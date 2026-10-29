@@ -2,6 +2,7 @@ import { setupTwGraphLoading } from './helper/tw-graph-loading';
 // resources/js/app.js
 
 import './forms/focus-field';
+import './forms/translation-key-input';
 import './forms/sync-copyable-field-heights';
 import './notices/validation-notices';
 

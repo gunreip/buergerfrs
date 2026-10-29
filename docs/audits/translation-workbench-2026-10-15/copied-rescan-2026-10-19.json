@@ -1,0 +1,107 @@
+{
+  "state": "rescan_rehearsal_verified",
+  "production_connected": false,
+  "input_dump_sha256": "3855cb420f2bf1b5782f8d3882ff92754e35f0b5041ad5563e0b2cd881d68e5a",
+  "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/code-box.blade.php",
+  "cases": {
+    "unchanged": {
+      "confirmed": 1,
+      "moved": 0,
+      "created": 0,
+      "removed": 0,
+      "excluded": 0,
+      "findings": [
+        291
+      ],
+      "scan": "213c5e9f-7f2a-474b-bdb8-e877ab7676fd",
+      "source_sha256": "b231d591582b69dccd8d13cecd6d3e0ad32a44b67b639bf98d09f155ca107c08"
+    },
+    "unchanged_again": {
+      "confirmed": 1,
+      "moved": 0,
+      "created": 0,
+      "removed": 0,
+      "excluded": 0,
+      "findings": [
+        291
+      ],
+      "scan": "540f4281-857d-431a-ac59-f6eed3582c69",
+      "source_sha256": "b231d591582b69dccd8d13cecd6d3e0ad32a44b67b639bf98d09f155ca107c08"
+    },
+    "moved": {
+      "confirmed": 0,
+      "moved": 1,
+      "created": 0,
+      "removed": 0,
+      "excluded": 0,
+      "findings": [
+        19942
+      ],
+      "scan": "979701c8-233d-41a9-9fbf-790ae5b73838",
+      "source_sha256": "89e6f98cb5b090ec3a6fedcbae5e7ab4f1751bb50728337a3e3eec3b4f87dadc"
+    },
+    "additional_copy": {
+      "confirmed": 1,
+      "moved": 0,
+      "created": 1,
+      "removed": 0,
+      "excluded": 0,
+      "findings": [
+        19942,
+        19943
+      ],
+      "scan": "5d1701d6-7193-40e7-920a-a617d453ad0d",
+      "source_sha256": "cb38c681a7c25913fa963b980cf1734a1e7438dd87ad6283692de81cd786f2ef"
+    },
+    "removed": {
+      "confirmed": 0,
+      "moved": 0,
+      "created": 0,
+      "removed": 2,
+      "excluded": 0,
+      "findings": [],
+      "scan": "9f6d088a-6cd2-43c3-956a-d403c7bfc5d1",
+      "source_sha256": "8a77c6cc9b9fc3b94a56d2b8e13b29bb9e2e6f6ba5a7edafbb56b53e53e359f0"
+    },
+    "reappeared": {
+      "confirmed": 0,
+      "moved": 0,
+      "created": 1,
+      "removed": 0,
+      "excluded": 0,
+      "findings": [
+        19944
+      ],
+      "scan": "e3a622c3-bafd-42c3-bf36-a8a0f75f9094",
+      "source_sha256": "b231d591582b69dccd8d13cecd6d3e0ad32a44b67b639bf98d09f155ca107c08"
+    },
+    "literal_changed": {
+      "confirmed": 0,
+      "moved": 0,
+      "created": 1,
+      "removed": 1,
+      "excluded": 0,
+      "findings": [
+        19945
+      ],
+      "scan": "0c44bc4c-384a-4e59-ad9e-8a892915c03f",
+      "source_sha256": "f63f43c044e0b5a655363d308ac2f845d1d4978a5741d7b8a1fdaf8aa03b0649"
+    }
+  },
+  "assertions": 16,
+  "rejected_cases": [
+    "ambiguous_duplicate_movement",
+    "dynamic_unresolved_capture",
+    "missing_file",
+    "excluded_file"
+  ],
+  "implementation_sha256": "28d97b25520cfd66a366bf5d746c8b47d63e28dd20c881c2bad8badf7c37898c",
+  "runner_sha256": "705e35ab7d2cb21193391459a55059156a9142fd063648301c665bfaf6df06e1",
+  "outside_findings_unchanged": true,
+  "dump": "storage/app/private/dev/workbench-rehearsal/20261019-075456-18dfd037/rescan_c1e38feaa192/database.dump",
+  "dump_sha256": "2829d279b850ab3a8f676fcad4a54a55aa3e7874abbdc9cd3de0568a4d887c8a",
+  "cluster_stopped": true,
+  "private_report": "storage/app/private/dev/workbench-rehearsal/20261019-075456-18dfd037/rescan_c1e38feaa192/result.json",
+  "private_report_sha256": "351204936eea5566d0bae85dcccd150e51797db14d8d4e085d4789f552fb8a47",
+  "tested_scope": "one real copied Blade file, seven successful scans and four rejected scenarios"
+}

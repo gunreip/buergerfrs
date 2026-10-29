@@ -2,6 +2,7 @@
 
 namespace Tests\Support\TranslationWorkbench;
 
+use Gunreip\TranslationWorkbench\Generation\BaselineValueReader;
 use Gunreip\TranslationWorkbench\Scanner\DiscoveredTranslation;
 use PDO;
 use RuntimeException;
@@ -38,6 +39,10 @@ final class BaselinePrototype
                 revision INTEGER NOT NULL, value TEXT NOT NULL, actor INTEGER NOT NULL, reason TEXT NOT NULL,
                 occurred_at TEXT NOT NULL, UNIQUE(key_id,locale,revision));
             CREATE TRIGGER immutable_revision BEFORE UPDATE ON revisions BEGIN SELECT RAISE(ABORT,'Immutable revision'); END;
+            CREATE TABLE approvals (id INTEGER PRIMARY KEY, revision_id INTEGER NOT NULL REFERENCES revisions(id),
+                decision TEXT NOT NULL CHECK(decision IN ('approved','revoked')), fingerprint TEXT NOT NULL,
+                actor INTEGER NOT NULL, reason TEXT NOT NULL, occurred_at TEXT NOT NULL);
+            CREATE TRIGGER immutable_approval BEFORE UPDATE ON approvals BEGIN SELECT RAISE(ABORT,'Immutable approval'); END;
             CREATE TABLE events (id INTEGER PRIMARY KEY, operation_id TEXT NOT NULL, event_type TEXT NOT NULL,
                 actor_type TEXT NOT NULL, actor_id INTEGER, occurred_at TEXT NOT NULL, reason TEXT NOT NULL,
                 subject TEXT NOT NULL, details TEXT NOT NULL);
@@ -46,7 +51,7 @@ final class BaselinePrototype
 
     public function rows(string $table): array
     {
-        if (! in_array($table, ['findings', 'runs', 'observations', 'keys', 'links', 'revisions', 'events', 'operations', 'baseline_observations'], true)) {
+        if (! in_array($table, ['findings', 'runs', 'observations', 'keys', 'links', 'revisions', 'events', 'operations', 'baseline_observations', 'approvals'], true)) {
             throw new RuntimeException('Unknown prototype table');
         }
 
@@ -213,6 +218,141 @@ final class BaselinePrototype
 
             return $plan;
         });
+    }
+
+    /** Read-only snapshot: approval always refers to one revision and its current usage. */
+    public function reviewSnapshot(int $revision): array
+    {
+        $row = $this->query('SELECT r.*, k.name AS key_name FROM revisions r JOIN keys k ON k.id=r.key_id WHERE r.id=?', [$revision])->fetch(PDO::FETCH_ASSOC);
+        if (! $row) {
+            throw new RuntimeException('Unknown value revision');
+        }
+        $links = $this->query("SELECT l.id, l.finding_id FROM links l JOIN findings f ON f.id=l.finding_id WHERE l.key_id=? AND l.active=1 AND f.status='active' ORDER BY l.id", [$row['key_id']])->fetchAll(PDO::FETCH_ASSOC);
+        $snapshot = ['revision_id' => $row['id'], 'key_id' => $row['key_id'], 'key_name' => $row['key_name'],
+            'locale' => $row['locale'], 'revision' => $row['revision'], 'value' => $row['value'], 'usage' => $links];
+
+        return ['snapshot' => $snapshot, 'fingerprint' => hash('sha256', json_encode($snapshot, JSON_THROW_ON_ERROR))];
+    }
+
+    public function decideRevision(string $operation, int $revision, string $expectedFingerprint, bool $approved, int $actor, string $reason): array
+    {
+        return $this->operation($operation, ['approval', $revision, $expectedFingerprint, $approved, $actor, $reason], function () use ($operation, $revision, $expectedFingerprint, $approved, $actor, $reason) {
+            $this->validateActor($actor, $reason);
+            $preview = $this->reviewSnapshot($revision);
+            if (! hash_equals($preview['fingerprint'], $expectedFingerprint)) {
+                throw new RuntimeException('Review context changed; inspect again');
+            }
+            if ($approved) {
+                $this->assertCurrentRevision($preview['snapshot']);
+                if ($preview['snapshot']['usage'] === []) {
+                    throw new RuntimeException('No current finding uses this key');
+                }
+            }
+            $decision = $approved ? 'approved' : 'revoked';
+            $latest = $this->latestApproval($revision);
+            if ($latest && $latest['decision'] === $decision && $latest['fingerprint'] === $expectedFingerprint) {
+                return ['approval_id' => $latest['id'], 'changed' => false];
+            }
+            if (! $approved && (! $latest || $latest['decision'] !== 'approved')) {
+                throw new RuntimeException('No approval to revoke');
+            }
+            $this->query('INSERT INTO approvals(revision_id,decision,fingerprint,actor,reason,occurred_at) VALUES (?,?,?,?,?,?)',
+                [$revision, $decision, $expectedFingerprint, $actor, $reason, gmdate('c')]);
+            $id = (int) $this->db->lastInsertId();
+            $this->event($operation, $approved ? 'revision_approved' : 'revision_approval_revoked', 'user', $actor, $reason,
+                'revision:'.$revision, ['approval_id' => $id, 'fingerprint' => $expectedFingerprint]);
+
+            return ['approval_id' => $id, 'changed' => true];
+        });
+    }
+
+    /** Eligibility manifest only. No file is read or written, and no publication is claimed. */
+    public function publicationPreview(array $revisionIds): array
+    {
+        if ($revisionIds === [] || count(array_unique($revisionIds, SORT_REGULAR)) !== count($revisionIds)) {
+            throw new RuntimeException('Choose distinct value revisions');
+        }
+        foreach ($revisionIds as $id) {
+            if (! is_int($id) || $id < 1) {
+                throw new RuntimeException('Revision IDs must be positive integers');
+            }
+        }
+        sort($revisionIds, SORT_NUMERIC);
+        $items = [];
+        foreach ($revisionIds as $revision) {
+            $preview = $this->reviewSnapshot($revision);
+            $snapshot = $preview['snapshot'];
+            $this->assertCurrentRevision($snapshot);
+            $approval = $this->latestApproval($revision);
+            if (! $approval || $approval['decision'] !== 'approved'
+                || ! hash_equals($approval['fingerprint'], $preview['fingerprint']) || $snapshot['usage'] === []) {
+                throw new RuntimeException('Current revision and context are not approved');
+            }
+            // Prototype supports nested scalar keys only; no silent key correction or fallback.
+            if (! preg_match('/^[a-z0-9_-]+(?:\.[a-z0-9_-]+){2,}$/iD', $snapshot['key_name'])) {
+                throw new RuntimeException('Nested scalar key required; correct it explicitly');
+            }
+            $items[] = [...$snapshot, 'approval_id' => $approval['id'], 'approval_fingerprint' => $preview['fingerprint']];
+        }
+        foreach ($items as $i => $item) {
+            foreach ($items as $j => $other) {
+                if ($i !== $j && $item['locale'] === $other['locale'] && str_starts_with($other['key_name'], $item['key_name'].'.')) {
+                    throw new RuntimeException('Scalar and container keys conflict');
+                }
+            }
+        }
+
+        return ['items' => $items, 'fingerprint' => hash('sha256', json_encode($items, JSON_THROW_ON_ERROR))];
+    }
+
+    public function verifyPublicationPreview(array $revisionIds, string $expectedFingerprint): array
+    {
+        $preview = $this->publicationPreview($revisionIds);
+        if (! hash_equals($preview['fingerprint'], $expectedFingerprint)) {
+            throw new RuntimeException('Publication preview changed; inspect again');
+        }
+
+        return $preview;
+    }
+
+    /** Called only after the isolated publisher has verified every resulting file hash. */
+    public function recordTestPublication(string $operation, array $revisionIds, string $manifestFingerprint, array $files, int $actor, string $reason): array
+    {
+        return $this->operation($operation, ['published', $revisionIds, $manifestFingerprint, $files, $actor, $reason], function () use ($operation, $revisionIds, $manifestFingerprint, $files, $actor, $reason) {
+            $this->validateActor($actor, $reason);
+            $manifest = $this->verifyPublicationPreview($revisionIds, $manifestFingerprint);
+            $this->event($operation, 'revisions_published', 'user', $actor, $reason, 'publication:'.$operation,
+                ['revisions' => $manifest['items'], 'files' => $files]);
+
+            return ['operation' => $operation, 'files' => $files];
+        });
+    }
+
+    public function recordTestClosure(string $run, array $review, int $actor, string $reason): array
+    {
+        $operation = 'publication-closure:'.$run;
+
+        return $this->operation($operation, [$review, $actor, $reason], function () use ($operation, $run, $review, $actor, $reason) {
+            $this->validateActor($actor, $reason);
+            $receipt = ['review' => $review, 'actor' => $actor, 'reason' => $reason];
+            $this->event($operation, 'publication_closed_without_writing', 'user', $actor, $reason, 'publication:'.$run, $receipt);
+
+            return $receipt;
+        });
+    }
+
+    private function assertCurrentRevision(array $snapshot): void
+    {
+        $current = $this->query('SELECT id FROM revisions WHERE key_id=? AND locale=? ORDER BY revision DESC LIMIT 1',
+            [$snapshot['key_id'], $snapshot['locale']])->fetchColumn();
+        if ((int) $current !== $snapshot['revision_id']) {
+            throw new RuntimeException('A newer draft exists; inspect the current revision');
+        }
+    }
+
+    private function latestApproval(int $revision): array|false
+    {
+        return $this->query('SELECT * FROM approvals WHERE revision_id=? ORDER BY id DESC LIMIT 1', [$revision])->fetch(PDO::FETCH_ASSOC);
     }
 
     private function suggestion(DiscoveredTranslation $item, array $translations, string $locale): array

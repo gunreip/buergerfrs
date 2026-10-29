@@ -35,6 +35,8 @@
             </flux:tooltip.content>
         </flux:tooltip>
     </div>
+    @include('translation-workbench::livewire.workflow.implementation-notes', ['implementationGraph' => 'target'])
+
     <x-translation-workbench::ui.tw-graph.preview-tools :dev="false">
         <div class="mt-3 max-h-[48rem] overflow-auto rounded-lg border border-zinc-200 dark:border-zinc-700">
             <x-translation-workbench::ui.tw-graph

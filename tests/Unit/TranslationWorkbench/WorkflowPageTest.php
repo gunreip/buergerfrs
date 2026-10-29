@@ -1,6 +1,8 @@
 <?php
 
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchWorkflow;
+use Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry;
+use Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -16,9 +18,19 @@ it('renders only the selected workflow graph and validates tab changes', functio
         ->assertDontSeeHtml('translation-workflow-legacy')
         ->set('activeTab', 'target')
         ->assertSeeHtml('translation-workflow-target')
+        ->assertSee('Plan and implementation')
+        ->assertSee('workflow.target.reconcile')
+        ->assertSee('Decision recorded; production transition pending')
+        ->assertSee('Package guard implemented; application setup pending')
+        ->assertSee('Empty generation installation verified in isolation')
+        ->assertSee('Selected transfer and correction: see recorded rehearsal result')
+        ->assertSee('Complete evidenced name inventory verified in isolation')
         ->assertDontSeeHtml('translation-workflow-workbench')
         ->set('activeTab', 'target-ui')
         ->assertSeeHtml('id="workflow-target-ui"')
+        ->assertSee('Plan and implementation')
+        ->assertSee('workflow.target-ui.recognize')
+        ->assertSee('Unlisted graph steps have not been assessed here.')
         ->assertSee('roadmap for the future UI', false)
         ->assertSee('Known and uniquely identified as moved?')
         ->assertSee('Update position; retain finding and edits')
@@ -193,8 +205,8 @@ it('renders the target lifecycle in one graph with separate stop and publication
 it('returns the UI workflow to its main axis after decisions', function () {
     view('translation-workbench::livewire.workflow.target-ui')->render();
     $graph = 'translation-workflow-target-ui';
-    $coordinate = fn (string $id) => \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression(
-        \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graph, 'workflow.target-ui.'.$id)['x'],
+    $coordinate = fn (string $id) => BoundsRegistry::evaluateRemExpression(
+        AnchorRegistry::get($graph, 'workflow.target-ui.'.$id)['x'],
     );
     $mainAxis = $coordinate('start.anchorNode-end');
 
@@ -207,10 +219,10 @@ it('returns the UI workflow to its main axis after decisions', function () {
     expect($coordinate('publication-recovery.anchorNode-end'))->toBeLessThan($mainAxis);
     expect($coordinate('source-recovery.anchorNode-end'))->toBeLessThan($mainAxis);
     expect($coordinate('input-kind.true.anchorNode-end'))->toBeLessThan($coordinate('input-kind.false.anchorNode-end'));
-    $inputTrue = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graph, 'workflow.target-ui.input-kind.true.anchorNode-end');
-    $inputFalse = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get($graph, 'workflow.target-ui.input-kind.false.anchorNode-end');
-    expect(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($inputFalse['y']))
-        ->toBeLessThan(\Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($inputTrue['y']));
+    $inputTrue = AnchorRegistry::get($graph, 'workflow.target-ui.input-kind.true.anchorNode-end');
+    $inputFalse = AnchorRegistry::get($graph, 'workflow.target-ui.input-kind.false.anchorNode-end');
+    expect(BoundsRegistry::evaluateRemExpression($inputFalse['y']))
+        ->toBeLessThan(BoundsRegistry::evaluateRemExpression($inputTrue['y']));
     expect($coordinate('input-kind.false.anchorNode-end'))->toBeLessThan($mainAxis);
     $source = file_get_contents(base_path('packages/gunreip/laravel-translation-workbench/resources/views/livewire/workflow/target-ui.blade.php'));
     expect($source)->toContain('attach-to="workflow.target-ui.scan-detail.return.anchorNode-end"')
@@ -222,7 +234,6 @@ it('returns the UI workflow to its main axis after decisions', function () {
     }
 });
 
-
 it('renders the dashed scan axis with a positive length matching its anchors', function () {
     $html = view('translation-workbench::livewire.workflow.target-ui')->render();
     $document = new DOMDocument;
@@ -233,19 +244,18 @@ it('renders the dashed scan axis with a positive length matching its anchors', f
     $line = $lines->item(0);
     expect($line->getAttribute('class'))->toContain('tw-graph-protocol-primitive-line-dashed');
     preg_match('/--tw-graph-protocol-local-length:\s*([^;]+)/', $line->getAttribute('style'), $match);
-    $evaluate = fn ($expression) => \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($expression);
+    $evaluate = fn ($expression) => BoundsRegistry::evaluateRemExpression($expression);
     $length = $evaluate($match[1]);
-    $start = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.scan.anchorNode-end');
-    $end = \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.scan-detail.return.anchorNode-end');
+    $start = AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.scan.anchorNode-end');
+    $end = AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.scan-detail.return.anchorNode-end');
     expect($length)->toBeGreaterThan(0)
         ->toEqualWithDelta($evaluate($start['y']) - $evaluate($end['y']), 0.001);
 });
 
-
 it('returns clarification outside the left branch into the context review stem', function () {
     view('translation-workbench::livewire.workflow.target-ui')->render();
-    $get = fn ($id) => \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.'.$id.'.anchorNode-end');
-    $rem = fn ($value) => \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($value);
+    $get = fn ($id) => AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.'.$id.'.anchorNode-end');
+    $rem = fn ($value) => BoundsRegistry::evaluateRemExpression($value);
     $capture = $get('capture');
     $reentry = $get('clarification-loop.reentry');
     $turn = $get('clarification-loop.turn');
@@ -257,11 +267,10 @@ it('returns clarification outside the left branch into the context review stem',
     expect($reentry['direction'])->toBe('top-bottom');
 });
 
-
 it('joins both publication recovery paths before rechecking approval', function () {
     view('translation-workbench::livewire.workflow.target-ui')->render();
-    $get = fn ($id) => \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.'.$id.'.anchorNode-end');
-    $rem = fn ($value) => \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($value);
+    $get = fn ($id) => AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.'.$id.'.anchorNode-end');
+    $rem = fn ($value) => BoundsRegistry::evaluateRemExpression($value);
     $review = $get('review');
     $reentry = $get('publication-recovery-loop.reentry');
     $join = $get('publication-recovery-loop.turn');
@@ -273,11 +282,10 @@ it('joins both publication recovery paths before rechecking approval', function 
     expect($reentry['direction'])->toBe('top-bottom');
 });
 
-
 it('returns conflicting edits to language selection with a fresh baseline', function () {
     view('translation-workbench::livewire.workflow.target-ui')->render();
-    $get = fn ($id) => \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.'.$id.'.anchorNode-end');
-    $rem = fn ($value) => \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($value);
+    $get = fn ($id) => AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.'.$id.'.anchorNode-end');
+    $rem = fn ($value) => BoundsRegistry::evaluateRemExpression($value);
     $key = $get('key-save');
     $reentry = $get('concurrent-edit-loop.reentry');
     expect($rem($reentry['x']))->toEqualWithDelta($rem($key['x']), 0.001);
@@ -285,11 +293,10 @@ it('returns conflicting edits to language selection with a fresh baseline', func
     expect($reentry['direction'])->toBe('top-bottom');
 });
 
-
 it('routes draft resumption outside the right branch back to editing', function () {
     view('translation-workbench::livewire.workflow.target-ui')->render();
-    $get = fn ($id) => \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.'.$id.'.anchorNode-end');
-    $rem = fn ($value) => \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($value);
+    $get = fn ($id) => AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.'.$id.'.anchorNode-end');
+    $rem = fn ($value) => BoundsRegistry::evaluateRemExpression($value);
     $key = $get('key-save');
     $reentry = $get('draft-loop.reentry');
     $turn = $get('draft-loop.turn');
@@ -300,11 +307,10 @@ it('routes draft resumption outside the right branch back to editing', function 
     expect($reentry['direction'])->toBe('top-bottom');
 });
 
-
 it('joins review corrections to the existing editing return', function () {
     view('translation-workbench::livewire.workflow.target-ui')->render();
-    $get = fn ($id) => \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.'.$id.'.anchorNode-end');
-    $rem = fn ($value) => \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($value);
+    $get = fn ($id) => AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.'.$id.'.anchorNode-end');
+    $rem = fn ($value) => BoundsRegistry::evaluateRemExpression($value);
     $join = $get('concurrent-edit-loop.turn');
     $turn = $get('review-feedback-loop.turn');
     expect($rem($turn['x']))->toEqualWithDelta($rem($join['x']), 0.001);
@@ -313,8 +319,8 @@ it('joins review corrections to the existing editing return', function () {
 
 it('returns published text revisions to editing while keeping completion on the main axis', function () {
     $html = view('translation-workbench::livewire.workflow.target-ui')->render();
-    $get = fn ($id) => \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.'.$id.'.anchorNode-end');
-    $rem = fn ($value) => \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($value);
+    $get = fn ($id) => AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.'.$id.'.anchorNode-end');
+    $rem = fn ($value) => BoundsRegistry::evaluateRemExpression($value);
     $join = $get('review-feedback-loop.turn');
     $turn = $get('published-edit-task-loop.turn');
     $finish = $get('published-edit-complete-return');
@@ -332,8 +338,8 @@ it('returns published text revisions to editing while keeping completion on the 
 
 it('documents explicit maintenance proposals and keeps their decisions on the main axis', function () {
     $html = view('translation-workbench::livewire.workflow.target-ui')->render();
-    $get = fn ($id) => \Gunreip\TranslationWorkbench\Support\TwGraph\AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.'.$id.'.anchorNode-end');
-    $rem = fn ($value) => \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::evaluateRemExpression($value);
+    $get = fn ($id) => AnchorRegistry::get('translation-workflow-target-ui', 'workflow.target-ui.'.$id.'.anchorNode-end');
+    $rem = fn ($value) => BoundsRegistry::evaluateRemExpression($value);
     $previous = $get('published-edit-complete-return');
     foreach (['key-migration-return', 'shared-maintenance-return', 'archive-unused-return', 'maintenance-deferred-return'] as $id) {
         $anchor = $get($id);

@@ -1,0 +1,334 @@
+{
+  "mode": "mapping_only",
+  "active_generation_created": false,
+  "backup_manifest_sha256": "f2071cb776c72889a430e6f279332aa51c39dbea92b899e92d191102958a7012",
+  "staging_dump_sha256": "a8ffb951e35f4df7b8a454f12b5bc67c8fb2122d7917bdb27a2beaab7566cf69",
+  "tables": [
+    {
+      "source_table": "translation_workbench_findings",
+      "source_rows": 23238,
+      "source_multiset_sha256": "994e520269764ce1a7187f8504f005c3a0c8bf5dbe436e2efa897675822d40a7",
+      "purpose": "fresh_capture_required",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_entries",
+      "source_rows": 3730,
+      "source_multiset_sha256": "66e15eb428bf08ce499a6c09c5e860169d9bf165185e088bbd532d9462c6c6ea",
+      "purpose": "fresh_capture_required",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_occurrences",
+      "source_rows": 10350,
+      "source_multiset_sha256": "a53cca179168be43fa380f40c4d860cd8749b7a4dd4566d94c476541b86bdec6",
+      "purpose": "fresh_capture_required",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_usages",
+      "source_rows": 14075,
+      "source_multiset_sha256": "a64b0adeface350481ec6fe9da65c2ad705ed12f3eba8b65b815230d30ce132c",
+      "purpose": "fresh_capture_required",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_source_files",
+      "source_rows": 819,
+      "source_multiset_sha256": "d0b19dec66f2f567e2b670e789b5dba84ee2f338005588d133dadbf1614cd6d5",
+      "purpose": "fresh_capture_required",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_keys",
+      "source_rows": 14205,
+      "source_multiset_sha256": "236a0f0c4bbdebdc274ad29832988de177a75f3c2c9afa1eded3c4979b65b450",
+      "purpose": "key_identity_review",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_keys",
+      "source_rows": 14961,
+      "source_multiset_sha256": "67450a80a5a71d17346872f8123e8d091a8fb4074416cca1229db796275ccb9a",
+      "purpose": "key_identity_review",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_key_inventory",
+      "source_rows": 1090,
+      "source_multiset_sha256": "7553983f5b500ea9248b5001c16b3f71891efb299a3fc9f9537494c75bb5150a",
+      "purpose": "key_identity_review",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_key_findings",
+      "source_rows": 25838,
+      "source_multiset_sha256": "b24bb7b061a1efa422811a7b8fc3824b77e123d15e3c813dc815649fa86d614d",
+      "purpose": "assignment_review",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_values",
+      "source_rows": 8284,
+      "source_multiset_sha256": "fe80af55dd12cfdb63fd1b248e6e9d8f73a40e86da651441ea391e890313e00f",
+      "purpose": "value_revision_review",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_key_values",
+      "source_rows": 0,
+      "source_multiset_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "purpose": "value_revision_review",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_lang_values",
+      "source_rows": 2216,
+      "source_multiset_sha256": "cc73013fc7ce582aea4022dd15420131f8c4ed4a080f131f345cc8d6051bed2c",
+      "purpose": "value_revision_review",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_dynamic_key_values",
+      "source_rows": 200,
+      "source_multiset_sha256": "a75dc9acc66558fed0ff7705c87801c9d6001c03cce1ff5433e1f1e80bea1af7",
+      "purpose": "value_revision_review",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_dynamic_source_candidates",
+      "source_rows": 121,
+      "source_multiset_sha256": "6dbfc31e49b478b58fad5b52f3284cd9cadfc77e9752d290cf5f9fca1ad0839d",
+      "purpose": "dynamic_context_review",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_dynamic_source_values",
+      "source_rows": 247,
+      "source_multiset_sha256": "daa7bc5fd7b25fa7b5dd039a460895dab74eec51d5b3af1538471ffd822acb60",
+      "purpose": "dynamic_context_review",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_dynamic_sources",
+      "source_rows": 96,
+      "source_multiset_sha256": "c96f33e6b8616c1683e81251987047b7abbbc53fcddec929734d357f19a7378b",
+      "purpose": "dynamic_context_review",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_dynamic_values",
+      "source_rows": 43,
+      "source_multiset_sha256": "e4b47166e3c024cf00ce1a828a77b228e3b5c764f9e0400faee9e4631ef6cff8",
+      "purpose": "dynamic_context_review",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_option_discoveries",
+      "source_rows": 26,
+      "source_multiset_sha256": "0f9097dfc008c455b5ab4b2fced44222926d6dcc4a94b608046aa12ed891f2da",
+      "purpose": "dynamic_context_review",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_values",
+      "source_rows": 952,
+      "source_multiset_sha256": "c05eebe40aae0c8229e41664663f310b6f438c0f6e93c3d46021e81cbd2f566a",
+      "purpose": "native_text_evidence",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_duplicate_candidates",
+      "source_rows": 109,
+      "source_multiset_sha256": "f7babf8dd54f400d82ecfc46778d8710b9e3df3379c855cbb7b991375ea73945",
+      "purpose": "recompute_candidates",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_shared_key_candidates",
+      "source_rows": 193,
+      "source_multiset_sha256": "0fd5d6ce7492956fed50c06d0a12c4c923dbc5dba30edb0c538770da1e2c39bd",
+      "purpose": "recompute_candidates",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_languages",
+      "source_rows": 2,
+      "source_multiset_sha256": "93e9f40d6bdd32f023a0df403e7be07851cd0a4a31a5179cb8a14c61a025576d",
+      "purpose": "configuration_review",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_lang_ballast_decisions",
+      "source_rows": 2,
+      "source_multiset_sha256": "e672f3af440623202367ae0997afef27df413b5c3be62c674bd088068629e0bb",
+      "purpose": "historical_decision_only",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_usage_audit_decision_usages",
+      "source_rows": 10,
+      "source_multiset_sha256": "c0bc3b8043918fb8fac220ba1844a621f7a9f2ba88f17ea87f6110c38ab1a085",
+      "purpose": "historical_decision_only",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_usage_audit_decisions",
+      "source_rows": 4,
+      "source_multiset_sha256": "31957b94290f31ba262788fb1fdb46c6bf2336d55b88d05e528b67bb65b01b2f",
+      "purpose": "historical_decision_only",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_reviews",
+      "source_rows": 1322,
+      "source_multiset_sha256": "ad7e81318f7a48291ac173429176200dd3d5b712ad2aacbb837e8fb748a97ba4",
+      "purpose": "historical_decision_only",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_audit_events",
+      "source_rows": 857724,
+      "source_multiset_sha256": "6d78ced05b26e05cf8ca5d6424c53a35f756d09512dc72a8d957c3e8c3b96fdc",
+      "purpose": "archive_only",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_events",
+      "source_rows": 1340120,
+      "source_multiset_sha256": "555ba974d2b3ca02d510726a46d7560e2b60521790c2940832ddec23d5c74220",
+      "purpose": "archive_only",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_timeline_events",
+      "source_rows": 175405,
+      "source_multiset_sha256": "9456884bd771c9d0949582e210cb8800e9ff422e29e701ba3a6c2d4c7283b81f",
+      "purpose": "archive_only",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_timeline_chains",
+      "source_rows": 1098,
+      "source_multiset_sha256": "489754cfcf83543383a8af6906b5470d33e65cafb0c8e8766a4b95a4be0f31b2",
+      "purpose": "archive_only",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_pipeline_runs",
+      "source_rows": 4,
+      "source_multiset_sha256": "7434eefa1333d4ffff707c82116e231e3ef71054004d5d6a00dd5df4f802fe87",
+      "purpose": "archive_only",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_pipeline_run_steps",
+      "source_rows": 148,
+      "source_multiset_sha256": "36a2b8dc15792cd89abf74825b0695c5fba4c73a6b5ca3ce332f0e8092eabcc9",
+      "purpose": "archive_only",
+      "automatic_active_import": false
+    },
+    {
+      "source_table": "translation_workbench_event_types",
+      "source_rows": 64,
+      "source_multiset_sha256": "37ab76cb385e4ff8dc9b713cfc8fec30442669905be4a4b26d10b8934282e699",
+      "purpose": "archive_only",
+      "automatic_active_import": false
+    }
+  ],
+  "capture_fields": {
+    "raw_expression": {
+      "legacy_candidates": {
+        "translation_workbench_findings": [
+          "raw_expression"
+        ],
+        "translation_workbench_occurrences": [
+          "raw_expression"
+        ]
+      },
+      "required_evidence": "Fresh static parser capture of the exact expression in a hashed copied source file.",
+      "on_missing": "block_finding"
+    },
+    "raw_source_code_literal": {
+      "legacy_candidates": {
+        "translation_workbench_findings": [
+          "literal_text",
+          "found_translation_key"
+        ]
+      },
+      "required_evidence": "Fresh static parser capture of the actual argument, classified as literal or translation key; never concatenate legacy fields.",
+      "on_missing": "null"
+    },
+    "raw_literal": {
+      "legacy_candidates": {
+        "translation_workbench_findings": [
+          "literal_text"
+        ]
+      },
+      "required_evidence": "Actual source text classified as a literal by fresh capture. A translation key is not a literal; ambiguity remains unresolved.",
+      "on_missing": "null"
+    },
+    "suggested_literal": {
+      "legacy_candidates": {
+        "translation_workbench_findings": [
+          "literal_text_suggested"
+        ],
+        "translation_workbench_lang_values": [
+          "locale",
+          "translation_key",
+          "value",
+          "source_path",
+          "source_hash"
+        ]
+      },
+      "required_evidence": "Unique scalar text at the exact captured key and explicit locale in the saved lang files; retain file hash, key and locale. No cross-key text matching or silent fallback.",
+      "on_missing": "null"
+    },
+    "suggested_key": {
+      "legacy_candidates": {
+        "translation_workbench_findings": [
+          "suggested_key"
+        ],
+        "translation_workbench_entries": [
+          "suggested_key"
+        ],
+        "translation_workbench_occurrences": [
+          "suggested_key"
+        ]
+      },
+      "required_evidence": "New suggestion generated once by the fresh scanner for a literal, with generator version and inputs. An existing key is captured separately; old mutable suggestions are evidence only.",
+      "on_missing": "null"
+    }
+  },
+  "identity_mapping": {
+    "evidence_identity": [
+      "batch_id",
+      "source_table",
+      "source_id"
+    ],
+    "target_identity": [
+      "generation_id",
+      "target_table",
+      "target_id"
+    ],
+    "rule": "Allocate new IDs. Record explicit evidence-to-target links with decision provenance; never equate finding IDs and key IDs or match by numeric ID alone.",
+    "finding_rule": "Fresh capture creates distinct findings per source position. Old findings remain archived; matching literal text does not merge findings.",
+    "key_rule": "Findings link to independent keys. Equal literals do not automatically merge keys. Name/namespace conflicts require a decision."
+  },
+  "activation_requirements": [
+    "Fresh capture from the hashed copied source, with exact line and column and completed scan scope.",
+    "Explicit key identity and finding assignment decisions; no legacy ownership semantics.",
+    "Reviewed locale, namespace and scalar/option identity; no silent normalization.",
+    "New revisions carry actual import actor and reason; old approvals never authorize publication.",
+    "Old audit and timeline events remain archived; new history begins with real new operations.",
+    "Every staged row is accounted for as linked evidence, pending review or archived; none silently discarded."
+  ],
+  "open_work": [
+    "fresh_source_capture_adapter",
+    "per_record_identity_map",
+    "reviewed_value_import",
+    "loss_accounting",
+    "workflow_replay"
+  ],
+  "staging_report_sha256": "181f6ac07fc1844653ce7bdfd9af725c8eb775f5c825d6edcb2d7e24d5d3d0e5"
+}

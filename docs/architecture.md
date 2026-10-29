@@ -69,3 +69,42 @@ Locale, country and language reference data is imported through `reference:impor
 - Source rewrites remain separate from ordinary UI persistence.
 - Potentially destructive translation cleanup requires explicit review or an apply flag.
 - Database history remains the durable record even when exported language-file entries change.
+
+
+## Flux component reference
+
+Verified on 2026-10-21 against the official v2 documentation and local vendor templates.
+`composer.lock` contains `livewire/flux` v2.20.1, `livewire/flux-pro` 2.20.1 and Livewire v4.4.7.
+These are the project's installed versions, not a claim about the latest available release.
+
+The following components are marked new in the current documentation and are already installed here:
+
+| Component | Purpose | Documentation |
+|---|---|---|
+| `flux:flag` | Country/region flag, for example `country="DE"`; supports sizes and circular presentation | [Flag](https://fluxui.dev/components/flag) |
+| `flux:toggle` | Compact boolean control with distinct on/off labels or icons | [Toggle](https://fluxui.dev/components/toggle) |
+| `flux:phone` (Pro) | International telephone input with country selection and formatting | [Phone](https://fluxui.dev/components/phone) |
+| `flux:color-picker` (Pro) | Color selection | [Color picker](https://fluxui.dev/components/color-picker) |
+| `flux:carousel` (Pro) | Horizontally scrolling slides | [Carousel](https://fluxui.dev/components/carousel) |
+
+Other installed Pro components worth checking before implementing custom UI include `autocomplete`,
+`command`, `composer`, `context`, `file-upload`, `kanban`, `pillbox`, `popover`, `timeline`,
+`date-picker` and `time-picker`. Installation alone does not establish which props are supported:
+inspect the specific component documentation and installed templates before using it.
+
+For this project:
+
+- Prefer the existing Flux component for tables, pagination, dialogs, accordions, context menus and toggles.
+- Keep the project's locale-to-country mapping. A language identifier is not necessarily a country code;
+  introducing `flux:flag` does not justify changing that mapping.
+- Preserve the chosen callout layout: an icon on `flux:callout` indents its content, while an icon on
+  `flux:callout.heading` belongs to the heading. Do not interchange these during cleanup.
+- Check local icon implementations under `resources/views/flux/icon/` before selecting icon variants;
+  the project's Lucide icons do not support every Heroicons variant.
+- The current online carousel navigation mentions a Datetime picker, but its page could not be verified
+  and no `datetime-picker` template exists in the installed packages. Do not assume it is available.
+- Check `vendor/livewire/flux/stubs/resources/views/flux/` and the corresponding `flux-pro` directory,
+  plus project overrides under `resources/views/flux/`. Do not edit vendor files to implement application UI.
+
+This is a dated component reference. Recheck documentation and installed code when implementing a feature;
+no dependency upgrade or automatic replacement of existing project components was performed for this inventory.

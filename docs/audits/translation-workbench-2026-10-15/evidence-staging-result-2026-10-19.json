@@ -1,0 +1,152 @@
+{
+  "started_at": "2026-10-19T08:02:53+00:00",
+  "mode": "isolated_evidence_staging",
+  "production_connected": false,
+  "backup_manifest_sha256": "f2071cb776c72889a430e6f279332aa51c39dbea92b899e92d191102958a7012",
+  "state": "evidence_staged_and_verified",
+  "source_read_only": "on",
+  "staging_database": "evidence_7d006794a4e8",
+  "collections": {
+    "translation_audit_events": {
+      "disposition": "retained_in_restored_archive",
+      "source_rows": 857724
+    },
+    "translation_keys": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 14205
+    },
+    "translation_lang_ballast_decisions": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 2
+    },
+    "translation_languages": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 2
+    },
+    "translation_usage_audit_decision_usages": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 10
+    },
+    "translation_usage_audit_decisions": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 4
+    },
+    "translation_usages": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 14075
+    },
+    "translation_values": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 8284
+    },
+    "translation_workbench_duplicate_candidates": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 109
+    },
+    "translation_workbench_dynamic_key_values": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 200
+    },
+    "translation_workbench_dynamic_source_candidates": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 121
+    },
+    "translation_workbench_dynamic_source_values": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 247
+    },
+    "translation_workbench_dynamic_sources": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 96
+    },
+    "translation_workbench_dynamic_values": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 43
+    },
+    "translation_workbench_entries": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 3730
+    },
+    "translation_workbench_event_types": {
+      "disposition": "retained_in_restored_archive",
+      "source_rows": 64
+    },
+    "translation_workbench_events": {
+      "disposition": "retained_in_restored_archive",
+      "source_rows": 1340120
+    },
+    "translation_workbench_findings": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 23238
+    },
+    "translation_workbench_key_findings": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 25838
+    },
+    "translation_workbench_key_inventory": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 1090
+    },
+    "translation_workbench_key_values": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 0
+    },
+    "translation_workbench_keys": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 14961
+    },
+    "translation_workbench_lang_values": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 2216
+    },
+    "translation_workbench_occurrences": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 10350
+    },
+    "translation_workbench_option_discoveries": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 26
+    },
+    "translation_workbench_pipeline_run_steps": {
+      "disposition": "retained_in_restored_archive",
+      "source_rows": 148
+    },
+    "translation_workbench_pipeline_runs": {
+      "disposition": "retained_in_restored_archive",
+      "source_rows": 4
+    },
+    "translation_workbench_reviews": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 1322
+    },
+    "translation_workbench_shared_key_candidates": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 193
+    },
+    "translation_workbench_source_files": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 819
+    },
+    "translation_workbench_timeline_chains": {
+      "disposition": "retained_in_restored_archive",
+      "source_rows": 1098
+    },
+    "translation_workbench_timeline_events": {
+      "disposition": "retained_in_restored_archive",
+      "source_rows": 175405
+    },
+    "translation_workbench_values": {
+      "disposition": "copied_as_evidence",
+      "source_rows": 952
+    }
+  },
+  "records": 122133,
+  "staging_dump": "storage/app/private/dev/workbench-rehearsal/20261019-075456-18dfd037/evidence_7d006794a4e8.dump",
+  "staging_dump_sha256": "a8ffb951e35f4df7b8a454f12b5bc67c8fb2122d7917bdb27a2beaab7566cf69",
+  "staging_dump_bytes": 18211057,
+  "files": 3595,
+  "rejected_mutation_checks": 3,
+  "active_generation_created": false,
+  "finished_at": "2026-10-19T08:03:14+00:00",
+  "cluster_stopped": true
+}

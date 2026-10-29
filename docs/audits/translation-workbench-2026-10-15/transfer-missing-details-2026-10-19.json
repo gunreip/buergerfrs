@@ -1,0 +1,772 @@
+{
+  "captured_at": "2026-10-19T09:32:25+02:00",
+  "mode": "read_only_targeted_evidence",
+  "category": "missing_value_evidence",
+  "checklist_sha256": "aeed405ecb89bc0d3015fbc19ccef35a45d0e4cb3488e65cfc67d06ea5999a6f",
+  "snapshot_captured_at": "2026-10-19T07:41:38+02:00",
+  "transaction_read_only": "on",
+  "items": [
+    {
+      "review_id": "26513d1a444bf9db",
+      "locale": "de",
+      "key": "admin.permissions.filters.assignment.label",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 1,
+      "current_null_records": 1,
+      "current_nonnull_records": 0,
+      "file": {
+        "path": "lang/de/admin.php",
+        "exists": true,
+        "sha256": "cd7582693a5a728c19dcd3c62b4aff6198c7c33a2b7b8817b8858e328abeb69c",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 5,
+          "value": null,
+          "status": "ok",
+          "updated_at": "2026-10-11 10:23:51",
+          "key_id": 3,
+          "hash": null
+        },
+        {
+          "source": "workbench",
+          "current_candidate": false,
+          "id": 214,
+          "value": "Zuweisung",
+          "status": "obsolete",
+          "value_type": "string",
+          "source_path": "lang/de/admin.php",
+          "source_hash": "2505acf3492736a3769388e7c3592facb11e8b16c890a179ca1fdddd765e92b2",
+          "updated_at": "2026-07-28 19:34:49",
+          "hash": "2505acf3492736a3769388e7c3592facb11e8b16c890a179ca1fdddd765e92b2"
+        }
+      ],
+      "active_finding_references": [],
+      "decision": null,
+      "assessment": "no_current_value_historical_only"
+    },
+    {
+      "review_id": "5d7f0f8be36769f9",
+      "locale": "de",
+      "key": "admin.permissions.filters.system.label",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 1,
+      "current_null_records": 1,
+      "current_nonnull_records": 0,
+      "file": {
+        "path": "lang/de/admin.php",
+        "exists": true,
+        "sha256": "cd7582693a5a728c19dcd3c62b4aff6198c7c33a2b7b8817b8858e328abeb69c",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 17,
+          "value": null,
+          "status": "ok",
+          "updated_at": "2026-10-11 10:23:51",
+          "key_id": 9,
+          "hash": null
+        },
+        {
+          "source": "workbench",
+          "current_candidate": false,
+          "id": 220,
+          "value": "System",
+          "status": "obsolete",
+          "value_type": "string",
+          "source_path": "lang/de/admin.php",
+          "source_hash": "6725e7bbcd28f3a8a586fa34bf191fd72dde8b61756932cd3237c17a6f196f1a",
+          "updated_at": "2026-07-28 19:34:49",
+          "hash": "6725e7bbcd28f3a8a586fa34bf191fd72dde8b61756932cd3237c17a6f196f1a"
+        }
+      ],
+      "active_finding_references": [],
+      "decision": null,
+      "assessment": "no_current_value_historical_only"
+    },
+    {
+      "review_id": "f034e8352d71c4e9",
+      "locale": "de",
+      "key": "admin.permissions.filters.title",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 1,
+      "current_null_records": 1,
+      "current_nonnull_records": 0,
+      "file": {
+        "path": "lang/de/admin.php",
+        "exists": true,
+        "sha256": "cd7582693a5a728c19dcd3c62b4aff6198c7c33a2b7b8817b8858e328abeb69c",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 19,
+          "value": null,
+          "status": "ok",
+          "updated_at": "2026-10-11 10:23:51",
+          "key_id": 10,
+          "hash": null
+        },
+        {
+          "source": "workbench",
+          "current_candidate": false,
+          "id": 2100,
+          "value": "Filter",
+          "status": "obsolete",
+          "value_type": "string",
+          "source_path": "lang/de/admin.php",
+          "source_hash": "638e249f4a15ebb84957da130701d138a6e06d88dceeaa2e6dcd91db70cc1381",
+          "updated_at": "2026-08-06 06:52:02",
+          "hash": "638e249f4a15ebb84957da130701d138a6e06d88dceeaa2e6dcd91db70cc1381"
+        }
+      ],
+      "active_finding_references": [],
+      "decision": null,
+      "assessment": "no_current_value_historical_only"
+    },
+    {
+      "review_id": "bbced55646c087e4",
+      "locale": "de",
+      "key": "admin.permissions.labels.sort_order",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 1,
+      "current_null_records": 1,
+      "current_nonnull_records": 0,
+      "file": {
+        "path": "lang/de/admin.php",
+        "exists": true,
+        "sha256": "cd7582693a5a728c19dcd3c62b4aff6198c7c33a2b7b8817b8858e328abeb69c",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 23,
+          "value": null,
+          "status": "ok",
+          "updated_at": "2026-10-11 10:23:51",
+          "key_id": 12,
+          "hash": null
+        },
+        {
+          "source": "workbench",
+          "current_candidate": false,
+          "id": 223,
+          "value": "Sortierreihenfolge",
+          "status": "obsolete",
+          "value_type": "string",
+          "source_path": "lang/de/admin.php",
+          "source_hash": "895f0813e563fa8407f9d3ebdc57f7018dfd6855cbb8bc975e95111d7f9f3d70",
+          "updated_at": "2026-07-28 19:34:49",
+          "hash": "895f0813e563fa8407f9d3ebdc57f7018dfd6855cbb8bc975e95111d7f9f3d70"
+        }
+      ],
+      "active_finding_references": [],
+      "decision": null,
+      "assessment": "no_current_value_historical_only"
+    },
+    {
+      "review_id": "69d8b2e5bd2e8b92",
+      "locale": "de",
+      "key": "admin.permissions.modals.edit.title",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 2,
+      "current_null_records": 1,
+      "current_nonnull_records": 2,
+      "file": {
+        "path": "lang/de/admin.php",
+        "exists": true,
+        "sha256": "cd7582693a5a728c19dcd3c62b4aff6198c7c33a2b7b8817b8858e328abeb69c",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 53,
+          "value": null,
+          "status": "ok",
+          "updated_at": "2026-10-11 10:23:51",
+          "key_id": 27,
+          "hash": null
+        },
+        {
+          "source": "workbench",
+          "current_candidate": true,
+          "id": 238,
+          "value": "Berechtigung bearbeiten",
+          "status": "active",
+          "value_type": "string",
+          "source_path": "lang/de/admin.php",
+          "source_hash": "7acf341ddf6c2f0d7c33995db0d3a6f0dab70337",
+          "updated_at": "2026-10-13 17:23:51",
+          "hash": "481c4f6655864fadc2d228186af958fb72a8feefbeda39b2d81bb3aa3bf74070"
+        },
+        {
+          "source": "file",
+          "id": "lang/de/admin.php",
+          "status": "observed",
+          "current_candidate": true,
+          "value": "Berechtigung bearbeiten",
+          "hash": "481c4f6655864fadc2d228186af958fb72a8feefbeda39b2d81bb3aa3bf74070"
+        }
+      ],
+      "active_finding_references": [
+        {
+          "id": 1301,
+          "status": "active",
+          "source_line": 11,
+          "source_column": null,
+          "found_translation_key": "admin.permissions.modals.edit.title",
+          "existing_key": "admin.permissions.modals.edit.title",
+          "path": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php"
+        }
+      ],
+      "decision": null,
+      "assessment": "current_value_present_legacy_null"
+    },
+    {
+      "review_id": "6c79a3f5c398a586",
+      "locale": "de",
+      "key": "admin.permissions.overview.title",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 1,
+      "current_null_records": 1,
+      "current_nonnull_records": 0,
+      "file": {
+        "path": "lang/de/admin.php",
+        "exists": true,
+        "sha256": "cd7582693a5a728c19dcd3c62b4aff6198c7c33a2b7b8817b8858e328abeb69c",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 83,
+          "value": null,
+          "status": "ok",
+          "updated_at": "2026-10-11 10:23:52",
+          "key_id": 42,
+          "hash": null
+        },
+        {
+          "source": "workbench",
+          "current_candidate": false,
+          "id": 253,
+          "value": "Übersicht",
+          "status": "obsolete",
+          "value_type": "string",
+          "source_path": "lang/de/admin.php",
+          "source_hash": "4d2bb368f919df818ee6c2d6ca5492d040f852b346b251fde3842b398db4d4ed",
+          "updated_at": "2026-08-06 06:42:14",
+          "hash": "4d2bb368f919df818ee6c2d6ca5492d040f852b346b251fde3842b398db4d4ed"
+        }
+      ],
+      "active_finding_references": [],
+      "decision": null,
+      "assessment": "no_current_value_historical_only"
+    },
+    {
+      "review_id": "2102b76b467cbbfd",
+      "locale": "de",
+      "key": "admin.permissions.table.columns.assigned_roles",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 1,
+      "current_null_records": 1,
+      "current_nonnull_records": 0,
+      "file": {
+        "path": "lang/de/admin.php",
+        "exists": true,
+        "sha256": "cd7582693a5a728c19dcd3c62b4aff6198c7c33a2b7b8817b8858e328abeb69c",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 93,
+          "value": null,
+          "status": "ok",
+          "updated_at": "2026-10-11 10:23:52",
+          "key_id": 47,
+          "hash": null
+        },
+        {
+          "source": "workbench",
+          "current_candidate": false,
+          "id": 258,
+          "value": "Zugewiesene Rollen",
+          "status": "obsolete",
+          "value_type": "string",
+          "source_path": "lang/de/admin.php",
+          "source_hash": "b84713cacaf2c747077d1c999e6351bf98ca6c36b4a2e55076acf23f490498e5",
+          "updated_at": "2026-07-29 07:14:03",
+          "hash": "b84713cacaf2c747077d1c999e6351bf98ca6c36b4a2e55076acf23f490498e5"
+        }
+      ],
+      "active_finding_references": [],
+      "decision": null,
+      "assessment": "no_current_value_historical_only"
+    },
+    {
+      "review_id": "7ae70b86ca574e8c",
+      "locale": "de",
+      "key": "ui.actions.save",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 1,
+      "current_null_records": 1,
+      "current_nonnull_records": 0,
+      "file": {
+        "path": "lang/de/ui.php",
+        "exists": true,
+        "sha256": "712c88b90ea5e0d3b5fb36fde9ef59161f0c7e5676cb53626d56491f2f57e377",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 107,
+          "value": null,
+          "status": "ok",
+          "updated_at": "2026-10-11 10:23:55",
+          "key_id": 54,
+          "hash": null
+        },
+        {
+          "source": "workbench",
+          "current_candidate": false,
+          "id": 2032,
+          "value": "Speichern",
+          "status": "obsolete",
+          "value_type": "string",
+          "source_path": "lang/de/ui.php",
+          "source_hash": "f6b2ff39f540eb8164628b1f1a838aea1eb673394253fa603d8935297eaaf36e",
+          "updated_at": "2026-08-05 09:28:40",
+          "hash": "f6b2ff39f540eb8164628b1f1a838aea1eb673394253fa603d8935297eaaf36e"
+        }
+      ],
+      "active_finding_references": [],
+      "decision": null,
+      "assessment": "no_current_value_historical_only"
+    },
+    {
+      "review_id": "77b0cc4c87586b06",
+      "locale": "en",
+      "key": "admin.permissions.filters.assignment.label",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 1,
+      "current_null_records": 1,
+      "current_nonnull_records": 0,
+      "file": {
+        "path": "lang/en/admin.php",
+        "exists": true,
+        "sha256": "4969449b612d9cbb78d0fa47c37abdc69f8b24d5477cffa7f396ce8623913f6d",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 6,
+          "value": null,
+          "status": "ok",
+          "updated_at": "2026-10-11 10:23:51",
+          "key_id": 3,
+          "hash": null
+        },
+        {
+          "source": "workbench",
+          "current_candidate": false,
+          "id": 1016,
+          "value": "Assignment",
+          "status": "obsolete",
+          "value_type": "string",
+          "source_path": "lang/en/admin.php",
+          "source_hash": "153cdaaec56103da0c71f1ff5a0786849d190d369ece1e63940081d8b3ecbd8d",
+          "updated_at": "2026-07-28 19:34:49",
+          "hash": "153cdaaec56103da0c71f1ff5a0786849d190d369ece1e63940081d8b3ecbd8d"
+        }
+      ],
+      "active_finding_references": [],
+      "decision": null,
+      "assessment": "no_current_value_historical_only"
+    },
+    {
+      "review_id": "049fec9c016d3692",
+      "locale": "en",
+      "key": "admin.permissions.filters.system.label",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 1,
+      "current_null_records": 1,
+      "current_nonnull_records": 0,
+      "file": {
+        "path": "lang/en/admin.php",
+        "exists": true,
+        "sha256": "4969449b612d9cbb78d0fa47c37abdc69f8b24d5477cffa7f396ce8623913f6d",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 18,
+          "value": null,
+          "status": "ok",
+          "updated_at": "2026-10-11 10:23:51",
+          "key_id": 9,
+          "hash": null
+        },
+        {
+          "source": "workbench",
+          "current_candidate": false,
+          "id": 1022,
+          "value": "System",
+          "status": "obsolete",
+          "value_type": "string",
+          "source_path": "lang/en/admin.php",
+          "source_hash": "6725e7bbcd28f3a8a586fa34bf191fd72dde8b61756932cd3237c17a6f196f1a",
+          "updated_at": "2026-07-28 19:34:49",
+          "hash": "6725e7bbcd28f3a8a586fa34bf191fd72dde8b61756932cd3237c17a6f196f1a"
+        }
+      ],
+      "active_finding_references": [],
+      "decision": null,
+      "assessment": "no_current_value_historical_only"
+    },
+    {
+      "review_id": "ea0e85a5e2e93fb6",
+      "locale": "en",
+      "key": "admin.permissions.filters.title",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 1,
+      "current_null_records": 1,
+      "current_nonnull_records": 0,
+      "file": {
+        "path": "lang/en/admin.php",
+        "exists": true,
+        "sha256": "4969449b612d9cbb78d0fa47c37abdc69f8b24d5477cffa7f396ce8623913f6d",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 20,
+          "value": null,
+          "status": "ok",
+          "updated_at": "2026-10-11 10:23:51",
+          "key_id": 10,
+          "hash": null
+        },
+        {
+          "source": "workbench",
+          "current_candidate": false,
+          "id": 2102,
+          "value": "Filtering",
+          "status": "obsolete",
+          "value_type": "string",
+          "source_path": "lang/en/admin.php",
+          "source_hash": "da12ab901ff9849c4ee4af34c1092618df91a243e6d3aaacac9554fc082b0ebb",
+          "updated_at": "2026-08-06 06:52:02",
+          "hash": "da12ab901ff9849c4ee4af34c1092618df91a243e6d3aaacac9554fc082b0ebb"
+        }
+      ],
+      "active_finding_references": [],
+      "decision": null,
+      "assessment": "no_current_value_historical_only"
+    },
+    {
+      "review_id": "8a40020a518eb23b",
+      "locale": "en",
+      "key": "admin.permissions.labels.sort_order",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 1,
+      "current_null_records": 1,
+      "current_nonnull_records": 0,
+      "file": {
+        "path": "lang/en/admin.php",
+        "exists": true,
+        "sha256": "4969449b612d9cbb78d0fa47c37abdc69f8b24d5477cffa7f396ce8623913f6d",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 24,
+          "value": null,
+          "status": "ok",
+          "updated_at": "2026-10-11 10:23:51",
+          "key_id": 12,
+          "hash": null
+        },
+        {
+          "source": "workbench",
+          "current_candidate": false,
+          "id": 1025,
+          "value": "Sort order",
+          "status": "obsolete",
+          "value_type": "string",
+          "source_path": "lang/en/admin.php",
+          "source_hash": "3c9b30285f90cf05528b2502044ec5c2b125b6c1885be9af8aeff0ba722fffbb",
+          "updated_at": "2026-07-28 19:34:49",
+          "hash": "3c9b30285f90cf05528b2502044ec5c2b125b6c1885be9af8aeff0ba722fffbb"
+        }
+      ],
+      "active_finding_references": [],
+      "decision": null,
+      "assessment": "no_current_value_historical_only"
+    },
+    {
+      "review_id": "1895614b3eaf887f",
+      "locale": "en",
+      "key": "admin.permissions.modals.edit.title",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 2,
+      "current_null_records": 1,
+      "current_nonnull_records": 2,
+      "file": {
+        "path": "lang/en/admin.php",
+        "exists": true,
+        "sha256": "4969449b612d9cbb78d0fa47c37abdc69f8b24d5477cffa7f396ce8623913f6d",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 54,
+          "value": null,
+          "status": "ok",
+          "updated_at": "2026-10-11 10:23:51",
+          "key_id": 27,
+          "hash": null
+        },
+        {
+          "source": "workbench",
+          "current_candidate": true,
+          "id": 1040,
+          "value": "Edit Permission",
+          "status": "active",
+          "value_type": "string",
+          "source_path": "lang/en/admin.php",
+          "source_hash": "32902dd4c8949679c2987aacc82ed55468f4b438",
+          "updated_at": "2026-10-13 17:23:51",
+          "hash": "3eb352609d09c58abb0653cb9838b140e0f241401cb51d05bf17e4e15d179d94"
+        },
+        {
+          "source": "file",
+          "id": "lang/en/admin.php",
+          "status": "observed",
+          "current_candidate": true,
+          "value": "Edit Permission",
+          "hash": "3eb352609d09c58abb0653cb9838b140e0f241401cb51d05bf17e4e15d179d94"
+        }
+      ],
+      "active_finding_references": [
+        {
+          "id": 1301,
+          "status": "active",
+          "source_line": 11,
+          "source_column": null,
+          "found_translation_key": "admin.permissions.modals.edit.title",
+          "existing_key": "admin.permissions.modals.edit.title",
+          "path": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php"
+        }
+      ],
+      "decision": null,
+      "assessment": "current_value_present_legacy_null"
+    },
+    {
+      "review_id": "f122e6c9a510ee15",
+      "locale": "en",
+      "key": "admin.permissions.overview.title",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 1,
+      "current_null_records": 1,
+      "current_nonnull_records": 0,
+      "file": {
+        "path": "lang/en/admin.php",
+        "exists": true,
+        "sha256": "4969449b612d9cbb78d0fa47c37abdc69f8b24d5477cffa7f396ce8623913f6d",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 84,
+          "value": null,
+          "status": "ok",
+          "updated_at": "2026-10-11 10:23:52",
+          "key_id": 42,
+          "hash": null
+        },
+        {
+          "source": "workbench",
+          "current_candidate": false,
+          "id": 1055,
+          "value": "Overview",
+          "status": "obsolete",
+          "value_type": "string",
+          "source_path": "lang/en/admin.php",
+          "source_hash": "d4b1ea5708dd532930a85188b45aff6f0a3ed458500c7577e0127a538eb0d100",
+          "updated_at": "2026-08-06 06:42:14",
+          "hash": "d4b1ea5708dd532930a85188b45aff6f0a3ed458500c7577e0127a538eb0d100"
+        }
+      ],
+      "active_finding_references": [],
+      "decision": null,
+      "assessment": "no_current_value_historical_only"
+    },
+    {
+      "review_id": "a4badf8a71e67d87",
+      "locale": "en",
+      "key": "admin.permissions.table.columns.assigned_roles",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 1,
+      "current_null_records": 1,
+      "current_nonnull_records": 0,
+      "file": {
+        "path": "lang/en/admin.php",
+        "exists": true,
+        "sha256": "4969449b612d9cbb78d0fa47c37abdc69f8b24d5477cffa7f396ce8623913f6d",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 94,
+          "value": null,
+          "status": "ok",
+          "updated_at": "2026-10-11 10:23:52",
+          "key_id": 47,
+          "hash": null
+        },
+        {
+          "source": "workbench",
+          "current_candidate": false,
+          "id": 1060,
+          "value": "Assigned roles",
+          "status": "obsolete",
+          "value_type": "string",
+          "source_path": "lang/en/admin.php",
+          "source_hash": "423dc5d9738b17d6e9dfb9ed1f955623f66b875b6c9ec1429dd93b696b48bf45",
+          "updated_at": "2026-07-29 07:14:03",
+          "hash": "423dc5d9738b17d6e9dfb9ed1f955623f66b875b6c9ec1429dd93b696b48bf45"
+        }
+      ],
+      "active_finding_references": [],
+      "decision": null,
+      "assessment": "no_current_value_historical_only"
+    },
+    {
+      "review_id": "ff8ce15b681fda7a",
+      "locale": "en",
+      "key": "ui.actions.save",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 1,
+      "current_null_records": 1,
+      "current_nonnull_records": 0,
+      "file": {
+        "path": "lang/en/ui.php",
+        "exists": true,
+        "sha256": "4d6153b5580bd147e32c585353813e4d871a98c2c067bdac5fc6a8e5b90301a1",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 108,
+          "value": null,
+          "status": "ok",
+          "updated_at": "2026-10-11 10:23:55",
+          "key_id": 54,
+          "hash": null
+        },
+        {
+          "source": "workbench",
+          "current_candidate": false,
+          "id": 2035,
+          "value": "Save",
+          "status": "obsolete",
+          "value_type": "string",
+          "source_path": "lang/en/ui.php",
+          "source_hash": "1509f561f2416598629b886ad7d3c05a7e221e4e0675c84bbff4ee6d9e03913d",
+          "updated_at": "2026-08-05 09:28:40",
+          "hash": "1509f561f2416598629b886ad7d3c05a7e221e4e0675c84bbff4ee6d9e03913d"
+        }
+      ],
+      "active_finding_references": [],
+      "decision": null,
+      "assessment": "no_current_value_historical_only"
+    }
+  ],
+  "finished_at": "2026-10-19T09:32:25+02:00",
+  "source_text_check": {
+    "method": "literal substring with key suffix boundary; not a parser or scanner",
+    "scope": "frozen source manifest minus archive-scope removals; current bytes read",
+    "scope_files": 1684,
+    "missing_paths": [],
+    "changed_since_snapshot": [
+      "packages/gunreip/laravel-translation-workbench/src/Scanner/TranslationWorkbenchScanner.php"
+    ],
+    "new_files_not_in_manifest": "not covered",
+    "hits": {
+      "admin.permissions.modals.edit.title": [
+        {
+          "path": "packages/gunreip/laravel-translation-workbench/src/Livewire/TwGraphDataDrivenDatasets.php",
+          "line": 17,
+          "text": "251 => 'Rekey target · admin.permissions.modals.edit.title',",
+          "sha256": "d466f49c88b1cd7056d70b706b17be102b7f6f8b780f4e9aadedfbffa3690427"
+        },
+        {
+          "path": "resources/views/components/admin/partials/permission-list/⚡modal-edit-permission.blade.php",
+          "line": 11,
+          "text": ":title=\"__('admin.permissions.modals.edit.title')\"",
+          "sha256": "d6118d814f225dff528b6d08a7ea4aebcad9ad34b47f9768bf001e07c3dbb80f"
+        }
+      ],
+      "admin.permissions.labels.sort_order": [],
+      "admin.permissions.table.columns.assigned_roles": [],
+      "admin.permissions.filters.assignment.label": [],
+      "admin.permissions.overview.title": [
+        {
+          "path": "packages/gunreip/laravel-translation-workbench/src/Livewire/TwGraphDataDrivenDatasets.php",
+          "line": 18,
+          "text": "266 => 'Rekey target · admin.permissions.overview.title',",
+          "sha256": "d466f49c88b1cd7056d70b706b17be102b7f6f8b780f4e9aadedfbffa3690427"
+        }
+      ],
+      "admin.permissions.filters.title": [],
+      "admin.permissions.filters.system.label": [],
+      "ui.actions.save": [
+        {
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/translation-migration.blade.php",
+          "line": 131,
+          "text": "'text' => ['shared translation key', 'ui.actions.save'],",
+          "sha256": "59a2bf446167a867eeb8c4089fd93e6d950935905e91db10a4603f4d440898bc"
+        },
+        {
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/translation-migration.blade.php",
+          "line": 145,
+          "text": "'text' => ['ui.actions.save', 'becomes ui.button.save.primary'],",
+          "sha256": "59a2bf446167a867eeb8c4089fd93e6d950935905e91db10a4603f4d440898bc"
+        }
+      ]
+    }
+  }
+}

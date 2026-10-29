@@ -1,0 +1,13 @@
+{
+    "state": "isolated_proposal_recording_verified",
+    "production_connected": false,
+    "assertions": 17,
+    "unchanged_tables": 27,
+    "source_occurrences": 387,
+    "published_values": 2,
+    "synthetic_actor": 999999,
+    "synthetic_target": "rehearsal.correction.type",
+    "correction_applied": false,
+    "input_dump_sha256": "7c9d454e98f9f056f8544ef3112c71845f281cfa9ae9079806f9273d0a0d8825",
+    "cluster_stopped": true
+}

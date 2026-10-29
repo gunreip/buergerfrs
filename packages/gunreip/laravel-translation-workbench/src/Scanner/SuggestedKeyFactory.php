@@ -13,7 +13,7 @@ class SuggestedKeyFactory
         $pathSegments = $this->pathSegments($sourcePath);
         $keyName = $this->shortenKeySegment($this->slugSegment($literal));
 
-        return $this->forPathAndKeyName($pathSegments, $keyName);
+        return $this->forPathAndKeyName($pathSegments, $keyName !== '' ? $keyName : 'literal');
     }
 
     public function forExistingKeyAtSource(string $existingKey, string $sourcePath): SuggestedKeyResult

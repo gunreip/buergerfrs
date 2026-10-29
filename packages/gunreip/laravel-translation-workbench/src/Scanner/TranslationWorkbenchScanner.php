@@ -30,8 +30,8 @@ class TranslationWorkbenchScanner
      * Zero-hit files are included; an absent requested root is not evidence of removal.
      * A read/discovery failure aborts the scan before any caller receives a manifest.
      *
-     * @param array<int, string>|null $paths
-     * @param iterable<string> $knownPaths Previously recorded source paths, supplied by the caller.
+     * @param  array<int, string>|null  $paths
+     * @param  iterable<string>  $knownPaths  Previously recorded source paths, supplied by the caller.
      * @return array{items: Collection<int, DiscoveredTranslation>, scanned_paths: array<int, string>, missing_paths: array<int, string>, scanned_directories: array<int, string>, reconciliation_paths: array<int, string>}
      */
     public function scanWithManifest(?array $paths = null, iterable $knownPaths = []): array
@@ -92,8 +92,8 @@ class TranslationWorkbenchScanner
     }
 
     /**
-     * @param iterable<string> $knownPaths
-     * @param array<int, string> $directories
+     * @param  iterable<string>  $knownPaths
+     * @param  array<int, string>  $directories
      * @return array<int, string>
      */
     private function missingPathsInDirectories(iterable $knownPaths, array $directories): array
@@ -192,6 +192,12 @@ class TranslationWorkbenchScanner
         $newline = strrpos(substr($contents, 0, $offset), "\n");
 
         return $offset - ($newline === false ? -1 : $newline);
+    }
+
+    /** Scan supplied bytes without reading or writing a file (for an explicit source-change preview). */
+    public function scanSource(string $path, string $contents): Collection
+    {
+        return $this->scanContents($path, $contents);
     }
 
     private function scanContents(string $path, string $contents): Collection
@@ -297,13 +303,13 @@ class TranslationWorkbenchScanner
                     functionName: $function,
                     rawExpression: $raw,
                     literalText: $kind === 'literal' ? $value : null,
-            literalTextSuggested: $kind === 'literal'
-                ? null
-                : $this->findingNormalizer->literalTextSuggestedFromTranslationKey($value),
-            existingKey: $existingKey,
-            translationKey: $translationKey,
-            translationKeySource: $translationKey !== null ? 'code' : null,
-            suggestedKey: $suggestedKey?->key,
+                    literalTextSuggested: $kind === 'literal'
+                        ? null
+                        : $this->findingNormalizer->literalTextSuggestedFromTranslationKey($value),
+                    existingKey: $existingKey,
+                    translationKey: $translationKey,
+                    translationKeySource: $translationKey !== null ? 'code' : null,
+                    suggestedKey: $suggestedKey?->key,
                     keyResult: $suggestedKey,
                     meta: [
                         'scanner' => 'literal_translation_call',
@@ -334,7 +340,6 @@ class TranslationWorkbenchScanner
             '/(?P<function>__|trans)\(\s*(?P<argument>(?![\'"])[^,\)\n]+)/su',
             '/(?P<function>@lang)\(\s*(?P<argument>(?![\'"])[^,\)\n]+)/su',
             '/(?P<function>Lang::get)\(\s*(?P<argument>(?![\'"])[^,\)\n]+)/su',
-            '/(?P<function>@js)\(\s*(?P<argument>\$[A-Za-z_][A-Za-z0-9_]*)\s*\)/su',
         ];
 
         foreach ($patterns as $pattern) {
@@ -635,7 +640,7 @@ class TranslationWorkbenchScanner
             }
         }
 
-        usort($ranges, static fn(array $left, array $right): int => $left['start'] <=> $right['start']);
+        usort($ranges, static fn (array $left, array $right): int => $left['start'] <=> $right['start']);
 
         return $ranges;
     }
@@ -823,11 +828,13 @@ class TranslationWorkbenchScanner
 
             if ($char === '"' || $char === "'") {
                 $inQuote = $char;
+
                 continue;
             }
 
             if ($char === '(') {
                 $depth++;
+
                 continue;
             }
 
@@ -836,6 +843,7 @@ class TranslationWorkbenchScanner
 
                 if ($depth <= 0) {
                     $raw = substr($contents, $offset, $i - $offset + 1);
+
                     return $normalize ? $this->normalizedExpression($raw) : $raw;
                 }
             }
@@ -866,6 +874,15 @@ class TranslationWorkbenchScanner
     {
         $relativePath = $this->relativePath($path);
 
+        // Compare directory segments, not substrings or filenames (e.g. old-tools.php).
+        // Missing recorded files use their parent path too: excluded archives are
+        // outside reconciliation scope, not evidence that a finding was deleted.
+        $directory = File::isDirectory($path) ? $relativePath : dirname($relativePath);
+        $excludedNames = (array) config('translation-workbench.exclude_directory_names', []);
+        if (array_intersect(explode('/', $directory), $excludedNames) !== []) {
+            return true;
+        }
+
         foreach ((array) config('translation-workbench.exclude_paths', []) as $excludedPath) {
             $excludedPath = trim(str_replace('\\', '/', (string) $excludedPath), '/');
 
@@ -873,7 +890,7 @@ class TranslationWorkbenchScanner
                 continue;
             }
 
-            if ($relativePath === $excludedPath || str_starts_with($relativePath, $excludedPath . '/')) {
+            if ($relativePath === $excludedPath || str_starts_with($relativePath, $excludedPath.'/')) {
                 return true;
             }
         }

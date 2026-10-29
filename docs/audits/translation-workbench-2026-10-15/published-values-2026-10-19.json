@@ -1,0 +1,193 @@
+{
+    "state": "published_baseline_verified",
+    "production_connected": false,
+    "assertions": 12,
+    "input_dump_sha256": "84e469cfd3ea407c034f51eb241c5dff87823329bf1a150ae002e766fca3468d",
+    "backup_manifest_sha256": "f2071cb776c72889a430e6f279332aa51c39dbea92b899e92d191102958a7012",
+    "files": 54,
+    "excluded_files": {
+        "lang/vendor/backup/ar/notifications.php": {
+            "sha256": "c141bc94d5e793dd5376e11a5195dbdbaf009ba44ef70336c563a4d5310876e1",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/bg/notifications.php": {
+            "sha256": "1c63dad3c754e84c767a5300dff434424d0e454ed035683d3142d0aa011b1446",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/bn/notifications.php": {
+            "sha256": "a814ca93caeed8764a2ce621e4b034e7157d6fb12082ce7a24a2583c8b531e9a",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/cs/notifications.php": {
+            "sha256": "ed40acbacd7d1ef98c8b1f0b9609af4f5383163420389bfbe698b7b8777b46fc",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/da/notifications.php": {
+            "sha256": "8f5782ddabc3bd44b60c1f17105df968c8be75cd395fad7d66817f5cea4b8a86",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/de/notifications.php": {
+            "sha256": "6bc8fc71c00e19ae8ea18a36165432106ac8839126e8f4cbd00c3829978f015a",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/en/notifications.php": {
+            "sha256": "594cccb9e1c17e69d68819da4a02fb1ec246722059047f6955efbffa06a1f56c",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/en/notifications.php,": {
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/es/notifications.php": {
+            "sha256": "0622929cdc5a4681bd0bc750887c2066c7a2dcec62c482dca7f70b956cbf592e",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/fa/notifications.php": {
+            "sha256": "2006c106a4ad0f03e0193e60c17db08f1c51f282d95304e9531f96a8e9cdc8c0",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/fi/notifications.php": {
+            "sha256": "8c8b2e8885e2103388cadd60394e179f9caf6c51bd7a0839187c28a4d03d276f",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/fr/notifications.php": {
+            "sha256": "7a7c397342ed5ee5a091eefa2e9c4c14dd3b3c76ee4d050832df03fdaca38483",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/he/notifications.php": {
+            "sha256": "6fbf1ec5d7b888c1786191ad440af5cec940e218cdf0d33a070a39e591e8f373",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/hi/notifications.php": {
+            "sha256": "a80bfa1e7dcbb874951866d8571bd1a60a7894ac98cfa1561aa4b1275adfbde4",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/hr/notifications.php": {
+            "sha256": "0833046d8e4469968d40e47d0a1f0157fb211e46623c0f6717b80b30e6692164",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/id/notifications.php": {
+            "sha256": "a507ca9b898846cc6ac6631867ce908f24a41937b7cd7e80c895d3bd32bd3dac",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/it/notifications.php": {
+            "sha256": "14d44ce150e03afe243d09bc194c2a09f1f23d2da88b6603f3f529c634257d65",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/ja/notifications.php": {
+            "sha256": "632ccb37108390169036f65e7394538e196a1d47c35ba16be2856943d5591eb7",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/kk/notifications.php": {
+            "sha256": "349abfddc3c0e0ba951575357d98a42279b6f53c33a66182e95d0d692816f29c",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/ko/notifications.php": {
+            "sha256": "f597f8395d0d5c91cce432874a4639b548f545e651d27ea995591c9fe82c971e",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/nl/notifications.php": {
+            "sha256": "eb41de7590e083eb5f88979f0c679585259b148884b186dbde88b2ff838263f0",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/no/notifications.php": {
+            "sha256": "099e26686f0729ff27e75287dacce80b8ee7ee84f726e30ad5870d882f6e2e0a",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/pl/notifications.php": {
+            "sha256": "04391e1fbef361e1f6b11eec17b7da70000bb36252601ab90a3023685386f779",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/pt/notifications.php": {
+            "sha256": "51bda3f6710baf971ac7d60b1649aeda01fb1980df4d281cd91b4bb568abda27",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/pt_BR/notifications.php": {
+            "sha256": "4842aac694576401164556c61ff0ad1f49c855a5499e45626f6780d1c4a78b8e",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/ro/notifications.php": {
+            "sha256": "1c92f3bcd20d469b58aa722188ad98081695b40ff7738e2da597fbcf4ad654c8",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/ru/notifications.php": {
+            "sha256": "dddad60a1e2ac4515b3a5a8de73f189bbfc1a7e2a898447e371b872558fc4fc4",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/sk/notifications.php": {
+            "sha256": "df3c6fe94821b278a4ef858674aafce0fbc929867b00234facac8a06584c274c",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/tr/notifications.php": {
+            "sha256": "8d4610abaef1ffeebd6f7ee4e26a63bd91f4badb2a8214314601a4ea90cc8fc2",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/uk/notifications.php": {
+            "sha256": "7c6d32bb7c881805428a2256aa4bc93188be168ad3bde44ba920f583ccf768d5",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/zh_CN/notifications.php": {
+            "sha256": "717b28a59dc250caf3c85d058948a5ee937b20e4eabeae153c4888f9f35c04ba",
+            "reason": "outside_app_php_locale_group_scope"
+        },
+        "lang/vendor/backup/zh_TW/notifications.php": {
+            "sha256": "bd3c221555d6dd8231641f0a25bc2b713502d875257028d1be11b07edb056152",
+            "reason": "outside_app_php_locale_group_scope"
+        }
+    },
+    "values": 2016,
+    "locales": {
+        "de": 967,
+        "de-at": 11,
+        "de-be": 10,
+        "de-ch": 11,
+        "de-de": 15,
+        "de-it": 11,
+        "de-li": 10,
+        "de-lu": 10,
+        "en": 971
+    },
+    "existing_tables_unchanged": 24,
+    "totals": {
+        "linked": 1597,
+        "blocked_structure": 22,
+        "unassigned_key": 397,
+        "replayed": false
+    },
+    "missing_exact_locales": [
+        {
+            "locale": "de-at",
+            "missing": 760
+        },
+        {
+            "locale": "de-be",
+            "missing": 760
+        },
+        {
+            "locale": "de-ch",
+            "missing": 760
+        },
+        {
+            "locale": "de-de",
+            "missing": 755
+        },
+        {
+            "locale": "de-it",
+            "missing": 760
+        },
+        {
+            "locale": "de-li",
+            "missing": 760
+        },
+        {
+            "locale": "de-lu",
+            "missing": 760
+        }
+    ],
+    "implementation_sha256": "3b4c9b7cefe8bf140400305dc757bb30a84b656fcee593e2b2a81619f5a7c8c1",
+    "schema_sha256": "70dda2e14420c210608c3fdba4710d4989c94e866c113d7b2c19a5feda316e77",
+    "runner_sha256": "d3476e96f36477e5ac3d9d589242c89e7958c363a595b8e2d0099a67fe3cb61b",
+    "dump": "storage/app/private/dev/workbench-rehearsal/20261019-075456-18dfd037/published_719fc169ef1a/database.dump",
+    "dump_sha256": "7c9d454e98f9f056f8544ef3112c71845f281cfa9ae9079806f9273d0a0d8825",
+    "cluster_stopped": true
+}

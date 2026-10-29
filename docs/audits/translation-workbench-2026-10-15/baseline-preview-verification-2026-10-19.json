@@ -1,0 +1,38 @@
+{
+    "state": "preview_verified_against_saved_language_files",
+    "production_connected": false,
+    "snapshot_sha256": "4e560ba1114dc8c6ea194bf6572685de8ea6c4be6328593c293be3b110e2e467",
+    "keys": 972,
+    "checks": 39999,
+    "exported_locales": [
+        "de",
+        "de-at",
+        "de-be",
+        "de-ch",
+        "de-de",
+        "de-it",
+        "de-li",
+        "de-lu",
+        "en"
+    ],
+    "visible_value_states": {
+        "linked": 1597,
+        "unassigned_key": 397,
+        "blocked_structure": 22
+    },
+    "chains": {
+        "de-at": {
+            "fallback": 961,
+            "exact": 11
+        },
+        "de": {
+            "exact": 967,
+            "fallback": 4,
+            "missing": 1
+        },
+        "en": {
+            "exact": 971,
+            "missing": 1
+        }
+    }
+}

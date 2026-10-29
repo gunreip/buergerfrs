@@ -1,0 +1,14 @@
+{
+    "recorded_at": "2026-10-20T11:13:35+00:00",
+    "mode": "source_changes_applied_to_separate_copy",
+    "database_connected": false,
+    "production_source_written": false,
+    "saved_source_unchanged": true,
+    "work_directory": "storage\/app\/private\/dev\/workbench-rehearsal\/20261019-075456-18dfd037\/source-apply-c652c4d5405f",
+    "files": 44,
+    "verified_findings": 387,
+    "position_only_movements": 16,
+    "assertions": 12009,
+    "movements_sha256": "29ebb90a9785c85f2034357d4342d60c6344067cca6672717bff7d579eb796d1",
+    "transitions_sha256": "446f4f7fdab002fd1b30545567223c725a46d325b0c5398c6004ea7b5b3d4a11"
+}

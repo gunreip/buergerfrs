@@ -359,6 +359,7 @@ return [
         'per_page_selector' => [
             'per_page' => 'Per Page',
         ],
+        'header' => ['reason' => 'Reason'],
     ],
     'target' => [
         'target-language' => 'Target language',

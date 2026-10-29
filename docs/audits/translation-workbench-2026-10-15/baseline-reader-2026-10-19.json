@@ -1,0 +1,15 @@
+{
+    "state": "baseline_reader_verified",
+    "production_connected": false,
+    "assertions": 2318,
+    "input_dump_sha256": "7c9d454e98f9f056f8544ef3112c71845f281cfa9ae9079806f9273d0a0d8825",
+    "verified_keys": 768,
+    "de_at_fallbacks": 760,
+    "unchanged_tables": 27,
+    "synthetic_fixture_database": "readmodel_0d0113f84602_fixture",
+    "fixture_exported": false,
+    "reader_sha256": "a570d404fa370b2b1fab4a3a5fa8037d8d52ad281daea2ce45e02d724d8763b8",
+    "review_context_sha256": "cda7e02ef830aa8b6c17b3522c010e4177b7ee84cd55ab71129ae1cb68229a2e",
+    "runner_sha256": "1c4b88286820195320cab7922858358b189966d0609965ab716f3527631a03f6",
+    "cluster_stopped": true
+}

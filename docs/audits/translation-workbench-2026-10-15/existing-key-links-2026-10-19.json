@@ -1,0 +1,33 @@
+{
+    "state": "existing_key_links_verified",
+    "production_connected": false,
+    "assertions": 11,
+    "input_dump_sha256": "8a84c83b270cb9e6d7a3568d56554a6dd1cd0db015bb3727d938f756f5586994",
+    "capture_manifest_sha256": "0c64bd3d2a4aa458ff3dad8a05e36b80f58ae4dbdfef4d2905448e3b0ffcdc92",
+    "plan": "storage/app/private/dev/workbench-rehearsal/20261019-075456-18dfd037/keylinks_c8f37f97d79b/plan.json",
+    "plan_sha256": "1540ac31988b69fc9c5089c22c4c182967ff26dc1d1314c7aa103755b068763f",
+    "keys": 768,
+    "links": 1792,
+    "observed_findings": 2207,
+    "blocked_findings": 415,
+    "blocked_keys": [
+        "ui.type",
+        "ui.add-primary-language",
+        "ui.client-number",
+        "ui.open",
+        "ui.actual",
+        "ui.action",
+        "ui.already-target",
+        "ui.activity-log",
+        "ui.app-settings",
+        "ui.add-document",
+        "ui.appearance"
+    ],
+    "unchanged_tables": 19,
+    "implementation_sha256": "a41f3d37c6abee29d9a259d183d18b6e7a5d1004859fd16ca5c25d27399cbeb4",
+    "planner_sha256": "8f92ef4ea5561d67cd74c25de3040ec2fa0c57cf64443d194f5480940ad5ce22",
+    "runner_sha256": "0a3227d15e4d4c6f3652cf239c2c9642a561086814acf9abbc62f6d37fd00efd",
+    "dump": "storage/app/private/dev/workbench-rehearsal/20261019-075456-18dfd037/keylinks_c8f37f97d79b/database.dump",
+    "dump_sha256": "84e469cfd3ea407c034f51eb241c5dff87823329bf1a150ae002e766fca3468d",
+    "cluster_stopped": true
+}

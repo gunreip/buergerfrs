@@ -17,6 +17,17 @@
         </x-slot:meta>
     </x-ui.headers.page>
 
+    <livewire:translation-workbench.source-case-review />
+
+    <flux:callout color="amber" icon="database">
+        <flux:callout.heading>{{ __('Previous Workbench data — migration not completed') }}</flux:callout.heading>
+        <flux:callout.text>{{ __('The Findings, keys, editing dialogs and history below use the public database schema. Their IDs are independent of the dataset shown above.') }}</flux:callout.text>
+    </flux:callout>
+
+    <flux:button href="#runtime-option-observation" icon="database" variant="outline" size="sm">
+        {{ __('Observed database option values') }}
+    </flux:button>
+
     {{-- Card Overview Tabs --}}
     <flux:card
         id="translation-workbench-overview"
@@ -156,6 +167,8 @@
     </flux:card>
 
     {{-- Table of Findings --}}
+    <livewire:translation-workbench.current-source-review />
+
     @include('translation-workbench::livewire.entries.findings-table')
 
     {{-- Finding Workflow Modals --}}

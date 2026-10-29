@@ -1,0 +1,3029 @@
+{
+    "recorded_at": "2026-10-20T10:53:51+00:00",
+    "mode": "source_change_preview_only",
+    "database_connected": false,
+    "source_files_written": false,
+    "source": "ui.type",
+    "synthetic_target": "rehearsal.correction.type",
+    "files": 44,
+    "findings": 387,
+    "changes": [
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/livewire\/entries\/findings\/review-last-edits.blade.php",
+            "before_sha256": "ffb544485d24ad9e854310dc87d100a1133b7980d6bbe80db8efa44472da4da4",
+            "after_sha256": "32f9b77614595c5a8a049b2b7ae8fc783e005e8d21f455fab77807248899f6fd",
+            "edits": [
+                {
+                    "finding": 817,
+                    "offset": 1683,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/livewire\/raw-data\/table-card.blade.php",
+            "before_sha256": "d1e2a343b7d40ad85a8339714b1f15f485043a7fe30c0ce00fb4d34b67f759fd",
+            "after_sha256": "4b10e7a254e339a35fdcec11d722b4614e6d21fe5784ed54b05de96e5aaa5ebb",
+            "edits": [
+                {
+                    "finding": 2695,
+                    "offset": 6758,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/livewire\/raw-data\/table-summary.blade.php",
+            "before_sha256": "563cfb856d2298960899dbec4c6078ab01283cea1cf150ff419ad3d8abf7cdfe",
+            "after_sha256": "a47b5308eca2ab6f3c845d26b9d23b248524aedbedf87ee23e7b450094780a72",
+            "edits": [
+                {
+                    "finding": 2769,
+                    "offset": 14541,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/livewire\/raw-data\/timeline-chains\/graph-preview\/tw-graph-data-driven.blade.php",
+            "before_sha256": "ae23fe89e5b146c10deccacc21911e9ecf7c31fdb33fe7a368b6410d7ea21376",
+            "after_sha256": "a7a0fdfa6823ef4f592edd793ff07bdbcd58ae77f96518644d6d4bb455c350c2",
+            "edits": [
+                {
+                    "finding": 2871,
+                    "offset": 83073,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/parts\/chain.blade.php",
+            "before_sha256": "61e9ad87be7f12c69437e7ab41b403ce89dec86e0bc59869691aec617d53c73a",
+            "after_sha256": "e2d2712d58f27183580799084430c7727df1d41cb7fc3e9b5c4bcab58893d2f2",
+            "edits": [
+                {
+                    "finding": 9808,
+                    "offset": 1238,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 9822,
+                    "offset": 7176,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 9832,
+                    "offset": 11370,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 9840,
+                    "offset": 13985,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 9857,
+                    "offset": 23868,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 9868,
+                    "offset": 29954,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 9886,
+                    "offset": 41779,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 9904,
+                    "offset": 53614,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 9921,
+                    "offset": 63965,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 9938,
+                    "offset": 73959,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 9949,
+                    "offset": 80045,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 9967,
+                    "offset": 91870,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 9986,
+                    "offset": 103749,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 9998,
+                    "offset": 110072,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10016,
+                    "offset": 121962,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10027,
+                    "offset": 125677,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/parts\/end.blade.php",
+            "before_sha256": "f490d3d1ca2141c5a72798e8aec04a52cc1bcfb990ce4b637cc86760376a02cf",
+            "after_sha256": "69609f8dbb07d19b936f0a2c4f8a6e38b06e85ffbd9a4e41928aff456ff39d8a",
+            "edits": [
+                {
+                    "finding": 10039,
+                    "offset": 1135,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10057,
+                    "offset": 9162,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10064,
+                    "offset": 11423,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10085,
+                    "offset": 21754,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/parts\/fusion.blade.php",
+            "before_sha256": "c2f8cc58f444b6526a13054bf5fbf16cf2801b2cd33b34ef0b9178cca55694bd",
+            "after_sha256": "992783ab9e71fa1ac19e0b92a8a9351c2a25c4ad54eb8aca1a4ea69429dccb2a",
+            "edits": [
+                {
+                    "finding": 10097,
+                    "offset": 1204,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10111,
+                    "offset": 6926,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10119,
+                    "offset": 9861,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10130,
+                    "offset": 13873,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/parts\/sideways.blade.php",
+            "before_sha256": "c242e9fe4da465ab61542e52909dc1106802f61153ef81777f6ce068506dcee4",
+            "after_sha256": "c468364bacd69c449bf7121d592f5eb7a915d6fbe6d8b4d1ca9fd4ecf5b9bb3b",
+            "edits": [
+                {
+                    "finding": 10143,
+                    "offset": 1231,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10177,
+                    "offset": 19033,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10184,
+                    "offset": 21300,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10197,
+                    "offset": 27539,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10205,
+                    "offset": 30777,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10213,
+                    "offset": 33710,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10224,
+                    "offset": 38500,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10242,
+                    "offset": 47985,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10264,
+                    "offset": 58572,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/parts\/split.blade.php",
+            "before_sha256": "8796e5d211b3e68edf35d6df0bc9d35b2da06aa7cba0b8cb9cb1a883dfb28f86",
+            "after_sha256": "ccd905bd5a6d7383a2567e12d09a2c3a45b38034be5960e29ca74d74ad6218d3",
+            "edits": [
+                {
+                    "finding": 10276,
+                    "offset": 972,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10290,
+                    "offset": 6630,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10304,
+                    "offset": 12423,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/parts\/start.blade.php",
+            "before_sha256": "d1e653494afb275d5b2fc537b3c7f94738b622a01bc7d31b02ac8aaa5dcd3731",
+            "after_sha256": "12b04e3f263ecf6fd9586f1e17a3cc3f9e67ea90b1caa35319767552fdb96370",
+            "edits": [
+                {
+                    "finding": 10319,
+                    "offset": 1190,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10344,
+                    "offset": 13341,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10352,
+                    "offset": 16349,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10359,
+                    "offset": 18547,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10370,
+                    "offset": 23337,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10388,
+                    "offset": 32822,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10406,
+                    "offset": 42316,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10427,
+                    "offset": 51798,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/branch-end.blade.php",
+            "before_sha256": "bafbac906e035e6dc249f5f290606a759ad48df30348fb30014d8f09b641a9cd",
+            "after_sha256": "d869111bc15d656c3e7a36682cd4859bf517bdef50662452b5f027e37fe4b2f9",
+            "edits": [
+                {
+                    "finding": 10439,
+                    "offset": 1160,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10456,
+                    "offset": 8625,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10463,
+                    "offset": 10886,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10485,
+                    "offset": 21416,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/branch-left.blade.php",
+            "before_sha256": "d749a535cff122364f6e26acb07221bc727755a72d65ca8f1d2fb0aaff9058cb",
+            "after_sha256": "a598d54b1c5c06681706ee326274d34c9160549c996baf0bf8c9bb35695945e1",
+            "edits": [
+                {
+                    "finding": 10498,
+                    "offset": 1218,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10520,
+                    "offset": 11611,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10527,
+                    "offset": 13779,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10534,
+                    "offset": 16188,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10552,
+                    "offset": 26857,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10570,
+                    "offset": 37533,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10577,
+                    "offset": 39953,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10584,
+                    "offset": 42728,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10602,
+                    "offset": 54721,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10620,
+                    "offset": 66724,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10631,
+                    "offset": 71545,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10648,
+                    "offset": 81497,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10662,
+                    "offset": 88442,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10669,
+                    "offset": 91211,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10687,
+                    "offset": 103176,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10705,
+                    "offset": 115194,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10721,
+                    "offset": 123240,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10732,
+                    "offset": 128813,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10749,
+                    "offset": 140038,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10756,
+                    "offset": 142828,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10774,
+                    "offset": 154891,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10792,
+                    "offset": 167010,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10810,
+                    "offset": 177862,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10818,
+                    "offset": 181258,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10825,
+                    "offset": 184420,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10843,
+                    "offset": 197835,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10861,
+                    "offset": 211358,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10878,
+                    "offset": 218097,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/branch-right.blade.php",
+            "before_sha256": "05fa9c8ab7ab86c3dd893c5741340a777e07a7cb6c72b98cbc947408c2ff1430",
+            "after_sha256": "7f8a3cd7ba538d82f62b6ed47822f89cc2a93e2d3ec8563c963044aeccd30375",
+            "edits": [
+                {
+                    "finding": 10894,
+                    "offset": 1222,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10916,
+                    "offset": 11615,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10923,
+                    "offset": 13783,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10930,
+                    "offset": 16192,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10948,
+                    "offset": 26861,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10966,
+                    "offset": 37537,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10973,
+                    "offset": 39957,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10980,
+                    "offset": 42732,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 10998,
+                    "offset": 54725,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11016,
+                    "offset": 66728,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11027,
+                    "offset": 71549,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11044,
+                    "offset": 81501,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11058,
+                    "offset": 88446,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11065,
+                    "offset": 91215,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11083,
+                    "offset": 103180,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11101,
+                    "offset": 115198,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11117,
+                    "offset": 123244,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11128,
+                    "offset": 128817,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11145,
+                    "offset": 140042,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11152,
+                    "offset": 142832,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11170,
+                    "offset": 154895,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11188,
+                    "offset": 167014,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11206,
+                    "offset": 177866,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11214,
+                    "offset": 181262,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11221,
+                    "offset": 184424,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11239,
+                    "offset": 197839,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11257,
+                    "offset": 211362,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11274,
+                    "offset": 218103,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/flow-if-else.blade.php",
+            "before_sha256": "04e1707d347832e37a1c1d185639177f99375c730b811a1fe9f9be6b8a1b1092",
+            "after_sha256": "54b2f806f8129b7087bfb58bcdb4a7b7ac2bd63549dcbf6852e9f74a726c5912",
+            "edits": [
+                {
+                    "finding": 11290,
+                    "offset": 1213,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11329,
+                    "offset": 22029,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11336,
+                    "offset": 24297,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11353,
+                    "offset": 33203,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11368,
+                    "offset": 40879,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11376,
+                    "offset": 44327,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11384,
+                    "offset": 47788,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11402,
+                    "offset": 57467,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11410,
+                    "offset": 60876,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11416,
+                    "offset": 62559,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11423,
+                    "offset": 65295,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11441,
+                    "offset": 77106,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11459,
+                    "offset": 88948,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11466,
+                    "offset": 91363,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11484,
+                    "offset": 102060,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11502,
+                    "offset": 112733,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11509,
+                    "offset": 115151,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11527,
+                    "offset": 125862,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11549,
+                    "offset": 137914,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/flow-if-elseif-multi.blade.php",
+            "before_sha256": "eb19e402fc5e494cde93811e891f4f7c11472f4ec8a12e829c528ec18b2bd1ba",
+            "after_sha256": "fccefb18c404700c52576e4f27308a701c47d58f55acd01a663a5949f26f8849",
+            "edits": [
+                {
+                    "finding": 11567,
+                    "offset": 1293,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11594,
+                    "offset": 14933,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11601,
+                    "offset": 17201,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11618,
+                    "offset": 26107,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11633,
+                    "offset": 33783,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11641,
+                    "offset": 37231,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11649,
+                    "offset": 40590,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11660,
+                    "offset": 45560,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11678,
+                    "offset": 56361,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11693,
+                    "offset": 65080,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11701,
+                    "offset": 68988,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11709,
+                    "offset": 72951,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11726,
+                    "offset": 81922,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11734,
+                    "offset": 85331,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11740,
+                    "offset": 87014,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11747,
+                    "offset": 89750,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11765,
+                    "offset": 101561,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11788,
+                    "offset": 115100,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/flow-if-elseif.blade.php",
+            "before_sha256": "3ab25aef1d4c6d2d871683e82e72c1ad6b6cbe1b38dd450b223830894815656a",
+            "after_sha256": "3a3977414f208c890758487c27465cb1ce2b0cd4c851a8e98e44f8fbc7f13cb7",
+            "edits": [
+                {
+                    "finding": 11807,
+                    "offset": 1192,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11834,
+                    "offset": 14832,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11841,
+                    "offset": 17100,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11858,
+                    "offset": 26006,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11872,
+                    "offset": 32943,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11880,
+                    "offset": 36391,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11888,
+                    "offset": 39796,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11898,
+                    "offset": 44130,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11916,
+                    "offset": 54931,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11931,
+                    "offset": 63650,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11939,
+                    "offset": 67558,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11947,
+                    "offset": 71521,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11964,
+                    "offset": 80492,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11972,
+                    "offset": 83901,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11978,
+                    "offset": 85584,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 11985,
+                    "offset": 88320,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12003,
+                    "offset": 100131,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12026,
+                    "offset": 113689,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/flow-if-ternary.blade.php",
+            "before_sha256": "260de7d3aa0f7634a37ad51e169352999454bdcbc87f76d9e38534e84c4c36d4",
+            "after_sha256": "66c6717049dfc4b347a2338e15e72561aa94ac56307cd999469e60952f47bb89",
+            "edits": [
+                {
+                    "finding": 12045,
+                    "offset": 1256,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12078,
+                    "offset": 18385,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12085,
+                    "offset": 20614,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12091,
+                    "offset": 22297,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12098,
+                    "offset": 25033,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12116,
+                    "offset": 36844,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12134,
+                    "offset": 48736,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12151,
+                    "offset": 57642,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12166,
+                    "offset": 65318,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12174,
+                    "offset": 68766,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12182,
+                    "offset": 72227,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12199,
+                    "offset": 81198,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12211,
+                    "offset": 85969,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/flow-if.blade.php",
+            "before_sha256": "a0cd0d7a02bb1153076f2160f9f741883216a6f5e186b9343398f97c3f4242c4",
+            "after_sha256": "331fec3ad354bbc8bf5de1b89da3bcf4c69325baf57728dec8f347e6272e2da9",
+            "edits": [
+                {
+                    "finding": 12229,
+                    "offset": 1177,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12262,
+                    "offset": 18291,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12269,
+                    "offset": 20552,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12286,
+                    "offset": 29523,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12294,
+                    "offset": 32932,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12300,
+                    "offset": 34615,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12307,
+                    "offset": 37351,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12325,
+                    "offset": 49162,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12343,
+                    "offset": 61054,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12360,
+                    "offset": 69960,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12375,
+                    "offset": 77636,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12383,
+                    "offset": 81084,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12395,
+                    "offset": 85859,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/flow-start.blade.php",
+            "before_sha256": "a2d0f4b922717e7318e1c973c41f76a092e782d0a854eb0dd0cd5cd433f2e782",
+            "after_sha256": "310a767f26bbfef1dbcec09c624ec043a613e825b5d1921533814faadbf46fce",
+            "edits": [
+                {
+                    "finding": 12413,
+                    "offset": 1220,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12436,
+                    "offset": 12111,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12443,
+                    "offset": 14309,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12454,
+                    "offset": 19096,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12470,
+                    "offset": 27295,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12477,
+                    "offset": 29713,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12495,
+                    "offset": 40424,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12513,
+                    "offset": 51159,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12531,
+                    "offset": 60644,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12554,
+                    "offset": 71385,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/flow-step.blade.php",
+            "before_sha256": "b434602839a1a8e1517b98ea7d26f1ede9743c8657d2cef57e24385f661def7c",
+            "after_sha256": "3dfbf355997e01f3ee16b8f436abb52a4c87ef77d7f83f4390c88ccf1c00f811",
+            "edits": [
+                {
+                    "finding": 12566,
+                    "offset": 1196,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12591,
+                    "offset": 13442,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12598,
+                    "offset": 15705,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12616,
+                    "offset": 24928,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12622,
+                    "offset": 26611,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12629,
+                    "offset": 29347,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12648,
+                    "offset": 41961,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12670,
+                    "offset": 55626,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/flow-switch-case.blade.php",
+            "before_sha256": "812a16d6c5feb58ed70d6319c38ae944dda5e7154d7d1966896e49d57714dc7d",
+            "after_sha256": "3bd5b0fe076bd04b8f5718967475f6cd243d31c6321bd7fd4006cf6ec72bd87b",
+            "edits": [
+                {
+                    "finding": 12682,
+                    "offset": 1624,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12703,
+                    "offset": 11695,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12711,
+                    "offset": 14007,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12729,
+                    "offset": 23750,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12744,
+                    "offset": 32626,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12764,
+                    "offset": 44362,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12774,
+                    "offset": 50132,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12794,
+                    "offset": 63696,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12811,
+                    "offset": 74210,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12820,
+                    "offset": 78328,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12840,
+                    "offset": 90098,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12861,
+                    "offset": 102512,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12881,
+                    "offset": 114399,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12901,
+                    "offset": 126215,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12913,
+                    "offset": 130879,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/flow-while.blade.php",
+            "before_sha256": "77cb5c237bbcdaabc79055b702624dacc89923d843ca4d908e2cb61652ed2bbe",
+            "after_sha256": "1c7f59d773106b3194973a80d20f4962b49aa792f267c9d49392b2a05d6dd63e",
+            "edits": [
+                {
+                    "finding": 12943,
+                    "offset": 1164,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12964,
+                    "offset": 10093,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12970,
+                    "offset": 11930,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 12985,
+                    "offset": 18904,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13003,
+                    "offset": 27781,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13018,
+                    "offset": 34696,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/merge-left.blade.php",
+            "before_sha256": "a4b7d6b4d8376afa196b12c3dcf0623384b5819f72a1c42da96e4d2cf1121768",
+            "after_sha256": "0bb1d375a139e31f1108a52cfe323408d4433e16b2b04051eca04ecec4151ee6",
+            "edits": [
+                {
+                    "finding": 13043,
+                    "offset": 1200,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13081,
+                    "offset": 20621,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13088,
+                    "offset": 22886,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13104,
+                    "offset": 31034,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13111,
+                    "offset": 33443,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13129,
+                    "offset": 44112,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13147,
+                    "offset": 54801,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13163,
+                    "offset": 63064,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13170,
+                    "offset": 65476,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13188,
+                    "offset": 76159,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13206,
+                    "offset": 86810,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13215,
+                    "offset": 90343,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13221,
+                    "offset": 92032,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13235,
+                    "offset": 98977,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13242,
+                    "offset": 101746,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13260,
+                    "offset": 113711,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13278,
+                    "offset": 125658,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13284,
+                    "offset": 127338,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13289,
+                    "offset": 128447,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13296,
+                    "offset": 131227,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13303,
+                    "offset": 134362,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13321,
+                    "offset": 147651,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13339,
+                    "offset": 161043,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13344,
+                    "offset": 162154,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13351,
+                    "offset": 164940,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13358,
+                    "offset": 168081,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13376,
+                    "offset": 181398,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13394,
+                    "offset": 194768,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13400,
+                    "offset": 196402,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13405,
+                    "offset": 197432,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13412,
+                    "offset": 200204,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13430,
+                    "offset": 212183,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13447,
+                    "offset": 223988,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13465,
+                    "offset": 231145,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/merge-right.blade.php",
+            "before_sha256": "decf2b9125cb46d99ac98880abb011e7c7f3c34542701ab7962295fbba6feab6",
+            "after_sha256": "0d3244932fe51765a551f61341277e4d5d471bbb9f7b3bed138b5b0aa074bbcc",
+            "edits": [
+                {
+                    "finding": 13481,
+                    "offset": 1204,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13519,
+                    "offset": 20625,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13526,
+                    "offset": 22890,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13542,
+                    "offset": 31038,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13549,
+                    "offset": 33447,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13567,
+                    "offset": 44116,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13585,
+                    "offset": 54805,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13601,
+                    "offset": 63068,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13608,
+                    "offset": 65480,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13626,
+                    "offset": 76163,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13644,
+                    "offset": 86814,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13653,
+                    "offset": 90347,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13659,
+                    "offset": 92036,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13673,
+                    "offset": 98981,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13680,
+                    "offset": 101750,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13698,
+                    "offset": 113715,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13716,
+                    "offset": 125662,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13722,
+                    "offset": 127342,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13727,
+                    "offset": 128451,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13734,
+                    "offset": 131231,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13741,
+                    "offset": 134366,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13759,
+                    "offset": 147655,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13777,
+                    "offset": 161047,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13782,
+                    "offset": 162158,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13789,
+                    "offset": 164944,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13796,
+                    "offset": 168085,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13814,
+                    "offset": 181402,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13832,
+                    "offset": 194772,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13838,
+                    "offset": 196406,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13843,
+                    "offset": 197436,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13850,
+                    "offset": 200208,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13868,
+                    "offset": 212187,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13885,
+                    "offset": 223992,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13903,
+                    "offset": 231151,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/rekey-source-left.blade.php",
+            "before_sha256": "ae637daefe74b9a6d104d7768c5a3e3a354e72db178b373a7830b74ecee631b8",
+            "after_sha256": "f7d01b419f3b90c6ae987e0b1bc0b15e2707b8916849c546ca0b64a764d892a8",
+            "edits": [
+                {
+                    "finding": 13919,
+                    "offset": 1222,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13942,
+                    "offset": 12290,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13949,
+                    "offset": 14555,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13965,
+                    "offset": 22703,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13972,
+                    "offset": 25112,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 13990,
+                    "offset": 35781,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14008,
+                    "offset": 46480,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14024,
+                    "offset": 54743,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14031,
+                    "offset": 57155,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14049,
+                    "offset": 67838,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14067,
+                    "offset": 78489,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14076,
+                    "offset": 82027,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14090,
+                    "offset": 88972,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14097,
+                    "offset": 91741,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14115,
+                    "offset": 103706,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14133,
+                    "offset": 115701,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14145,
+                    "offset": 119759,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/rekey-source-right.blade.php",
+            "before_sha256": "758da99596045a59568602cf3234277c54eadf03bb054fe1fffe7e2cdd6049f7",
+            "after_sha256": "bbfb8d08e666b8f8946288264494f2d7e0abb4bfef6bcd14eebc746707442e16",
+            "edits": [
+                {
+                    "finding": 14158,
+                    "offset": 1226,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14181,
+                    "offset": 12294,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14188,
+                    "offset": 14559,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14204,
+                    "offset": 22707,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14211,
+                    "offset": 25116,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14229,
+                    "offset": 35785,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14247,
+                    "offset": 46484,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14263,
+                    "offset": 54747,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14270,
+                    "offset": 57159,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14288,
+                    "offset": 67842,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14306,
+                    "offset": 78493,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14315,
+                    "offset": 82031,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14329,
+                    "offset": 88976,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14336,
+                    "offset": 91745,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14354,
+                    "offset": 103710,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14372,
+                    "offset": 115705,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14384,
+                    "offset": 119765,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/rekey-target-left.blade.php",
+            "before_sha256": "609497bf5be9d58655388f4052c3ee0621dfb361db869f74feb3873c565b67d5",
+            "after_sha256": "2ef539a4e9ef95edd6b17ccc83e8fb8631449c4879bce0d7650a74006e069795",
+            "edits": [
+                {
+                    "finding": 14397,
+                    "offset": 1216,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14417,
+                    "offset": 10451,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14424,
+                    "offset": 12697,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14438,
+                    "offset": 19642,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14445,
+                    "offset": 22411,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14463,
+                    "offset": 34376,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14481,
+                    "offset": 46404,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14499,
+                    "offset": 55837,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14506,
+                    "offset": 58246,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14524,
+                    "offset": 68915,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14546,
+                    "offset": 80622,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/rekey-target-right.blade.php",
+            "before_sha256": "f6e2a5ecb157cfd77f1ab38cd1e5466efe861b98e795ca829cd374846ebb1929",
+            "after_sha256": "d0b57c02b153d8488526cb7d93116d5e7f44222a47e0b42ee6e97bc36ced7cdc",
+            "edits": [
+                {
+                    "finding": 14559,
+                    "offset": 1220,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14579,
+                    "offset": 10455,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14586,
+                    "offset": 12701,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14600,
+                    "offset": 19646,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14607,
+                    "offset": 22415,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14625,
+                    "offset": 34380,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14643,
+                    "offset": 46408,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14661,
+                    "offset": 55841,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14668,
+                    "offset": 58250,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14686,
+                    "offset": 68919,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14708,
+                    "offset": 80628,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "packages\/gunreip\/laravel-translation-workbench\/resources\/views\/pages\/tw-graph\/samples\/documentation\/idea-to-paper\/props-and-connections\/strang\/trunk.blade.php",
+            "before_sha256": "6a418b0fe179115025aec9c539c57a3161e5046039bed97c37e8817e89f2ff83",
+            "after_sha256": "347c74fe549eb2d4aaab28f963d5eb7a2cf0777ed2991cec6c3b4ce154203687",
+            "edits": [
+                {
+                    "finding": 14721,
+                    "offset": 1172,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14748,
+                    "offset": 14498,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14755,
+                    "offset": 16721,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14767,
+                    "offset": 22258,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14776,
+                    "offset": 26463,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14794,
+                    "offset": 38372,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14812,
+                    "offset": 50292,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14830,
+                    "offset": 62189,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14848,
+                    "offset": 74085,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14855,
+                    "offset": 76494,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14873,
+                    "offset": 87163,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14891,
+                    "offset": 97856,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14907,
+                    "offset": 106097,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14925,
+                    "offset": 115581,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14932,
+                    "offset": 117999,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14950,
+                    "offset": 128710,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 14973,
+                    "offset": 140753,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "resources\/views\/components\/admin\/partials\/activity-log\/table\/\u26a1active-filter-badges.blade.php",
+            "before_sha256": "2951119d47893fcdc3c8247d94a9a42a29f3f3e85888a8fb7288c1fb62b67e99",
+            "after_sha256": "903eb1fde9e70d08b47c073543f3d8ae04363807f079840d8118a35f7ce6ade1",
+            "edits": [
+                {
+                    "finding": 17058,
+                    "offset": 324,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "resources\/views\/components\/admin\/partials\/activity-log\/table\/\u26a1all.blade.php",
+            "before_sha256": "5e96b226045d569cce03269c18c4edbf24eab5dd47ac08de9369ed1614d09703",
+            "after_sha256": "3c79af86d36ca776cacb7fd72fad2bcce3b14e746f8831da37b0dbaec1ef048c",
+            "edits": [
+                {
+                    "finding": 17069,
+                    "offset": 3081,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "resources\/views\/components\/admin\/partials\/client-list\/\u26a1filter.blade.php",
+            "before_sha256": "30a22297fe5a80f4cd49c662d8493a4bf39118dfe7748060746567d30da79104",
+            "after_sha256": "bb1c492b6cb2fe4f695cf19ee0b59f3b62cfd3e3ff30aea1e0c607cf05b7ec8a",
+            "edits": [
+                {
+                    "finding": 17293,
+                    "offset": 2011,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "resources\/views\/components\/admin\/partials\/client-list\/\u26a1table.blade.php",
+            "before_sha256": "0c5fcd4c8f7b047f7752faf7466a586d6d4b7118d2cbd60a8333264f4ebb455a",
+            "after_sha256": "30d10d4c00003b23f74ff8131993837b17a363b04bf56bfdfa120f5996a3e013",
+            "edits": [
+                {
+                    "finding": 17330,
+                    "offset": 2395,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 17332,
+                    "offset": 2592,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "resources\/views\/components\/admin\/partials\/fallback-report-list\/\u26a1table.blade.php",
+            "before_sha256": "2a45121c3612b0fd82d5e52f68709050557bed69f0411e9f3b6bca48336664f9",
+            "after_sha256": "22e080b9b8d3f5b284db1f2249bd1191014cad4aac8e23bc7e0e86bc223d3b44",
+            "edits": [
+                {
+                    "finding": 17453,
+                    "offset": 2591,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 17455,
+                    "offset": 2769,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "resources\/views\/components\/admin\/partials\/flag-reference-list\/\u26a1filter.blade.php",
+            "before_sha256": "b554e3b77cef490331fe0684f293501024ffb36fc9a396cffe482e9b5c5f8b9c",
+            "after_sha256": "2f21f82d25abb369b7d5c17c81d69c632a0af14aea70f4f47939038943df6803",
+            "edits": [
+                {
+                    "finding": 17483,
+                    "offset": 1194,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "resources\/views\/components\/admin\/partials\/flag-reference-list\/\u26a1table.blade.php",
+            "before_sha256": "8ce55ce623a23c81a5508c63e6699b717d18c0812a280b5cb70d0fc5a4085667",
+            "after_sha256": "091c5c699a9d19364b759b00ef2371690d18352e8cf7eb6805a68025645305d1",
+            "edits": [
+                {
+                    "finding": 17503,
+                    "offset": 1258,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "resources\/views\/components\/admin\/partials\/html-view-audit\/\u26a1modal.blade.php",
+            "before_sha256": "b3eb2687e649135adcf7d7cbca5b936f117c11d028e47105f884273c32c1149e",
+            "after_sha256": "e1bb5252a30d8429406afad12dd8c756403b7967d7e3fcf2d04c66cc1f1ef883",
+            "edits": [
+                {
+                    "finding": 17580,
+                    "offset": 3158,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "resources\/views\/components\/admin\/partials\/html-view-audit\/\u26a1table.blade.php",
+            "before_sha256": "a26101b6f4a0309c82ed62f48bc70b7dee82abf1e4f7f0559949bb7fd36cef57",
+            "after_sha256": "300341d077819200130544329ce9c625c3025ec02a1c9255638189502e07c0d3",
+            "edits": [
+                {
+                    "finding": 17646,
+                    "offset": 4170,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "resources\/views\/components\/admin\/partials\/translation-list\/modal-history\/timeline.blade.php",
+            "before_sha256": "6f5744a3da01037614471cf5a84cfdd28e33d7c249a7ad2a624810f9b60aacfc",
+            "after_sha256": "6a35cd389f9bc87de5313a6a19c99c0d437462ad465f2281e391a26221fb4ef0",
+            "edits": [
+                {
+                    "finding": 18144,
+                    "offset": 8981,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "resources\/views\/components\/admin\/partials\/translation-list\/\u26a1filter.blade.php",
+            "before_sha256": "01e77e756b1790342a43844970365f65e59b300d6f51ec2dcf36022cd3316574",
+            "after_sha256": "a797d60a3a12ebb1c7e7400fc7641c401f2ccb282c975f133f6595ffb8ba0417",
+            "edits": [
+                {
+                    "finding": 18350,
+                    "offset": 23233,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "resources\/views\/components\/admin\/partials\/translation-list\/\u26a1meta.blade.php",
+            "before_sha256": "a03e0e62c5facb502aec0fd006ae895e71a7860a6a5affc35f9a1bc6a381bb83",
+            "after_sha256": "2562c84c94f5b55bc82f70ad798c4f2cfadec450792480a699eb514be3d350c3",
+            "edits": [
+                {
+                    "finding": 18414,
+                    "offset": 10644,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "resources\/views\/components\/admin\/partials\/translation-statistics\/\u26a1table.blade.php",
+            "before_sha256": "1a5c069a940b5511a88b2105c0779bcd381323846e1479cfb80f6fa395e7bbb3",
+            "after_sha256": "e5baa9c8cd188862dfc6be67aade704bbfd70176b5f02eae92e70c6ca82fc3b2",
+            "edits": [
+                {
+                    "finding": 18623,
+                    "offset": 1890,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                },
+                {
+                    "finding": 18625,
+                    "offset": 2159,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "resources\/views\/components\/management\/people\/create-person\/\u26a1form-person.blade.php",
+            "before_sha256": "a76c24f0bac26345b8c855456c383f2165073c994cf3b5ad6f1803f461c4f6a3",
+            "after_sha256": "e8d5b5f0f051b426e579e3628d592bd2693001c5ab1aec184736e5d9a1a6c2c7",
+            "edits": [
+                {
+                    "finding": 19241,
+                    "offset": 7456,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        },
+        {
+            "path": "resources\/views\/components\/management\/people\/edit-person\/sections\/documents\/\u26a1archive-modal.blade.php",
+            "before_sha256": "bdead28d0548b8c95d1d6d1541e1dbc34038603d6af44f564798fc183a75dbaf",
+            "after_sha256": "ce33cd4fa7883349c3a93f25eb8728dff9b20c2cae7294941f18b0d0fb9ccb43",
+            "edits": [
+                {
+                    "finding": 19289,
+                    "offset": 3843,
+                    "length": 9,
+                    "before": "'ui.type'",
+                    "after": "'rehearsal.correction.type'"
+                }
+            ]
+        }
+    ]
+}

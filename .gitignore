@@ -44,3 +44,7 @@ yarn-error.log
 auth.json
 storage/reports/
 storage/translation-workbench/
+
+# Generated Python bytecode from local audit helpers
+__pycache__/
+*.py[cod]

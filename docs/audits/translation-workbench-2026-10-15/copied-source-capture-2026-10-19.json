@@ -1,0 +1,74 @@
+{
+  "mode": "copied_source_candidates",
+  "state": "candidates_captured",
+  "scope": {
+    "paths": [
+      "app",
+      "routes",
+      "resources/views",
+      "packages/gunreip/laravel-translation-workbench/resources/views",
+      "packages/gunreip/laravel-translation-workbench/src"
+    ],
+    "exclude_paths": [
+      "packages/gunreip/laravel-translation-workbench/resources/views/livewire/old",
+      "app/Console/Commands"
+    ],
+    "exclude_directory_names": [
+      "_old",
+      "-old"
+    ],
+    "file_patterns": [
+      "*.php",
+      "*.blade.php"
+    ],
+    "ignored_filename_contains": [
+      "xxx",
+      "yyy",
+      "zzz"
+    ]
+  },
+  "locale": "en",
+  "counts": {
+    "key_with_exact_lang_evidence": 2207,
+    "literal_candidate": 17718,
+    "commented_source": 121,
+    "dynamic_or_nonliteral_argument": 33,
+    "key_like_argument_without_lang_evidence": 10,
+    "incomplete_expression": 3,
+    "special_call_requires_context": 28
+  },
+  "active_generation_created": false,
+  "production_connected": false,
+  "source_context_validation_complete": false,
+  "language_pending": [],
+  "candidate_file_sha256": "16d3437510fcdb46fd9dc45ed201bc911772a192f84ac15a3b3f7fb75af32d25",
+  "backup_manifest_sha256": "f2071cb776c72889a430e6f279332aa51c39dbea92b899e92d191102958a7012",
+  "scanner_code_sha256": {
+    "packages/gunreip/laravel-translation-workbench/src/Scanner/DiscoveredTranslation.php": "87c300c81c7bf94cd60d6a7a754af9d41f5df309578910f7cfe0f150eacdc5c5",
+    "packages/gunreip/laravel-translation-workbench/src/Scanner/StaticOptionArray.php": "84b6d79cbbb6fed09d1665904773a229d7d4abe6ae90ef54107d12edc837f5cc",
+    "packages/gunreip/laravel-translation-workbench/src/Scanner/SuggestedKeyFactory.php": "e040792cc11130685f469e93b5ee1322bb72f1621e269b6952386aec0a2cc164",
+    "packages/gunreip/laravel-translation-workbench/src/Scanner/SuggestedKeyResult.php": "c282918444081aa9f0e320ad9ae9cba634d11fa967017a5b4aae5278c914f9b2",
+    "packages/gunreip/laravel-translation-workbench/src/Scanner/TranslationFindingClassifier.php": "f37273ad14a3245d1d99b96c203e64b81d7a89c78dd396dfcda20e651c76ab70",
+    "packages/gunreip/laravel-translation-workbench/src/Scanner/TranslationFindingNormalizer.php": "d879c2568fa1dda8c1acd3af16f59afab0d272bcda8acfd70f8ebf1b0190404f",
+    "packages/gunreip/laravel-translation-workbench/src/Scanner/TranslationFingerprintFactory.php": "c56bf3deeb95c3fa5cfe7e02f1c28164e577af07e925d16137a1aaa3bb9b0af2",
+    "packages/gunreip/laravel-translation-workbench/src/Scanner/TranslationKeyPartsFactory.php": "2e311f6a45231f1eb8bb7e1d436e45244ffc6818aa20ced976f52d83868fa1ec",
+    "packages/gunreip/laravel-translation-workbench/src/Scanner/TranslationWorkbenchDynamicOptionCollector.php": "07441bf049da7536fbfa38ed14efb05cf54a2a34659f8978128e0ca599d4fc33",
+    "packages/gunreip/laravel-translation-workbench/src/Scanner/TranslationWorkbenchOptionViewBinding.php": "b9845f2c175e0c1253b7141ae51a1885f03ff383a12f8ee5e7307dd1e6ea5d2d",
+    "packages/gunreip/laravel-translation-workbench/src/Scanner/TranslationWorkbenchScanSession.php": "a4a4737148d798ac4b789b77a2f249a24cb791ea23b5b32b67484310776fd3ca",
+    "packages/gunreip/laravel-translation-workbench/src/Scanner/TranslationWorkbenchScanner.php": "c604b47de8a43357c1c32a5602d33f5b5df82f72aef7aa50de11e554b6ddd4c2",
+    "packages/gunreip/laravel-translation-workbench/src/Scanner/WorkbenchOptionCall.php": "9dbd51ee7ce9555bcf93cd73c49f9e9a6b655f9e4111767f04c1e5d72f7299a3"
+  },
+  "support_code_sha256": {
+    "tests/Support/TranslationWorkbench/CopiedSourceCapture.php": "c7cf97d8e20a754ad14f848d2fe493545f91e13c6216698db1e1520a7e0fff14",
+    "tests/Support/TranslationWorkbench/BaselineValueReader.php": "effdf7a2616fcbbefc7cb13f66b2ee0afd1792555d3f3700ec5ac7e9394dba9b",
+    "docs/audits/translation-workbench-2026-10-15/capture-copied-source.php": "4859adfefc08f32698a34156718aa6444c39f4897deee824413585268d931758",
+    "composer.lock": "47feaa089bf43d4edd941ffb9dca21e60693823aafbbaf621121877e18e5577d"
+  },
+  "manifest": "storage/app/private/dev/workbench-rehearsal/20261019-075456-18dfd037/capture-4631d8cec523/manifest.json",
+  "manifest_sha256": "9cb61d9a35b6fcc678e03ec3f268901c0e0c3593d0cd659c101471c762ccc6fb",
+  "files": 1684,
+  "language_files": 20,
+  "candidates": 20120,
+  "unique_capture_ids": 20120,
+  "adapter_test_assertions": 14
+}

@@ -1,169 +1,482 @@
 <flux:callout
-    class="min-w-0"
     id="workflow-target-ui"
+    {{-- class="min-w-0" --}}
     color="cyan"
+    icon="route"
+    heading="{{ __('Target workflow UI — from literal to translated page') }}"
 >
 
-    <flux:callout.heading icon="route">{{ __('Target workflow UI — from literal to translated page') }}
-    </flux:callout.heading>
-    <flux:callout.text class="mb-3">
-        {{ __('This is the proposed user journey and a roadmap for the future UI, independent of the current screens, controls and commands. It shows the successful path plus known literals found again, moved, replaced or removed within the code. This roadmap can evolve as the workflow becomes clearer. Further alternatives and exceptional cases will be added later.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Read from top to bottom: the central boxes show the actions, the left labels describe the intended workspace, and the right labels show the result and where it is stored. Workspace names describe responsibilities, not existing menu items. The connected side path on the right expands step 2, scanning, and returns to the main axis below the summary labels. It describes the same scan, not an additional or parallel process.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Saving stores translations in the Workbench database. Publication writes the language files and then replaces the source literals with keys. The application displays the translations from those language files.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('On the first scan of a new literal, store its exact original source text as immutable raw_data together with its source location, and generate a SuggestedKey. Keep this original capture separate from editable translations and the confirmed translation key. Subsequent scans and editorial changes must not overwrite raw_data. The SuggestedKey is a proposal for review, not an approved key and not a source-code replacement.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Classify three independent properties: argument origin (direct string, variable or expression), text form (plain text, placeholders or plural forms), and a separately verified translation-key reference. These properties can coexist: a dynamic key can reference plural text with placeholders. Store the classification beside immutable raw_data, not instead of it.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Placeholders such as :name belong to the translation text; their values are supplied when rendering, in PHP as well as Blade. Keep placeholder names when translating. Plural alternatives belong to one translation entry and may contain placeholders. Concatenated expressions should receive a review suggestion for a placeholder-based form, never a silent code rewrite.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('A static string may already be a translation key; a dot alone is not proof. Check its reference before treating it as a new literal. Variables may supply either text or keys. Inspect their origin and possible values without executing application code during scanning. Unresolved expressions remain findings for review, not invented translation values. Only resolved text literals continue into first capture and SuggestedKey creation. Published key usages follow their existing assignment; unresolved arguments or key references remain open for clarification.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Rescan cases: a literal is new, unchanged at its known position, or unchanged but moved within the code. Recognize it by source context and content, not by line number alone. Rediscovery retains the finding, key assignment, saved values and review status. Replacing the source text is a new capture plus reconciliation of the missing old occurrence; it does not automatically continue the old finding. Additional active occurrences follow the new-capture path. Ambiguous identity matches remain a separate case to add later.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Known and moved: the original occurrence is no longer at its previous position and context plus unchanged content identify exactly one successor. Both positions must be covered by the scan. Update the existing source location, retain the finding identity and editorial state, and record the old and new file/line with the scan ID and timestamp. Identical text alone does not prove a move; an additional active occurrence is a new capture, not an automatic relocation. There is no separate copy-detection case.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Literal replaced in source code: replacing XYZ with ABC means that XYZ is no longer found at that occurrence and ABC is captured as a new literal with its own immutable raw_data and SuggestedKey. Confirm removal only after a successful complete scan of the relevant scope. Retain the old finding and its history, and log removal and new capture separately. Do not automatically transfer its key, translations or approvals to the new finding.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Later wording changes belong in the Workbench translation editor. Editing a translation retains the assigned key and the original captured raw_data, records the editorial change, and follows review and publication. This is a later part of the Target Workflow UI, separate from discovering or replacing source literals.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Known and removed is a comparison with previously active occurrences after a successfully completed scan of their scope, not a case among newly found literals. An excluded file or failed scan is not evidence of deletion. Resolve moves and documented literal-to-key replacement during publication first; that publication retains the finding and its provenance. Only confirmed missing occurrences become inactive; keep their identity, translations and history, and log the last file/line, old and new state, scan ID and time once per state change.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('A removed occurrence leaves the active translation work list. If its key still has other active usages, those usages and their translations remain active. Without another usage, show it as unused and awaiting review; do not delete database records, keys or language-file entries automatically. The graph below follows one occurrence at a time; the scan result summarizes all occurrences.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Shared candidates: after capturing findings and reconciling source locations, compare the current literal content across the active database records, including findings outside the current scan scope. At least two active findings with identical literal content and different SuggestedKeys make the whole group sharedCandidate. Count each finding once, not once per scan. The marker is a review hint; it neither merges records nor changes their SuggestedKeys, translations or immutable raw_data.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Recalculate affected shared groups after additions and removals. Replacing XYZ with ABC affects the old and new text groups through removal and new capture, without rewriting the original raw_data. Remove sharedCandidate when fewer than two active members remain or the group no longer has different SuggestedKeys. Inactive findings do not count and lose the active marker; their history is retained. Record marker changes with the affected findings, group membership, old/new state and the triggering scan. Repeated unchanged checks do not create new change events.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Logs accompany the work. Each scan records its start, end and result, and links observations to that run. Finding creation, source relocation, confirmed removal and actual editorial changes belong in the history; unchanged rediscovery does not create a new content-change event. Scanning does not start editing or publication automatically.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Scan scope comes from translation-workbench configuration: paths, exclude_paths, file_patterns and ignored_filename_contains. Translation functions define the calls to inspect. Commands currently allow an explicit paths override; the roadmap requires making the effective scope and any override visible and recording them with the scan. Only successfully scanned scope can establish that an occurrence has disappeared.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Capture context alongside the immutable original: file and line, a bounded source excerpt, the translation call and its enclosing component, view or method where identifiable. This helps distinguish a button label from a heading, message or other usage. Store observed source context separately from later editorial explanations; do not guess the business meaning. Missing context remains open for clarification in the UI.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('The editorial entry starts with the scan result or the existing work list. A finding describes a source occurrence; a translation task describes the text to maintain for an assigned key and selected languages. Opening a finding does not create a duplicate task, change its status or publish it. Capture only observes and stores findings; it does not edit translations or publish them. Aligning the Artisan commands is a subsequent implementation task once this roadmap is sufficiently defined.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Additional active occurrence: capture each distinct source occurrence, even when the same literal already exists in the same file, on the same line or in another file. File, line and position identify the occurrence for later source replacement; they do not determine sharedCandidate membership. Do not infer whether text was copied. Rediscovery of the same occurrence is not an additional finding. Recalculate sharedCandidate using the existing rule: at least two active findings with identical text and different SuggestedKeys.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Comments are ignored when capturing active occurrences, including historical commented-out source copies. They need no separate workflow or status. If a previously active occurrence is now commented out, reconcile it as no longer active after a successful complete scan of its scope. Retain its captured raw_data and history; comments must not count towards sharedCandidate.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Rescanning a published translation call: use the recorded publication and key assignment to recognize the active source occurrence even though the literal has been replaced by a key. Retain the original raw_data, translations, approvals and history; update its observation and scan link. Do not create a new literal finding or SuggestedKey, and do not mark the published occurrence as removed. A key without a reliable occurrence assignment remains open for clarification; never invent a link or infer literal text from its spelling.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Before editing, inspect the source excerpt, usage and existing translations. Clarify meaning, placeholders and plural forms; store editorial explanations separately from captured source data, with author and timestamp when saved. Continue with a clear context in this initial path; unresolved cases remain open for later clarification. Reuse an existing translation task when its assignment is established. Identical text and sharedCandidate are review hints, not permission to merge tasks or keys automatically. Review any shared candidates before confirming the key assignment.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Key assignment is an explicit editorial decision. Accept or revise a SuggestedKey, or deliberately select a suitable existing key after comparing meaning, placeholders, plural forms and related usages. Identical wording or sharedCandidate alone does not justify sharing a key. Check the proposal against the configured key rules and existing assignments before saving. Conflicts remain open without overwriting existing values. This path continues with a valid confirmed assignment; conflict resolution and changes to already published keys will be detailed separately.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Saving the key assignment links the selected finding to the translation task and key in the Workbench database. Retain the original raw_data and existing translations. Record actual assignment changes with previous and new key, affected finding, author and time. Opening or resaving an unchanged assignment creates no duplicate task or change event. Source replacement and language-file export remain publication steps, not effects of confirming a key.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Translation entry starts by selecting the configured target languages and inspecting their existing values and status. Show the captured source and contextual explanation alongside the editable values. Distinguish an actual stored translation from a displayed fallback and from a missing value; a fallback is not a completed translation. Selecting languages does not overwrite or remove values in other languages.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Before saving, check required placeholders, plural syntax and locale-appropriate forms, and make missing or invalid inputs visible per language. Preserve input while the user corrects it. This validation path continues with valid values; deliberately unfinished input can instead be saved as a draft in the pause branch. Save the explicitly edited language values to the confirmed key, preserving other languages and immutable raw_data. Record actual value changes with language, old/new value, author and time. Saving is neither approval nor publication; changed values must be reviewed again and unchanged saves create no duplicate change events.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Review concerns explicitly selected saved keys and language values, together with their source context and related usages. Show the current saved text and relevant changes before confirmation. A displayed fallback, an unselected language or unsaved editor input is not implicitly approved. Check meaning, placeholders and plural forms; this path continues with a successful review, while corrections remain work for the editor.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Approval records the reviewed assignment and saved value state, selected languages, reviewer and time. It does not write language files or replace source literals. Before publication, verify that the selected data still matches the approved state; changed values or assignments require review again. Historical approval remains traceable but cannot approve later changes. Publication starts only through a separate explicit action with its own visible scope.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Publication begins with a preview of the approved keys, languages, target language files and exact source occurrences to change. Show the proposed differences and confirm this scope explicitly. Verify that approved data and source context still match the plan before writing; a stale plan requires a new preview and confirmation. Preserve entries outside the selected scope. A publication run links its language-file changes, source replacements and verification results under one run ID.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Write and verify the selected language entries before replacing source literals. Replace only the confirmed translation-call occurrences, preserving placeholders and arguments; matching text elsewhere is not permission for a global replacement. Already keyed usages require no literal replacement when only their translations change. Preserve raw_data and record the publication link so the next scan recognizes the same occurrence.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Verify the resulting language values and source references before marking the selected publication complete. A started run or a successful language-file write alone is not a completed publication. Record failures and any partial writes explicitly, stop dependent steps and retain the actual state for recovery; do not claim an automatic rollback. The language-write failure branch records incomplete publication before dependent source replacement. Source replacement has its own failure branch; detailed recovery execution will be specified separately. The UI exposes the result, affected files and history before the translated application is checked.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('SharedCandidate is an invitation to compare contexts, not a merge instruction. Compare the meaning, placeholders, plural forms and intended usage of the selected findings. If one shared key is appropriate, explicitly select the participating findings and propose that key for confirmation. Otherwise keep separate keys, even for identical wording. Preserve each finding and its raw_data and history; do not overwrite conflicting saved translations. Record the confirmed assignment and its reason. Existing published-key migrations remain a separate case.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Language activation is independent of translation completeness. An active language may have no own published value yet. Resolve each requested value through the configured language hierarchy: for example de-AT, then its configured German parent de or de-DE, then the source language en. This is a configured parent relationship, not an arbitrary search across sibling locales. Show the effective value and the language supplying it; fallback does not create or approve a translation for the requested locale.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Before publication replaces a source literal with a key, the literal remains visible from the source code. Once a key is used, its source-language value must be available as the final fallback even when target or sublanguage values are missing. Verify that source-language coverage before source replacement; do not require every target language to be translated or copy fallback values into missing translations. Language activation, value approval and publication are distinct decisions.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('If meaning or usage is unclear, explicitly defer editorial work with a question and the relevant source context. This is an editorial clarification state, not an inactive or deleted source occurrence. Keep raw_data, existing keys, translations and history; do not approve, publish or merge anything through deferral. Normal rescans still observe the active source occurrence and must not silently clear the clarification state.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Pending clarification remains accessible in the work list. Save the explanation and record author, time and actual state changes. Resume deliberately by reopening the same finding at context review, checking the current source and assignments again. Do not create a duplicate task or automatically restore approval. If the source has disappeared meanwhile, use the missing-occurrence review instead of continuing as if it were still active.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('If writing or verifying language files fails, stop source replacement for the selected publication run. Show which files and values were written, failed, skipped or remain uncertain. Missing translations outside the selected scope are not a publication failure when the configured fallback covers them. Keep the publication incomplete and retain its run ID, errors and actual file state. Do not mark it published or assume that database and filesystem changes were rolled back together.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('The outer recovery loop returns to approval readiness before a new publication preview. It represents deliberate resumption after inspection, not an automatic retry. Compare the actual files, approved values and current source against the failed plan. Correct the cause, prepare a fresh preview for the remaining or corrective work, and confirm it explicitly. Preserve the failed run and link the recovery run to it. Any changed translation or assignment returns to review first; already successful writes must remain visible rather than being silently repeated or forgotten.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Source replacement is verified per confirmed occurrence: the intended translation call uses the expected key, its arguments are preserved and the resulting file remains valid. Recheck source context before each write. Changed or ambiguous source is a conflict, not permission to replace matching text elsewhere. For already keyed usages, verify the expected reference without forcing a rewrite.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('If source writing or verification fails, stop further source changes and keep the run incomplete. Language files may already contain published values, and some source occurrences may already use keys while others still contain literals. Show these actual outcomes separately, including unknown outcomes, and preserve the publication link for every verified replacement so the next scan retains its finding identity. Do not undo successful replacements or delete language entries automatically. Recovery requires a fresh comparison and confirmed plan linked to the failed run.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Before saving edited translations, compare the current saved values and key assignment with the state loaded for editing. The comparison must guard the write itself so that a change after a preliminary check cannot be silently overwritten. Check the relevant edited values and assignment, not unrelated activity elsewhere. A conflict leaves the current database state untouched and preserves the unsaved input for comparison.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Resolve a concurrent edit deliberately: show the originally loaded values, current stored values and own proposed text. The user can adopt the current values, revise the proposed text or cancel; never reload over unsaved input or silently merge it. Re-enter language selection and editing with a fresh baseline, then validate and check again before saving. If the key assignment changed, clarify that assignment before saving against a different key. An aborted save is not a translation-change event; actual committed changes retain their normal history.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Pausing editorial work is explicit: save the selected inputs as an unpublished draft or deliberately leave without saving them. Do not silently discard unsaved input. A draft may contain unfinished text and unresolved validation hints; it is not an approved or published value and must not replace the effective published translation or fallback. Draft persistence must also detect concurrent edits before writing. Missing own translations in other active languages remain normal fallback cases, not a reason to block a draft.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Reopen the saved draft through the same translation task, with its language scope, input and validation hints. Compare it with the current key assignment and saved values; do not overwrite changes made since the draft was saved. Continue through input validation, conflict checking, saving and review. Keep raw_data and other language values unchanged, log actual draft changes with author and time, and do not create duplicate tasks or change events for an unchanged draft.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('If review finds corrections necessary, record the feedback against the reviewed key, languages and saved values, with reviewer and time. Do not approve the affected proposed values. Keep the current published translations and fallback unchanged, preserve the work and return to editing. After correction, validate, save and review the changed state again; feedback does not automatically rewrite text or restore an earlier approval. Unrelated language values are not rejected implicitly.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Revising a published translation reopens the existing key and selected languages, retaining the immutable raw_data and publication history. Compare the current saved and published values and inspect shared usages. Validate, save, review and approve the changed state again before publication. Until then, the current published values and fallback remain effective. With an unchanged key, publish the selected language values without replacing source literals again. A key change is a separate migration, not a text correction.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Key migration is an explicit plan for selected occurrences, not a new literal capture. Validate the target key, related usages and per-language values without overwriting conflicts. Publish and verify required target values before updating source references. Record each verified assignment change and preserve original raw_data and history. Remove an old export only when no remaining usage needs it; do not introduce a permanent compatibility alias automatically.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Shared assignments can be merged or split only after comparing meaning, placeholders, plural forms and affected usages. Explicitly select findings and resolve conflicting language values. Splitting changes only the selected occurrences; remaining usages retain their key. Neither identical wording nor sharedCandidate is an instruction to merge. Reassess approval for the changed scope and log old and new assignments while preserving each finding identity.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Archive is a deliberate lifecycle decision after reliable usage verification, not a consequence of an excluded file or incomplete scan. Remaining active usages prevent retirement. Preserve findings, immutable raw_data, translations and history. Removing unused language-file entries requires its own explicit preview and confirmation; archival is not physical deletion. A later reappearance requires review of the archived assignment and current state, not silent deletion or blind republication.') }}
-    </flux:callout.text>
-    <flux:callout.text class="mb-3">
-        {{ __('Maintenance proposals leave effective assignments and published values unchanged until an explicitly reviewed current plan is executed. Required language values precede source-reference changes; old export cleanup follows verified usage checks. Log verified outcomes separately from uncertain or failed steps. Partial execution stays incomplete, stops dependent writes and requires a fresh comparison and confirmed recovery plan; never assume a transaction spans database and files.') }}
-    </flux:callout.text>
+    {{-- <flux:callout.heading>
+        {{ __('Target workflow UI — from literal to translated page') }}
+    </flux:callout.heading> --}}
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('This is the proposed user journey and a roadmap for the future UI, independent of the current screens, controls and commands. It shows the successful path plus known literals found again, moved, replaced or removed within the code. This roadmap can evolve as the workflow becomes clearer. Further alternatives and exceptional cases will be added later.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Read from top to bottom: the central boxes show the actions, the left labels describe the intended workspace, and the right labels show the result and where it is stored. Workspace names describe responsibilities, not existing menu items. The connected side path on the right expands step 2, scanning, and returns to the main axis below the summary labels. It describes the same scan, not an additional or parallel process.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Saving stores translations in the Workbench database. Publication writes the language files and then replaces the source literals with keys. The application displays the translations from those language files.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('On the first scan of a new literal, store its exact original source text as immutable raw_data together with its source location, and generate a SuggestedKey. Keep this original capture separate from editable translations and the confirmed translation key. Subsequent scans and editorial changes must not overwrite raw_data. The SuggestedKey is a proposal for review, not an approved key and not a source-code replacement.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Classify three independent properties: argument origin (direct string, variable or expression), text form (plain text, placeholders or plural forms), and a separately verified translation-key reference. These properties can coexist: a dynamic key can reference plural text with placeholders. Store the classification beside immutable raw_data, not instead of it.') }}
+        </flux:callout.text>
+        <flux:callout.text>
+            {{ __('Planned UI decision: mark a value as DatabaseValue when it should be displayed unchanged from its database source. This completes its translation review without creating a translation, approval or language-file export. Database origin alone does not make this decision. Preserve the source evidence, decision scope, actor and time; unchanged rescans retain the decision. Changes to the source meaning or assignment require review, and the decision can be revised explicitly.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Placeholders such as :name belong to the translation text; their values are supplied when rendering, in PHP as well as Blade. Keep placeholder names when translating. Plural alternatives belong to one translation entry and may contain placeholders. Concatenated expressions should receive a review suggestion for a placeholder-based form, never a silent code rewrite.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('A static string may already be a translation key; a dot alone is not proof. Check its reference before treating it as a new literal. Variables may supply either text or keys. Inspect their origin and possible values without executing application code during scanning. Unresolved expressions remain findings for review, not invented translation values. Only resolved text literals continue into first capture and SuggestedKey creation. Published key usages follow their existing assignment; unresolved arguments or key references remain open for clarification.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Rescan cases: a literal is new, unchanged at its known position, or unchanged but moved within the code. Recognize it by source context and content, not by line number alone. Rediscovery retains the finding, key assignment, saved values and review status. Replacing the source text is a new capture plus reconciliation of the missing old occurrence; it does not automatically continue the old finding. Additional active occurrences follow the new-capture path. Ambiguous identity matches remain a separate case to add later.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Known and moved: the original occurrence is no longer at its previous position and context plus unchanged content identify exactly one successor. Both positions must be covered by the scan. Update the existing source location, retain the finding identity and editorial state, and record the old and new file/line with the scan ID and timestamp. Identical text alone does not prove a move; an additional active occurrence is a new capture, not an automatic relocation. There is no separate copy-detection case.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Literal replaced in source code: replacing XYZ with ABC means that XYZ is no longer found at that occurrence and ABC is captured as a new literal with its own immutable raw_data and SuggestedKey. Confirm removal only after a successful complete scan of the relevant scope. Retain the old finding and its history, and log removal and new capture separately. Do not automatically transfer its key, translations or approvals to the new finding.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Later wording changes belong in the Workbench translation editor. Editing a translation retains the assigned key and the original captured raw_data, records the editorial change, and follows review and publication. This is a later part of the Target Workflow UI, separate from discovering or replacing source literals.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Known and removed is a comparison with previously active occurrences after a successfully completed scan of their scope, not a case among newly found literals. An excluded file or failed scan is not evidence of deletion. Resolve moves and documented literal-to-key replacement during publication first; that publication retains the finding and its provenance. Only confirmed missing occurrences become inactive; keep their identity, translations and history, and log the last file/line, old and new state, scan ID and time once per state change.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('A removed occurrence leaves the active translation work list. If its key still has other active usages, those usages and their translations remain active. Without another usage, show it as unused and awaiting review; do not delete database records, keys or language-file entries automatically. The graph below follows one occurrence at a time; the scan result summarizes all occurrences.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Shared candidates: after capturing findings and reconciling source locations, compare the current literal content across the active database records, including findings outside the current scan scope. At least two active findings with identical literal content and different SuggestedKeys make the whole group sharedCandidate. Count each finding once, not once per scan. The marker is a review hint; it neither merges records nor changes their SuggestedKeys, translations or immutable raw_data.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Recalculate affected shared groups after additions and removals. Replacing XYZ with ABC affects the old and new text groups through removal and new capture, without rewriting the original raw_data. Remove sharedCandidate when fewer than two active members remain or the group no longer has different SuggestedKeys. Inactive findings do not count and lose the active marker; their history is retained. Record marker changes with the affected findings, group membership, old/new state and the triggering scan. Repeated unchanged checks do not create new change events.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Logs accompany the work. Each scan records its start, end and result, and links observations to that run. Finding creation, source relocation, confirmed removal and actual editorial changes belong in the history; unchanged rediscovery does not create a new content-change event. Scanning does not start editing or publication automatically.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Scan scope comes from translation-workbench configuration: paths, exclude_paths, file_patterns and ignored_filename_contains. Translation functions define the calls to inspect. Commands currently allow an explicit paths override; the roadmap requires making the effective scope and any override visible and recording them with the scan. Only successfully scanned scope can establish that an occurrence has disappeared.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Capture context alongside the immutable original: file and line, a bounded source excerpt, the translation call and its enclosing component, view or method where identifiable. This helps distinguish a button label from a heading, message or other usage. Store observed source context separately from later editorial explanations; do not guess the business meaning. Missing context remains open for clarification in the UI.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('The editorial entry starts with the scan result or the existing work list. A finding describes a source occurrence; a translation task describes the text to maintain for an assigned key and selected languages. Opening a finding does not create a duplicate task, change its status or publish it. Capture only observes and stores findings; it does not edit translations or publish them. Aligning the Artisan commands is a subsequent implementation task once this roadmap is sufficiently defined.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Additional active occurrence: capture each distinct source occurrence, even when the same literal already exists in the same file, on the same line or in another file. File, line and position identify the occurrence for later source replacement; they do not determine sharedCandidate membership. Do not infer whether text was copied. Rediscovery of the same occurrence is not an additional finding. Recalculate sharedCandidate using the existing rule: at least two active findings with identical text and different SuggestedKeys.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Comments are ignored when capturing active occurrences, including historical commented-out source copies. They need no separate workflow or status. If a previously active occurrence is now commented out, reconcile it as no longer active after a successful complete scan of its scope. Retain its captured raw_data and history; comments must not count towards sharedCandidate.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Rescanning a published translation call: use the recorded publication and key assignment to recognize the active source occurrence even though the literal has been replaced by a key. Retain the original raw_data, translations, approvals and history; update its observation and scan link. Do not create a new literal finding or SuggestedKey, and do not mark the published occurrence as removed. A key without a reliable occurrence assignment remains open for clarification; never invent a link or infer literal text from its spelling.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Before editing, inspect the source excerpt, usage and existing translations. Clarify meaning, placeholders and plural forms; store editorial explanations separately from captured source data, with author and timestamp when saved. Continue with a clear context in this initial path; unresolved cases remain open for later clarification. Reuse an existing translation task when its assignment is established. Identical text and sharedCandidate are review hints, not permission to merge tasks or keys automatically. Review any shared candidates before confirming the key assignment.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Key assignment is an explicit editorial decision. Accept or revise a SuggestedKey, or deliberately select a suitable existing key after comparing meaning, placeholders, plural forms and related usages. Identical wording or sharedCandidate alone does not justify sharing a key. Check the proposal against the configured key rules and existing assignments before saving. Conflicts remain open without overwriting existing values. This path continues with a valid confirmed assignment; conflict resolution and changes to already published keys will be detailed separately.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Saving the key assignment links the selected finding to the translation task and key in the Workbench database. Retain the original raw_data and existing translations. Record actual assignment changes with previous and new key, affected finding, author and time. Opening or resaving an unchanged assignment creates no duplicate task or change event. Source replacement and language-file export remain publication steps, not effects of confirming a key.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Translation entry starts by selecting the configured target languages and inspecting their existing values and status. Show the captured source and contextual explanation alongside the editable values. Distinguish an actual stored translation from a displayed fallback and from a missing value; a fallback is not a completed translation. Selecting languages does not overwrite or remove values in other languages.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Before saving, check required placeholders, plural syntax and locale-appropriate forms, and make missing or invalid inputs visible per language. Preserve input while the user corrects it. This validation path continues with valid values; deliberately unfinished input can instead be saved as a draft in the pause branch. Save the explicitly edited language values to the confirmed key, preserving other languages and immutable raw_data. Record actual value changes with language, old/new value, author and time. Saving is neither approval nor publication; changed values must be reviewed again and unchanged saves create no duplicate change events.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Review concerns explicitly selected saved keys and language values, together with their source context and related usages. Show the current saved text and relevant changes before confirmation. A displayed fallback, an unselected language or unsaved editor input is not implicitly approved. Check meaning, placeholders and plural forms; this path continues with a successful review, while corrections remain work for the editor.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Approval records the reviewed assignment and saved value state, selected languages, reviewer and time. It does not write language files or replace source literals. Before publication, verify that the selected data still matches the approved state; changed values or assignments require review again. Historical approval remains traceable but cannot approve later changes. Publication starts only through a separate explicit action with its own visible scope.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Publication begins with a preview of the approved keys, languages, target language files and exact source occurrences to change. Show the proposed differences and confirm this scope explicitly. Verify that approved data and source context still match the plan before writing; a stale plan requires a new preview and confirmation. Preserve entries outside the selected scope. A publication run links its language-file changes, source replacements and verification results under one run ID.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Write and verify the selected language entries before replacing source literals. Replace only the confirmed translation-call occurrences, preserving placeholders and arguments; matching text elsewhere is not permission for a global replacement. Already keyed usages require no literal replacement when only their translations change. Preserve raw_data and record the publication link so the next scan recognizes the same occurrence.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Verify the resulting language values and source references before marking the selected publication complete. A started run or a successful language-file write alone is not a completed publication. Record failures and any partial writes explicitly, stop dependent steps and retain the actual state for recovery; do not claim an automatic rollback. The language-write failure branch records incomplete publication before dependent source replacement. Source replacement has its own failure branch; detailed recovery execution will be specified separately. The UI exposes the result, affected files and history before the translated application is checked.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('SharedCandidate is an invitation to compare contexts, not a merge instruction. Compare the meaning, placeholders, plural forms and intended usage of the selected findings. If one shared key is appropriate, explicitly select the participating findings and propose that key for confirmation. Otherwise keep separate keys, even for identical wording. Preserve each finding and its raw_data and history; do not overwrite conflicting saved translations. Record the confirmed assignment and its reason. Existing published-key migrations remain a separate case.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Language activation is independent of translation completeness. An active language may have no own published value yet. Resolve each requested value through the configured language hierarchy: for example de-AT, then its configured German parent de or de-DE, then the source language en. This is a configured parent relationship, not an arbitrary search across sibling locales. Show the effective value and the language supplying it; fallback does not create or approve a translation for the requested locale.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Before publication replaces a source literal with a key, the literal remains visible from the source code. Once a key is used, its source-language value must be available as the final fallback even when target or sublanguage values are missing. Verify that source-language coverage before source replacement; do not require every target language to be translated or copy fallback values into missing translations. Language activation, value approval and publication are distinct decisions.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('If meaning or usage is unclear, explicitly defer editorial work with a question and the relevant source context. This is an editorial clarification state, not an inactive or deleted source occurrence. Keep raw_data, existing keys, translations and history; do not approve, publish or merge anything through deferral. Normal rescans still observe the active source occurrence and must not silently clear the clarification state.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Pending clarification remains accessible in the work list. Save the explanation and record author, time and actual state changes. Resume deliberately by reopening the same finding at context review, checking the current source and assignments again. Do not create a duplicate task or automatically restore approval. If the source has disappeared meanwhile, use the missing-occurrence review instead of continuing as if it were still active.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('If writing or verifying language files fails, stop source replacement for the selected publication run. Show which files and values were written, failed, skipped or remain uncertain. Missing translations outside the selected scope are not a publication failure when the configured fallback covers them. Keep the publication incomplete and retain its run ID, errors and actual file state. Do not mark it published or assume that database and filesystem changes were rolled back together.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('The outer recovery loop returns to approval readiness before a new publication preview. It represents deliberate resumption after inspection, not an automatic retry. Compare the actual files, approved values and current source against the failed plan. Correct the cause, prepare a fresh preview for the remaining or corrective work, and confirm it explicitly. Preserve the failed run and link the recovery run to it. Any changed translation or assignment returns to review first; already successful writes must remain visible rather than being silently repeated or forgotten.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Source replacement is verified per confirmed occurrence: the intended translation call uses the expected key, its arguments are preserved and the resulting file remains valid. Recheck source context before each write. Changed or ambiguous source is a conflict, not permission to replace matching text elsewhere. For already keyed usages, verify the expected reference without forcing a rewrite.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('If source writing or verification fails, stop further source changes and keep the run incomplete. Language files may already contain published values, and some source occurrences may already use keys while others still contain literals. Show these actual outcomes separately, including unknown outcomes, and preserve the publication link for every verified replacement so the next scan retains its finding identity. Do not undo successful replacements or delete language entries automatically. Recovery requires a fresh comparison and confirmed plan linked to the failed run.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Before saving edited translations, compare the current saved values and key assignment with the state loaded for editing. The comparison must guard the write itself so that a change after a preliminary check cannot be silently overwritten. Check the relevant edited values and assignment, not unrelated activity elsewhere. A conflict leaves the current database state untouched and preserves the unsaved input for comparison.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Resolve a concurrent edit deliberately: show the originally loaded values, current stored values and own proposed text. The user can adopt the current values, revise the proposed text or cancel; never reload over unsaved input or silently merge it. Re-enter language selection and editing with a fresh baseline, then validate and check again before saving. If the key assignment changed, clarify that assignment before saving against a different key. An aborted save is not a translation-change event; actual committed changes retain their normal history.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Pausing editorial work is explicit: save the selected inputs as an unpublished draft or deliberately leave without saving them. Do not silently discard unsaved input. A draft may contain unfinished text and unresolved validation hints; it is not an approved or published value and must not replace the effective published translation or fallback. Draft persistence must also detect concurrent edits before writing. Missing own translations in other active languages remain normal fallback cases, not a reason to block a draft.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Reopen the saved draft through the same translation task, with its language scope, input and validation hints. Compare it with the current key assignment and saved values; do not overwrite changes made since the draft was saved. Continue through input validation, conflict checking, saving and review. Keep raw_data and other language values unchanged, log actual draft changes with author and time, and do not create duplicate tasks or change events for an unchanged draft.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('If review finds corrections necessary, record the feedback against the reviewed key, languages and saved values, with reviewer and time. Do not approve the affected proposed values. Keep the current published translations and fallback unchanged, preserve the work and return to editing. After correction, validate, save and review the changed state again; feedback does not automatically rewrite text or restore an earlier approval. Unrelated language values are not rejected implicitly.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Revising a published translation reopens the existing key and selected languages, retaining the immutable raw_data and publication history. Compare the current saved and published values and inspect shared usages. Validate, save, review and approve the changed state again before publication. Until then, the current published values and fallback remain effective. With an unchanged key, publish the selected language values without replacing source literals again. A key change is a separate migration, not a text correction.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Key migration is an explicit plan for selected occurrences, not a new literal capture. Validate the target key, related usages and per-language values without overwriting conflicts. Publish and verify required target values before updating source references. Record each verified assignment change and preserve original raw_data and history. Remove an old export only when no remaining usage needs it; do not introduce a permanent compatibility alias automatically.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Shared assignments can be merged or split only after comparing meaning, placeholders, plural forms and affected usages. Explicitly select findings and resolve conflicting language values. Splitting changes only the selected occurrences; remaining usages retain their key. Neither identical wording nor sharedCandidate is an instruction to merge. Reassess approval for the changed scope and log old and new assignments while preserving each finding identity.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Archive is a deliberate lifecycle decision after reliable usage verification, not a consequence of an excluded file or incomplete scan. Remaining active usages prevent retirement. Preserve findings, immutable raw_data, translations and history. Removing unused language-file entries requires its own explicit preview and confirmation; archival is not physical deletion. A later reappearance requires review of the archived assignment and current state, not silent deletion or blind republication.') }}
+        </flux:callout.text>
+    </flux:callout>
+
+    <flux:callout
+        color="cyan"
+        icon="dot"
+    >
+        <flux:callout.text>
+            {{ __('Maintenance proposals leave effective assignments and published values unchanged until an explicitly reviewed current plan is executed. Required language values precede source-reference changes; old export cleanup follows verified usage checks. Log verified outcomes separately from uncertain or failed steps. Partial execution stays incomplete, stops dependent writes and requires a fresh comparison and confirmed recovery plan; never assume a transaction spans database and files.') }}
+        </flux:callout.text>
+    </flux:callout>
 
     @php
         // Flux icon used for list items within textLabel lines.
         $workflowListIcon = 'dot';
     @endphp
+
+    @include('translation-workbench::livewire.workflow.implementation-notes', ['implementationGraph' => 'target-ui'])
 
     <x-translation-workbench::ui.tw-graph.preview-tools :dev="false">
         <div class="mt-3 max-h-[96rem] overflow-auto rounded-lg border border-zinc-200 dark:border-zinc-700">
@@ -278,7 +591,10 @@
                             'text' => [
                                 __('Workbench · Capture'),
                                 ['icon' => $workflowListIcon, 'text' => __('Start scanning the configured scope')],
-                                ['icon' => $workflowListIcon, 'text' => __('Capture active source occurrences only')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Capture active source occurrences only'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Ignore commented-out code')],
                             ],
                             'width' => 'long',
@@ -290,7 +606,10 @@
                                 __('SCAN RESULT'),
                                 ['icon' => $workflowListIcon, 'text' => __('Literal and its source location')],
                                 ['icon' => $workflowListIcon, 'text' => __('LOG: scan started · time and scope')],
-                                ['icon' => $workflowListIcon, 'text' => __('Follow the connected scan detail path')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Follow the connected scan detail path'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -351,7 +670,10 @@
                             'text' => [
                                 __('CONFIGURATION → FILE LIST'),
                                 ['icon' => $workflowListIcon, 'text' => __('Apply paths, patterns and exclusions')],
-                                ['icon' => $workflowListIcon, 'text' => __('Ignore comments as active occurrences')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Ignore comments as active occurrences'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Record scope, scan ID and start time')],
                             ],
                             'width' => 'long',
@@ -377,7 +699,10 @@
                             'text' => [
                                 __('SOURCE → OBSERVATIONS'),
                                 ['icon' => $workflowListIcon, 'text' => __('Inspect source without executing it')],
-                                ['icon' => $workflowListIcon, 'text' => __('Capture file, line, position and context')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Capture file, line, position and context'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Record unreadable or changed files')],
                             ],
                             'width' => 'long',
@@ -403,8 +728,14 @@
                             'text' => [
                                 __('TEXT / KEY / EXPRESSION'),
                                 ['icon' => $workflowListIcon, 'text' => __('Resolve literal text where possible')],
-                                ['icon' => $workflowListIcon, 'text' => __('Identify placeholders and plural forms')],
-                                ['icon' => $workflowListIcon, 'text' => __('Keep unresolved expressions for review')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Identify placeholders and plural forms'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Keep unresolved expressions for review'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -428,13 +759,22 @@
                         'right' => [
                             'text' => [
                                 __('OBSERVATIONS → WORKBENCH DATABASE'),
-                                ['icon' => $workflowListIcon, 'text' => __('Known: update observation; retain edits')],
-                                ['icon' => $workflowListIcon, 'text' => __('Uniquely moved: update source position')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Known: update observation; retain edits'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Uniquely moved: update source position'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('New or additional: raw_data + SuggestedKey'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Log creation or actual location changes')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Log creation or actual location changes'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -464,7 +804,10 @@
                                 ],
                                 ['icon' => $workflowListIcon, 'text' => __('Confirmed missing: mark inactive')],
                                 ['icon' => $workflowListIcon, 'text' => __('Retain original capture and history')],
-                                ['icon' => $workflowListIcon, 'text' => __('Incomplete scan: no removal inference')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Incomplete scan: no removal inference'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -519,12 +862,18 @@
                             'text' => [
                                 __('SCAN LOG + RESULT'),
                                 ['icon' => $workflowListIcon, 'text' => __('End time, counts and errors')],
-                                ['icon' => $workflowListIcon, 'text' => __('Status: complete, incomplete or failed')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Status: complete, incomplete or failed'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Link results to findings for later UI review'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('No translation editing or publication')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('No translation editing or publication'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -581,12 +930,19 @@
                     color="violet"
                     before-length="3rem"
                     after-length="3.6rem"
-                    :step-label="['text' => [__('Capture the source context')], 'width' => 'long', 'align' => 'center']"
+                    :step-label="[
+                        'text' => [__('Capture the source context')],
+                        'width' => 'long',
+                        'align' => 'center',
+                    ]"
                     :node-labels="[
                         'left' => [
                             'text' => [
                                 __('SOURCE CONTEXT'),
-                                ['icon' => $workflowListIcon, 'text' => __('File and line + bounded source excerpt')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('File and line + bounded source excerpt'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Translation call and enclosing code')],
                                 [
                                     'icon' => $workflowListIcon,
@@ -601,10 +957,16 @@
                         'right' => [
                             'text' => [
                                 __('FINDING CONTEXT'),
-                                ['icon' => $workflowListIcon, 'text' => __('Store context beside immutable raw_data')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Store context beside immutable raw_data'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Link the observation to this scan')],
                                 ['icon' => $workflowListIcon, 'text' => __('Business meaning is not inferred')],
-                                ['icon' => $workflowListIcon, 'text' => __('Clarify unknown purpose later in the UI')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Clarify unknown purpose later in the UI'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -619,7 +981,11 @@
                     color="violet"
                     before-length="5rem"
                     after-length="3rem"
-                    :step-label="['text' => [__('Classify the argument origin')], 'width' => 'long', 'align' => 'center']"
+                    :step-label="[
+                        'text' => [__('Classify the argument origin')],
+                        'width' => 'long',
+                        'align' => 'center',
+                    ]"
                     :node-labels="[
                         'left' => [
                             'text' => [
@@ -635,7 +1001,10 @@
                         'right' => [
                             'text' => [
                                 __('CAPTURE + CLASSIFICATION'),
-                                ['icon' => $workflowListIcon, 'text' => __('Preserve the original source expression')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Preserve the original source expression'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Inspect origin and possible values')],
                                 ['icon' => $workflowListIcon, 'text' => __('Unknown value: review needed')],
                             ],
@@ -668,8 +1037,14 @@
                         'right' => [
                             'text' => [
                                 __('EDITOR GUIDANCE'),
-                                ['icon' => $workflowListIcon, 'text' => __('Placeholders can occur in plural text')],
-                                ['icon' => $workflowListIcon, 'text' => __('Keep placeholder names when translating')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Placeholders can occur in plural text'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Keep placeholder names when translating'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Plural forms belong to one entry')],
                                 ['icon' => $workflowListIcon, 'text' => __('Concatenation: suggest placeholders')],
                             ],
@@ -707,9 +1082,15 @@
                             'text' => [
                                 __('WORKBENCH DATABASE'),
                                 ['icon' => $workflowListIcon, 'text' => __('Origin + text form + key reference')],
-                                ['icon' => $workflowListIcon, 'text' => __('Store separately from original raw_data')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Store separately from original raw_data'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Log classification and its evidence')],
-                                ['icon' => $workflowListIcon, 'text' => __('Continue below with resolved literals')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Continue below with resolved literals'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -736,7 +1117,10 @@
                     :if-start="[
                         'text' => [
                             __('YES · key reference or unresolved argument'),
-                            ['icon' => $workflowListIcon, 'text' => __('Check existing publication and assignment')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Check existing publication and assignment'),
+                            ],
                         ],
                         'width' => 'long',
                         'align' => 'center',
@@ -774,7 +1158,10 @@
                     :if-start="[
                         'text' => [
                             __('YES · known published occurrence'),
-                            ['icon' => $workflowListIcon, 'text' => __('Retain raw_data, translations and history')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Retain raw_data, translations and history'),
+                            ],
                             ['icon' => $workflowListIcon, 'text' => __('Update last seen and scan observation')],
                             ['icon' => $workflowListIcon, 'text' => __('Keep occurrence active; no removal')],
                             ['icon' => $workflowListIcon, 'text' => __('No new literal finding or SuggestedKey')],
@@ -788,9 +1175,15 @@
                         'text' => [
                             __('NO · assignment requires clarification'),
                             ['icon' => $workflowListIcon, 'text' => __('Record reference, location and evidence')],
-                            ['icon' => $workflowListIcon, 'text' => __('Retain existing data; do not guess a link')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Retain existing data; do not guess a link'),
+                            ],
                             ['icon' => $workflowListIcon, 'text' => __('No automatic literal or SuggestedKey')],
-                            ['icon' => $workflowListIcon, 'text' => __('Make uncertainty visible for later review')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Make uncertainty visible for later review'),
+                            ],
                         ],
                         'width' => 'long',
                         'align' => 'center',
@@ -898,7 +1291,10 @@
                                         'icon' => $workflowListIcon,
                                         'text' => __('Update position; retain finding and edits'),
                                     ],
-                                    ['icon' => $workflowListIcon, 'text' => __('Log old → new position in this scan')],
+                                    [
+                                        'icon' => $workflowListIcon,
+                                        'text' => __('Log old → new position in this scan'),
+                                    ],
                                 ],
                                 'width' => 'long',
                                 'align' => 'center',
@@ -988,7 +1384,10 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Compare previously active occurrences next'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Replaced literal: new capture + removal')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Replaced literal: new capture + removal'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Open the work list when ready')],
                             ],
                             'width' => 'long',
@@ -998,7 +1397,10 @@
                         'right' => [
                             'text' => [
                                 __('SCAN LOG'),
-                                ['icon' => $workflowListIcon, 'text' => __('Start, end, scope and counts per case')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Start, end, scope and counts per case'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Observation links for this run')],
                                 ['icon' => $workflowListIcon, 'text' => __('No duplicate translation tasks')],
                                 [
@@ -1142,7 +1544,10 @@
                         'left' => [
                             'text' => [
                                 __('WORKBENCH DATABASE'),
-                                ['icon' => $workflowListIcon, 'text' => __('Inactive finding: clear sharedCandidate')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Inactive finding: clear sharedCandidate'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Count remaining active findings once')],
                             ],
                             'width' => 'long',
@@ -1334,8 +1739,14 @@
                             'text' => [
                                 __('HISTORY: marker changes only'),
                                 ['icon' => $workflowListIcon, 'text' => __('Affected findings · group members')],
-                                ['icon' => $workflowListIcon, 'text' => __('Old/new marker · triggering scan/edit')],
-                                ['icon' => $workflowListIcon, 'text' => __('A candidate is not an automatic merge')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Old/new marker · triggering scan/edit'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('A candidate is not an automatic merge'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -1363,9 +1774,15 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Open from scan result or existing work list'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Inspect scan status, counts and errors')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Inspect scan status, counts and errors'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Select a finding requiring attention')],
-                                ['icon' => $workflowListIcon, 'text' => __('See the text together with its context')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('See the text together with its context'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -1375,7 +1792,10 @@
                             'text' => [
                                 __('WORKBENCH DATABASE'),
                                 ['icon' => $workflowListIcon, 'text' => __('Original raw_data remains unchanged')],
-                                ['icon' => $workflowListIcon, 'text' => __('SuggestedKey available for new literals')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('SuggestedKey available for new literals'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Untranslated remains open')],
                                 [
                                     'icon' => $workflowListIcon,
@@ -1420,9 +1840,18 @@
                             'text' => [
                                 __('CONTEXT + EDITORIAL EXPLANATION'),
                                 ['icon' => $workflowListIcon, 'text' => __('Captured raw_data remains immutable')],
-                                ['icon' => $workflowListIcon, 'text' => __('Save explanations separately from source')],
-                                ['icon' => $workflowListIcon, 'text' => __('History: author, time and actual changes')],
-                                ['icon' => $workflowListIcon, 'text' => __('Unclear purpose remains open for review')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Save explanations separately from source'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('History: author, time and actual changes'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Unclear purpose remains open for review'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -1451,7 +1880,10 @@
                             __('YES · defer editorial work'),
                             ['icon' => $workflowListIcon, 'text' => __('Record the question and source context')],
                             ['icon' => $workflowListIcon, 'text' => __('Keep the active finding and saved values')],
-                            ['icon' => $workflowListIcon, 'text' => __('No approval or publication through deferral')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('No approval or publication through deferral'),
+                            ],
                         ],
                         'width' => 'long',
                         'align' => 'center',
@@ -1493,8 +1925,14 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Save the explanation separately from raw_data'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Recheck current source and assignment')],
-                                ['icon' => $workflowListIcon, 'text' => __('Resume deliberately at context review')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Recheck current source and assignment'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Resume deliberately at context review'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -1503,13 +1941,19 @@
                         'right' => [
                             'text' => [
                                 __('EDITORIAL STATE + HISTORY'),
-                                ['icon' => $workflowListIcon, 'text' => __('Deferral does not deactivate the finding')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Deferral does not deactivate the finding'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Rescan does not clear clarification')],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Record question, explanation, author and time'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('No duplicate task or automatic approval')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('No duplicate task or automatic approval'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -1687,7 +2131,10 @@
                             'text' => [
                                 __('Workbench · Translation task'),
                                 ['icon' => $workflowListIcon, 'text' => __('Finding = a source occurrence')],
-                                ['icon' => $workflowListIcon, 'text' => __('Task = key + text in selected languages')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Task = key + text in selected languages'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Reuse an established task assignment')],
                                 ['icon' => $workflowListIcon, 'text' => __('For a new task, confirm its key next')],
                             ],
@@ -1698,8 +2145,14 @@
                         'right' => [
                             'text' => [
                                 __('EXPLICIT EDITORIAL SCOPE'),
-                                ['icon' => $workflowListIcon, 'text' => __('Show related findings and saved values')],
-                                ['icon' => $workflowListIcon, 'text' => __('sharedCandidate is only a review hint')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Show related findings and saved values'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('sharedCandidate is only a review hint'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('No automatic task or key merging')],
                                 [
                                     'icon' => $workflowListIcon,
@@ -1748,7 +2201,10 @@
                             __('NO · keep a separate key'),
                             ['icon' => $workflowListIcon, 'text' => __('Different context or no suitable group')],
                             ['icon' => $workflowListIcon, 'text' => __('Identical wording does not force reuse')],
-                            ['icon' => $workflowListIcon, 'text' => __('Preserve existing translations and history')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Preserve existing translations and history'),
+                            ],
                             ['icon' => $workflowListIcon, 'text' => __('Continue to explicit key confirmation')],
                         ],
                         'width' => 'long',
@@ -1819,7 +2275,10 @@
                             'text' => [
                                 __('Workbench · Key assignment'),
                                 ['icon' => $workflowListIcon, 'text' => __('Accept or edit the SuggestedKey')],
-                                ['icon' => $workflowListIcon, 'text' => __('Or deliberately select an existing key')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Or deliberately select an existing key'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Compare meaning and related usages')],
                             ],
                             'width' => 'long',
@@ -1857,7 +2316,10 @@
                                 __('Workbench · Assignment check'),
                                 ['icon' => $workflowListIcon, 'text' => __('Validate configured key rules')],
                                 ['icon' => $workflowListIcon, 'text' => __('Check existing keys and assignments')],
-                                ['icon' => $workflowListIcon, 'text' => __('Compare placeholders and plural forms')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Compare placeholders and plural forms'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Existing key: confirm semantic suitability'),
@@ -1870,10 +2332,22 @@
                         'right' => [
                             'text' => [
                                 __('VALIDATED PROPOSAL'),
-                                ['icon' => $workflowListIcon, 'text' => __('sharedCandidate does not approve reuse')],
-                                ['icon' => $workflowListIcon, 'text' => __('Conflicts remain open for clarification')],
-                                ['icon' => $workflowListIcon, 'text' => __('Do not overwrite existing translations')],
-                                ['icon' => $workflowListIcon, 'text' => __('Continue here with a valid assignment')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('sharedCandidate does not approve reuse'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Conflicts remain open for clarification'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Do not overwrite existing translations'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Continue here with a valid assignment'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -1897,9 +2371,15 @@
                         'left' => [
                             'text' => [
                                 __('Workbench · Explicit confirmation'),
-                                ['icon' => $workflowListIcon, 'text' => __('Review finding, task and selected key')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Review finding, task and selected key'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Save the assignment deliberately')],
-                                ['icon' => $workflowListIcon, 'text' => __('Reuse the established translation task')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Reuse the established translation task'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Keep source text and language files unchanged'),
@@ -1920,7 +2400,10 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Preserve original raw_data and translations'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Log previous/new key, author and time')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Log previous/new key, author and time'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Unchanged save creates no duplicate event'),
@@ -1966,8 +2449,14 @@
                             'text' => [
                                 __('EDITORIAL LANGUAGE SCOPE'),
                                 ['icon' => $workflowListIcon, 'text' => __('Stored value, fallback or missing?')],
-                                ['icon' => $workflowListIcon, 'text' => __('Displayed fallback is not a translation')],
-                                ['icon' => $workflowListIcon, 'text' => __('Other language values remain untouched')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Displayed fallback is not a translation'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Other language values remain untouched'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Activation is independent of completeness'),
@@ -1986,12 +2475,19 @@
                     color="cyan"
                     before-length="4rem"
                     after-length="3rem"
-                    :step-label="['text' => [__('5. Enter the translations')], 'width' => 'long', 'align' => 'center']"
+                    :step-label="[
+                        'text' => [__('5. Enter the translations')],
+                        'width' => 'long',
+                        'align' => 'center',
+                    ]"
                     :node-labels="[
                         'left' => [
                             'text' => [
                                 __('Workbench · Translation editor'),
-                                ['icon' => $workflowListIcon, 'text' => __('Edit the text for each selected language')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Edit the text for each selected language'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Later wording changes retain the key')],
                                 ['icon' => $workflowListIcon, 'text' => __('Original raw_data stays immutable')],
                             ],
@@ -2033,8 +2529,14 @@
                                 'icon' => $workflowListIcon,
                                 'text' => __('Save selected input explicitly; check conflicts'),
                             ],
-                            ['icon' => $workflowListIcon, 'text' => __('Retain unfinished text and validation hints')],
-                            ['icon' => $workflowListIcon, 'text' => __('Keep published values and fallback unchanged')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Retain unfinished text and validation hints'),
+                            ],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Keep published values and fallback unchanged'),
+                            ],
                         ],
                         'width' => 'long',
                         'align' => 'center',
@@ -2071,7 +2573,10 @@
                         'left' => [
                             'text' => [
                                 __('Workbench · Saved drafts'),
-                                ['icon' => $workflowListIcon, 'text' => __('Find the draft through the existing task')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Find the draft through the existing task'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Restore saved input and selected languages'),
@@ -2080,7 +2585,10 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Compare current key assignment and values'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Resume at language selection and editing')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Resume at language selection and editing'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -2089,7 +2597,10 @@
                         'right' => [
                             'text' => [
                                 __('UNPUBLISHED DRAFT + HISTORY'),
-                                ['icon' => $workflowListIcon, 'text' => __('Draft is not an effective translation')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Draft is not an effective translation'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Do not overwrite concurrent changes')],
                                 [
                                     'icon' => $workflowListIcon,
@@ -2289,7 +2800,10 @@
                         'right' => [
                             'text' => [
                                 __('VALID INPUT FOR SAVING'),
-                                ['icon' => $workflowListIcon, 'text' => __('Continue here with valid language values')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Continue here with valid language values'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Do not silently alter placeholders')],
                                 ['icon' => $workflowListIcon, 'text' => __('Validation is not editorial approval')],
                                 ['icon' => $workflowListIcon, 'text' => __('No source or language-file changes')],
@@ -2325,7 +2839,10 @@
                                 'text' => __('Preserve unsaved input and current stored values'),
                             ],
                             ['icon' => $workflowListIcon, 'text' => __('No silent overwrite or automatic merge')],
-                            ['icon' => $workflowListIcon, 'text' => __('Resolve changed assignments before saving')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Resolve changed assignments before saving'),
+                            ],
                         ],
                         'width' => 'long',
                         'align' => 'center',
@@ -2377,7 +2894,10 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Changed key assignment needs clarification'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Resume editing with a refreshed baseline')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Resume editing with a refreshed baseline'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -2395,7 +2915,10 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Only committed value changes enter edit history'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Validate and compare again before saving')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Validate and compare again before saving'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -2584,7 +3107,10 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Save language values for the confirmed key'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('HISTORY: language value · who and when')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('HISTORY: language value · who and when'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Language, previous and new value')],
                                 [
                                     'icon' => $workflowListIcon,
@@ -2614,9 +3140,18 @@
                             'text' => [
                                 __('Workbench · Review selection'),
                                 ['icon' => $workflowListIcon, 'text' => __('Select keys and languages explicitly')],
-                                ['icon' => $workflowListIcon, 'text' => __('Inspect saved text and relevant changes')],
-                                ['icon' => $workflowListIcon, 'text' => __('Check source context and related usages')],
-                                ['icon' => $workflowListIcon, 'text' => __('Review meaning, placeholders and plurals')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Inspect saved text and relevant changes'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Check source context and related usages'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Review meaning, placeholders and plurals'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -2625,9 +3160,18 @@
                         'right' => [
                             'text' => [
                                 __('REVIEW SCOPE'),
-                                ['icon' => $workflowListIcon, 'text' => __('Only selected saved values are reviewed')],
-                                ['icon' => $workflowListIcon, 'text' => __('Unsaved input is not part of approval')],
-                                ['icon' => $workflowListIcon, 'text' => __('Fallback is not an approved translation')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Only selected saved values are reviewed'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Unsaved input is not part of approval'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Fallback is not an approved translation'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Corrections return to editorial work')],
                             ],
                             'width' => 'long',
@@ -2655,7 +3199,10 @@
                         'text' => [
                             __('YES · return affected values for correction'),
                             ['icon' => $workflowListIcon, 'text' => __('Do not approve the proposed values')],
-                            ['icon' => $workflowListIcon, 'text' => __('Keep published values and fallback unchanged')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Keep published values and fallback unchanged'),
+                            ],
                         ],
                         'width' => 'long',
                         'align' => 'center',
@@ -2717,8 +3264,14 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Record reviewer, time and required changes'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('No automatic text rewrite or approval')],
-                                ['icon' => $workflowListIcon, 'text' => __('Other languages retain their own status')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('No automatic text rewrite or approval'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Other languages retain their own status'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -2873,8 +3426,14 @@
                         'left' => [
                             'text' => [
                                 __('Workbench · Review'),
-                                ['icon' => $workflowListIcon, 'text' => __('Check the key and the language values')],
-                                ['icon' => $workflowListIcon, 'text' => __('Explicitly approve the reviewed state')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Check the key and the language values'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Explicitly approve the reviewed state'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Approval does not publish anything')],
                             ],
                             'width' => 'long',
@@ -2915,12 +3474,18 @@
                             'text' => [
                                 __('Workbench · Publication preparation'),
                                 ['icon' => $workflowListIcon, 'text' => __('Select approved keys and languages')],
-                                ['icon' => $workflowListIcon, 'text' => __('Compare current data with approved state')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Compare current data with approved state'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Changed assignment or value: review again'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Start publication as a separate action')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Start publication as a separate action'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -2938,7 +3503,10 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Other languages are not implicitly included'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Keep previous approvals in the history')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Keep previous approvals in the history'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -2962,10 +3530,22 @@
                         'left' => [
                             'text' => [
                                 __('Workbench · Publication preview'),
-                                ['icon' => $workflowListIcon, 'text' => __('Show keys, languages and target files')],
-                                ['icon' => $workflowListIcon, 'text' => __('Show exact source occurrences and diffs')],
-                                ['icon' => $workflowListIcon, 'text' => __('Confirm the proposed changes explicitly')],
-                                ['icon' => $workflowListIcon, 'text' => __('Changed plan: preview and confirm again')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Show keys, languages and target files'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Show exact source occurrences and diffs'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Confirm the proposed changes explicitly'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Changed plan: preview and confirm again'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -2978,12 +3558,18 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Recheck approval and current source context'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Preserve entries outside this selection')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Preserve entries outside this selection'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Create run ID; record actor, time and scope'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('No writes before explicit confirmation')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('No writes before explicit confirmation'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -3021,7 +3607,10 @@
                                 __('LANGUAGE FILES'),
                                 ['icon' => $workflowListIcon, 'text' => __('Write the values to lang/* files')],
                                 ['icon' => $workflowListIcon, 'text' => __('PUBLICATION LOG: who and when')],
-                                ['icon' => $workflowListIcon, 'text' => __('Keys, languages, files and write result')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Keys, languages, files and write result'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -3045,7 +3634,10 @@
                         'left' => [
                             'text' => [
                                 __('Workbench · Publication progress'),
-                                ['icon' => $workflowListIcon, 'text' => __('Read back the selected language values')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Read back the selected language values'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Verify file validity and expected entries'),
@@ -3066,7 +3658,10 @@
                         'right' => [
                             'text' => [
                                 __('LANGUAGE WRITE RESULT'),
-                                ['icon' => $workflowListIcon, 'text' => __('Record files, keys and language outcomes')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Record files, keys and language outcomes'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Language files written is not yet complete'),
@@ -3115,7 +3710,10 @@
                     :if-end="[
                         'text' => [
                             __('NO · selected language entries verified'),
-                            ['icon' => $workflowListIcon, 'text' => __('Continue with confirmed source occurrences')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Continue with confirmed source occurrences'),
+                            ],
                         ],
                         'width' => 'long',
                         'align' => 'center',
@@ -3140,7 +3738,10 @@
                         'left' => [
                             'text' => [
                                 __('Workbench · Publication diagnostics'),
-                                ['icon' => $workflowListIcon, 'text' => __('Show written, failed and pending files')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Show written, failed and pending files'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Inspect actual state and correct the cause'),
@@ -3355,7 +3956,10 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Replace the literal at its source location'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Only confirmed calls; preserve arguments')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Only confirmed calls; preserve arguments'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Already keyed usage: no replacement needed'),
@@ -3376,7 +3980,10 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Translation call uses actions.save_changes'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('PUBLICATION LOG: same publication run')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('PUBLICATION LOG: same publication run'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Changed source locations and keys')],
                             ],
                             'width' => 'long',
@@ -3463,7 +4070,10 @@
                         'right' => [
                             'text' => [
                                 __('SOURCE OUTCOMES + PUBLICATION HISTORY'),
-                                ['icon' => $workflowListIcon, 'text' => __('Language files may already be written')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Language files may already be written'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Verified replacements retain their finding link'),
@@ -3619,8 +4229,14 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Show affected files and per-step outcomes'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Mark complete only after verification')],
-                                ['icon' => $workflowListIcon, 'text' => __('Failures or partial writes stay visible')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Mark complete only after verification'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Failures or partial writes stay visible'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -3634,7 +4250,10 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Keep original raw_data and source history'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Next scan recognizes the published usage')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Next scan recognizes the published usage'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('No automatic rollback is assumed')],
                             ],
                             'width' => 'long',
@@ -3668,7 +4287,10 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Parent value missing → source language en'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Use the first available published value')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Use the first available published value'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -3677,7 +4299,10 @@
                         'right' => [
                             'text' => [
                                 __('DISPLAYED VALUE AND ITS ORIGIN'),
-                                ['icon' => $workflowListIcon, 'text' => __('Show which language supplies the value')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Show which language supplies the value'),
+                                ],
                                 ['icon' => $workflowListIcon, 'text' => __('Fallback is not an own translation')],
                                 [
                                     'icon' => $workflowListIcon,
@@ -3710,7 +4335,10 @@
                         'left' => [
                             'text' => [
                                 __('Application · Translated page'),
-                                ['icon' => $workflowListIcon, 'text' => __('Open the page in the selected language')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Open the page in the selected language'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -3748,8 +4376,14 @@
                     :if-start="[
                         'text' => [
                             __('YES · revise the existing translation'),
-                            ['icon' => $workflowListIcon, 'text' => __('Keep the confirmed key and original raw_data')],
-                            ['icon' => $workflowListIcon, 'text' => __('Keep published values and fallback unchanged')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Keep the confirmed key and original raw_data'),
+                            ],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Keep published values and fallback unchanged'),
+                            ],
                         ],
                         'width' => 'long',
                         'align' => 'center',
@@ -3793,7 +4427,10 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Compare current published and saved values'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Inspect all usages when a key is shared')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Inspect all usages when a key is shared'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Validate, save and review the revised values'),
@@ -3806,7 +4443,10 @@
                         'right' => [
                             'text' => [
                                 __('TRANSLATION REVISION HISTORY'),
-                                ['icon' => $workflowListIcon, 'text' => __('Keep the previous publication traceable')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Keep the previous publication traceable'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Record author, time and actual value changes'),
@@ -3815,7 +4455,10 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Publish language values; source key stays unchanged'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Other languages retain their own status')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Other languages retain their own status'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -3974,9 +4617,15 @@
                         'text' => [
                             __('YES · prepare a key migration'),
                             ['icon' => $workflowListIcon, 'text' => __('Select occurrences and old → new key')],
-                            ['icon' => $workflowListIcon, 'text' => __('Check syntax, usages and target conflicts')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Check syntax, usages and target conflicts'),
+                            ],
                             ['icon' => $workflowListIcon, 'text' => __('Keep current assignment until execution')],
-                            ['icon' => $workflowListIcon, 'text' => __('No automatic overwrite or permanent alias')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('No automatic overwrite or permanent alias'),
+                            ],
                         ],
                         'width' => 'long',
                         'align' => 'center',
@@ -4046,13 +4695,26 @@
                     after-length="3rem"
                     stem-length="4rem"
                     bridge-length="4rem"
-                    :condition-label="['text' => [__('Change a shared assignment?')], 'width' => 'long', 'align' => 'center']"
+                    :condition-label="[
+                        'text' => [__('Change a shared assignment?')],
+                        'width' => 'long',
+                        'align' => 'center',
+                    ]"
                     :if-start="[
                         'text' => [
                             __('YES · prepare merge or split'),
-                            ['icon' => $workflowListIcon, 'text' => __('Merge: explicitly select compatible findings')],
-                            ['icon' => $workflowListIcon, 'text' => __('Split: select occurrences for a separate key')],
-                            ['icon' => $workflowListIcon, 'text' => __('Resolve language-value conflicts explicitly')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Merge: explicitly select compatible findings'),
+                            ],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Split: select occurrences for a separate key'),
+                            ],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Resolve language-value conflicts explicitly'),
+                            ],
                             ['icon' => $workflowListIcon, 'text' => __('Preserve every finding and its raw_data')],
                         ],
                         'width' => 'long',
@@ -4063,7 +4725,10 @@
                     :if-end="[
                         'text' => [
                             __('NO · retain existing assignments'),
-                            ['icon' => $workflowListIcon, 'text' => __('sharedCandidate alone changes no assignment')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('sharedCandidate alone changes no assignment'),
+                            ],
                         ],
                         'width' => 'long',
                         'align' => 'center',
@@ -4134,10 +4799,16 @@
                     :if-start="[
                         'text' => [
                             __('YES · propose archive after usage verification'),
-                            ['icon' => $workflowListIcon, 'text' => __('Complete scan and known references required')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Complete scan and known references required'),
+                            ],
                             ['icon' => $workflowListIcon, 'text' => __('Remaining usages block retirement')],
                             ['icon' => $workflowListIcon, 'text' => __('Keep raw_data, values and history')],
-                            ['icon' => $workflowListIcon, 'text' => __('File cleanup is a separate confirmed change')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('File cleanup is a separate confirmed change'),
+                            ],
                         ],
                         'width' => 'long',
                         'align' => 'center',
@@ -4219,8 +4890,14 @@
                         'left' => [
                             'text' => [
                                 __('Workbench · Assignment and retirement plan'),
-                                ['icon' => $workflowListIcon, 'text' => __('Show only explicitly selected changes')],
-                                ['icon' => $workflowListIcon, 'text' => __('Compare current usages and saved values')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Show only explicitly selected changes'),
+                                ],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Compare current usages and saved values'),
+                                ],
                                 [
                                     'icon' => $workflowListIcon,
                                     'text' => __('Show per-language conflicts and source references'),
@@ -4246,7 +4923,10 @@
                                     'icon' => $workflowListIcon,
                                     'text' => __('Keep other usages and languages untouched'),
                                 ],
-                                ['icon' => $workflowListIcon, 'text' => __('Record reason, actor and selected scope')],
+                                [
+                                    'icon' => $workflowListIcon,
+                                    'text' => __('Record reason, actor and selected scope'),
+                                ],
                             ],
                             'width' => 'long',
                             'align' => 'left',
@@ -4285,8 +4965,14 @@
                     :if-end="[
                         'text' => [
                             __('NO · finish without applying changes'),
-                            ['icon' => $workflowListIcon, 'text' => __('Keep unresolved proposals for clarification')],
-                            ['icon' => $workflowListIcon, 'text' => __('No approval: no assignment or file changes')],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('Keep unresolved proposals for clarification'),
+                            ],
+                            [
+                                'icon' => $workflowListIcon,
+                                'text' => __('No approval: no assignment or file changes'),
+                            ],
                         ],
                         'width' => 'long',
                         'align' => 'center',

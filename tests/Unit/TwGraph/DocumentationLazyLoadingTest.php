@@ -341,7 +341,7 @@ it('filters inventory chains and opens only known component sources', function (
         ->set('inventoryArchive', true)
         ->assertSet('paginators.inventoryPage', 1)
         ->assertSet('inventoryRoot', '')
-        ->assertSee('strang._old.if-else-endif');
+        ->assertDontSee('strang._old.if-else-endif');
 });
 
 it('loads the component reference separately from example tables and restores its navigation', function () {

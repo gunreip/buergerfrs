@@ -1,0 +1,40 @@
+{
+  "state": "isolated_capture_verified",
+  "production_connected": false,
+  "database": "capture_edd580c43329",
+  "mode": "isolated_static_capture_import",
+  "capture_manifest_sha256": "0c64bd3d2a4aa458ff3dad8a05e36b80f58ae4dbdfef4d2905448e3b0ffcdc92",
+  "schema_sha256": "49972a78f936db63dca283028dcfb64afa7f149131e2f7448d8938774dff51e7",
+  "importer_sha256": "d73eb616eb49c1febe15a39edff5913b7b3d0fe0328972e9e9ed967be670a274",
+  "first_import": {
+    "captured": 19940,
+    "excluded": 108,
+    "pending": 72,
+    "replayed": false
+  },
+  "retry": {
+    "pending": 72,
+    "captured": 19940,
+    "excluded": 108,
+    "replayed": true
+  },
+  "verified_captures": 19940,
+  "empty_tables": {
+    "translation_workbench_keys": 0,
+    "translation_workbench_key_findings": 0,
+    "translation_workbench_value_revisions": 0,
+    "translation_workbench_reviews": 0,
+    "translation_workbench_events": 0,
+    "translation_workbench_operations": 0,
+    "translation_workbench_publication_runs": 0
+  },
+  "immutable_field_rejected": true,
+  "partial_failure_rolled_back": true,
+  "dump": "storage/app/private/dev/workbench-rehearsal/20261019-075456-18dfd037/capture_edd580c43329.dump",
+  "dump_sha256": "3855cb420f2bf1b5782f8d3882ff92754e35f0b5041ad5563e0b2cd881d68e5a",
+  "cluster_stopped": true,
+  "private_report": "storage/app/private/dev/workbench-rehearsal/20261019-075456-18dfd037/capture_edd580c43329-result.json",
+  "private_report_sha256": "444a930089815c77d04a49c92a6ab1491c30ad1ad659496bf938fe291deced02",
+  "production_generation_created": false,
+  "new_findings_exist_only_in_isolated_database": true
+}

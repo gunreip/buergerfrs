@@ -48,9 +48,9 @@
     }
 }
 
-/* [data-flux-tab] {
-    @apply hover:cursor-pointer
-} */
+[data-flux-icon] {
+    stroke-width: 0.75;
+}
 
 [data-flux-field]:not(ui-radio, ui-checkbox) {
     @apply grid gap-2;

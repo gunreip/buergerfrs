@@ -9,6 +9,20 @@
  * - danger: blocking/error/missing/required states.
  */
 
+[data-flux-tooltip-content] {
+    max-width: min(24rem, calc(100vw - 2rem));
+    white-space: normal;
+    @apply text-justify hyphens-auto;
+}
+
+.tooltip-wide {
+    --tooltip-max-width: 36rem;
+}
+
+.tooltip-compact {
+    --tooltip-max-width: 16rem;
+}
+
 @layer components {
     .my-tooltip {
         --tooltip-bg: #27272a;

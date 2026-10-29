@@ -525,3 +525,1557 @@ Tests: `tests/Unit/TranslationWorkbench/BaselineValueReaderTest.php` prüft echt
 
 Validierung vor Sicherungs-Commit: vollständige `tests/Unit/TranslationWorkbench`-Suite erfolgreich (882 Tests, 5.921 Assertions), einschließlich der isolierten Prototyp-/Werteaufnahmetests. PHP-Syntaxprüfung aller 166 zum Commit vorgemerkten PHP-Dateien ohne Fehler. Kein Produktionsreset und keine reale Bestandsübernahme ausgeführt.
 Ergänzend: betroffene Command-/TW-Graph-Tests erfolgreich (209 Tests, 1.569 Assertions). Zusammen 1.091 Tests / 7.490 Assertions. Die PostgreSQL-Integration für Nebenläufigkeit wurde in diesem Schritt nicht ausgeführt.
+
+### Ausbau: Revisionsfreigabe und Publikationsberechtigung — 2026-10-19
+
+Der isolierte `BaselinePrototype` enthält nun ein unveränderliches Entscheidungsprotokoll `approvals`. `reviewSnapshot()` liefert den konkreten Textstand, seine Revisions-/Key-ID, den aktuellen Key-Namen, die Locale und die aktiven Finding-Verwendungen mit Fingerprint. Die UI eines späteren Systems kann genau diesen Stand zur Entscheidung vorlegen; im Prototyp erfolgt der Aufruf nur aus Tests.
+
+`decideRevision()` prüft diesen Fingerprint innerhalb der Änderungstransaktion und protokolliert Freigabe beziehungsweise Widerruf mit Akteur, Zeitpunkt und Grund. Eine identische Wiederholung erzeugt keinen zweiten fachlichen Eintrag. Frühere Entscheidungen bleiben erhalten. Ein Recorder-Fehler rollt die Entscheidung zurück.
+
+`publicationPreview()` erstellt ausschließlich ein **Manifest der fachlich freigegebenen Revisionen**, keinen ausführbaren Dateischreibplan. Jede gewählte Revision muss aktuell sein und eine gültige Freigabe im aktuellen Verwendungskontext besitzen. Neue Entwürfe, neue/veränderte Zuordnungen, Widerruf und ein anderer Key-Name verhindern die Verwendung einer alten Freigabe. Die Auswahl ist explizit je Revision/Locale; andere Sprachen oder Fallback-Kopien werden nicht automatisch ergänzt. Root-Scalar-Keys werden vor der Publikation zurückgewiesen, aber nicht umbenannt. Kollisionen zwischen skalaren und Container-Pfaden innerhalb der ausgewählten Manifest-Einträge werden geprüft.
+
+`verifyPublicationPreview()` prüft den Fingerprint erneut. Der Fingerprint enthält auch die konkrete Freigabe-ID; Widerruf und anschließende Neufreigabe reaktivieren deshalb kein bereits geprüftes altes Manifest. Ein leerer oder doppelter Revisionssatz wird abgelehnt. Das Öffnen/Prüfen einer Vorschau erzeugt kein Arbeitsereignis.
+
+**Prototyp-Regel, vor UI-Umsetzung noch abschließend abzustimmen:** Freigaben sind hier konservativ an den exakten aktiven Verwendungskontext gebunden. Eine erneute Zuordnung desselben Keys ist ein neuer Kontext. Außerdem darf dieser neue Publikationsvorgang nur die jüngste Entwurfsrevision wählen. Das löscht oder entwertet keine historische Veröffentlichung einer älteren Revision; ein bewusster Rollback auf einen älteren Wert wäre eine eigene neue Revision/Entscheidung. Ob reine Positionsnachfolger später eine Freigabe nach expliziter Prüfung fortführen dürfen, ist hier nicht vorausgesetzt.
+
+Unverändert offen: echte Dateibeobachtung beim Publizieren, Vergleich mit allen bereits vorhandenen Dateiknoten, Vollständigkeit der Locale-Konfiguration, Namensversionen, Rechteprüfung, PostgreSQL-Sperren, atomarer Dateiaustausch und Recovery. Das Manifest schützt noch nicht vor Änderungen zwischen späterer Prüfung und tatsächlichem Schreiben; der produktive Writer muss beides unter dem abgesicherten Publikationsablauf verbinden. Der Prototyp schreibt **keine** Sprachdateien und erzeugt **keine** `published`-Ereignisse. Übernommene Baseline-Werte gelten weiterhin weder als neu freigegeben noch als neu veröffentlicht.
+
+Validierung: `BaselinePrototypeTest`, `BaselineValueReaderTest` und der neue `BaselineApprovalTest` bestehen gemeinsam mit **38 Tests / 169 Assertions**. Geprüft sind insbesondere alte Dialoge, neue Revision mit wieder identischem Text, Zuordnungswechsel, Widerruf/Neufreigabe, Retry, atomarer Rollback, Baseline ohne Freigabe, getrennte Sprachen und Root-Scalar-Keys. Pint und Whitespace-Prüfung erfolgreich. Nur Test-Prototyp, Tests und diese Dokumentation geändert; Produktionsschema, Commands, UI und Datenbestand bleiben unverändert.
+
+### Ausbau: Dateiveröffentlichung und Wiederanlauf im temporären Testbereich — 2026-10-19
+
+`tests/Support/TranslationWorkbench/BaselinePublisher.php` ergänzt den abgesicherten Dateischritt. Der Publisher erzeugt selbst einen zufälligen privaten Unterordner im System-Tempverzeichnis; sein Konstruktor akzeptiert keinen Zielpfad. Damit kann dieser Prototyp nicht auf die produktiven `/lang`-Dateien gerichtet werden. Die In-Memory-Datenbank bleibt die aus den bisherigen Tests bekannte isolierte Instanz.
+
+Ablauf:
+
+1. Das freigegebene Revisionsmanifest wird geprüft. Statische vorhandene PHP-Sprachdateien werden als Syntaxbaum gelesen, niemals ausgeführt. Der geplante Zielinhalt enthält die ausgewählten Änderungen und bewahrt andere Werte sowie leere Container. Konflikte gegen vorhandene, nicht ausgewählte Scalar-/Container-Knoten werden abgewiesen.
+2. Ein Journal speichert Run-ID, Akteur/Grund, Revisionsmanifest-Fingerprint und pro Datei den erwarteten Vorher-Hash (NULL bei fehlender Datei), Nachher-Hash und geplante Bytes. Ohne tatsächliche Dateiänderung gibt es keinen neuen Publish-Lauf. Ein weiterer offener Lauf darf nicht dieselben Dateien betreffen.
+3. Vor dem ersten Schreiben werden **alle** Dateien geprüft; vor jedem einzelnen Schreiben nochmals Datei und Freigabestand. Ein fremder Zwischenstand wird nicht überschrieben. Dateien werden über eine temporäre Datei im selben Verzeichnis und Rename einzeln ersetzt. Symlink-Ziele und unsichere Pfade werden zurückgewiesen.
+4. Bereits auf dem geplanten Nachher-Hash stehende Dateien werden beim Wiederanlauf nicht erneut geschrieben. Erst nachdem sämtliche Nachher-Hashes geprüft sind, wird ein idempotentes fachliches `revisions_published`-Ereignis mit Revisions-/Freigabebelegen, Akteur, Grund und Datei-Hashes gespeichert. Anschließend wird das Journal abgeschlossen.
+5. Unterbrechungen hinterlassen das Journal als `interrupted`. Bei einem fehlgeschlagenen DB-Receipt bleiben die bereits geschriebenen Dateien erhalten; das Journal ermöglicht die kontrollierte Fortsetzung. Es wird kein DB-/Datei-übergreifender Rollback behauptet.
+6. Wurde das Receipt bereits erfolgreich gespeichert und nur der Journalabschluss unterbrochen, kann dieser Abschluss ohne erneutes Publizieren erfolgen. Eine zwischenzeitlich neue Entwurfsrevision macht den bereits erfolgten historischen Erfolg nicht unwahr. Stimmen die Dateien jedoch nicht mehr mit dem Receipt überein, wird der Abschluss verweigert statt aktuelle Dateien zu überschreiben.
+
+Eine widerrufene Freigabe stoppt einen noch nicht quittierten Teillauf. Eventuell schon geschriebene Dateien bleiben als realer Teilzustand erhalten; es entsteht kein Ereignis, das die gesamte Veröffentlichung als erfolgreich behauptet. Die technischen Journalinformationen sind Grundlage für eine spätere sichtbare Konflikt-/Abschlussentscheidung. Eine produktive UI für Teilergebnisse und das bewusste Schließen ohne Weiterschreiben ist noch nicht Bestandteil dieses Prototyps.
+
+Neue Tests in `tests/Unit/TranslationWorkbench/BaselinePublisherTest.php` simulieren Fehler unmittelbar nach Rename, nach Receipt und beim Recorder. Zusätzlich prüfen sie alle Dateien vor Beginn, externe Dateiänderung, Revision-/Freigabeprüfung beim Wiederanlauf, unveränderte Wiederholung, überlappende Läufe, Symlinks und Scalar-/Container-Kollisionen. Zusammen mit Erfassung, Werteaufnahme und Freigabe bestehen **50 Tests / 228 Assertions**. Formatierung und Whitespace-Prüfung erfolgreich.
+
+Grenzen: Der Testwriter erzeugt die PHP-Arraydatei mit `var_export` neu; er bewahrt Inhalte und leere Container, aber nicht Kommentare oder ursprüngliche Formatierung einer veränderten Datei. Das ist kein festgelegtes Verhalten für den späteren produktiven Exporter. Unveränderte Dateien werden nicht umformatiert. Nicht unterstützte Sprachdateisyntax wird zurückgewiesen. Das Dateischloss koordiniert nur Teilnehmer dieses Writers; konkurrierende fremde Editoren können nicht allein durch `flock` ausgeschlossen werden. Ein atomarer Rename pro Datei ist weder eine atomare Mehrdatei-Publikation noch eine garantierte Stromausfallsicherung. PostgreSQL-Nebenläufigkeit, dauerhafte DB-/Journal-Wiederaufnahme über Prozessneustarts, Rechteprüfung, vollständige Locale-/Namespace-Unterstützung und eine produktive Freigabe-/Closure-UI bleiben gesonderte Umsetzungsschritte.
+
+Keine produktiven Sprachdateien, Tabellen, UI oder Commands geändert. Die nächste Prüfung sollte die bewusste Behandlung eines unterbrochenen Teilergebnisses abdecken: Zustand anzeigen, betroffene Dateien/Revisionen vergleichen und den Lauf entweder sicher fortsetzen oder mit begründeter Entscheidung ohne weitere Schreiboperation schließen.
+
+### Ausbau: Teilveröffentlichung bewusst schließen — 2026-10-19
+
+Der isolierte Publisher kann einen vorbereiteten oder unterbrochenen Lauf jetzt nach einer
+erneuten Prüfung mit Bearbeiter und Begründung schließen. Die Vorschau enthält je Datei
+Ausgangs-, Ziel- und aktuellen Hash sowie den Zustand: unverändert, noch im Ausgangszustand,
+passend zum geplanten Ergebnis oder abweichend. „Passend zum Ergebnis“ beweist nicht,
+wer die Datei geschrieben hat. Eine inzwischen ungültige Freigabe wird angezeigt,
+verhindert aber nicht das bewusste Schließen.
+
+Die Bestätigung ist an den Fingerprint dieser Vorschau gebunden. Änderungen zwischen
+Vorschau und Bestätigung erfordern eine neue Prüfung. Schließen schreibt ausschließlich
+Journal und Arbeitsdokumentation; bereits geschriebene Dateien bleiben bestehen, fehlende
+werden nicht ergänzt, externe Änderungen nicht überschrieben. Das Ereignis
+`publication_closed_without_writing` enthält den geprüften Teilzustand, Bearbeiter und
+Begründung. Es ersetzt ausdrücklich keine erfolgreiche Veröffentlichung.
+
+Der Abschlussbeleg wird vor dem Journalstatus gespeichert. Scheitert die Speicherung des
+Belegs, bleibt der Lauf fortsetzbar. Scheitert erst die Journalaktualisierung, verhindert
+bereits der Beleg jedes weitere Veröffentlichen dieses Laufs; dieselbe Abschlussentscheidung
+kann ohne doppeltes Ereignis nachgetragen werden. Abweichende Wiederholungen werden abgewiesen.
+Ein geschlossener Lauf gibt seine Dateireservierung für einen neuen, frisch geprüften Plan
+frei. Bereits erfolgreich belegte Veröffentlichungen können nicht nachträglich als
+unvollständig geschlossen werden.
+
+Verifikation: **55 Tests / 267 Assertions** über die vier Baseline-Prototyp-Suites.
+Enthalten sind Teilstand mit widerrufener Freigabe, externe Dateiänderung, veraltete
+Vorschau, fehlende Begründung, Recorder-Fehler, Abbruch nach Abschlussbeleg, Wiederholung
+und bereits vorhandener Erfolgsbeleg.
+
+Weiterhin ausschließlich Testprototyp: temporäre Dateien und In-Memory-Datenbank.
+Keine Änderung an Produktivdaten, produktiven Commands oder `/lang`.
+Die zuvor dokumentierten Grenzen zu externen Schreibzugriffen, Prozessneustart,
+Autorisierung und Mehrdatei-Atomarität bleiben bestehen. Der nächste Integrationsschritt
+ist die Übertragung des geprüften Lebenszyklus in ein konkretes persistentes Zielschema
+mit eindeutigem Umstellungsplan; der Prototyp selbst ist kein produktiver Ersatz.
+
+## Persistentes Zielschema und Umstellungsplan — 2026-10-19
+
+**Status: Implementierungsentwurf, noch keine produktive Migration.** Dieser Abschnitt
+ergänzt den relationalen Zielentwurf oben. Die Prototyp-Abschnitte dokumentieren jeweils
+ihren damaligen Ausbauzustand. Dauerhaftes Recovery über Prozessneustarts und
+PostgreSQL-Nebenläufigkeit sind durch die bisherigen SQLite-Tests nicht nachgewiesen.
+
+### Ablage, Identitäten und unveränderliche Belege
+
+Die nächste Implementierung erfolgt in einer eigenen PostgreSQL-Testdatenbank.
+Die Schema-Erstellung bleibt zunächst außerhalb der automatisch geladenen
+Produktivmigrationen. Alte Migrationen werden nicht nachträglich umgeschrieben.
+`TW_` steht weiterhin für `translation_workbench_`; es entsteht kein zweites Fachmodell.
+
+Fachliche IDs: bigint; Vorgangs-/Scan-/Publication-IDs: UUID; Zeitpunkte: timestamptz;
+Texte: text; unveränderliche strukturierte Belege: jsonb; SHA-256-Hashes: validierte
+64-stellige Hexstrings. Eine Bestandskennung `generation_id` (UUID je Neuaufbau)
+bindet externe Links, Jobs, Journale und Exportmanifeste an den richtigen Bestand.
+Zufällig gleiche alte und neue numerische IDs dürfen keine Verknüpfung erzeugen.
+Anfragen mit alter Bestandskennung werden abgewiesen, nicht auf neue IDs umgedeutet.
+
+Fachliche Identitäten werden archiviert/versioniert, nicht kaskadierend gelöscht.
+Benutzerreferenz und unveränderlicher Akteur-Snapshot bleiben getrennt: eine spätere
+Benutzerlöschung darf weder Ereignisse löschen noch deren damaligen Urheber umdeuten.
+
+| Bereich | Datenbankgarantie | Ergänzende Service-Regel |
+| --- | --- | --- |
+| Findings | FK Quelldatei/Erfassungslauf; partielle Unique-Quellsignatur für active; unique predecessor_id, sofern gesetzt; positive Position; konsistente Status-/Stilllegungsfelder | Vorgänger sperren; eindeutigen Umzug belegen; keine Reaktivierung, Kopien-Zusammenlegung oder Nachfolgerzyklen |
+| Rohbefund | UPDATE-Trigger schützt Position, Ausdruck, vier Capture-Felder und Herkunft | Neue Version statt Überschreiben; spätere Klassifikation nicht rückwirkend zum Rohbefund erklären |
+| Key-Namen | Ein aktueller Name je Key; ein aktueller vollständiger Name je Namespace; globale Namespace-Kennung nicht NULL | Historische Namenswiederbelegung ausdrücklich entscheiden; ungültige vorhandene Keys erfassen und Veröffentlichung sperren |
+| Verwendung | FK Finding/Key; höchstens ein offener Link je statischem Finding; gültige Zeitintervalle | Wechsel unter Finding-/Key-Sperre; Kandidaten sind keine Verwendung; dynamische Optionsbezüge separat |
+| Wertslots | Partielle Unique-Indizes Key/Locale für scalar und Key/Locale/Optionsidentität für option; CHECK kind/option_identity | Keine Fallback-Kopien; Optionsidentität verlustfrei prüfen |
+| Revisionen | Unique slot_id/revision_number; unveränderliche Revision; zusammengesetzter FK current_revision_id/slot_id auf Revision id/slot_id | Slot vor Revisionsvergabe sperren; unveränderter Text erzeugt keine Revision |
+| Scan-Beobachtung | Unique Scan-Datei/Finding; FK auf beide Belege | Finding muss zur Quelldatei gehören; fehlgeschlagener oder unvollständiger Scan bestätigt keine Abwesenheit |
+
+Die Entscheidungen des Prototyps werden in **einem** typisierten `TW_reviews`
+fortgeführt, nicht zusätzlich in einer produktiven approvals-Tabelle. Konkrete Felder:
+id, operation_id, decision_type, revision_id, key_name_id, finding_id, key_id,
+context_fingerprint, context_snapshot, decision, Akteur, Grund und Zeitpunkt.
+Bezugsspalten sind je Entscheidungstyp nullable; CHECK-Regeln verlangen die passenden
+Referenzen. Revisionsfreigaben referenzieren die konkrete Revision und Namensversion.
+Entscheidungen bleiben unveränderlich. Ein zweites unabhängig gepflegtes approved am
+Key entfällt. Der konservative Kontextvertrag des Prototyps bleibt bis zu einer
+ausdrücklich dokumentierten Änderung bestehen.
+
+### Dauerhafter Vorgang, Dateiplan und Abschluss
+
+Diese Tabellen konkretisieren publication_runs/items und den Idempotenzvertrag.
+Sie sind keine zusätzliche Quelle redaktioneller Übersetzungswerte.
+
+| Tabelle | Konkrete Kernfelder | Regeln |
+| --- | --- | --- |
+| `TW_operations` | id UUID PK, kind, request_fingerprint, result JSONB, completed_at | Ergebnis atomar mit fachlicher Wirkung speichern. Gleiche ID mit anderem Request ablehnen. Keine stundenlange DB-Transaktion für Dateioperationen. |
+| `TW_publication_runs` | id UUID PK, prepare_operation_id, generation_id, state, manifest_fingerprint, plan_fingerprint, configuration_snapshot, Akteur/Grund, Zeitpunkte, error_summary | CHECK prepared/writing/interrupted/complete/closed; Plan nach Vorbereitung unveränderlich. Terminaler Beleg ist maßgeblich, nicht allein der Betriebsstatus. |
+| `TW_publication_files` | id, run_id, target_path, before_hash nullable, after_hash, artifact_reference, artifact_hash | Unique run_id/target_path. NULL bedeutet zuvor fehlende Datei. Unveränderliche geplante Bytes als gesichertes Artefakt vorhalten; Hash allein reicht nicht zur Wiederaufnahme. |
+| `TW_publication_items` | id, run_id, publication_file_id, revision_id, key_name_id, review_id, context_fingerprint | Unique run_id/revision_id. Zusammengesetzte FKs sichern gleiche Run-ID von Datei/Item. Locale und Key müssen zum Datei-/Revisionsbezug passen. |
+| `TW_file_reservations` | target_path PK, run_id, publication_file_id | Ein offener Writer pro kanonischem Zielpfad; FK auf Datei desselben Runs. Unterbrechung behält Reservierung; Freigabe nur mit terminalem Beleg. |
+| `TW_publication_outcomes` | run_id PK, operation_id UNIQUE, kind, review_fingerprint, file_snapshot JSONB, Akteur/Grund/Zeitpunkt | CHECK completed/closed_without_writing. Genau ein unveränderlicher terminaler Beleg je Run; Erfolg nicht nachträglich zum Abbruch umdeuten. |
+
+Das neue `TW_events` enthält id, operation_id, event_index, event_type, actor_type,
+Benutzerreferenz/Actor-Snapshot, occurred_at, reason_code, reason_text, typisierte
+fachliche Referenzen und details. Unique operation_id/event_index verhindert
+Wiederholungsereignisse, erlaubt aber zusammengehörige Teiländerungen. DB-Wirkung,
+Entscheidung, Operationsergebnis und Ereignis werden gemeinsam committed.
+TW-Graph-Chains sind daraus neu erzeugbare Projektionen.
+
+**Maßgebliche Ablage:** DB-Plan und Outcome entscheiden über den fachlichen Zustand;
+das Dateijournal dokumentiert Schreibversuche und beobachtete Hashes. Kein zweiter
+Receipt-Speicher in generischen Review-Metadaten. Ein Journal darf niemals eine
+neuere DB-Abschlussentscheidung überstimmen. Artefakte und Journal sind an Generation,
+Run-ID und Planhash gebunden.
+
+### Sperren und Recovery
+
+- Alle UI-/Command-Schreibwege benutzen dieselben Services. Atomare Reservierung
+  der Operation-ID mit Requestvergleich verhindert doppelte Ausführung. Ein SELECT
+  vor INSERT allein reicht nicht; Unique-Konflikte benötigen definiertes Retry-Verhalten.
+- Zuordnung, Rename, Speichern und Freigabe sperren konsistent dieselben
+  Finding-/Key-/Slot-Identitäten. Auch eine neue Verwendung muss die Kontextsperre
+  ihres Keys beachten. Sperrreihenfolge zentral festlegen und konkurrierend testen.
+- Dateireservierungen in sortierter Pfadreihenfolge anlegen. Eine PostgreSQL-Sperre
+  je Run serialisiert Publish/Close/Resume. DB-Sperren schützen keine fremden Editoren;
+  dafür bleiben gemeinsamer Writer und eine definierte Betriebsgrenze erforderlich.
+- Vor Schreiben Plan, Belegfreiheit, Freigabe und sämtliche Datei-Hashes prüfen.
+  Während der Schreibphase müssen Kontext-/Freigabeänderungen koordiniert blockiert
+  oder vor jedem Schritt zuverlässig erkannt werden. Die genaue Lock-Lebensdauer
+  ist im PostgreSQL-Test nachzuweisen, nicht durch SQLite vorauszusetzen.
+- Nach Neustart DB-Plan, Artefakte, Journal und Dateien vergleichen: Vorher-Hash =
+  offen, Nachher-Hash = entspricht Zielstand, anderer Hash = Klärung. Der passende
+  Hash beweist nicht, welcher Prozess die Datei geschrieben hat.
+- Erfolg speichert Outcome, Arbeitsereignis, Operationsergebnis und Freigabe der
+  Reservierungen in einer Transaktion. Journalabschluss danach ist wiederholbar.
+  Schließen ohne Schreiben dokumentiert stattdessen den geprüften Teilstand und
+  verändert keine Zieldatei. Beide Abschlüsse schließen weiteres Schreiben aus.
+- Spätere externe Dateiänderungen bleiben als aktuelle Abweichung sichtbar;
+  der historische Abschluss bleibt bestehen. Ein beendeter Run darf nach Freigabe
+  seiner Reservierungen keine alten Artefakte über einen späteren Run zurückschreiben.
+- Fehlende Artefakte blockieren Recovery sichtbar. Journale aus alten Generationen
+  bleiben Archiv und dürfen nicht im neuen Bestand fortgesetzt werden.
+
+Code-Ersetzungen erhalten einen eigenen Vorgangstyp mit Finding-Version,
+Quellhash und Key-Namensversion. Sie benötigen ebenfalls Plan, Hashprüfung und
+Recovery. Eine Publication ersetzt nicht nebenbei Source-Literale; ein geänderter
+Quellstand benötigt eine belegte Folgeerfassung statt Überschreiben des Rohbefunds.
+
+### Umstellung mit prüfbaren Etappenzielen
+
+| Etappe | Ergebnis | Abnahme |
+| --- | --- | --- |
+| 1. PostgreSQL-Testbasis | Neues Schema ausschließlich in eigener Testdatenbank | Constraints, Unveränderlichkeit, konkurrierende Operationen und neu geöffnete Verbindung geprüft |
+| 2. Gemeinsame Services | Erfassung, Zuordnung, Revision, Entscheidung, Publication und Abschluss gegen persistentes Schema | 55 bisherige Prototyp-Fälle übertragen; zusätzliche Neustart-/Nebenläufigkeitsfälle erfolgreich |
+| 3. Vollständige Aufnahme | Frischer read-only Bericht über Code, DB-Werte/Entwürfe, Sprachdateien, Locales, dynamische Optionen und Namespaces | Jede Werteart hat sicheren Leser und Herkunft; nicht unterstützte Inhalte sind Blocker, keine still ausgelassenen Einträge |
+| 4. Generalprobe | Neuaufbau auf Kopie, neue IDs und neue Arbeitsdokumentation | Erst-/Zweitscan, Umzug, Entfernung, copied/handmade, SharedCandidate, Review, Teilpublikation; kein exklusiver Entwurf verloren |
+| 5. UI-/Command-Anbindung | Workbench-Formular und Commands verwenden dieselben neuen Services, Graph neue Projektion | UI-Durchlauf, Autorisierung und Ausschluss alter Schreibwege/Jobs nachgewiesen |
+| 6. Wechselbericht | Archivmanifest, Wertevergleich, Konflikte, Wiederherstellungsprobe und Wartungsfenster | Konkreten Produktionswechsel erst anhand dieses prüfbaren Ergebnisses freigeben |
+| 7. Wechsel | Alte Writer/Jobs stoppen, zusammengehörigen Stand sichern, neue Generation aktivieren | Smoke-Test und unveränderter Rescan; keine Vermischung alter Links/Journale/Caches mit neuen IDs |
+| 8. Archivphase | Alter Bestand separat nur lesbar; nicht mehr benötigter Code nach _old | Kein sofortiges Löschen; alte Historie nicht als neue Timeline importieren |
+
+**Kein Dual-Write:** Bis zur Generalprobe läuft die neue Implementierung isoliert.
+Beim Wechsel gibt es genau eine aktive Generation und einen fachlichen Schreibweg.
+Anwendungs-/Benutzerdaten außerhalb dieses Neuaufbaus werden nicht zurückgesetzt.
+Quellcode und veröffentlichte Sprachdateien bleiben gesicherte Ausgangsbasis;
+Literale werden nicht massenweise zurückgeschrieben.
+
+**Rückkehrplan:** Vor neuen produktiven Änderungen kann gemeinsam auf den gesicherten
+alten Stand zurückgeschaltet werden. Nach neuen Bearbeitungen oder Dateiänderungen
+ist ein einfacher DB-Restore kein sicherer Rollback. Erst die neuen Änderungen
+sichern, Dateien und Daten gemeinsam abgleichen und bewusst wiederherstellen oder
+vorwärts korrigieren. Seit der Umschaltung geleistete Arbeit darf nicht verloren gehen.
+
+### Offene Nachweise und nächster begrenzter Umsetzungsschritt
+
+Dynamische Optionen, Namespaces, JSON-Sprachdateien, Source-Replacement,
+Autorisierung und vollständige Locale-Unterstützung sind weiterhin verpflichtende
+Gates vor Produktion. Der skalare Prototyp belegt sie nicht automatisch.
+
+Als nächstes entsteht die PostgreSQL-Testbasis für Erfassung, Keys/Zuordnungen,
+Revisionen sowie Operationen/Ereignisse. Zu prüfen sind Bewegung ohne Reaktivierung,
+konkurrierende Zuordnung, konkurrierendes Speichern und idempotente Wiederholung
+über eine neu geöffnete Verbindung. Danach folgen Freigabe und persistenter Dateiplan.
+Der vorhandene Launcher in
+`tests/Integration/TranslationWorkbench/source-link-concurrency.php` dient als
+Sicherheitsmuster: eigener temporärer Cluster, keine App-DB-Zugangsdaten. Er ist
+kein bereits bestandener Nachweis für das neue Schema.
+
+In diesem Schritt ausschließlich den Entwurf konkretisiert und mit vorhandenen
+Migrationen/Prototypen abgeglichen. Keine Produktivmigration, kein Reset und keine
+Bestandsübernahme ausgeführt. Whitespace-Prüfung erfolgreich; keine Laufzeittests
+für diese reine Dokumentationsänderung erforderlich.
+
+### Umsetzung: isolierte PostgreSQL-Testbasis — 2026-10-19
+
+Die erste persistente Teilmenge liegt jetzt in
+`tests/Support/TranslationWorkbench/postgres/baseline.sql` und
+`tests/Support/TranslationWorkbench/PostgresBaseline.php`.
+Sie wird ausschließlich vom expliziten Integrationstest
+`tests/Integration/TranslationWorkbench/baseline-persistence.php` geladen:
+
+```bash
+php tests/Integration/TranslationWorkbench/baseline-persistence.php
+```
+
+Der Launcher erstellt einen eigenen PostgreSQL-18-Cluster unter einem zufälligen
+privaten Tempverzeichnis, erreichbar ausschließlich über seinen Unix-Socket.
+Er lädt weder den Laravel-App-Bootstrap noch Produktiv-Zugangsdaten. Der Adapter
+akzeptiert nur dieses Tempverzeichnis-Muster mit existierendem Testcluster.
+Nach dem Test wird der eigene Server gestoppt und sein Verzeichnis entfernt.
+Der Launcher benötigt die Erlaubnis, einen lokalen Unix-Socket anzulegen; das
+ist in der eingeschränkten Sandbox nicht möglich. Der ausgeführte Test nutzte
+entsprechend die Freigabe für diesen Runner.
+
+**Tatsächlich implementierte Teilmenge:** Source-Dateien, abgeschlossene/fehlgeschlagene
+Scan-Läufe, unveränderliche Finding-Erfassung, Beobachtungen, Key-Identität und
+Namensstände, aktuelle/historische Verknüpfungen, skalare Locale-Slots und
+Wertrevisionen, atomare Operationsergebnisse und fachliche Ereignisse.
+Die Capture-Methode nimmt ausdrücklich vorbereitete Testbefunde beziehungsweise
+bereits geprüfte Positionsbewegungen entgegen. Sie ersetzt nicht den Scanner und
+behauptet keine produktive Umzugserkennung. Der im Fixture gespeicherte SuggestedKey
+ist ein Testwert, kein neu eingeführter Generator.
+
+Nachgewiesen:
+
+- Unveränderter Befund bestätigt dasselbe Finding ohne neues Änderungsereignis.
+- Explizit geprüfter Positionsnachfolger archiviert den Vorgänger und führt dessen
+  aktive Zuordnung fort. Ein archivierter Vorgänger wird weder geändert noch reaktiviert.
+- Ein zusätzliches gleichlautendes Finding bleibt eigenständig und erhält keine
+  automatische Kopie der Key-Zuordnung.
+- Datenbank-Trigger verhindern Änderungen des Capture-/SuggestedKey und vorhandener
+  Revisionen. Partielle Eindeutigkeit verhindert zwei aktuelle statische Zuordnungen.
+- Ein zusammengesetzter Foreign Key verhindert einen aktuellen Revisionszeiger
+  auf den Slot eines anderen Keys. Unverändertes Speichern erzeugt keine Revision.
+- Fehler beim Ereignisschreiben rollen Wertrevision, aktuellen Zeiger und
+  Operationsergebnis gemeinsam zurück.
+- Zwei getrennte PHP-Prozesse werden tatsächlich an PostgreSQL-Sperren angehalten
+  (über pg_stat_activity nachgewiesen). Nach Freigabe gewinnt eine Zuordnung bzw.
+  Textänderung; die konkurrierende Bestätigung mit veraltetem Kontext wird abgelehnt.
+- Zwei gleiche parallele Operationen liefern dasselbe Ergebnis mit nur einem Ereignis.
+  Dieselbe Operation-ID mit verschiedenen Requests wird auch parallel zurückgewiesen.
+- Ein neuer PHP-Prozess und anschließend ein tatsächlicher PostgreSQL-Serverneustart
+  liefern beim Retry den gespeicherten Abschluss ohne erneute fachliche Wirkung.
+
+Ergebnis: **46 Assertions erfolgreich**, davon 44 im Hauptlauf mit vier
+Konkurrenzszenarien und zwei nach dem Serverneustart. Zusätzlich bestehen die vier
+bisherigen SQLite-Prototyp-Suites mit **55 Tests / 267 Assertions** unverändert.
+Pint, PHP-Syntax und Whitespace-Prüfung erfolgreich.
+
+**Abgrenzung:** Noch keine vollständige Umsetzung des Zielschemas. Dynamische
+Optionsslots, vollständige Scan-Dateimanifeste/Hashes und Matching, produktive
+Namensversionierung, Bestandskennung, Autorisierung, Freigabe und Dateipublikation
+sind noch nicht an diesen PostgreSQL-Kern angeschlossen. Die Benutzer-IDs sind
+Testakteure. Der Runner ist explizit auszuführen, nicht bereits automatisch Teil
+jedes normalen Pest-/Diagnostics-Laufs. Die Koordination von Key-Kontextänderungen
+mit Freigaben ist erst beim nächsten Ausbau zu implementieren und zu testen;
+die bisherigen Zuordnungs-/Speichersperren belegen diese noch nicht.
+
+Nächster Schritt: revisionsgebundene Entscheidungen/Freigaben an diesen persistenten
+Kern anschließen, einschließlich konkurrierender Zuordnungs- und Textänderungen.
+Danach folgt der persistente Datei-/Abschlussplan. Kein Produktivschema, UI,
+Artisan-Schreibweg oder realer Datenbestand wurde durch diesen Schritt geändert.
+
+### Ausbau: persistente revisionsgebundene Freigaben — 2026-10-19
+
+Der PostgreSQL-Testkern verwendet jetzt `translation_workbench_reviews` für
+unveränderliche Freigaben und Widerrufe. Gespeichert werden konkrete Revision,
+Key-Namensversion, Kontext-Snapshot/-Hash, Operation, Akteur, Grund und Zeitpunkt.
+Die Operation-Referenz wird wie beim Arbeitsereignis spätestens beim Commit geprüft;
+ein Recorder-Fehler rollt Entscheidung, Ereignis und Operation gemeinsam zurück.
+Eine produktive UI-/Command-Anbindung findet weiterhin nicht statt.
+
+`reviewSnapshot()` liest den Dialogstand mit einem einzelnen SQL-Statement als
+zusammenhängenden MVCC-Snapshot. Er enthält Textrevision, aktuellen Revisionszeiger,
+Locale, Key-Namensversion sowie die sortierten aktiven Finding-/Link-Identitäten.
+Der Bestätigungs-Fingerprint enthält zusätzlich die letzte Entscheidungs-ID.
+Damit kann ein vor einem Widerruf geöffneter Dialog nicht still die vorherige
+Freigabe wiederherstellen. Der gespeicherte Kontext-Hash selbst enthält diese
+Entscheidungs-ID nicht: Eine Entscheidung soll nicht durch ihr eigenes Anlegen
+sofort ungültig werden.
+
+`decide()` sperrt die Key-Identität und prüft den Snapshot erneut. Freigabe benötigt
+die aktuelle Revision und mindestens eine aktive Verwendung; Widerruf bleibt
+auch für einen historischen Stand möglich. Identische Entscheidungen im gleichen
+Kontext erzeugen keine weitere Review-/Ereigniszeile. Gleiche Operation-ID mit
+gleichem Request liefert den historischen Abschluss, nicht eine erneute Freigabe.
+Akteur und nichtleere Begründung sind erforderlich.
+
+Die anderen beteiligten Test-Schreibwege beachten dieselbe Kontextgrenze:
+Zuordnungen sperren nach dem Finding sowohl alten als auch neuen Key in aufsteigender
+ID-Reihenfolge; Positionsnachfolger sperren nach Datei/Finding den bisherigen Key.
+Speichern sperrt Key vor Slot, Entscheidungen benötigen nur den Key und erwerben
+keine nachgelagerte Finding-Sperre. Dadurch entsteht zwischen diesen implementierten
+Schreibwegen kein umgekehrter Key→Finding-Sperrpfad. Ein kommender Rename-/Retirement-
+Service muss diese Reihenfolge ebenfalls einhalten; direkte beliebige SQL-Änderungen
+werden durch diesen Servicevertrag nicht abgesichert.
+
+Der konservative Freigabevertrag bleibt: neue Revision, geänderte Verwendung und
+Positionsnachfolger machen einen bisherigen Kontext ungültig, ohne die historische
+Entscheidung zu löschen. Ein Wechsel zu einem anderen Key betrifft beide Kontexte.
+Freigabe einer Locale autorisiert keine andere Locale. `approvalIsCurrent()` ist
+nur eine Diagnose des gelesenen Zustands, keine Schreibberechtigung für einen späteren
+Dateiexport; dessen erneute Prüfung und Sperren folgen mit dem Publication-Ausbau.
+
+**Verifikation:** PostgreSQL-Runner erfolgreich mit **94 Assertions** (90 im Hauptlauf,
+vier nach echtem Serverneustart) und acht nachgewiesenen Konkurrenzszenarien.
+Neu geprüft sind Freigabe parallel zu Textänderung, zusätzlicher Verwendung und
+Positionsnachfolger sowie konkurrierende Freigabe/Widerruf. Unabhängig davon, welcher
+Prozess zuerst fortgesetzt wird, bleibt kein neuer Kontext durch eine alte Entscheidung
+freigegeben. Zusätzlich geprüft: veralteter Dialog, historische Revision,
+fehlende Verwendung, unveränderliche Reviews, fehlender Akteur/Grund, Recorder-Rollback,
+Key-Wechsel beidseitig, getrennte Locales und Review-Retry nach Prozess-/Serverneustart.
+Die bisherigen **55 SQLite-Prototyp-Tests / 267 Assertions** bleiben erfolgreich.
+Pint und Whitespace-Prüfung bestanden.
+
+Nächster begrenzter Ausbau: den geprüften Datei-/Abschlussablauf an diesen persistenten
+Kern anbinden, einschließlich Dateireservierung, Belegen und Recovery nach Neustart.
+Dynamische Optionen, vollständiger Scanner, produktive Rechteprüfung und UI bleiben
+weiterhin getrennte offene Integrationsschritte; Produktivschema und Datenbestand
+wurden nicht verändert.
+
+### Ausbau: persistente Dateiveröffentlichung und Recovery — 2026-10-19
+
+`tests/Support/TranslationWorkbench/PostgresPublisher.php` bindet den geprüften
+Dateiablauf an den isolierten PostgreSQL-Kern an. Das Zielverzeichnis wird aus dem
+validierten Testcluster abgeleitet; ein produktiver Zielpfad kann nicht übergeben
+werden. Die neuen Testtabellen speichern Runs, unveränderliche Datei-Hashpläne,
+eindeutige Dateireservierungen und unveränderliche terminale Outcomes.
+
+Vorbereitung prüft die freigegebenen Revisionen unter sortierten Key-Sperren und
+liest vorhandene statische PHP-Arrays mit dem bestehenden BaselineValueReader,
+ohne deren PHP-Code auszuführen. Bestehende ungewählte Werte bleiben erhalten;
+Scalar-/Container-Kollisionen werden zurückgewiesen. Plan und Reservierungen werden
+atomar gespeichert. Eine konkurrierende Reservierung derselben Datei verhindert
+einen weiteren offenen Plan. Wiederholung derselben Vorbereitung liefert denselben
+Plan; abweichende Eingaben unter derselben Operation-ID bleiben ein Fehler.
+
+**Konkrete Persistenzentscheidung im Test:** Die geplanten Bytes liegen vorerst
+unveränderlich im DB-Plantext samt SHA-256; es gibt keine zusätzliche externe
+Artefaktdatei und keinen zweiten Dateijournal-Writer. Der Run-Status wird vor Beginn
+der Schreibtransaktion dauerhaft auf writing gesetzt. Damit bleibt nach einem
+Prozessabbruch ein erkennbarer offener Run mit vollständigem Wiederaufnahmeplan.
+Das ist eine begrenzte Testausprägung des Entwurfs, noch keine Entscheidung über
+Speichergrenzen und Artefaktablage für beliebig große produktive Publikationen.
+
+Publish/Close werden durch eine Session-Advisory-Sperre je Run serialisiert.
+Der Writer hält während der kurzen Test-Dateischreibphase die Key-Zeilensperren
+in einer Transaktion: ein kooperierender Widerruf/Save/Assignment wartet bis zum
+Commit oder Abbruch. Vor dem ersten Schreiben werden sämtliche Dateien,
+Reservierungen und die exakten Freigabe-Snapshots geprüft. Dateien werden einzeln
+über Tempdatei/Rename ersetzt. Vorhandener Nachher-Hash wird beim Resume nicht
+nochmals geschrieben. Erst nach Prüfung aller Zielhashes werden Outcome,
+Arbeitsereignis, Reservierungsfreigabe und terminaler Run-Status gemeinsam committed.
+
+Ein DB-Rollback kann bereits geschriebene Dateien nicht zurückrollen. Bei
+Recorder-Fehler oder Prozessabbruch bleiben Plan und Reservierungen erhalten.
+Nach einem Neustart werden die tatsächlichen Hashes mit Vorher/Nachher verglichen;
+abweichende Dateien werden nicht überschrieben. Ein vollständiger Beleg ist
+historisch: weder späterer Widerruf noch externe spätere Dateiänderung berechtigen
+einen Retry, alte Bytes erneut zu schreiben.
+
+Schließen ohne Schreiben erfordert einen aktuellen Hash-Snapshot, Akteur und Grund.
+Es erzeugt einen eigenen terminalen Outcome und das entsprechende Arbeitsereignis,
+aber keinen Veröffentlichungserfolg und keine Dateikorrektur. Gleiche Wiederholung
+liefert den Abschluss; abweichende oder widersprüchliche Abschlussentscheidung wird
+abgewiesen. Auch ein wegen widerrufener Freigabe blockierter Lauf kann so geschlossen
+werden. Der Event-Bezug benutzt im Test die ursprüngliche Run-/Prepare-Operation;
+der Abschluss selbst ist zusätzlich über den eindeutigen Outcome abgesichert.
+Eine eigene persistente Request-ID je UI-Abschlussaktion ist damit noch nicht umgesetzt.
+
+Die neuen Fälle in `tests/Integration/TranslationWorkbench/baseline-publication-cases.php`
+werden vom vorhandenen isolierten Runner eingebunden. Nachgewiesen sind:
+
+- Wiederholbare Vorbereitung und Rollback bei überlappender Dateireservierung.
+- Abrupter Exit des separaten PHP-Writers direkt nach der ersten Datei, ohne
+  normales Exception-/Rollback-Handling des Publishers: Status bleibt writing,
+  keine Erfolgsquittung, Reservierungen bleiben erhalten.
+- Wiederaufnahme dieses Teilstands nach echtem PostgreSQL-Neustart in einem weiteren
+  PHP-Prozess; die erste Datei behält ihren gesetzten mtime, die zweite wird ergänzt.
+- Externe Änderungen und veraltete Closure-Vorschau werden erkannt; Closure
+  überschreibt nichts. Ein neuer Plan kann freigegebene Reservierungen benutzen.
+- Recorder-Ausfall nach Dateischreiben, Retry ohne erneutes Schreiben sowie Abbruch
+  nach bereits committed Receipt ohne doppeltes Erfolgsereignis.
+- Ungewählte Dateiinhalte bleiben erhalten; ein historischer Retry überschreibt
+  keine späteren externen Änderungen.
+- Widerruf vor Publish verhindert Schreiben. Ein während Publish gestarteter
+  Widerruf wartet nachweislich auf die Key-Sperre und wird anschließend wirksam,
+  ohne den historischen Erfolg umzudeuten.
+
+**Validierung:** PostgreSQL-Runner mit **129 Assertions** erfolgreich (122 im Hauptlauf,
+sieben nach Serverneustart), einschließlich neun Konkurrenzszenarien. Die bisherigen
+**55 Prototyp-Tests / 267 Assertions** bleiben erfolgreich. Pint, PHP-Syntaxprüfung
+des neuen Publishers und Whitespace-Prüfung bestanden.
+
+Weiterhin keine Produktivmigration oder echte Datei-/Bestandsveröffentlichung.
+Der Testwriter bewahrt Inhalte, nicht die Formatierung/Kommentare veränderter Dateien.
+Er unterstützt nur den geprüften statischen skalaren PHP-Arrayfall. Es besteht keine
+atomare Mehrdatei- oder Stromausfallgarantie. Externe Editoren respektieren keine
+DB-Sperren; der unvermeidbare externe Hashcheck/Rename-Zwischenraum ist nicht durch
+PostgreSQL abgesichert. Mehrhost-Betrieb, Bestandskennung, Artefaktgrößen, Rechteprüfung,
+Namespace-/Optionsdaten und UI-Anbindung bleiben separate Produktionsvoraussetzungen.
+
+Damit sind die grundlegenden isolierten Erfassungs-, Bearbeitungs-, Freigabe- und
+Publikationsabläufe ausführbar belegt. Nächster sinnvoller Schritt ist der Abgleich
+mit den real vorhandenen Datenformaten und Schreibwegen anhand eines frischen
+read-only Übernahmeberichts; weitere Produktionsfunktionen sollten nicht auf einer
+unvollständigen skalaren Bestandsannahme aufgebaut werden.
+
+## Aktueller read-only Übernahmebericht — 2026-10-19, 07:41:38 +02:00
+
+Ausführung: inspect-transfer-readiness.php. Vollständige Evidenz in
+[transfer-readiness-2026-10-19.json](transfer-readiness-2026-10-19.json).
+PostgreSQL bestätigte **repeatable read / read_only=on**. Kein Scannerlauf,
+Import, Export oder Reparaturcommand ausgeführt. Der vorhandene Scanner wurde
+nur nach seiner Dateiauswahl gefragt; Sprachdateien wurden per AST gelesen.
+
+DB-Abfragen bilden einen gemeinsamen Snapshot; Dateien wurden anschließend mit
+Hashes geprüft. Das ist kein atomarer DB-/Dateisystem-Snapshot. Bei den geprüften
+Dateien wurde während der jeweiligen Prüfung keine Änderung festgestellt.
+Für einen tatsächlichen Wechsel bleibt ein neuer gemeinsamer Sicherungsstand
+im Wartungsfenster erforderlich.
+
+### Umfang
+
+| Bereich | Aktueller Befund | Bedeutung |
+| --- | ---: | --- |
+| Translation-bezogene Tabellen | 33 | Keine automatische Löschfreigabe |
+| Findings | 23.238: 18.870 active / 4.237 obsolete / 131 commented_out | Neuerfassung aus geprüftem Code; alte Historie archivieren |
+| Aktive skalare Workbench-Werte | 1.631 | Herkunft und Konflikte prüfen |
+| Aktive dynamische Key-Werte | 200 | Optionsrevisionen fehlen im PostgreSQL-Testkern |
+| Ältere dynamische Werte | 43, Status ok, Locale en | Exklusive Entwürfe nicht verlieren |
+| Dynamische Quellen | 96: 22 active / 48 needs_review / 26 obsolete | Nicht pauschal als bestätigt übernehmen |
+| Dynamische Quellwerte | 247 active | Beobachtung ist keine freigegebene Übersetzung |
+| Optionsbeobachtungen | 26: 12 JSON-Objekte / 14 JSON-Arrays | Beide Strukturen verlustfrei behandeln |
+| Alte native/Optionswerte | 952 | Herkunft/Beobachtung, nicht automatisch Übersetzungsrevision |
+| Ausgewählte Quelldateien | 1.696 | Manifest, keine Aussage über enthaltene Findings |
+| Sprachdateien aus CLI-Loader-Pfaden | 89 PHP-Dateien | 54 Anwendung, 4 Framework, 31 Paket-Overrides unter lang/vendor/backup |
+| Aktive Links auf obsolete Findings | 12 | Keine aktuelle Verwendung daraus ableiten |
+| Aktive Findings mit mehreren benannten aktiven Key-IDs | 27 | Kandidaten-/Relationsbedeutung prüfen, nicht pauschal konkurrierende bestätigte Zuordnungen |
+
+translation_workbench_key_values bleibt leer. Das beweist nicht, dass alle Leser
+bereits entfernt werden können. Große alte Historientabellen bleiben unangetastet.
+
+### Belegte Wertevergleiche
+
+Verglichen werden exakter vollständiger Key und exakte Locale, ohne Fallback,
+Case-Folding oder Umbenennung. Die alte Spalte lang_values.namespace bezeichnet
+laut LangValueImporter die Dateigruppe (z. B. ui), nicht den Laravel-Paketnamespace.
+Sie darf nicht ungeprüft in die neue package_namespace-Bedeutung übernommen werden.
+
+| Vergleich | Gleich | Unterschiedlich | Nur links | Nur rechts |
+| --- | ---: | ---: | ---: | ---: |
+| Legacy-Werte Status ok, nicht-NULL ↔ aktive skalare Workbench-Werte | 1.167 | 10 | 290 | 454 |
+| Aktive skalare Workbench-Werte ↔ gelesene Anwendungsdateiwerte | 1.608 | 9 | 14 | 399 |
+| Aktive dynamische Key-Werte ↔ Anwendungsdateiwerte | 184 | 0 | 16 | 1.832 |
+
+Gezählt werden Key-/Locale-Identitäten, nicht beliebige Tabellenzeilen. Dynamische
+Keys wurden mit der vorhandenen reinen Funktion TranslationWorkbenchOption::key()
+gebildet. Die rechte Menge enthält alle gelesenen skalaren Anwendungsdateiwerte;
+1.832 „nur rechts“ sind deshalb keine fehlenden dynamischen Übersetzungen.
+Auch die 399 reinen Dateieinträge des skalaren Vergleichs sind keine pauschale
+Fehlerliste: darin können dynamische und anders verwaltete Werte liegen.
+
+14 skalare und 16 dynamische Werte ohne Dateigegenstück sind Übernahme-Prüfkandidaten,
+nicht automatisch verlorene oder zu veröffentlichende Übersetzungen. Ebenso können
+die 290 Legacy-Identitäten ohne aktives skalares Workbench-Gegenstück in archivierten
+Zeilen oder anderen Modellen enthalten sein. IDs, Status und Inhaltshashes bleiben
+im Bericht erhalten; keine Seite wird automatisch als maßgeblich ausgewählt.
+
+### Fehlende Formatabdeckung
+
+- Alle 89 PHP-Dateien bestehen die syntaktische Baumprüfung des Testwriters.
+  Das belegt nicht dessen Zielpfad-/Namespace-Unterstützung. Der Baseline-Leser
+  akzeptiert 58 Dateien; 31 Paket-Overrides sind ausdrücklich nicht abgedeckt.
+- In den erfassten Loader-Wurzeln wurden keine JSON-Sprachdateien gefunden.
+  Das beweist weder JSON-Unterstützung noch die Erfassung erst in anderem
+  Laufzeitkontext registrierter Paketquellen. Der CLI-Loader hatte keine
+  expliziten Namespace-Hints.
+- Die Sprachverwaltung enthält de und en. Legacy-Werte enthalten zugleich
+  de-at/de-AT, de-de/de-DE und weitere Varianten. Vor Zusammenführung sind
+  Locale-Regeln und Wertkonflikte zu prüfen. Workbench-Quellsprache en und
+  Default-Sprache de haben unterschiedliche Rollen und sind kein automatisch
+  zu korrigierender Widerspruch.
+- 200 dynamische Übersetzungen brauchen Optionsidentität plus Key-/Locale-Bezug;
+  scalar-only Slots reichen nicht. Die 43 älteren dynamischen Werte sind noch
+  nicht einzeln auf exklusive Inhalte abgeglichen.
+
+### Konkreter Scan-Umfang-Befund
+
+Die reale Dateiauswahl enthält zwölf Dateien aus _old-Verzeichnissen: sieben alte
+TW-Graph-Strang-Views und fünf alte Command-/Foundation-Dateien. Die Liste steht
+unter archived_directories_in_scan_scope im JSON. Konfigurierte Pfadausschlüsse
+und Dateinamensmarker schließen diese Verzeichnisebene derzeit nicht generell aus.
+
+Das ist ein Blocker für einen sauberen Erstscan, da diese Dateien ausdrücklich
+als inaktiv eingestuft wurden. Es ist kein Beleg für neu erzeugte Findings:
+Der Bericht führte keinen Scan aus. Die Auswahlregeln wurden noch nicht verändert.
+
+### Daraus folgende Reihenfolge
+
+1. Archivierte Verzeichnisse im Scanner-Umfang konsistent abgrenzen und die
+   Dateiauswahl testen; noch keinen schreibenden Rescan ausführen.
+2. Optionsidentitäten und Locale-/Namespace-Behandlung anhand der real
+   vorkommenden Formate im isolierten Schema/Leser ergänzen.
+3. Reine DB-Werte und Abweichungen mit sämtlicher Herkunft als Übernahme-Prüfliste
+   aufbereiten. Kein stilles „Datei gewinnt“ oder „Datenbank gewinnt“.
+4. Erst dann die vollständige Generalprobe auf gesicherter Kopie durchführen.
+   Dieser Bericht ist kein vollständiger Datenexport und keine Reset-Freigabe.
+
+Geändert: Audit-Script, JSON-Bericht und diese Dokumentation. PHP-Syntax, Pint und
+Whitespace geprüft. Kein produktiver Datenbestand oder Schreibweg verändert.
+
+### Korrektur des Scanner-Umfangs — 2026-10-19
+
+Die zentrale Konfiguration enthält jetzt exclude_directory_names mit den exakten
+Verzeichnisnamen _old und -old. Die vorhandene zentrale Pfadprüfung des Scanners
+wendet diese Regel auf jeder Verzeichnisebene an. Keine Teilstring-Erkennung:
+old-tools, _older und eine Datei _old.php bleiben regulär auswählbar.
+Die Regel ist konfigurierbar und wird nicht parallel in einzelnen Commands gepflegt.
+
+Abgedeckt sind Verzeichnis-Discovery, explizit angegebene Dateien, direkter scanFile-
+Aufruf, Scan-Manifest und die Prüfung vermeintlich fehlender bekannter Dateien.
+Ausgeschlossene Archive liegen außerhalb des Reconciliation-Scopes. Ihr Ausschluss
+ist kein Löschbeleg und archiviert daher nicht automatisch bestehende Findings.
+
+Die reine Dateiauswahl des echten Projekts wurde mit dem vorherigen Bericht verglichen:
+**1.696 → 1.684 Dateien**, genau die zwölf zuvor gefundenen _old-Dateien entfernt,
+keine anderen Dateien hinzugefügt/entfernt, keine archivierten Pfade verbleiben.
+Nachweis: [archive-scope-2026-10-19.json](archive-scope-2026-10-19.json).
+Der ursprüngliche Übernahmebericht bleibt als Vorher-Snapshot erhalten.
+
+TranslationScanPathsTest prüft die Ausschlüsse auch über die drei vorhandenen
+Command-Konsumenten, ohne deren schreibende handle-Methoden auszuführen.
+Zusätzlich wurden die Workflow-Regressionsfälle ausgeführt:
+**781 Tests / 5.176 Assertions erfolgreich** (ScanPaths und TranslationWorkflow).
+Syntax-/Whitespace-Prüfung erfolgreich. Kein produktiver Scannerlauf, keine
+Datenbankbereinigung und keine Löschung archivierter Dateien durchgeführt.
+Die zuvor vorhandenen Findings/Links bleiben bis zur geplanten Übernahmeprüfung
+unverändert. Als Nächstes folgt die Formatabdeckung für dynamische Optionswerte.
+
+### Dynamische Optionswerte im isolierten PostgreSQL-Modell — 2026-10-19
+
+Wert-Slots unterscheiden jetzt scalar und option. Ein skalarer Slot hat keine
+Optionsidentität; ein Options-Slot benötigt eine nichtleere Zeichenfolge.
+Die Eindeutigkeit gilt getrennt pro Key/Locale beziehungsweise
+Key/Locale/Optionsidentität. Diese Identitätsfelder sind nach Erstellung unveränderlich.
+Der vorhandene Revisions-, Freigabe- und Ereignispfad wird gemeinsam verwendet;
+es gibt keinen zweiten Speicherweg für Optionsübersetzungen.
+
+Optionsidentitäten werden unverändert gespeichert. Insbesondere bleiben 0, 01,
+1, 1.0, a.b und a%2Eb unterscheidbar. Diese Prüfung betrifft Zeichenfolgen,
+nicht eine zusätzliche Unterscheidung von Integer 1 und String 1. Leerer
+Übersetzungstext ist zulässig und wird nicht mit einer fehlenden Option verwechselt.
+
+Die Freigabe bindet auch Slot-Art und Optionsidentität. Änderungen einer Option
+oder Sprache erteilen keiner anderen Option eine Freigabe und entziehen auch
+keiner unveränderten Option ihre Freigabe. Neue Revisionen müssen selbst geprüft
+werden. Konkurrierende Änderungen desselben Slots werden weiterhin über die
+erwartete Revision abgesichert.
+
+Der bisherige skalare PostgreSQL-Dateiexporter weist Optionsrevisionen ausdrücklich
+zurück. Erst ein optionsbewusster Dateiplan darf deren Zielpfade bestimmen; andernfalls
+könnte der Wert versehentlich unter dem übergeordneten skalaren Key landen.
+Optionspublikation, Übernahme dynamischer Quellbeobachtungen sowie vollständige
+Locale-/Namespace-Abdeckung sind damit noch nicht umgesetzt.
+
+Nachweis: **156 Assertions und zehn Konkurrenzfälle**, zusätzlich **neun Assertions
+nach echtem PostgreSQL-Serverneustart**, insgesamt **165 Assertions erfolgreich**.
+Der wiederholte Optionsauftrag liefert nach Neustart dieselbe Revision und erzeugt
+keinen zweiten Ereigniseintrag. Geprüft werden außerdem Identitätsconstraints,
+slotfremde Revisionszeiger, getrennte Freigaben und die Exportsperre.
+
+Geändert wurden ausschließlich das isolierte PostgreSQL-Testmodell, dessen
+Integrationstests und diese Dokumentation. Keine Produktionsmigration, kein
+Import, kein Scannerlauf und keine Änderung des vorhandenen Datenbestands.
+Als Nächstes ist die optionsbewusste Dateizuordnung einschließlich numerischer
+und punktierter Optionsidentitäten zu prüfen.
+
+### Optionsbewusster Testexport — 2026-10-19
+
+Die zuvor dokumentierte pauschale Options-Exportsperre wurde im isolierten
+PostgreSQL-Publisher durch eine explizite Dateizuordnung ersetzt. Verwendet wird
+unverändert die vorhandene TranslationWorkbenchOption::key-Funktion:
+`<Key>.options.<kodierte Optionsidentität>`. Die Datenbankidentität selbst wird
+nicht umgeschrieben. Punkte, Prozentzeichen und Unicode werden ausschließlich
+für den Dateipfad kodiert; 1 und 01 bleiben verschiedene Optionen.
+
+Der statische AST-Leser kann für diesen Export numerische Schlüssel innerhalb
+von options-Arrays lesen. PHP schreibt beispielsweise den Schlüssel '1' als
+Integer 1 zurück. Außerhalb solcher Container bleiben numerische Schlüssel
+abgewiesen; doppelte Schlüssel, unkodierte Punkte und ausführbare PHP-Ausdrücke
+werden weiterhin abgewiesen. PHP-Dateien werden zur Prüfung nicht ausgeführt.
+Der bisherige strenge Leser bleibt ohne explizite Freigabe unverändert.
+
+Die Integration prüft Veröffentlichung und erneutes Einlesen aller getesteten
+Optionsidentitäten, die Auflösung über den Runtime-Key und Arr::get, getrennte
+Sprachen sowie die gezielte Änderung einer Option bei erhaltenen Geschwistern.
+Ein skalarer Wert am selben Key kollidiert mit dem Optionscontainer und wird
+abgewiesen, statt automatisch verschoben oder ersetzt zu werden. Zwei ausgewählte
+Revisionen mit demselben physischen Zielpfad werden ebenfalls abgewiesen.
+Dies ersetzt noch keine globale Prüfung sämtlicher unselektierter Keys auf
+potenziell überlappende Dateipfade; diese gehört vor einen produktiven Export.
+
+Der Unicode-Freigabetest deckte auf, dass initdb mit --no-locale bisher SQL_ASCII
+verwendete. Der temporäre Testcluster wird jetzt ausdrücklich mit --encoding=UTF8
+initialisiert. Keine Änderung an der Anwendungsdatenbank.
+
+Ergebnis: **172 PostgreSQL-Assertions / zehn Konkurrenzfälle**, zusätzlich
+**neun Assertions nach Serverneustart**, insgesamt **181 Assertions erfolgreich**.
+Die vier bestehenden Basissuiten einschließlich der neuen Leserprüfung bestehen
+mit **56 Tests / 274 Assertions**. Pint erfolgreich.
+
+Keine produktive Migration oder Veröffentlichung, keine Übernahme von Bestandsdaten.
+Locale-/Namespace-Regeln, globale Dateipfadkonflikte und die Übernahme-Prüfliste
+bleiben vor einer vollständigen Generalprobe zu bearbeiten.
+
+### Übergreifende Exportziele und Locale-/Namespace-Grenzen — 2026-10-19
+
+Der isolierte PostgreSQL-Publisher prüft jetzt die ausgewählten Ziele gegen alle
+aktuellen Wert-Slots mit aktuellem Key-Namen, auch wenn deren Revision nicht
+freigegeben oder nicht ausgewählt ist. Gleiche Dateipfade und verschachtelte
+Scalar-/Container-Konflikte werden vor Erstellung eines Plans und erneut vor
+Dateischreibzugriffen abgewiesen. Die Prüfung verändert keine Identitäten.
+Slots ohne aktuelle Revision und historische Key-Namen belegen dabei kein
+aktuelles Ziel; diese Regel ist noch keine automatische Bereinigungsstrategie.
+
+Ein nach der Planung ergänzter, nicht freigegebener Kind-Key blockiert im Test
+auch die Veröffentlichung seines zuvor geplanten Elternwerts. Es wird keine
+Datei geschrieben und kein Erfolg quittiert; der Plan kann regulär ohne Schreiben
+geschlossen werden. Konflikte mit nicht ausgewählten Options-/Scalar-Aliaszielen
+werden ebenfalls geprüft.
+
+Zur Stabilisierung des vollständigen Identitätsbestands während der Transaktion
+verwendet das Testmodell SHARE-Tabellensperren auf Key-Namen und Wert-Slots mit
+NOWAIT, vor den vorhandenen Key-Zeilensperren. Bei einem bereits laufenden
+Identitätsschreibzugriff wird sofort abgebrochen, nicht mit einer unsicheren
+Momentaufnahme fortgefahren. Diese grobe Sperre ist ein isolierter Korrektheitsnachweis,
+keine Produktivempfehlung für große Datenbestände. Eine produktive Lösung benötigt
+gezielte Zielreservierungen samt konsistenter Sperrreihenfolge aller Schreibwege.
+
+Locale-Schreibweisen bleiben exakt erhalten. Gleichzeitige Varianten, die sich
+nur in Groß-/Kleinschreibung oder Bindestrich/Unterstrich unterscheiden, werden
+als Mehrdeutigkeit gemeldet. Berücksichtigt werden aktuelle Slots desselben
+Namespace sowie vorhandene Locale-Verzeichnisse. Das ist eine Kollisionsprüfung,
+keine automatische BCP-47-Normalisierung oder Änderung der Fallback-Kaskade.
+Ein gültiger de-AT-Export schreibt tatsächlich nach de-AT, nicht nach de-at.
+Pfadbestandteile wie ../en werden abgewiesen.
+
+Nichtleere Laravel-Namespaces bleiben ausdrücklich gesperrt, bis eine geprüfte
+Loader-Root-Zuordnung vorliegt. Der bestehende Legacy-Dateigruppenbezeichner wird
+nicht als Paket-Namespace interpretiert. Auch wird kein Namespace stillschweigend
+auf das Anwendungs-lang-Verzeichnis abgebildet. Ein unabhängiger gültiger Export
+bleibt trotz solcher anderweitigen Konflikte/ungültigen Einträge möglich.
+Externe Dateisystemänderungen außerhalb des Publishers sind durch die Datenbank-
+Tabellensperren nicht ausgeschlossen; die bestehenden Hash-Prüfungen bleiben nötig.
+
+Nachweis: **186 PostgreSQL-Assertions / zehn Konkurrenzfälle**, zusätzlich
+**neun Assertions nach Serverneustart**, insgesamt **195 Assertions erfolgreich**.
+Pint und git diff --check erfolgreich. Neue Fälle stehen in
+baseline-destination-cases.php; bestehende Optionsfälle berücksichtigen nun die
+strengere Prüfung nicht ausgewählter aktueller Slots. Die dortige Freigabe des
+Optionscontainers nach Konfliktnachweis ist eine ausdrückliche Testfixture-Änderung,
+kein neuer produktiver Bereinigungs-/Archivierungsweg.
+
+Keine Produktivdaten, Source-Dateien oder Sprachdateien verändert. Nächster
+fachlicher Schritt: Herkunfts-/Konfliktliste für die tatsächliche Datenübernahme
+und explizite Loader-/Locale-Zuordnung vor einer Generalprobe auf Kopie.
+
+### Konkrete Übernahme-Prüfliste aus dem Snapshot — 2026-10-19
+
+[transfer-checklist-2026-10-19.md](transfer-checklist-2026-10-19.md) fasst die
+bereits erfassten aktuellen Evidenzen je exakter Locale-/Key-Kombination zusammen.
+Die gleichnamige JSON-Datei enthält vollständige Wert-Hashes, Herkunfts-IDs,
+Dateihashes, Optionsidentitäten und zugehörige historische Evidenzen.
+build-transfer-checklist.py reproduziert beide Dateien ausschließlich aus dem
+unveränderten transfer-readiness-2026-10-19.json; kein Bootstrap, keine DB-Verbindung.
+
+2.152 Identitäten: 1.987 mit übereinstimmender DB-/Dateievidenz, zehn Wertkonflikte,
+16 mit mindestens einem NULL-Wertnachweis, 122 nur DB, 17 nur Anwendungsdateien.
+Das ist die vereinigte Sicht über Legacy-ok, Workbench-active, dynamische aktive
+Werte und gelesene Anwendungsdateien, nicht die Summe früherer paarweiser Vergleiche.
+NULL in einem Legacy-Eintrag bleibt auch dann ein Prüfpunkt, wenn andere Quellen
+übereinstimmen. Identische Konfliktmengen in zwei Quellen werden ausdrücklich
+nicht als übereinstimmender einzelner Wert behandelt.
+
+Zusätzliche, überlappende Hinweise: 170 Identitäten mit Locale-Schreibvarianten,
+sechs mit mehreren Datensätzen innerhalb derselben Quelle und 26 mit weniger
+als drei Key-Segmenten. Letzteres ist ein Strukturhinweis entsprechend der
+gewünschten verschachtelten Sprachdateien, keine automatische Umbenennung.
+Alle Entscheidungen bleiben NULL. Gleichlautende Literale werden nicht über
+unterschiedliche Keys hinweg zusammengeführt. Alte namespace-Werte werden
+nicht als bestätigte Laravel-Paketzuordnung interpretiert.
+
+Der Snapshot enthält ausschließlich Hashes, keine vollständigen Übersetzungstexte.
+Die Liste zeigt deshalb Herkunft und Abweichung, entscheidet aber nicht über
+inhaltliche Qualität. Noch nicht wertweise abgedeckte dynamische Altformate,
+31 nicht gelesene Paketdateien und nur aggregierte Finding-/Link-Befunde sind
+explizit als offene Abdeckung aufgeführt. Vor einer Generalprobe ist der Stand
+frisch zu erheben; ein aktueller Scan oder Reset wurde nicht ausgeführt.
+
+Acht Offline-Regressionstests erfolgreich (transfer-checklist-test.py), darunter
+Konflikte innerhalb einer Quelle, NULL vs. Leerwertnachweis, historische Evidenz,
+Locale-Varianten, Framework-Abgrenzung und deterministische Gruppierung.
+
+### Inhaltliche Prüfung der zehn bekannten Wertkonflikte — 2026-10-19
+
+[transfer-conflict-details-2026-10-19.md](transfer-conflict-details-2026-10-19.md)
+listet die tatsächlichen Texte, Quell-IDs und kontextbezogenen Empfehlungen.
+Das gleichnamige JSON enthält vollständige aktuelle Evidenz und aktive
+Finding-Verweise. inspect-transfer-conflicts.php liest ausschließlich die zehn
+bekannten Identitäten in REPEATABLE READ / READ ONLY; Sprachdateien werden
+statisch geparst. Alle zehn Evidenzmengen stimmen noch mit dem Snapshot überein.
+Alle Sprachdateihashes waren nach dem Lesen unverändert.
+
+Vier Workbench-Vorschläge werden durch den Quellcode-Kontext gestützt:
+Filter by category statt v, bis statt zu, und zwei Sprachbutton-Texte mit
+:language statt generischem Sprache. Der deutsche Workbench-Wert All entries
+ist selbst korrekturbedürftig; weitere All-Texte sind redaktionelle Unterschiede.
+Bei ui.type stimmen Workbench und Datei bereits in Typ überein, nur Legacy
+enthält Type. Die unzureichende Key-Tiefe bleibt eine getrennte UI-Entscheidung.
+
+Keine Werte angewendet oder freigegeben. DB-Verweise sind kein neuer Scannerlauf;
+insbesondere die 387 aktiven Verweise für ui.type wurden nicht alle neu verifiziert.
+Syntax/Pint und JSON-Konsistenz geprüft: zehn Fälle, read_only=on, identische
+Evidenz, unveränderte Dateien. Nächster separater Prüfblock sind die 16 fehlenden
+Wertnachweise; danach die ausschließlich in der DB vorhandenen Werte.
+
+### Die 16 NULL-Wertnachweise — 2026-10-19
+
+[transfer-missing-details-2026-10-19.md](transfer-missing-details-2026-10-19.md)
+und die gleichnamige JSON-Datei dokumentieren die aktuelle schreibgeschützte Prüfung.
+Das vorhandene inspect-transfer-conflicts.php akzeptiert dafür ausdrücklich
+missing_value_evidence; der bisherige Wertkonflikt-Aufruf bleibt unverändert nutzbar.
+
+Alle 16 Evidenzmengen entsprechen weiterhin dem Ausgangssnapshot. Zwei Fälle
+(admin.permissions.modals.edit.title, de/en) besitzen identische aktive
+Workbench-/Dateitexte; nur Legacy #53/#54 ist NULL. Die übrigen 14 Fälle betreffen
+sieben Keys mit Legacy-Status ok bei NULL, historischen obsolete Workbench-Texten
+und ohne aktive Finding-Verweise. Keine aktuelle Datei enthält diese sieben Keys.
+
+Ergänzende Textsuche in den aktuellen Bytes der 1.684 verbleibenden Manifestdateien:
+keine fehlenden Pfade, eine seit dem Snapshot geänderte Datei. Für die sieben Keys
+wurden ausschließlich ein beschreibender Critical-Datasets-Eintrag und zwei
+TW-Graph-Beispieltexte gefunden. Die Suche ist ausdrücklich kein Scannerlauf;
+neue Dateien außerhalb des gespeicherten Manifests sind nicht abgedeckt.
+
+Kein Datenverlustausgleich durch automatische Reaktivierung. Vollständige Texte
+bleiben Herkunftskandidaten, NULL darf sie nicht überschreiben. Die historischen
+Keys erhalten ohne neue relevante Erfassung keine neue aktive Aufgabe.
+Alle Entscheidungen bleiben offen; keine Datenbank-/Sprachdateiänderungen.
+PHP-Syntax, Pint, Whitespace und Berichtskonsistenz (16 Fälle, 2 aktuell abgedeckt,
+14 historische Fälle, READ ONLY, stabile Datei- und Evidenzhashes) geprüft.
+
+### Die 122 ausschließlich exakt DB-seitig belegten Kombinationen — 2026-10-19
+
+[transfer-database-only-details-2026-10-19.md](transfer-database-only-details-2026-10-19.md)
+und das zugehörige JSON sichern tatsächliche Texte, Quell-IDs, Optionsidentitäten,
+Finding-Verweise und vergleichbare Dateitexte. Alle 122 aktuellen Evidenzmengen
+entsprechen dem Snapshot. Abfrage: inspect-transfer-conflicts.php database_only,
+REPEATABLE READ / READ ONLY; Dateien statisch geparst und Hashstabilität geprüft.
+
+Die 92 Legacy-Werte regionaler Locales sind in 71 Fällen in anders geschriebenen
+Locale-Verzeichnissen identisch vorhanden, in weiteren 21 Fällen in de. Dies
+ist kein Runtime-Fallback-Nachweis und keine automatische Locale-Normalisierung.
+Die 16 dynamischen Werte sind identisch unter dem anderen Options-Parent-Key
+vorhanden, den die aktuellen Dokumenten-Views verwenden (documents statt
+documents.add_modal). Der Vergleich wurde anhand dieser konkreten Aufrufe
+geprüft, nicht als allgemeine Key-Umschreiberegel implementiert.
+
+14 skalare Workbench-Werte (sieben Keys in de/en) besitzen keine aktiven
+Finding-Verweise. Die ergänzende Textsuche in 1.684 Manifestpfaden findet nur
+zwei auskommentierte i18n-native-Zeilen für ui.assignable-through-ui. Test-/DEV-
+Bezeichnungen bleiben dennoch gesicherte Evidenz; keine automatische Löschung.
+Neue Dateien außerhalb des alten Manifests sind durch diese Textsuche nicht erfasst.
+
+Alle 122 Texte sind gezielt dokumentiert; der Bericht ersetzt kein vollständiges
+Backup. Keine Werte angewendet, Keys vereinheitlicht, Locales umbenannt oder
+obsolete Einträge reaktiviert. PHP/Pint, Whitespace und Konsistenzprüfungen
+(122 Fälle = 71 + 21 + 16 + 14; stabile Dateihashes; READ ONLY) erfolgreich.
+Offen bleiben insbesondere dynamische Altformate und bislang nicht wertweise
+inventarisierte Paketdateien vor der vollständigen Generalprobe auf Kopie.
+
+### Dynamische Altformate und Paketübersetzungen — 2026-10-19
+
+[transfer-extra-evidence-2026-10-19.md](transfer-extra-evidence-2026-10-19.md)
+und das gleichnamige JSON erfassen die bislang offenen Formate inhaltlich.
+inspect-transfer-extra-evidence.php liest PostgreSQL mit REPEATABLE READ / READ
+ONLY, rollt zurück und parst Sprachdateien statisch ohne Provider-Aufrufe.
+
+43 alte dynamische Werte gehören zu sechs Entries ohne translation_key. Für alle
+43 existieren aktive aktuelle Optionswerte mit identischer Locale, Optionsidentität
+und Text; dies bestätigt keine fachliche Key-Zuordnung. Die Kandidaten sind
+explizit unverbindlich gelistet. SuggestedKeys werden nicht als Ersatz-Zuordnung
+verwendet und bleiben unverändert.
+
+96 Quellen, 247 Quellwerte, 121 Kandidaten und 26 Optionsbeobachtungen wurden mit
+Payloads und IDs erfasst. 14 Beobachtungen enthalten Listen, zwölf Objekte.
+Alle 247 Quellwerte heißen active, aber nur 177 hängen an aktiven Quellen;
+70 hängen an obsolete Quellen. Diese Kaskade muss bei der Übernahme beachtet
+werden. Native Labels ohne explizite Locale sind keine automatisch freigegebenen
+en-Übersetzungen. Keine Reaktivierung oder Statuskorrektur durchgeführt.
+
+31 lang/vendor/backup-Dateien ergeben 1.054 statisch lesbare Texte: 1.051 stimmen
+mit der installierten Paketversion überein, drei deutsche Overrides unterscheiden
+sich sprachlich (gepeichert, Gesund, dass). Beide Fassungen und Datei-Hashes sind
+gesichert. Provider-/PackageTools-Code belegt den Namespace backup; dies schaltet
+keinen neuen produktiven Veröffentlichungsweg frei.
+
+Prüfungen: READ ONLY bestätigt, 43 Vergleichsfälle, alle 31 Dateien lesbar,
+1.054 = 1.051 + 3, stabile Hashes der Projekt- und Paketdateien; PHP-Syntax,
+Pint und Whitespace erfolgreich. Keine Produktionsdaten geändert.
+Die bereits gezählten 952 nativen Legacy-Werte sind noch auf exklusive Inhalte
+zu prüfen. Die Berichte ersetzen weiterhin keine vollständige Sicherung und
+keine Generalprobe auf Datenbankkopie.
+
+### Inhaltliche Prüfung der 952 nativen Altwerte — 2026-10-19
+
+[transfer-native-values-2026-10-19.md](transfer-native-values-2026-10-19.md)
+und das gleichnamige JSON sichern alle 952 Originalzeilen mit Herkunft und Meta.
+inspect-transfer-native-values.php liest READ ONLY; build-native-value-review.py
+klassifiziert offline ohne Schreibzugriff auf Anwendungsdaten.
+
+909 Zeilen stammen laut source_type aus Sprachdateien, 43 aus fest definierten
+Optionsarrays. Die 952 Zeilen enthalten 810 unterschiedliche native_label-Texte,
+keine NULL-/Leertexte. Es handelt sich nicht um 952 freigegebene Übersetzungen.
+Alle Wertzeilen heißen open, die Entries dagegen 798 open / 142 obsolete /
+12 commented_out. Sprachherkunft muss aus gespeicherter Evidenz stammen;
+keine neue Locale oder SuggestedKey-Zuordnung wurde erfunden.
+
+797 Labels stimmen noch am gespeicherten Sprachdatei-Key überein, 136 sind
+anderswo textgleich belegt, 13 enthalten JSON-Strukturen mit 39 textgleichen
+Textblättern. Sechs Texte haben keinen aktuellen Zeugen im geprüften Umfang:
+All guards, All roles, Assignment, Edit Role Management, No Value, Not A Number.
+Alle sechs gehören zu obsolete Entries und bleiben gesicherte historische
+Textnachweise. Kein automatisches Löschen oder Reaktivieren.
+
+Textgleichheit begründet keine Finding-/Key-Zusammenführung. Dynamische
+Quelllabels zählen für die aktuelle Textabdeckung nur bei active Quellwert UND
+active übergeordneter Quelle. Die 13 JSON-Zeichenfolgen werden nicht als einzelne
+Übersetzungen importiert; Original und Blattvergleich bleiben getrennt erhalten.
+
+Prüfungen: READ ONLY bestätigt, 952 eindeutige Zeilen und Vergleiche,
+952 = 797 + 136 + 13 + 6, 39/39 JSON-Textblätter mit Textzeugen,
+elf referenzierte Dateien hashstabil; Syntax/Pint/Whitespace geprüft.
+Keine Produktionsdaten verändert. Die gezielten Inhaltsprüfungen sind damit
+für die bislang aufgelisteten Altformate durchgeführt, aber kein vollständiges
+Backup oder Importplan. Nächster Schritt: offene Entscheidungen konsolidieren
+und die Generalprobe auf gesicherter Kopie vorbereiten.
+
+### Konsolidierte Entscheidungen und Vorbereitung der Generalprobe — 2026-10-19
+
+[transfer-rehearsal-plan-2026-10-19.md](transfer-rehearsal-plan-2026-10-19.md)
+trennt vollständige Evidenzaufnahme von aktivem Arbeitsbestand. Das zugehörige
+Manifest bindet sieben Berichte per SHA256 und enthält 114 offene Arbeitseinträge
+in acht Themenblöcken. Keine Entscheidung wird automatisch getroffen; Themen
+und Texte dürfen sich überschneiden und sind nicht als Verlustzählung zu addieren.
+
+prepare-transfer-rehearsal.py erstellt/prüft ausschließlich offline. Sechs Tests
+prüfen Evidenzdrift, doppelte IDs, unzulässige Entscheidungen, falsche Backup-
+Behauptungen sowie Reproduzierbarkeit des tatsächlichen Manifests. Alle erfolgreich.
+Der Validator meldet bewusst rehearsal_ready=false / reset_ready=false.
+
+pg_dump/pg_restore vorhanden, pg_dump 18.6. Noch kein vollständiger Dump, Restore,
+Evidenzimport oder Neuaufbau durchgeführt. Die vorhandenen Berichte sind mehrere
+zeitversetzte Inhaltsnachweise, kein zusammenhängendes Backup. Fixture-Capture
+ersetzt nicht den echten Scanner. Der Plan benennt die sieben ausstehenden
+Abnahmeschritte und die separate spätere UI-/Command-Anbindung ausdrücklich.
+Nächster Schritt ist eine geschützte Sicherung mit Wiederherstellungsprüfung in
+einem neuen isolierten Cluster; kein produktiver Reset und keine Datenänderung
+in diesem Vorbereitungsschritt.
+
+### Vollständiger DB-Dump und geprüfter Restore — 2026-10-19
+
+[backup-restore-result-2026-10-19.md](backup-restore-result-2026-10-19.md)
+und das gleichnamige JSON dokumentieren die erfolgreich ausgeführte Sicherung.
+backup-and-restore-rehearsal.php verwendet einen exportierten READ-ONLY-Snapshot,
+privates Git-ignoriertes Backup-Verzeichnis und einen neuen eigenen PostgreSQL-
+Cluster ohne TCP. Kein Schreibzugriff auf die Anwendungsdatenbank.
+
+Ergebnis: 326.519.713 Bytes Dump; 79 Tabellen / 2.630.711 Zeilen,
+Spaltenstruktur und 69 Sequenzstände nach Restore identisch. 3.595 Projektdateien
+kopiert und hashstabil; kein beobachteter DB-/Struktur-/Sequenzdrift während Aufnahme.
+Cluster anschließend gestoppt; temporäre .pgpass entfernt; privates Verzeichnis
+0700 / Dump 0600 geprüft, Dump-SHA256 nach Abschluss erneut verifiziert.
+
+Sicherung unter storage/app/private/dev/workbench-rehearsal/20261019-075456-18dfd037.
+Wiederherstellungsquelle ist der private Dump; gestoppter /tmp-Cluster ist nur
+Arbeitskopie. Keine Offsite-Kopie. Kein vollständiges Deployment-Backup: globale
+Rollen, .env, Uploads, Abhängigkeitsinstallationen und externe Dienste nicht in
+Source-Kopie; Restore mit isoliertem Owner ohne produktive ACLs.
+
+Die ersten beiden Vorbereitungsschritte sind damit ausgeführt; das ursprüngliche
+Manifest bleibt historisch unverändert. Kein neuer Workbench-Datenbestand,
+kein produktiver Reset und keine Übernahmeentscheidung. Nächster Schritt:
+separates Evidenz-Staging aus der geprüften Kopie, danach echter Neuaufbau.
+# Nachweisablage auf der geprüften Kopie – 2026-10-19
+
+Die isolierte Nachweisablage wurde erfolgreich aufgebaut: 122.133 unveränderte Datensätze aus 26 Tabellen, 3.595 Dateinachweise und sieben ausschließlich im restaurierten Archiv belassene History-/Lauftabellen. Alle 33 Tabellen wurden gegen die Sicherung geprüft. Drei negative Integritätsprüfungen bestanden. Ein eigener privater Dump wurde erstellt; der Testcluster ist gestoppt. Kein produktiver Datenbankzugriff und keine aktive Generation wurden durchgeführt.
+
+Details und Grenzen: [evidence-staging-result-2026-10-19.md](evidence-staging-result-2026-10-19.md), maschinenlesbares Ergebnis: [evidence-staging-result-2026-10-19.json](evidence-staging-result-2026-10-19.json).
+
+## Zuordnung zur neuen Generation – 2026-10-19
+
+Der offline erzeugte [Übernahmeplan](generation-mapping-2026-10-19.md) ordnet alle 33 gesicherten Tabellen ausdrücklich ein. Rohfelder werden durch eine neue statische Quellerfassung belegt; gleichnamige oder ähnliche Altfelder sind kein ausreichender Herkunftsnachweis. Alte Freigaben und Timeline-Ereignisse werden nicht aktiv übernommen. Der maschinenlesbare [Plan](generation-mapping-2026-10-19.json) bindet Sicherung, Staging-Dump und Quelltabellen-Fingerabdrücke. Sieben Tests bestanden. Kein aktiver Import und kein produktiver Datenbankzugriff; nächster offener Schritt ist der Adapter für die echte Quellerfassung auf der Sicherungskopie.
+
+## Quellerfassung auf der Sicherungskopie – 2026-10-19
+
+Der vorhandene Scanner wurde ohne Anwendungsbootstrap und Datenbankzugriff auf 1.684 gesicherte Quelldateien angewendet. Ergebnis: 20.120 getrennte Kandidaten, darunter 121 ausgeschlossene Kommentar-Treffer; 2.207 Key-Kandidaten haben einen exakten Textbeleg in den 20 statisch gelesenen englischen Sprachdateien. Keine aktiven Findings erzeugt. 14 Adapter-Assertions bestanden. Der nächste notwendige Schritt ist die Validierung des umgebenden PHP-/Blade-Kontexts; die bisherige Mustersuche allein reicht für eine aktive Übernahme nicht aus. Details: [Quellerfassung](copied-source-capture-2026-10-19.md), [Prüfsummen und Zähler](copied-source-capture-2026-10-19.json).
+
+## Kontextprüfung der Sicherungserfassung – 2026-10-19
+
+Die statische Kontextprüfung ordnet sämtliche 20.120 vorhandenen Kandidaten zu: 20.012 syntaktische Aufrufe, 105 Kommentare, drei PHP-Stringinhalte. Die Capture-IDs bleiben unverändert. 16 zuvor pauschal als Kommentar behandelte Treffer wurden korrigiert; keine aktiven Findings erzeugt. 42 Adapter-/Kontextprüfungen und sieben Mappingtests bestanden. Details und Grenzen: [Kontextbericht](copied-source-context-2026-10-19.md), [maschinenlesbares Ergebnis](copied-source-context-2026-10-19.json). Die Vollständigkeit bezieht sich nur auf entdeckte Kandidaten, nicht auf eine vollständige Erkennung aller möglichen Quellkonstrukte.
+
+## Probe-Erfassung im neuen Schema – 2026-10-19
+
+19.940 bestätigte statische Kandidaten wurden als neue Findings in einer separaten Testdatenbank erfasst; 108 ausgeschlossen, 72 offen. Alle 20.120 Kandidaten sind über einen unveränderlichen Ergebnisnachweis bilanziert. Rücklesevergleich, identischer Retry, SuggestedKey-Schreibschutz und Rollback nach einem Teilimport bestanden. Keine Keys, Zuordnungen, Revisionen, Freigaben oder Timeline-Events angelegt; produktiver Bestand unverändert. Details: [Probe-Erfassung](static-capture-import-2026-10-19.md), [Prüfergebnis](static-capture-import-2026-10-19.json). Nächster Schritt: Verhalten eines echten erneuten Scans mit unveränderten, verschobenen und entfernten Fundstellen auf der Kopie.
+
+## Erneute Scan-Zyklen – 2026-10-19
+
+Auf einer weiteren restaurierten Testdatenbank wurden sieben echte Scan-Zyklen an einer kopierten Quelldatei geprüft: unverändert (zweimal), verschoben, zusätzlich kopiert, entfernt, erneut vorhanden und textuell geändert. Vier unsichere Fälle wurden ohne Änderungen abgewiesen. 16 Integrations-Assertions und erneut 42 Kontext-/Adapterprüfungen bestanden. Findings außerhalb der Datei und die gesicherte Ausgangsdatei blieben unverändert. Keine produktiven Anpassungen. Details und Grenzen: [Rescan-Probe](copied-rescan-2026-10-19.md), [Ergebnis](copied-rescan-2026-10-19.json). Als nächster fachlicher Schritt bleiben die 72 offenen Kandidaten und danach die getrennte Key-/Finding-Zuordnung.
+
+## Untersuchung der 72 offenen Kandidaten – 2026-10-19
+
+Vollständig und ohne produktive Änderungen untersucht: sieben reine JS-Serialisierungen, sechs serialisierte Props mit übersetztem Default, 28 explizite Optionsquellen (zwölf Keys, 102 englische Optionswerte), drei überschreibbare Literal-Prop-Defaults, 18 dynamische Übersetzungsargumente sowie zehn Literal/Key-Prüffälle. Acht neue Prüfungen bestanden. Keine automatischen Entscheidungen; die bisherige Datenbankbilanz bleibt unverändert. Details: [Bericht](pending-capture-review-2026-10-19.md), [Einzelnachweise für alle 72 Kandidaten](pending-capture-review-2026-10-19.json).
+
+## Quellenrollen auf der Testkopie – 2026-10-19
+
+Alle 20.120 Captures haben einen zusätzlichen unveränderlichen Rollennachweis: 19.940 erfasste und 31 offene Übersetzungsquellen, 28 Optionsquellen, 13 Verwendungen und 108 ausgeschlossene Kontexte. Die 19.940 Findings blieben vollständig unverändert. Keine produktiven Änderungen, keine zusätzlichen skalaren Findings aus Optionen/Serialisierung. 15 Rollen- und 11 PostgreSQL-Assertions bestanden; acht Review- und 42 Kontextprüfungen ebenfalls. Die 72 ursprünglichen Prüffälle bleiben im Importnachweis offen. Details und Grenzen: [Quellenrollen](source-roles-2026-10-19.md), [Prüfergebnis](source-roles-2026-10-19.json).
+
+## Wertquellen und Optionsargumente – 2026-10-19
+
+Alle 31 offenen Übersetzungsquellen und 28 Optionsquellen sind weiter aufgeschlüsselt. Sieben Fundstellen haben konkrete Producer-Beobachtungen, drei einen überschreibbaren Default, elf benötigen weitere Laufzeitevidenz und zehn eine Literal/Key-Entscheidung. Die 28 Optionsaufrufe enthalten getrennte Owner-, Identitäts-, Fallback- und Locale-Nachweise. Keine Datenbank- oder Quellcodeänderung; keine automatischen Entscheidungen. 16 neue Argumenttests sowie acht Review- und 15 Rollentests bestanden. [Bericht](source-arguments-2026-10-19.md), [Einzelnachweise](source-arguments-2026-10-19.json).
+
+## Persistierte Herkunftsnachweise – 2026-10-19
+
+Auf einer frisch restaurierten Quellenrollen-Kopie wurden drei additive Evidenztabellen angelegt. 59 Fundstellennachweise und sechs Wertlieferanten wurden gespeichert und zurückgelesen. Retry, Vollständigkeit, falsche Rollen/Reviews, Teilimport-Rollback und Schreibschutz geprüft: 82 PostgreSQL-Assertions sowie erneut 16 Argument- und 15 Rollentests bestanden. Alle 19 bestehenden Tabellen blieben inhaltlich unverändert. Kein produktiver Eingriff; alle fachlich offenen Entscheidungen bleiben offen. [Bericht](source-argument-persistence-2026-10-19.md), [Ergebnis](source-argument-persistence-2026-10-19.json).
+
+## Key-/Finding-Zuordnung auf der Kopie – 2026-10-19
+
+2.207 bestehende Key-Verwendungen sind exakt belegt. In einer neuen restaurierten Testgeneration wurden 768 Keys und 1.792 Finding-Verknüpfungen angelegt. Elf strukturell problematische Keys mit 415 Findings bleiben blockiert; keine automatische Umbenennung und keine Zusammenlegung gleichlautender Literale. Zehn Planner- und elf PostgreSQL-Assertions bestanden. Die 19 übrigen bestehenden Tabellen blieben unverändert, insbesondere Findings, SuggestedKeys, Werte und Reviews. Kein produktiver Eingriff. [Bericht](existing-key-links-2026-10-19.md), [Ergebnis](existing-key-links-2026-10-19.json).
+
+## Sprachdatei-Baseline auf der Kopie – 2026-10-19
+
+2.016 Werte aus 54 App-Sprachdateien in neun Locales separat gespeichert: 1.597 exakt verknüpft, 22 wegen Key-Struktur blockiert, 397 unzugeordnet erhalten. 32 Vendor-Dateien explizit außerhalb dieses Umfangs dokumentiert. Keine künstlichen Regional-Fallback-Werte, Revisionen, Benutzerereignisse oder Freigaben erzeugt. Alle 24 vorhandenen Tabellen blieben unverändert. Zwölf PostgreSQL- und sechs Reader-Assertions bestanden. [Bericht](published-values-2026-10-19.md), [Ergebnis](published-values-2026-10-19.json).
+
+## Getrennter Leseweg – 2026-10-19
+
+Read-only-Modell für veröffentlichten Ausgangswert, aktuellen skalaren Entwurf, kontextgebundenes Review und ausdrücklich übergebene Locale-Kette implementiert. 768 Keys mit `de-at → de → en` geprüft, darunter 760 Fallbacks. 2.318 Assertions bestanden; alle 27 Baseline-Tabellen unverändert. Synthetische Review-/Entwurfsfälle ausschließlich in einer separaten, nicht exportierten Fixture-Datenbank. Bestehender Persistenztest nach gemeinsamem Review-Kontext-Refactoring: 186 Assertions, zehn Konkurrenzfälle und neun Neustart-Assertions bestanden. Keine produktive/UI-Anbindung. [Bericht](baseline-reader-2026-10-19.md), [Ergebnis](baseline-reader-2026-10-19.json).
+
+## Lesende Vorschau in Workflow – 2026-10-19
+
+Tab **Baseline preview** ergänzt. Ein privater, expliziter Export stellt 972 Keys aus der isolierten Generation bereit; der Webrequest verbindet sich nicht mit der Testdatenbank. Dateiwert, Entwurf, Review und Fallback sind getrennt sichtbar. Drei neue Pest-Tests / 15 Assertions bestanden. Fehlender Export wird erklärt; echte Entwürfe/Reviews sind im Snapshot noch nicht vorhanden. [Aufruf, Umfang und Aktualisierung](baseline-preview-2026-10-19.md).
+
+## Kontext der unzugeordneten Werte – 2026-10-19
+
+397 unzugeordnete Werte weiter untersucht: 184 Werte / 92 Keys besitzen eine exakt belegte Optionsquelle; 213 Werte / 101 Keys bleiben hinsichtlich ihrer Verwendung offen. Keine neuen Key-Zuordnungen oder Änderungen an Werten. Baseline preview zeigt den zusätzlichen Kontext mit Quellaufrufen, ohne Laufzeitverwendung jeder Option zu behaupten. Zehn Klassifikator-Assertions und fünf Vorschau-Pest-Tests / 23 Assertions bestanden. [Bericht](unassigned-context-2026-10-19.md), [Einzelnachweise](unassigned-context-2026-10-19.json).
+
+## Vollständiger Vorschau-Abgleich – 2026-10-19
+
+Alle 972 exportierten Keys und drei Fallbackketten offline gegen die gesicherten
+Sprachdateien geprüft: 25.861 Prüfungen erfolgreich. Ein Key besitzt ausschließlich
+einen de-at-Wert; für de/en bleibt der Leerzustand ausdrücklich erhalten. Keine
+Datenbankverbindung oder Datenänderung. Die aktuelle Vorschau umfasst drei der neun
+Baseline-Locales. [Ergebnisse und Grenzen](baseline-preview-2026-10-19.md#vollständiger-offline-abgleich-der-vorschau),
+[maschinenlesbares Ergebnis](baseline-preview-verification-2026-10-19.json).
+
+## Korrekturvorschläge getrennt persistieren – 2026-10-19
+
+Additiven Persistenzvertrag auf einer frisch restaurierten Baseline geprüft:
+Vorschläge mit Bearbeiter/Begründung und Ausgangsfingerprint, exakter Retry,
+abweichende Wiederholung, fehlender Kontext sowie Unveränderlichkeit. 17 Assertions
+bestanden. Alle 27 vorher vorhandenen Tabellen unverändert. Ein synthetischer
+Vorschlag wurde ausschließlich auf der Kopie gespeichert; keine Korrektur
+angewendet und kein produktiver/UI-Schreibweg aktiviert.
+[Bericht und Grenzen](key-correction-proposal-2026-10-19.md),
+[Ergebnis](key-correction-proposal-2026-10-19.json).
+
+## Bestätigte Key-Korrektur auf der Kopie – 2026-10-19
+
+DB-Anwendung des synthetischen Vorschlags erprobt: ein regulärer Key, 387 getrennte
+Finding-Verknüpfungen, Anwendungsnachweis und Ereignis. Roh-Findings und die beiden
+ursprünglichen Sprachwerte blieben unverändert; keine Datei-/Produktivänderungen.
+Rollback nach der ersten Verknüpfung, nachträglich belegter Ziel-Key, Retry und
+doppelte Anwendung geprüft. [Bericht](key-correction-application-2026-10-19.md),
+[Prüfergebnis](key-correction-application-2026-10-19.json).
+
+## Arbeitswerte nach Key-Korrektur lesen – 2026-10-19
+
+Gemeinsamen Baseline-Leseweg um einen separaten Reader für ausdrücklich angewendete
+Korrekturen ergänzt. Die alten Dateiwertnachweise werden je Locale als
+Arbeitsgrundlage mit voller Herkunft gelesen; keine Veröffentlichung unter neuem
+Namen und keine erzeugten Revisionen/Freigaben. Erweiterte isolierte Probe:
+53 Assertions erfolgreich, lesender Zugriff ohne Tabellenänderungen.
+[Details](key-correction-application-2026-10-19.md#gesicherte-werte-als-arbeitsgrundlage-lesen).
+
+## Arbeitsgrundlage in einen Entwurf übernehmen – 2026-10-19
+
+Explizite Übernahme eines vorhandenen Locale-Werts unter dem korrigierten Key auf
+der isolierten Kopie ergänzt. Gemeinsamer Revisionsschreibweg, Herkunftsnachweis,
+Kontextprüfung, Überschreibschutz und atomarer Rollback; keine Freigabe oder
+Veröffentlichung. 65 Assertions erfolgreich. Bestehende Persistenzprüfung:
+186 Assertions, zehn Parallelitätsfälle und neun Neustart-Assertions erfolgreich.
+[Details](key-correction-application-2026-10-19.md#arbeitsgrundlage-ausdrücklich-als-entwurf-übernehmen).
+
+## Freigabezyklus des übernommenen Entwurfs – 2026-10-19
+
+Gemeinsamen Review-Schreibweg extrahiert und am übernommenen Entwurf geprüft:
+explizite Freigabe, Kontextänderung, Retry und Widerruf. Herkunft bleibt erhalten;
+Freigabe erzeugt keine Veröffentlichung. 79 Assertions erfolgreich, bestehende
+Persistenz-/Veröffentlichungsprüfungen ebenfalls erfolgreich. Datei-Export dieses
+konkreten übernommenen Entwurfs bleibt ein nachfolgender Integrationsschritt.
+[Details](key-correction-application-2026-10-19.md#übernommenen-entwurf-prüfen-und-freigabe-widerrufen).
+
+## Datei-Export nach Entwurfsübernahme – 2026-10-20
+
+Bestehenden Publisher mit der isolierten Wiederherstellung verbunden; Ausgabe
+ausschließlich unter dem temporären Testcluster. Freigabe, späterer Widerruf,
+Dateischreiben, Unterbrechung und Wiederanlauf am übernommenen Wert geprüft.
+94 Assertions erfolgreich; bestehende Persistenz-/Publikationstests ebenfalls
+erfolgreich. Produktive Sprachdateien und UI bleiben unverändert.
+[Details](key-correction-application-2026-10-19.md#datei-export-des-übernommenen-entwurfs--2026-10-20).
+
+## Veröffentlichungsstand wieder einlesen – 2026-10-20
+
+Separaten read-only Verifikationsreader ergänzt: abgeschlossener Export,
+Datei-Prüfsumme, statisch gelesener Spracheintrag, unveränderliche Revision und
+Herkunftsbeleg werden gemeinsam geprüft. Fehlende/veränderte Dateien und nicht
+veröffentlichte Revisionen werden abgewiesen. Ursprüngliche Baseline unverändert.
+Integrierter Probelauf: 103 Assertions erfolgreich.
+[Details](key-correction-application-2026-10-19.md#exportierten-stand-wieder-einlesen--2026-10-20).
+
+## Prüfbericht in der Baseline-Vorschau – 2026-10-20
+
+Die Baseline-Vorschau zeigt am Ende einen eigenen Flux-Callout mit aufklappbaren
+Prüfschritten des synthetischen Probelaufs. Die Anzeige liest ausschließlich den
+festen JSON-Prüfbericht; sie startet keine Befehle und verbindet keine Datenbank.
+Zeitpunkt, Test-Key und Assertions werden angezeigt. Fehlende Schrittbelege werden
+nicht als Erfolg gewertet; abweichende Dump-Prüfsummen zur angezeigten Baseline
+werden kenntlich gemacht. Der Bericht ist unabhängig von der aktuellen Key-Auswahl
+und enthält ausdrücklich keine produktive Freigabe.
+
+Der Probelauf wurde erneut ausgeführt: 103 Assertions erfolgreich. Die neuen
+UI-/Validierungstests bestehen. Im gemeinsamen Lauf mit BaselineReaderPreviewTest
+bleibt eine bestehende Markup-Erwartung offen: Der Mehrzeiligkeitstest erwartet
+`pre`/`div.whitespace-pre-wrap`; die individuell überarbeitete View verwendet
+inzwischen Flux-Textarea beziehungsweise Callout-Text. Diese Darstellung wurde
+für die Berichtsanzeige nicht umgebaut.
+
+### Leserechte des UI-Prüfberichts korrigiert
+
+Die UI liest nun `storage/app/private/workbench-previews/workflow-rehearsal.json`
+statt direkt den mit 0600 geschützten Auditbericht. Der Probelauf stellt diese
+separate Kopie atomar mit 0644 bereit, entsprechend der bestehenden
+Baseline-Vorschau. Der Auditbericht bleibt privat. Fehlende, unlesbare oder
+ungültige Vorschau-Dateien liefern keine Daten statt einer unbehandelten Exception.
+
+## Quellcode-Änderungsvorschau – 2026-10-20
+
+`SourceKeyChangePreview` erzeugt ausschließlich vorgeschlagene Bytes, keine
+Dateiänderungen. Voraussetzung sind passende Datei-Prüfsumme, exakte Byteposition,
+unveränderte erfasste Expression und bestätigter Aufrufkontext. Nur das statische
+erste Argument wird ersetzt; weitere Argumente und Anführungszeichen bleiben
+unverändert. Doppelte/überlappende Positionen sowie Kommentare werden abgewiesen.
+
+Der Offline-Probelauf `preview-key-source-changes.php` prüfte alle 387 belegten
+Fundstellen von `ui.type` in 44 gesicherten Dateien mit dem synthetischen Ziel
+`rehearsal.correction.type`. Keine Datenbankverbindung und keine Änderungen an
+Quell-/Sprachdateien. Ergebnis inklusive einzelner Vorher-/Nachher-Argumente:
+[source-key-change-preview-2026-10-20.json](source-key-change-preview-2026-10-20.json).
+Drei gezielte Tests mit sieben Assertions bestanden.
+
+Die Vorschau ist zusätzlich in den integrierten Korrekturprobelauf eingebunden;
+dieser konnte diesmal nicht erneut ausgeführt werden, weil der bisherige
+`/tmp/tw-restore-*`-Cluster nicht mehr vorhanden ist. Sein letzter erfolgreicher
+Bericht bleibt unverändert. Der erfolgreiche Offline-Abgleich ist kein Nachweis
+für den aktuellen produktiven Quellstand und keine Freigabe zum Umschreiben.
+
+### Integrierte Prüfung wiederhergestellt – 2026-10-20
+
+Der Korrekturprobelauf legt nun für jeden Lauf einen eigenen isolierten
+PostgreSQL-Cluster unter `/tmp` an. Die geprüften Sicherungen bleiben unverändert;
+ein historischer temporärer Cluster ist keine Voraussetzung mehr. Der neue
+Cluster bietet ausschließlich einen privaten Unix-Socket und wird nach dem
+Probelauf gestoppt.
+
+Vollständiges Ergebnis: 193 Assertions erfolgreich, einschließlich der
+Quellcode-Änderungsvorschau für 387 getrennte Fundstellen in 44 gesicherten Dateien.
+Der aktuelle JSON-Bericht wurde auch als lesbare UI-Vorschau bereitgestellt.
+Die Schritttabelle zeigt nun zusätzlich die rein lesende Quellcode-Vorschau.
+Quellcode-Umschreiben und produktive Schreibaktionen bleiben unangebunden.
+
+## Quellcodeänderung auf Arbeitskopie und Rescan – 2026-10-20
+
+`rehearse-key-source-application.php` erstellt ein neues privates Arbeitsverzeichnis
+mit den 44 betroffenen Dateien. Nach Prüfung der Ausgangsprüfsummen werden die
+vorgeschlagenen Bytes atomar in diese Arbeitskopie geschrieben. Der bestehende
+Scanner wird ohne produktiven Laravel-Bootstrap und ohne Datenbank davor und
+danach ausgeführt. Der bestehende Capture-Adapter bestätigt den Aufrufkontext.
+
+Alle 387 ausgewählten Fundstellen liefern den synthetischen neuen Key. Die
+übrigen Scanner-Aufrufe werden unter Berücksichtigung verschobener Bytepositionen
+abgeglichen; ihre Expressions und Argumentwerte bleiben unverändert. Es entstehen
+keine zusätzlichen Scanner-Aufrufe. 12.009 Assertions erfolgreich.
+
+Die gesicherte Ausgangskopie und produktive Dateien bleiben unverändert.
+Einzeländerungen liegen in `changes.json` des im Ergebnis angegebenen privaten
+Arbeitsverzeichnisses. Das Ergebnis ist in
+[source-key-application-2026-10-20.json](source-key-application-2026-10-20.json)
+festgehalten. Noch nicht enthalten: Datenbank-Reconciliation des Rescans,
+Nachfolgerverweise und Historienereignisse für diese tatsächliche Codeänderung.
+
+## Explizite Rewrite-Nachfolger in der Datenbank – 2026-10-20
+
+Der Arbeitskopie-Rescan liefert nun einen prüfsummengesicherten Übergangsnachweis
+je ausgewähltem Finding. Der integrierte Probelauf prüft diese Dateien gegen die
+bestätigte Vorschau und verwendet `CorrectedSourceReconciler` ausschließlich für
+diese expliziten Übergänge. Keine Textgleichheits-Heuristik und keine
+Reaktivierung obsoleter Einträge.
+
+Ergebnis auf der isolierten Kopie: 387 bisherige Findings stillgelegt, 387
+getrennte Nachfolger mit `predecessor_id` erstellt und jeweils mit derselben
+Key-ID verknüpft. Alte Rohdaten und SuggestedKeys bleiben erhalten. Scanbeleg,
+Nachfolger, Links und ein nachvollziehbares Ereignis werden atomar geschrieben.
+Ein Fehler nach dem ersten Nachfolger rollt alles zurück. Derselbe Auftrag wird
+ohne Schreiben wiederholt; ein neuer Auftrag mit identischem Rescan bestätigt
+die Nachfolger ohne zusätzliche Findings oder Historienereignisse (nur ein
+Operationsbeleg). Abweichende, doppelte und veraltete Übergänge werden abgewiesen.
+
+Die veränderten aktiven Finding-Verknüpfungen machen die bisherige Review-Freigabe
+ungültig. Der historische Veröffentlichungsbeleg und die exportierten Bytes
+bleiben weiter verifizierbar. Gesamtlauf: 1.027 Assertions erfolgreich;
+Arbeitskopie/Rescan: weiterhin 12.009 Assertions erfolgreich.
+
+Grenze: Dies ist die explizite Reconciliation der ausgewählten Rewrite-Findings,
+kein vollständiger neuer Scanlauf über den gesamten Datenbestand. Eventuell nur
+positionsverschobene, nicht ausgewählte Aufrufe müssen separat abgeglichen werden.
+Produktive Daten und Quelldateien bleiben unverändert.
+
+## Nicht ausgewählte Positionsverschiebungen – 2026-10-20
+
+Der Arbeitskopie-Rescan ermittelt zusätzlich 16 unveränderte Literal-Aufrufe,
+deren Spalte durch die längeren Keys um jeweils 18 Bytes verschoben wird.
+Der gespeicherte Übergangsnachweis enthält jeweils die vollständige alte und
+neue Erfassung. Identifikation erfolgt anhand Datei, Zeile, Byte-Spalte und
+unveränderter Expression, nicht anhand gleicher Literaltexte.
+
+Der vorhandene `CorrectedSourceReconciler` verarbeitet nun auch explizite reine
+Positionsverschiebungen. In diesem Modus müssen Expression und Literalinhalt
+gleich bleiben und die Position tatsächlich abweichen. Raw-Literal,
+SuggestedLiteral und SuggestedKey werden erhalten; die bestehende Zuordnung
+bleibt gleich, einschließlich fehlender Verknüpfung. Vorgänger werden archiviert,
+Nachfolger verweisen auf diese. Rollback und identischer erneuter Rescan sind
+auch hierfür geprüft. Es entsteht kein neuer Key durch eine Positionsänderung.
+
+Gesamter isolierter Probelauf: 1.082 Assertions erfolgreich, 387 geänderte
+Key-Aufrufe und 16 zusätzlich verschobene Aufrufe. Die Baseline-Vorschau zeigt
+den zusätzlichen Prüfschritt. Produktive Dateien und Daten bleiben unverändert.
+
+## Quellcode-Vergleich in der Baseline-Vorschau – 2026-10-20
+
+Neuer aufklappbarer Callout „Recorded source changes“ mit einer durchsuchbaren
+Flux-Dateiauswahl. Pro Datei zeigt die Tabelle Finding-ID der isolierten Generation,
+ursprüngliche Zeile/Byte-Spalte sowie altes und vorgeschlagenes Key-Argument.
+Eine weitere Tabelle zeigt unveränderte Aufrufe mit verschobener Position.
+
+Die Anzeige ist ausdrücklich unabhängig von der Key-Auswahl oben und beschreibt
+nur den synthetischen Probelauf. Sie liest ausschließlich den atomar mit 0644
+bereitgestellten Snapshot `storage/app/private/workbench-previews/source-changes.json`.
+Dateiauswahl ist nur ein Filter im Snapshot, kein Dateizugriff. Fehlende/unlesbare
+oder ungültige Snapshots werden abgefangen. Keine Scan- oder Schreibaktionen.
+
+Arbeitskopie/Rescan erneut erfolgreich: 12.009 Assertions, 44 Dateien, 387
+Key-Änderungen und 16 Positionsverschiebungen. UI-Auswahl, unbekannte Pfade und
+fehlende/ungültige/unlesbare Snapshots sind durch gezielte Tests abgedeckt.
+
+## Aktueller Quellcode gegen aufgezeichnete Änderungen – 2026-10-20
+
+Die ausgewählte Datei wird zusätzlich anhand ihrer Prüfsumme mit dem
+aufgezeichneten Ausgangsstand und dem vorgeschlagenen Ergebnis verglichen.
+Die vorhandene `BaselineFileFreshness`-Prüfung übernimmt Dateizugriff und
+Projektgrenzen; nur eindeutig im Snapshot enthaltene Dateien werden geprüft.
+Unbekannte Pfade aus der Auswahl führen zu keinem Dateizugriff.
+
+Die UI unterscheidet Ausgangsstand, vorgeschlagenen Stand, abweichenden Inhalt,
+fehlende/unlesbare Dateien und fehlende Prüfnachweise. Prüfzeit und „Check again“
+machen den Zeitpunkt nachvollziehbar. Übereinstimmung mit dem Ergebnis ist
+ausdrücklich kein Nachweis einer Workbench-Anwendung und keine Schreibfreigabe.
+
+Der lesende Abgleich ergab für alle 44 Dateien Übereinstimmung mit dem
+gesicherten Ausgangsstand. Produktive Quelldateien und Datenbank bleiben
+unverändert. Gezielte Tests decken Statuswechsel, unveränderte Dateibytes,
+Pfadgrenzen und die gerenderte Anzeige ab.
+
+## Gemeinsame Prüfung der Baseline-Bausteine – 2026-10-20
+
+Der bisher offene Mehrzeiligkeitstest wurde auf die aktuelle Flux-Darstellung
+umgestellt. Er prüft den tatsächlichen Textarea-Inhalt und die getrennten
+veröffentlichten Werte/Entwürfe im gerenderten DOM, statt ein nicht mehr
+verwendetes `pre` vorauszusetzen. Dabei wurde die fehlende Erhaltung von
+Zeilenumbrüchen bei veröffentlichten Tabellenwerten ergänzt. Die Ergebnis-
+Textarea ist ausdrücklich readonly; das vom Nutzer angepasste Layout bleibt.
+
+Diese Prüfung betrifft Vorschau, Freigabe-, Veröffentlichungs- und
+Quelländerungsbausteine im Testbetrieb. Sie ist keine Freigabe eines produktiven
+Resets oder einer automatischen Übernahme. Der bisherige produktive Workflow
+wird durch diese Anzeigeänderungen nicht umgeschaltet.
+
+Gemeinsamer Pest-Lauf: alle 94 Tests mit 435 Assertions erfolgreich.
+Gezielter Pint-Check der geänderten Testdatei erfolgreich. Ein zusätzlich
+gestarteter `--dirty`-Check meldet bestehende Formatabweichungen in drei älteren
+Audit-Skripten und dem Scanner; diese Dateien wurden hier nicht umformatiert.
+
+## Vollständiger Quellabgleich in der Vorschau – 2026-10-20
+
+„Check all recorded source files“ aktiviert in „Recorded source changes“ den
+lesenden Abgleich des gesamten aufgezeichneten Dateisatzes. Solange aktiviert,
+wird er bei weiteren Renderings frisch berechnet. Zusammenfassung und Prüfzeit
+zeigen den aktuellen Stand; Abweichungen sind über „Inspect“ direkt auswählbar.
+Der bestehende Einzeldatei-Prüfer wird wiederverwendet.
+
+Bereits dem vorgeschlagenen Ergebnis entsprechende Dateien bleiben prüfbedürftig:
+Die Bytes allein beweisen keine erfolgreiche Workbench-Operation. Fehlende,
+unlesbare oder abweichende Dateien sowie fehlende Prüfsummen und mehrdeutige
+doppelte Pfade werden nicht als passender Ausgangsstand gewertet. Ein leerer
+Dateisatz gilt ebenfalls nicht als vollständig geprüft.
+
+Ergebnis auf den aktuellen Quelldateien: 44 von 44 entsprechen dem Ausgangsstand.
+Gezielte Pest-Prüfung: 9 Tests, 58 Assertions erfolgreich; Pint erfolgreich.
+Der Abgleich prüft weder aktuelle Datenbankzuordnungen noch Sprachdateien und
+erteilt keine Schreibfreigabe. Produktive Daten bleiben unverändert.
+
+## Quelländerungsvorschau für einen eingegebenen Ersatz-Key – 2026-10-20
+
+Nach „Check proposal“ steht bei einem strukturell gültigen und im Snapshot
+konfliktfreien Vorschlag „Source changes for your proposed key“ bereit.
+Die durchsuchbare Dateiauswahl enthält ausschließlich die für diesen Key
+aufgezeichneten Quelldateien. Die Tabelle zeigt Finding-ID der Baseline,
+Zeile/Byte-Spalte und das alte/neue Key-Argument. Änderungen am eingegebenen
+Key oder an der Key-Auswahl entfernen die bisherige Vorschau.
+
+`BaselineProposedSourceChanges` prüft den Vorschlag und die Dateievidenz erneut.
+Prüfsummen, Projektgrenze, konkrete Positionen und statischer Aufruf müssen
+übereinstimmen. Der Parser prüft die Prüfsumme nochmals anhand der tatsächlich
+gelesenen Bytes. Fehlende, geänderte, außerhalb liegende oder widersprüchliche
+Quellen werden abgewiesen. Kein Scan, keine Dateiänderung, keine DB-Verbindung.
+Andere Argumente und der übrige Quelltext bleiben in den vorgeschlagenen Bytes
+unverändert; vollständige Dateiinhalte werden nicht an die UI ausgegeben.
+
+Die bereits geprüften Klassen `SourceKeyChangePreview` und `CopiedSourceContext`
+wurden aus `tests/Support/TranslationWorkbench` nach
+`packages/gunreip/laravel-translation-workbench/src/Support` verschoben.
+Die bisherigen Tests und Audit-Skripte verwenden dieselben Klassen; keine
+zweite Parser-Implementierung und keine Kompatibilitätsaliase. `nikic/php-parser`
+ist nun ausdrücklich als Laufzeitabhängigkeit in Projekt und Package deklariert.
+Composer hat keine Paketversionen verändert.
+
+Geänderte Anbindung:
+- `src/Livewire/TranslationWorkbenchWorkflow.php`
+- `resources/views/livewire/workflow/baseline-key-correction.blade.php`
+- neue View `resources/views/livewire/workflow/baseline-proposed-source-changes.blade.php`
+- neuer Test `tests/Unit/TranslationWorkbench/BaselineProposedSourceChangesTest.php`
+
+Auf die gemeinsamen Klassen umgestellte Aufrufer:
+- `tests/Unit/TranslationWorkbench/SourceKeyChangePreviewTest.php`
+- `tests/Integration/TranslationWorkbench/copied-source-capture.php`
+- `tests/Support/TranslationWorkbench/CopiedSourceCapture.php`
+- `tests/Support/TranslationWorkbench/PendingCaptureReview.php`
+- Audit-Skripte `capture-copied-source.php`, `preview-key-source-changes.php`,
+  `rehearse-key-source-application.php`, `rehearse-key-correction-application.php`
+
+Validierung: 97 Pest-Tests / 471 Assertions erfolgreich, 42 bestehende
+Scanner-/Kontext-Assertions erfolgreich. Lesende Vorschau auf den 44 aktuellen
+Quelldateien: alle 387 aufgezeichneten Key-Argumente überprüft. Dafür wurde der
+bekannte synthetische Ziel-Key verwendet; kein Vorschlag gespeichert oder
+angewendet. Composer-Validierung erfolgreich.
+
+## Vollständiger eingegebener Quelländerungsvorschlag – 2026-10-20
+
+„Check all proposed changes“ prüft den eingegebenen Ersatz-Key über den
+vollständigen aufgezeichneten Fundstellenbestand. Der bestehende
+`BaselineProposedSourceChanges`-Prüfer führt die Einzeldateiprüfungen zusammen;
+es gibt keine zweite Ersetzungslogik. Referenzierte Quell- und Sprachdateien
+werden vor und nach der Parserprüfung mit ihren erfassten Prüfsummen verglichen.
+
+Ein vollständiger Vorschlag setzt eindeutige Finding-IDs, prüfbare Positionen,
+passende Prüfsummen und eine vollständige Bilanz aller Fundstellen voraus.
+Teilweise erfolgreiche Prüfungen erhalten keinen Vorschlagsfingerabdruck.
+Fehlende, geänderte oder unprüfbare Dateien erscheinen mit Grund in der UI.
+
+Der Fingerabdruck bindet Schema, vollständigen Snapshot, Quell-/Ziel-Key,
+konkrete Ersetzungen und Referenzprüfsummen. Prüfzeitpunkte sind nicht Teil
+des Fingerabdrucks; eine identische Wiederholungsprüfung bleibt vergleichbar.
+Das Ergebnis wird erst auf expliziten Klick berechnet, als gesperrte
+Livewire-Property angezeigt und beim Wechsel von Key, Eingabe, Filter oder
+Snapshot verworfen. Die Anzeige beschreibt den Prüfzeitpunkt; sie behauptet
+keine fortlaufende Aktualität und keine Schreibfreigabe.
+
+Lesender Gesamtlauf mit dem synthetischen Ziel-Key: 44 Quelldateien und 387
+Fundstellen vollständig geprüft, keine Abweichung in referenzierten Dateien.
+Es wurden weder Quell-/Sprachdateien noch produktive Daten geändert.
+
+Weiterhin ausdrücklich offen: Die aktuellen Datenbankzuordnungen sind nicht
+Teil dieser Snapshot-Prüfung. Vor einer echten Anwendung müssen diese und die
+Dateien erneut unter dem gemeinsamen Schreibablauf geprüft werden. Der
+Fingerabdruck allein ist kein Anwendungs- oder Veröffentlichungsbeleg.
+
+Validierung: 98 Pest-Tests mit 502 Assertions erfolgreich. Enthalten sind
+gemischte gültige/ungültige Fundstellen, Sprachdateiänderungen, fehlende Dateien,
+doppelte IDs, deterministische Fingerabdrücke sowie das Verwerfen einer
+UI-Prüfung bei einem neuen Snapshot. Whitespace-Prüfung erfolgreich.
+
+## Vorschau gegen den isolierten Datenbankstand – 2026-10-20
+
+`BaselineProposalEvidence` vergleicht die geladene Baseline-Vorschau mit dem
+transaktional gelesenen Kontext von `KeyCorrectionProposal`. Verglichen werden
+Baseline, Quell-/Ziel-Key, exakt dieselben Finding-IDs, Dateipfade, Positionen,
+Expressions sowie die veröffentlichten Ausgangswerte je Sprache und Datei.
+Eine gleiche Anzahl allein genügt nicht. Die Klasse öffnet selbst keine
+Datenbankverbindung; die Belege stammen aus dem bestehenden Prüfablauf.
+
+Der Datenbankkontext enthält jetzt auch den Dateipfad. Außerdem müssen alle
+aktiven Findings zum Quell-Key in den Baseline-Beobachtungen enthalten sein.
+Zusätzliche aktive Findings ohne diesen Nachweis blockieren den Vorgang.
+Die vorhandene transaktionale Prüfung vor Erfassung und Anwendung bleibt
+maßgeblich; Dateipfade sind nun auch in die zugehörigen Tabellensperren und
+den Kontextfingerabdruck einbezogen.
+
+Der vollständige isolierte Probelauf wurde erneut mit frischer restaurierter
+Testdatenbank ausgeführt: 1.098 Assertions erfolgreich. Der neue Vergleich
+bestätigt vor Anwendung 387 Fundstellen und zwei veröffentlichte Ausgangswerte.
+Zusätzliche Prüfungen weisen archivierte Findings, neue aktive Fundstellen,
+anderweitige Key-Zuordnungen, belegte Eltern-/Kindpfade des Ziel-Keys und einen
+geänderten Quellpfad zurück. Sämtliche Testmutationen werden zurückgerollt;
+Tabellenfingerabdrücke prüfen dies nach jedem Fall.
+
+Die UI zeigt diesen Nachweis unter „Recorded isolated workflow rehearsal“.
+Dies ist ausdrücklich ein Ergebnis für die isolierte neue Generation. Ihre IDs
+werden nicht gegen den alten produktiven Datenbestand interpretiert.
+Produktive Datenbank, Quell- und Sprachdateien bleiben unverändert; der
+temporäre PostgreSQL-Cluster wurde abschließend gestoppt.
+
+Zusätzlich: 110 Pest-Tests / 518 Assertions erfolgreich, gezielter Pint-Check
+und `git diff --check` erfolgreich. Neuer Unit-Test:
+`tests/Unit/TranslationWorkbench/BaselineProposalEvidenceTest.php`.
+
+## Gemeinsamer Datei-/Datenbank-Prüfstand – 2026-10-20
+
+`BaselineCorrectionPreflight` führt die bestehenden vollständigen
+Dateivorschläge und den Datenbank-/Snapshot-Abgleich zusammen. Der Aufrufer
+liefert den vorhandenen transaktionalen Read-only-Datenbankleser. Der Ablauf
+prüft Dateien, Datenbankkontext, nochmals Dateien und nochmals den Kontext.
+Bei widersprüchlichen Ergebnissen entsteht kein gemeinsamer Prüfnachweis.
+
+Der gemeinsame Fingerabdruck bindet Baseline-Snapshot, Quell-/Ziel-Key sowie
+Datei- und Datenbankfingerabdruck. Identische Wiederholungen bleiben unabhängig
+von der Prüfzeit vergleichbar. Der isolierte Schreibprobelauf verwendet den
+Datenbankfingerabdruck dieses gemeinsamen Ergebnisses; seine bestehenden
+transaktionalen Prüfungen unmittelbar vor dem Schreiben bleiben erhalten.
+
+Die neue Prüfung ersetzt weder die Sperren noch eine erneute Prüfung vor einer
+echten Anwendung. Sie behauptet keine atomare Transaktion zwischen Dateisystem
+und Datenbank und ist keine dauerhafte Freigabe. Es wurde keine produktive
+Schreibaktion an die UI angeschlossen.
+
+Der wiederholte Gesamtlauf bestand mit 1.102 Assertions: 44 Quelldateien,
+387 Fundstellen und zwei veröffentlichte Ausgangswerte passen gemeinsam.
+Der Bericht enthält den Prüfnachweis und zeigt ihn unter „Recorded isolated
+workflow rehearsal“. Die temporäre Datenbank wurde anschließend gestoppt.
+
+Neue gezielte Tests prüfen Änderungen an Quell-/Sprachdateien zwischen den
+Prüfschritten, einen wechselnden Datenbankkontext, falsche Ziel-Keys oder
+Generationen, deterministische Fingerabdrücke und den Abbruch vor einem
+Datenbankzugriff bei bereits fehlerhafter Dateievidenz.
+
+Zusätzlich bestanden 117 Pest-Tests mit 534 Assertions sowie der gezielte
+Pint-Check und die Whitespace-Prüfung.
+
+## Bestätigung unmittelbar vor dem isolierten Schreiben – 2026-10-20
+
+`KeyCorrectionApplication` verlangt nun den gemeinsamen Prüffingerabdruck,
+den zugehörigen Snapshot und einen expliziten Quellwurzelpfad. Der bisherige
+reine Datenbankfingerabdruck genügt nicht mehr. Unter den bestehenden
+Datenbanksperren werden der gespeicherte Vorschlagskontext und der vollständige
+gemeinsame Prüfstand erneut überprüft, bevor ein Key oder eine Zuordnung
+angelegt wird.
+
+Nach den Zuordnungsschreibvorgängen und vor dem Commit werden die referenzierten
+Dateiprüfsummen nochmals kontrolliert. Eine Abweichung rollt die Datenbank-
+Transaktion zurück. Geänderte Dateien werden dabei weder überschrieben noch
+automatisch repariert. Der Vorgangsbeleg und das History-Ereignis enthalten
+den bestätigten gemeinsamen Fingerabdruck; die History hält außerdem den
+Dateifingerabdruck und den Snapshot-Hash fest.
+
+Ein identischer Retry eines bereits abgeschlossenen Vorgangs liefert den
+ursprünglichen Beleg ohne neue Schreibvorgänge zurück. Er behauptet damit
+keine erneute Prüfung des inzwischen möglichen Dateistands. Eine geänderte
+Bestätigungsanfrage wird weiterhin zurückgewiesen.
+
+Die neuen Fehlertests ändern ausschließlich eine zusätzliche Wegwerfkopie der
+referenzierten Dateien. Getestet werden geänderte Quell- und Sprachdateien vor
+der Bestätigung und während der Zuordnungsschreibvorgänge sowie ein Retry nach
+einer späteren Dateiänderung. Die ursprünglichen Sicherungsdateien werden
+abschließend per Prüfsumme auf Unverändertheit geprüft.
+
+Grenze: Dies bleibt ein isolierter Datenbank-Schreibprobelauf. Er schreibt keine
+Quell- oder Sprachdateien und behauptet keine atomare Transaktion mit externen
+Editoren. Produktive Schreibaktionen bleiben von der Vorschau getrennt.
+
+Validierung: vollständiger isolierter Probelauf mit 1.166 Assertions erfolgreich;
+die temporäre PostgreSQL-Instanz wurde gestoppt. Zusätzlich 11 gezielte
+Pest-Tests mit 35 Assertions erfolgreich. Der Bericht in der Baseline-Vorschau
+enthält den neuen Bestätigungs-/Rollback-Prüfschritt.
+
+## Key-Korrektur als Paketdienst – 2026-10-20
+
+`KeyCorrectionProposal` und `KeyCorrectionApplication` wurden aus
+`tests/Support/TranslationWorkbench` nach
+`packages/gunreip/laravel-translation-workbench/src/Support` verschoben.
+Beide Generalproben verwenden die Paketklassen; keine Alias-Klassen bleiben
+zurück. Die Fachlogik und die bisherigen Transaktions-/Prüfregeln sind unverändert.
+
+Die Verbindung wird weiterhin ausdrücklich als PDO übergeben. Die Dienste
+öffnen keine Default-Verbindung und erwarten das Schema der neuen Generation.
+Eine aktive produktive UI-/Command-Anbindung ist damit noch nicht implementiert.
+
+Der vollständige Lauf mit den Paketklassen bestand mit 1.166 Assertions;
+die isolierte Instanz wurde beendet. Zusätzlich bestanden 11 Pest-Tests mit
+35 Assertions und Pint für beide Klassen. Der aktuelle
+[Umsetzungsstand](workbench-implementation-status-2026-10-20.md) trennt die
+abgeschlossenen Nachweise von den verbleibenden fünf Umsetzungspaketen.
+
+## Explizite Datenbankbindung für Key-Korrekturen – 2026-10-20
+
+Die beiden Paketdienste verlangen nun `KeyCorrectionDatabase` statt einer
+ungebundenen PDO-Verbindung. Datenbankname, Schema, Baseline-Hash und
+Sicherungsmanifest-Hash müssen ausdrücklich angegeben werden. Die Prüfung der
+benötigten Tabellen/Spalten und ihrer tatsächlichen Suchpfadauflösung erfolgt
+innerhalb der Transaktion vor fachlichen Zugriffen, auch bei einem Replay.
+ACCESS-SHARE-Sperren schützen die Tabellen gegen DDL-Änderungen im Vorgang.
+
+Die Generalprobe testet fehlerhafte Bindungen, fehlende Schemaelemente,
+temporäre Überschattung und veränderten Suchpfad. Sie besteht mit
+1.182 Assertions; 12 bisher unveränderte Tabellen bleiben unverändert.
+Testcluster beendet, keine produktive Verbindung. Ergänzend 11 Pest-Tests
+mit 36 Assertions und Pint für die drei Paketklassen erfolgreich.
+
+Dies ersetzt weder eine vollständige versionierte Schema-Prüfung einschließlich
+Constraints/Triggern noch Benutzerberechtigungen oder den Isolationsnachweis
+des Clusters. Der Guard richtet keine Datenbank ein und löst keine implizite
+Standardverbindung auf. Die Baseline-Vorschau und die Plan-/Praxis-Notizen
+weisen den neuen Teilumfang gesondert aus.
+
+## Versionierte leere Arbeitsgeneration – 2026-10-20
+
+Die acht bestehenden SQL-Definitionen der aktiven Arbeitsgeneration liegen
+unverändert im Package unter `database/generations/v1`. Die bisher eingebetteten
+Definitionen für `capture_imports`/`capture_outcomes` liegen dort zusätzlich als
+`capture-ledger.sql`. Alle bisherigen PHP-Aufrufer wurden auf die Paketdateien
+umgestellt; die historische `evidence-staging.sql` bleibt getrennt.
+
+`WorkingGenerationSchema` installiert ausdrücklich in ein neues, benanntes
+Schema und protokolliert UUID, Version, SQL-Manifest und Strukturfingerabdruck.
+Installation und Nachweis sind transaktional; vorhandene Schemata werden
+abgewiesen. Der Suchpfad bleibt nach dem Vorgang unverändert.
+
+Die Prüfung erkennt geänderte Spaltentypen, Constraints, Indizes, Funktionen
+und deaktivierte Trigger. Sie vergleicht den aufgezeichneten Installationsstand,
+keine frei erfundene Aussage über produktive Bereitschaft. Rollenrechte und
+Manipulationen durch Administratoren sind nicht damit abgedeckt.
+
+Validierung: 1.200 Assertions in der isolierten Generalprobe, 186 Assertions
+einschließlich zehn Parallelitätsszenarien in der Persistenzsuite und neun
+Assertions nach Serverneustart; zwei gezielte UI-Tests mit 138 Assertions.
+Beide temporären PostgreSQL-Cluster wurden gestoppt. Die neue Schema-Version
+enthält noch keine aktiven Daten; die restaurierte Baseline wurde nicht als
+neue Generation registriert. Der nächste Schritt ist die ausdrückliche
+Übernahme ausgewählter Nachweise auf der Kopie.
+
+## Ausgewählte Übernahme in Schema-Version 1 – 2026-10-20
+
+Der isolierte Testadapter `SelectedGenerationTransfer` überträgt die
+387 einzelnen Fundstellen und zwei veröffentlichten Werte des ausgewählten
+blockierten Keys in die frisch installierte Generation. Die 44 Dateinachweise
+erhalten eigene IDs; Finding-Herkunft und unveränderte Rohfelder bleiben
+nachvollziehbar. Ein eigener Baseline-Hash kennzeichnet den Teilbestand.
+
+Aktive Entscheidungen und alte History bleiben ausgeschlossen. Der
+Übernahme-Scan-Nachweis ist ausdrücklich als `evidence_transfer_not_new_scan`
+markiert. Ein Fehler nach der zweiten Fundstelle rollt die Übernahme zurück;
+eine bereits befüllte Generation wird nicht nochmals importiert.
+
+Die Paketdienste prüfen, bestätigen und schreiben anschließend die synthetische
+Korrektur direkt in diese Generation. Der identische Retry erzeugt keinen
+weiteren Event. Der vollständige Lauf besteht mit 1.218 Assertions.
+Die Quellbaseline bleibt unverändert, die Schema-Prüfung besteht auch nach
+dem Schreiben, der temporäre Cluster ist gestoppt.
+
+Der Adapter ist weiterhin ausschließlich Testinfrastruktur. Vollständige
+Namensraum-/Konfliktprüfung und weitere Übernahmekategorien fehlen noch.
+Bearbeitung und Export auf der neu befüllten Generation sind noch keine
+abgenommenen Funktionen; die vorhandenen Exportprüfungen verwenden weiterhin
+die restaurierte Test-Baseline.
+
+## Vollständiges Namensinventar bei Teilübernahmen – 2026-10-20
+
+Schema-Version 2 ergänzt die eigenständige immutable Tabelle
+`baseline_name_inventories`. Version 1 bleibt unverändert. Der Paketdienst
+`BaselineNameInventory` erfasst Namespace und Key-Name aus veröffentlichten
+Nachweisen und aktiven benannten Keys, normalisiert die Reihenfolge und bindet
+die Liste an Anzahl und SHA-256.
+
+Die Generalprobe überträgt alle 972 belegten Namen, während nur die ausgewählten
+387 Findings und zwei Textnachweise aktiv übernommen werden. Dies aktiviert
+keine zusätzlichen Key-Zuordnungen. Vorschau und Datenbankprüfung erkennen
+damit auch Konflikte außerhalb dieser Auswahl. Der Inventar-Hash ist Teil des
+Vorschlagskontexts. Fehlendes Inventar wird nicht als freier Namensraum behandelt.
+
+1.228 Assertions der isolierten Generalprobe sowie 43 Pest-Tests mit
+101 Assertions bestanden. Exakte Namen, Scalar-/Array-Pfade, Segmentgrenzen,
+getrennte Namespaces und fehlende/defekte Inventare sind abgedeckt.
+Die alten Statusnotizen bleiben als historischer Verlauf erhalten; diese
+Ergänzung schließt die zuvor dokumentierte Namensraumgrenze für den
+gesicherten Ausgangsstand. Kein produktiver Schemawechsel wurde ausgeführt.

@@ -1,0 +1,3136 @@
+{
+    "mode": "read_only_current_source_inventory",
+    "generated_at": "2026-10-21T04:55:44+00:00",
+    "production_connected": false,
+    "automatic_assignment": false,
+    "runtime_exhaustiveness_proven": false,
+    "files": {
+        "app/Livewire/Management/People/CreatePerson.php": {
+            "sha256": "b39489b1a1c3aedb2be85c2ec04eac5c26c4532f48ff8172e612409163a58dd9",
+            "property_defaults": {
+                "salutationOptions": {
+                    "line": 161,
+                    "expression": "[\n        'mr' => 'Mr.',\n        'mrs' => 'Mrs.',\n        'mx' => 'Mx.',\n    ]"
+                },
+                "genderOptions": {
+                    "line": 167,
+                    "expression": "[\n        'female' => 'Female',\n        'male' => 'Male',\n        'diverse' => 'Diverse',\n        'unknown' => 'Unknown',\n    ]"
+                },
+                "emergencyContactRelationshipOptions": {
+                    "line": 174,
+                    "expression": "[\n        PersonContact::RELATIONSHIP_PARENT => 'Parent',\n        PersonContact::RELATIONSHIP_CHILD => 'Child',\n        PersonContact::RELATIONSHIP_SPOUSE => 'Spouse',\n        PersonContact::RELATIONSHIP_PARTNER => 'Partner',\n        PersonContact::RELATIONSHIP_SIBLING => 'Sibling',\n        PersonContact::RELATIONSHIP_GUARDIAN => 'Guardian',\n        PersonContact::RELATIONSHIP_CAREGIVER => 'Caregiver',\n        PersonContact::RELATIONSHIP_FRIEND => 'Friend',\n        PersonContact::RELATIONSHIP_OTHER => 'Other',\n    ]"
+                },
+                "maritalStatusOptions": {
+                    "line": 186,
+                    "expression": "[\n        'single' => 'Single',\n        'married' => 'Married',\n        'registered_partnership' => 'Registered partnership',\n        'divorced' => 'Divorced',\n        'widowed' => 'Widowed',\n        'separated' => 'Separated',\n        'unknown' => 'Unknown',\n    ]"
+                },
+                "documentTypeOptions": {
+                    "line": 196,
+                    "expression": "[]"
+                }
+            },
+            "literal_array_entries": [
+                {
+                    "key": "mr",
+                    "value": "Mr.",
+                    "line": 162,
+                    "expression": "'mr' => 'Mr.'"
+                },
+                {
+                    "key": "mrs",
+                    "value": "Mrs.",
+                    "line": 163,
+                    "expression": "'mrs' => 'Mrs.'"
+                },
+                {
+                    "key": "mx",
+                    "value": "Mx.",
+                    "line": 164,
+                    "expression": "'mx' => 'Mx.'"
+                },
+                {
+                    "key": "female",
+                    "value": "Female",
+                    "line": 168,
+                    "expression": "'female' => 'Female'"
+                },
+                {
+                    "key": "male",
+                    "value": "Male",
+                    "line": 169,
+                    "expression": "'male' => 'Male'"
+                },
+                {
+                    "key": "diverse",
+                    "value": "Diverse",
+                    "line": 170,
+                    "expression": "'diverse' => 'Diverse'"
+                },
+                {
+                    "key": "unknown",
+                    "value": "Unknown",
+                    "line": 171,
+                    "expression": "'unknown' => 'Unknown'"
+                },
+                {
+                    "key": "single",
+                    "value": "Single",
+                    "line": 187,
+                    "expression": "'single' => 'Single'"
+                },
+                {
+                    "key": "married",
+                    "value": "Married",
+                    "line": 188,
+                    "expression": "'married' => 'Married'"
+                },
+                {
+                    "key": "registered_partnership",
+                    "value": "Registered partnership",
+                    "line": 189,
+                    "expression": "'registered_partnership' => 'Registered partnership'"
+                },
+                {
+                    "key": "divorced",
+                    "value": "Divorced",
+                    "line": 190,
+                    "expression": "'divorced' => 'Divorced'"
+                },
+                {
+                    "key": "widowed",
+                    "value": "Widowed",
+                    "line": 191,
+                    "expression": "'widowed' => 'Widowed'"
+                },
+                {
+                    "key": "separated",
+                    "value": "Separated",
+                    "line": 192,
+                    "expression": "'separated' => 'Separated'"
+                },
+                {
+                    "key": "unknown",
+                    "value": "Unknown",
+                    "line": 193,
+                    "expression": "'unknown' => 'Unknown'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-salutation",
+                    "line": 487,
+                    "expression": "'input_id' => 'create-person-salutation'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-is-test-data",
+                    "line": 491,
+                    "expression": "'input_id' => 'create-person-is-test-data'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-name-title",
+                    "line": 495,
+                    "expression": "'input_id' => 'create-person-name-title'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-gender",
+                    "line": 499,
+                    "expression": "'input_id' => 'create-person-gender'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-marital-status",
+                    "line": 503,
+                    "expression": "'input_id' => 'create-person-marital-status'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-first-name",
+                    "line": 507,
+                    "expression": "'input_id' => 'create-person-first-name'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-middle-name",
+                    "line": 511,
+                    "expression": "'input_id' => 'create-person-middle-name'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-preferred-name",
+                    "line": 515,
+                    "expression": "'input_id' => 'create-person-preferred-name'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-last-name",
+                    "line": 519,
+                    "expression": "'input_id' => 'create-person-last-name'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-date-of-birth",
+                    "line": 523,
+                    "expression": "'input_id' => 'create-person-date-of-birth'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-avatar-upload",
+                    "line": 527,
+                    "expression": "'input_id' => 'create-person-avatar-upload'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-birth-country",
+                    "line": 531,
+                    "expression": "'input_id' => 'create-person-birth-country'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-birth-place",
+                    "line": 535,
+                    "expression": "'input_id' => 'create-person-birth-place'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-birth-name",
+                    "line": 539,
+                    "expression": "'input_id' => 'create-person-birth-name'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-phone",
+                    "line": 543,
+                    "expression": "'input_id' => 'create-person-phone'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-mobile",
+                    "line": 547,
+                    "expression": "'input_id' => 'create-person-mobile'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-email-private",
+                    "line": 551,
+                    "expression": "'input_id' => 'create-person-email-private'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-email-work",
+                    "line": 555,
+                    "expression": "'input_id' => 'create-person-email-work'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-address-country",
+                    "line": 559,
+                    "expression": "'input_id' => 'create-person-address-country'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-address-postal-code",
+                    "line": 563,
+                    "expression": "'input_id' => 'create-person-address-postal-code'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-address-city",
+                    "line": 567,
+                    "expression": "'input_id' => 'create-person-address-city'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-address-street",
+                    "line": 571,
+                    "expression": "'input_id' => 'create-person-address-street'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-address-house-number",
+                    "line": 575,
+                    "expression": "'input_id' => 'create-person-address-house-number'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-address-line-2",
+                    "line": 579,
+                    "expression": "'input_id' => 'create-person-address-line-2'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-email",
+                    "line": 583,
+                    "expression": "'input_id' => 'create-person-email'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-primary-nationality",
+                    "line": 587,
+                    "expression": "'input_id' => 'create-person-primary-nationality'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-primary-language",
+                    "line": 591,
+                    "expression": "'input_id' => 'create-person-primary-language'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-national-id-number",
+                    "line": 595,
+                    "expression": "'input_id' => 'create-person-national-id-number'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-national-id-issuing-authority",
+                    "line": 599,
+                    "expression": "'input_id' => 'create-person-national-id-issuing-authority'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-tax-id",
+                    "line": 603,
+                    "expression": "'input_id' => 'create-person-tax-id'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-social-security-number",
+                    "line": 607,
+                    "expression": "'input_id' => 'create-person-social-security-number'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-emergency-contact-name",
+                    "line": 611,
+                    "expression": "'input_id' => 'create-person-emergency-contact-name'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-emergency-contact-relationship",
+                    "line": 615,
+                    "expression": "'input_id' => 'create-person-emergency-contact-relationship'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-emergency-contact-phone",
+                    "line": 619,
+                    "expression": "'input_id' => 'create-person-emergency-contact-phone'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-emergency-contact-email",
+                    "line": 623,
+                    "expression": "'input_id' => 'create-person-emergency-contact-email'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-pension-insurance-number",
+                    "line": 627,
+                    "expression": "'input_id' => 'create-person-pension-insurance-number'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-health-insurance-number",
+                    "line": 631,
+                    "expression": "'input_id' => 'create-person-health-insurance-number'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-health-insurance-provider",
+                    "line": 635,
+                    "expression": "'input_id' => 'create-person-health-insurance-provider'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-residence-permit-number",
+                    "line": 639,
+                    "expression": "'input_id' => 'create-person-residence-permit-number'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-document-type",
+                    "line": 643,
+                    "expression": "'input_id' => 'create-person-document-type'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-document-title",
+                    "line": 647,
+                    "expression": "'input_id' => 'create-person-document-title'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-document-number",
+                    "line": 651,
+                    "expression": "'input_id' => 'create-person-document-number'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-document-issuing-authority",
+                    "line": 655,
+                    "expression": "'input_id' => 'create-person-document-issuing-authority'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-document-issued-at",
+                    "line": 659,
+                    "expression": "'input_id' => 'create-person-document-issued-at'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-document-expires-at",
+                    "line": 663,
+                    "expression": "'input_id' => 'create-person-document-expires-at'"
+                },
+                {
+                    "key": "input_id",
+                    "value": "create-person-document-upload",
+                    "line": 667,
+                    "expression": "'input_id' => 'create-person-document-upload'"
+                },
+                {
+                    "key": "source",
+                    "value": "manual",
+                    "line": 1668,
+                    "expression": "'source' => 'manual'"
+                },
+                {
+                    "key": "source",
+                    "value": "manual",
+                    "line": 1687,
+                    "expression": "'source' => 'manual'"
+                },
+                {
+                    "key": "source",
+                    "value": "manual",
+                    "line": 1711,
+                    "expression": "'source' => 'manual'"
+                },
+                {
+                    "key": "file_disk",
+                    "value": "local",
+                    "line": 1954,
+                    "expression": "'file_disk' => 'local'"
+                }
+            ],
+            "methods": [
+                {
+                    "name": "mount",
+                    "line": 198,
+                    "expression": "public function mount(): void\n    {\n        $this->refreshDocumentTypeOptions();\n    }"
+                },
+                {
+                    "name": "documentTypeOptionKeys",
+                    "line": 206,
+                    "expression": "private function documentTypeOptionKeys(): array\n    {\n        if ($this->documentTypeOptions === []) {\n            $this->refreshDocumentTypeOptions();\n        }\n\n        return array_keys($this->documentTypeOptions);\n    }"
+                },
+                {
+                    "name": "refreshDocumentTypeOptions",
+                    "line": 215,
+                    "expression": "private function refreshDocumentTypeOptions(): void\n    {\n        $this->documentTypeOptions = PersonDocumentType::options();\n    }"
+                },
+                {
+                    "name": "collectRuntimeDynamicOptions",
+                    "line": 220,
+                    "expression": "private function collectRuntimeDynamicOptions(): void\n    {\n        if (! class_exists(RuntimeDynamicTranslationCollector::class)) {\n            return;\n        }\n\n        $collector = app(RuntimeDynamicTranslationCollector::class);\n\n        $collector->options(\n            key: 'management.people.create_person.sections.person_core.salutation_options',\n            scope: 'salutation_options',\n            values: $this->salutationOptions,\n            source: self::class . '::salutationOptions',\n            origin: 'runtime',\n            sourceType: 'runtime_options',\n        );\n\n        $collector->options(\n            key: 'management.people.create_person.sections.person_core.gender_options',\n            scope: 'gender_options',\n            values: $this->genderOptions,\n            source: self::class . '::genderOptions',\n            origin: 'runtime',\n            sourceType: 'runtime_options',\n        );\n\n        $collector->options(\n            key: 'management.people.create_person.sections.person_core.marital_status_options',\n            scope: 'marital_status_options',\n            values: $this->maritalStatusOptions,\n            source: self::class . '::maritalStatusOptions',\n            origin: 'runtime',\n            sourceType: 'runtime_options',\n        );\n\n        $collector->options(\n            key: 'management.people.create_person.sections.documents.document_type_options',\n            scope: 'document_type_options',\n            values: $this->documentTypeOptions,\n            source: self::class . '::documentTypeOptions',\n            origin: 'db',\n            sourceType: 'runtime_db_options',\n        );\n\n        $collector->options(\n            key: 'management.people.create_person.sections.emergency_contact.emergency_contact_relationship_options',\n            scope: 'emergency_contact_relationship_options',\n            values: $this->emergencyContactRelationshipOptions,\n            source: self::class . '::emergencyContactRelationshipOptions',\n            origin: 'runtime',\n            sourceType: 'runtime_options',\n        );\n    }"
+                },
+                {
+                    "name": "fillTestDataFields",
+                    "line": 405,
+                    "expression": "public function fillTestDataFields(): void\n    {\n        $faker = fake('de_DE');\n        $country = $this->testDataCountry();\n        $language = $this->testDataLanguage();\n\n        if ($country === null || $language === null) {\n            Flux::toast(\n                heading: __('Test data could not be filled'),\n                text: __('Please seed countries and languages before generating form test data.'),\n                variant: 'warning',\n                duration: 5000,\n            );\n\n            return;\n        }\n\n        $gender = $faker->randomElement(array_keys($this->genderOptions));\n        $firstName = match ($gender) {\n            'female' => $faker->firstNameFemale(),\n            'male' => $faker->firstNameMale(),\n            default => $faker->firstName(),\n        };\n        $lastName = $faker->lastName();\n        $addressReference = $this->testDataAddressReference($country);\n        $birthPlace = $this->testDataBirthPlace($country) ?: ($addressReference['city'] ?? $faker->city());\n        $emailToken = Str::lower(Str::random(10));\n\n        $this->isTestData = true;\n        $this->salutation = match ($gender) {\n            'female' => 'mrs',\n            'male' => 'mr',\n            default => 'mx',\n        };\n        $this->gender = $gender;\n        $this->firstName = $firstName;\n        $this->lastName = $lastName;\n        $this->maritalStatus = $faker->randomElement(array_keys($this->maritalStatusOptions));\n        $this->birthCountryId = $country->id;\n        $this->birthPlaceText = $birthPlace;\n        $this->dateOfBirth = $faker->dateTimeBetween('-82 years', '-18 years')->format('Y-m-d');\n        $this->email = \"test.manual.{$emailToken}@example.test\";\n\n        $this->addressCountryId = $country->id;\n        $this->addressPostalCode = $addressReference['postal_code'] ?? $faker->postcode();\n        $this->addressCity = $addressReference['city'] ?? $faker->city();\n        $this->addressStreet = $addressReference['street'] ?? $faker->streetName();\n        $this->addressHouseNumber = (string) $faker->numberBetween(1, 220);\n\n        $this->primaryNationalityCountryId = [$country->id];\n        $this->primaryLanguageId = [$language->id];\n        $this->syncLanguageAbilities();\n\n        $this->nationalIdNumber = 'TEST-ID-'.Str::upper(Str::random(10));\n\n        $this->nameTitle = $faker->boolean(12) ? 'Dr.' : '';\n        $this->middleName = $faker->boolean(35) ? $faker->firstName() : '';\n        $this->preferredName = $faker->boolean(25) ? $firstName : '';\n        $this->birthName = $faker->boolean(20) ? $faker->lastName() : '';\n        $this->phone = $faker->boolean(55) ? $faker->phoneNumber() : '';\n        $this->mobile = $faker->boolean(75) ? $faker->phoneNumber() : '';\n        $this->emailPrivate = $faker->boolean(65) ? \"private.{$emailToken}@example.test\" : '';\n        $this->emailWork = $faker->boolean(35) ? \"work.{$emailToken}@example.test\" : '';\n        $this->addressLine2 = $faker->boolean(20) ? __('Test address note') : '';\n        $this->nationalIdIssuingAuthority = $faker->boolean(60) ? __('Test authority') : '';\n        $this->taxId = $faker->boolean(35) ? 'TEST-TAX-'.Str::upper(Str::random(8)) : '';\n        $this->socialSecurityNumber = $faker->boolean(35) ? 'TEST-SSN-'.Str::upper(Str::random(8)) : '';\n        $this->pensionInsuranceNumber = $faker->boolean(25) ? 'TEST-PEN-'.Str::upper(Str::random(8)) : '';\n        $this->residencePermitNumber = $faker->boolean(20) ? 'TEST-RP-'.Str::upper(Str::random(8)) : '';\n\n        $this->fillOptionalHealthInsuranceTestData($emailToken);\n        $this->fillOptionalDocumentTestData();\n        $this->fillOptionalEmergencyContactTestData($faker);\n\n        $this->resetValidation();\n    }"
+                },
+                {
+                    "name": "render",
+                    "line": 1004,
+                    "expression": "public function render()\n    {\n        $this->collectRuntimeDynamicOptions();\n\n        return view('components.management.people.⚡create-person', [\n            'birthCountryOptions' => Country::query()\n                ->active()\n                ->ordered()\n                ->get(['id', 'iso2', 'name', 'native_name']),\n            'birthPlaceOptions' => $this->birthPlaceOptions(),\n            'addressCountryOptions' => Country::query()\n                ->active()\n                ->ordered()\n                ->get(['id', 'iso2', 'name', 'native_name']),\n            'addressPostalCodeOptions' => $this->addressPostalCodeOptions(),\n            'addressCityOptions' => $this->addressCityOptions(),\n            'addressStreetOptions' => $this->addressStreetOptions(),\n            'nationalityCountryOptions' => Country::query()\n                ->active()\n                ->ordered()\n                ->get(['id', 'iso2', 'name', 'native_name']),\n            'languageOptions' => Language::query()\n                ->active()\n                ->ordered()\n                ->get(['id', 'iso639_1', 'iso639_3', 'name', 'native_name']),\n            'selectedNationalityOptions' => $this->selectedNationalityOptions(),\n            'selectedLanguageOptions' => $this->selectedLanguageOptions(),\n            'documentIssuingAuthorityOptions' => $this->documentIssuingAuthorityOptions(),\n            'healthInsuranceProviderOptions' => InsuranceProvider::query()\n                ->active()\n                ->where('type', InsuranceProvider::TYPE_HEALTH)\n                ->ordered()\n                ->get(['id', 'name', 'short_name', 'code']),\n        ]);\n    }"
+                },
+                {
+                    "name": "birthPlaceOptions",
+                    "line": 1040,
+                    "expression": "private function birthPlaceOptions()\n    {\n        if ($this->birthCountryId === null) {\n            return collect();\n        }\n\n        $options = AddressLocality::query()\n            ->where('country_id', $this->birthCountryId)\n            ->ordered()\n            ->limit(100)\n            ->pluck('name')\n            ->unique()\n            ->values();\n\n        return $this->includeCurrentAddressOption($options, $this->birthPlaceText);\n    }"
+                },
+                {
+                    "name": "fillOptionalEmergencyContactTestData",
+                    "line": 1161,
+                    "expression": "private function fillOptionalEmergencyContactTestData(\\Faker\\Generator $faker): void\n    {\n        if (! $faker->boolean(45)) {\n            $this->emergencyContactName = '';\n            $this->emergencyContactRelationship = '';\n            $this->emergencyContactPhone = '';\n            $this->emergencyContactEmail = '';\n\n            return;\n        }\n\n        $this->emergencyContactName = $faker->name();\n        $this->emergencyContactRelationship = $faker->randomElement(array_keys($this->emergencyContactRelationshipOptions));\n        $this->emergencyContactPhone = $faker->phoneNumber();\n        $this->emergencyContactEmail = 'emergency.'.Str::lower(Str::random(10)).'@example.test';\n    }"
+                },
+                {
+                    "name": "addressPostalCodeOptions",
+                    "line": 1178,
+                    "expression": "private function addressPostalCodeOptions()\n    {\n        if ($this->addressCountryId === null) {\n            return collect();\n        }\n\n        $options = AddressPostalCode::query()\n            ->where('country_id', $this->addressCountryId)\n            ->ordered()\n            ->limit(100)\n            ->pluck('postal_code');\n\n        return $this->includeCurrentAddressOption($options, $this->addressPostalCode);\n    }"
+                },
+                {
+                    "name": "addressCityOptions",
+                    "line": 1193,
+                    "expression": "private function addressCityOptions()\n    {\n        if ($this->addressCountryId === null) {\n            return collect();\n        }\n\n        $postalCode = $this->addressPostalCodeReference($this->addressPostalCode);\n\n        if ($this->addressPostalCode !== '' && $postalCode === null) {\n            return $this->includeCurrentAddressOption(collect(), $this->addressCity);\n        }\n\n        $options = AddressLocality::query()\n            ->where('country_id', $this->addressCountryId)\n            ->when($postalCode !== null, function ($query) use ($postalCode): void {\n                $query->where('postal_code_id', $postalCode->id);\n            })\n            ->ordered()\n            ->limit(100)\n            ->pluck('name');\n\n        return $this->includeCurrentAddressOption($options, $this->addressCity);\n    }"
+                },
+                {
+                    "name": "addressStreetOptions",
+                    "line": 1217,
+                    "expression": "private function addressStreetOptions()\n    {\n        if ($this->addressCountryId === null || $this->addressCity === '') {\n            return collect();\n        }\n\n        $postalCode = $this->addressPostalCodeReference($this->addressPostalCode);\n        $locality = $this->addressLocalityReference($this->addressCity, $postalCode);\n\n        if (($this->addressPostalCode !== '' && $postalCode === null) || $locality === null) {\n            return $this->includeCurrentAddressOption(collect(), $this->addressStreet);\n        }\n\n        $options = AddressStreet::query()\n            ->where('country_id', $this->addressCountryId)\n            ->when($postalCode !== null, function ($query) use ($postalCode): void {\n                $query->where('postal_code_id', $postalCode->id);\n            })\n            ->when($locality !== null, function ($query) use ($locality): void {\n                $query->where('locality_id', $locality->id);\n            })\n            ->ordered()\n            ->limit(100)\n            ->pluck('name');\n\n        return $this->includeCurrentAddressOption($options, $this->addressStreet);\n    }"
+                },
+                {
+                    "name": "includeCurrentAddressOption",
+                    "line": 1272,
+                    "expression": "private function includeCurrentAddressOption($options, string $current)\n    {\n        $current = trim($current);\n\n        if ($current === '' || $options->containsStrict($current)) {\n            return $options;\n        }\n\n        return $options\n            ->prepend($current)\n            ->unique()\n            ->values();\n    }"
+                },
+                {
+                    "name": "documentIssuingAuthorityOptions",
+                    "line": 1286,
+                    "expression": "private function documentIssuingAuthorityOptions()\n    {\n        $options = PersonDocument::query()\n            ->whereNotNull('issuing_authority')\n            ->where('issuing_authority', '!=', '')\n            ->distinct()\n            ->orderBy('issuing_authority')\n            ->limit(100)\n            ->pluck('issuing_authority');\n\n        return $this->includeCurrentAddressOption($options, $this->documentIssuingAuthority);\n    }"
+                },
+                {
+                    "name": "selectedNationalityOptions",
+                    "line": 1329,
+                    "expression": "private function selectedNationalityOptions()\n    {\n        $selectedIds = $this->normalizeSelectedIds($this->primaryNationalityCountryId);\n\n        if ($selectedIds === []) {\n            return collect();\n        }\n\n        return Country::query()\n            ->whereIn('id', $selectedIds)\n            ->get(['id', 'iso2', 'name', 'native_name'])\n            ->sortBy(fn(Country $country): int => array_search($country->id, $selectedIds, true))\n            ->values();\n    }"
+                },
+                {
+                    "name": "selectedLanguageOptions",
+                    "line": 1344,
+                    "expression": "private function selectedLanguageOptions()\n    {\n        $selectedIds = $this->normalizeSelectedIds($this->primaryLanguageId);\n\n        if ($selectedIds === []) {\n            return collect();\n        }\n\n        return Language::query()\n            ->whereIn('id', $selectedIds)\n            ->get(['id', 'iso639_1', 'iso639_3', 'name', 'native_name'])\n            ->sortBy(fn(Language $language): int => array_search($language->id, $selectedIds, true))\n            ->values();\n    }"
+                },
+                {
+                    "name": "validationRules",
+                    "line": 1543,
+                    "expression": "private function validationRules(): array\n    {\n        return [\n            'salutation' => $this->validationRulesFor('salutation', ['string', Rule::in(array_keys($this->salutationOptions))]),\n            'isTestData' => ['boolean'],\n            'nameTitle' => $this->validationRulesFor('nameTitle', ['string', 'max:255']),\n            'gender' => $this->validationRulesFor('gender', ['string', Rule::in(array_keys($this->genderOptions))]),\n            'maritalStatus' => $this->validationRulesFor('maritalStatus', ['string', Rule::in(array_keys($this->maritalStatusOptions))]),\n            'firstName' => $this->validationRulesFor('firstName', ['string', 'max:255']),\n            'middleName' => $this->validationRulesFor('middleName', ['string', 'max:255']),\n            'preferredName' => $this->validationRulesFor('preferredName', ['string', 'max:255']),\n            'lastName' => $this->validationRulesFor('lastName', ['string', 'max:255']),\n            'birthName' => $this->validationRulesFor('birthName', ['string', 'max:255']),\n            'dateOfBirth' => $this->validationRulesFor('dateOfBirth', ['date']),\n            'avatarUpload' => $this->validationRulesFor('avatarUpload', ['file', 'image', 'max:4096', 'mimes:jpg,jpeg,png,webp']),\n            'birthCountryId' => $this->validationRulesFor('birthCountryId', ['integer', Rule::exists('countries', 'id')]),\n            'birthPlaceText' => $this->validationRulesFor('birthPlaceText', ['string', 'max:255']),\n            'phone' => $this->validationRulesFor('phone', ['string', 'max:255']),\n            'mobile' => $this->validationRulesFor('mobile', ['string', 'max:255']),\n            'emailPrivate' => $this->validationRulesFor('emailPrivate', ['email', 'max:255']),\n            'emailWork' => $this->validationRulesFor('emailWork', ['email', 'max:255']),\n            'email' => $this->validationRulesFor('email', ['email', 'max:255', Rule::unique('users', 'email')]),\n            'addressCountryId' => $this->validationRulesFor('addressCountryId', ['integer', Rule::exists('countries', 'id')]),\n            'addressPostalCode' => $this->validationRulesFor('addressPostalCode', ['string', 'max:255']),\n            'addressCity' => $this->validationRulesFor('addressCity', ['string', 'max:255']),\n            'addressStreet' => $this->validationRulesFor('addressStreet', ['string', 'max:255']),\n            'addressHouseNumber' => $this->validationRulesFor('addressHouseNumber', ['string', 'max:255']),\n            'addressLine2' => $this->validationRulesFor('addressLine2', ['string', 'max:255']),\n            'primaryNationalityCountryId' => $this->validationRulesFor('primaryNationalityCountryId', ['array']),\n            'primaryNationalityCountryId.*' => ['integer', Rule::exists('countries', 'id')],\n            'primaryLanguageId' => $this->validationRulesFor('primaryLanguageId', ['array']),\n            'primaryLanguageId.*' => ['integer', Rule::exists('languages', 'id')],\n            'languageAbilities' => ['array'],\n            'languageAbilities.*.speaking' => ['boolean'],\n            'languageAbilities.*.reading' => ['boolean'],\n            'languageAbilities.*.writing' => ['boolean'],\n            'nationalIdNumber' => $this->validationRulesFor('nationalIdNumber', ['string', 'max:255']),\n            'nationalIdIssuingAuthority' => $this->validationRulesFor('nationalIdIssuingAuthority', ['string', 'max:255']),\n            'taxId' => $this->validationRulesFor('taxId', ['string', 'max:255']),\n            'socialSecurityNumber' => $this->validationRulesFor('socialSecurityNumber', ['string', 'max:255']),\n            'pensionInsuranceNumber' => $this->validationRulesFor('pensionInsuranceNumber', ['string', 'max:255']),\n            'healthInsuranceNumber' => $this->validationRulesFor('healthInsuranceNumber', ['string', 'max:255']),\n            'healthInsuranceProviderId' => $this->validationRulesFor('healthInsuranceProviderId', [\n                'integer',\n                Rule::exists('insurance_providers', 'id')\n                    ->where('type', InsuranceProvider::TYPE_HEALTH)\n                    ->where('is_active', true),\n            ]),\n            'residencePermitNumber' => $this->validationRulesFor('residencePermitNumber', ['string', 'max:255']),\n            'documentType' => $this->validationRulesFor('documentType', ['string', Rule::in($this->documentTypeOptionKeys())]),\n            'documentTitle' => $this->validationRulesFor('documentTitle', ['string', 'max:255']),\n            'documentNumber' => $this->validationRulesFor('documentNumber', ['string', 'max:255']),\n            'documentIssuingAuthority' => $this->validationRulesFor('documentIssuingAuthority', ['string', 'max:255']),\n            'documentIssuedAt' => $this->validationRulesFor('documentIssuedAt', ['date']),\n            'documentExpiresAt' => $this->validationRulesFor('documentExpiresAt', ['date', 'after_or_equal:documentIssuedAt']),\n            'documentUpload' => $this->validationRulesFor('documentUpload', ['array']),\n            'documentUpload.*' => ['file', 'max:10240', 'mimes:pdf,jpg,jpeg,png,webp'],\n            'emergencyContactName' => $this->validationRulesFor('emergencyContactName', ['string', 'max:255']),\n            'emergencyContactRelationship' => $this->validationRulesFor('emergencyContactRelationship', ['string', Rule::in(array_keys($this->emergencyContactRelationshipOptions))]),\n            'emergencyContactPhone' => $this->validationRulesFor('emergencyContactPhone', ['string', 'max:255']),\n            'emergencyContactEmail' => $this->validationRulesFor('emergencyContactEmail', ['email', 'max:255']),\n        ];\n    }"
+                },
+                {
+                    "name": "documentCategoryForType",
+                    "line": 1918,
+                    "expression": "private function documentCategoryForType(string $type): string\n    {\n        return PersonDocumentType::categoryFor($type);\n    }"
+                }
+            ],
+            "constants": [
+                {
+                    "name": "FORM_KEY",
+                    "line": 49,
+                    "expression": "'management.people.create-person'"
+                },
+                {
+                    "name": "PERSON_NUMBER_ALPHABET",
+                    "line": 51,
+                    "expression": "'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'"
+                },
+                {
+                    "name": "DEFAULT_DATE_OF_BIRTH_YEARS_AGO",
+                    "line": 53,
+                    "expression": "30"
+                }
+            ]
+        },
+        "app/Livewire/Management/People/EditPerson.php": {
+            "sha256": "08ee85a7f81d6423e0882d2b376589f34e38ee59efb30c5a737b091a150b5185",
+            "property_defaults": {
+                "salutationOptions": {
+                    "line": 169,
+                    "expression": "[\n        'mr' => 'Mr.',\n        'mrs' => 'Mrs.',\n        'mx' => 'Mx.',\n    ]"
+                },
+                "genderOptions": {
+                    "line": 175,
+                    "expression": "[\n        'female' => 'Female',\n        'male' => 'Male',\n        'diverse' => 'Diverse',\n        'unknown' => 'Unknown',\n    ]"
+                },
+                "maritalStatusOptions": {
+                    "line": 182,
+                    "expression": "[\n        'single' => 'Single',\n        'married' => 'Married',\n        'registered_partnership' => 'Registered partnership',\n        'divorced' => 'Divorced',\n        'widowed' => 'Widowed',\n        'separated' => 'Separated',\n        'unknown' => 'Unknown',\n    ]"
+                },
+                "documentTypeOptions": {
+                    "line": 192,
+                    "expression": "[]"
+                },
+                "documentCategoryOptions": {
+                    "line": 194,
+                    "expression": "[]"
+                },
+                "emergencyContactRelationshipOptions": {
+                    "line": 196,
+                    "expression": "[\n        PersonContact::RELATIONSHIP_PARENT => 'Parent',\n        PersonContact::RELATIONSHIP_CHILD => 'Child',\n        PersonContact::RELATIONSHIP_SPOUSE => 'Spouse',\n        PersonContact::RELATIONSHIP_PARTNER => 'Partner',\n        PersonContact::RELATIONSHIP_SIBLING => 'Sibling',\n        PersonContact::RELATIONSHIP_GUARDIAN => 'Guardian',\n        PersonContact::RELATIONSHIP_CAREGIVER => 'Caregiver',\n        PersonContact::RELATIONSHIP_FRIEND => 'Friend',\n        PersonContact::RELATIONSHIP_OTHER => 'Other',\n    ]"
+                }
+            },
+            "literal_array_entries": [
+                {
+                    "key": "mr",
+                    "value": "Mr.",
+                    "line": 170,
+                    "expression": "'mr' => 'Mr.'"
+                },
+                {
+                    "key": "mrs",
+                    "value": "Mrs.",
+                    "line": 171,
+                    "expression": "'mrs' => 'Mrs.'"
+                },
+                {
+                    "key": "mx",
+                    "value": "Mx.",
+                    "line": 172,
+                    "expression": "'mx' => 'Mx.'"
+                },
+                {
+                    "key": "female",
+                    "value": "Female",
+                    "line": 176,
+                    "expression": "'female' => 'Female'"
+                },
+                {
+                    "key": "male",
+                    "value": "Male",
+                    "line": 177,
+                    "expression": "'male' => 'Male'"
+                },
+                {
+                    "key": "diverse",
+                    "value": "Diverse",
+                    "line": 178,
+                    "expression": "'diverse' => 'Diverse'"
+                },
+                {
+                    "key": "unknown",
+                    "value": "Unknown",
+                    "line": 179,
+                    "expression": "'unknown' => 'Unknown'"
+                },
+                {
+                    "key": "single",
+                    "value": "Single",
+                    "line": 183,
+                    "expression": "'single' => 'Single'"
+                },
+                {
+                    "key": "married",
+                    "value": "Married",
+                    "line": 184,
+                    "expression": "'married' => 'Married'"
+                },
+                {
+                    "key": "registered_partnership",
+                    "value": "Registered partnership",
+                    "line": 185,
+                    "expression": "'registered_partnership' => 'Registered partnership'"
+                },
+                {
+                    "key": "divorced",
+                    "value": "Divorced",
+                    "line": 186,
+                    "expression": "'divorced' => 'Divorced'"
+                },
+                {
+                    "key": "widowed",
+                    "value": "Widowed",
+                    "line": 187,
+                    "expression": "'widowed' => 'Widowed'"
+                },
+                {
+                    "key": "separated",
+                    "value": "Separated",
+                    "line": 188,
+                    "expression": "'separated' => 'Separated'"
+                },
+                {
+                    "key": "unknown",
+                    "value": "Unknown",
+                    "line": 189,
+                    "expression": "'unknown' => 'Unknown'"
+                },
+                {
+                    "key": "salutation",
+                    "value": "edit-person-salutation",
+                    "line": 1095,
+                    "expression": "'salutation' => 'edit-person-salutation'"
+                },
+                {
+                    "key": "gender",
+                    "value": "edit-person-gender",
+                    "line": 1096,
+                    "expression": "'gender' => 'edit-person-gender'"
+                },
+                {
+                    "key": "nameTitle",
+                    "value": "edit-person-name-title",
+                    "line": 1097,
+                    "expression": "'nameTitle' => 'edit-person-name-title'"
+                },
+                {
+                    "key": "firstName",
+                    "value": "edit-person-first-name",
+                    "line": 1098,
+                    "expression": "'firstName' => 'edit-person-first-name'"
+                },
+                {
+                    "key": "lastName",
+                    "value": "edit-person-last-name",
+                    "line": 1099,
+                    "expression": "'lastName' => 'edit-person-last-name'"
+                },
+                {
+                    "key": "middleName",
+                    "value": "edit-person-middle-name",
+                    "line": 1100,
+                    "expression": "'middleName' => 'edit-person-middle-name'"
+                },
+                {
+                    "key": "preferredName",
+                    "value": "edit-person-preferred-name",
+                    "line": 1101,
+                    "expression": "'preferredName' => 'edit-person-preferred-name'"
+                },
+                {
+                    "key": "birthName",
+                    "value": "edit-person-birth-name",
+                    "line": 1102,
+                    "expression": "'birthName' => 'edit-person-birth-name'"
+                },
+                {
+                    "key": "maritalStatus",
+                    "value": "edit-person-marital-status",
+                    "line": 1103,
+                    "expression": "'maritalStatus' => 'edit-person-marital-status'"
+                },
+                {
+                    "key": "birthCountryId",
+                    "value": "edit-person-birth-country",
+                    "line": 1104,
+                    "expression": "'birthCountryId' => 'edit-person-birth-country'"
+                },
+                {
+                    "key": "birthPlaceText",
+                    "value": "edit-person-birth-place",
+                    "line": 1105,
+                    "expression": "'birthPlaceText' => 'edit-person-birth-place'"
+                },
+                {
+                    "key": "dateOfBirth",
+                    "value": "edit-person-date-of-birth",
+                    "line": 1106,
+                    "expression": "'dateOfBirth' => 'edit-person-date-of-birth'"
+                },
+                {
+                    "key": "phone",
+                    "value": "edit-person-phone",
+                    "line": 1107,
+                    "expression": "'phone' => 'edit-person-phone'"
+                },
+                {
+                    "key": "mobile",
+                    "value": "edit-person-mobile",
+                    "line": 1108,
+                    "expression": "'mobile' => 'edit-person-mobile'"
+                },
+                {
+                    "key": "emailPrivate",
+                    "value": "edit-person-email-private",
+                    "line": 1109,
+                    "expression": "'emailPrivate' => 'edit-person-email-private'"
+                },
+                {
+                    "key": "emailWork",
+                    "value": "edit-person-email-work",
+                    "line": 1110,
+                    "expression": "'emailWork' => 'edit-person-email-work'"
+                },
+                {
+                    "key": "addressCountryId",
+                    "value": "edit-person-address-country",
+                    "line": 1111,
+                    "expression": "'addressCountryId' => 'edit-person-address-country'"
+                },
+                {
+                    "key": "addressPostalCode",
+                    "value": "edit-person-address-postal-code",
+                    "line": 1112,
+                    "expression": "'addressPostalCode' => 'edit-person-address-postal-code'"
+                },
+                {
+                    "key": "addressCity",
+                    "value": "edit-person-address-city",
+                    "line": 1113,
+                    "expression": "'addressCity' => 'edit-person-address-city'"
+                },
+                {
+                    "key": "addressStreet",
+                    "value": "edit-person-address-street",
+                    "line": 1114,
+                    "expression": "'addressStreet' => 'edit-person-address-street'"
+                },
+                {
+                    "key": "addressHouseNumber",
+                    "value": "edit-person-address-house-number",
+                    "line": 1115,
+                    "expression": "'addressHouseNumber' => 'edit-person-address-house-number'"
+                },
+                {
+                    "key": "addressLine2",
+                    "value": "edit-person-address-line-2",
+                    "line": 1116,
+                    "expression": "'addressLine2' => 'edit-person-address-line-2'"
+                },
+                {
+                    "key": "primaryNationalityCountryId",
+                    "value": "edit-person-primary-nationality",
+                    "line": 1117,
+                    "expression": "'primaryNationalityCountryId' => 'edit-person-primary-nationality'"
+                },
+                {
+                    "key": "primaryLanguageId",
+                    "value": "edit-person-primary-language",
+                    "line": 1118,
+                    "expression": "'primaryLanguageId' => 'edit-person-primary-language'"
+                },
+                {
+                    "key": "identifierNationalIdNumber",
+                    "value": "edit-person-national-id-number",
+                    "line": 1119,
+                    "expression": "'identifierNationalIdNumber' => 'edit-person-national-id-number'"
+                },
+                {
+                    "key": "identifierNationalIdIssuingAuthority",
+                    "value": "edit-person-national-id-issuing-authority",
+                    "line": 1120,
+                    "expression": "'identifierNationalIdIssuingAuthority' => 'edit-person-national-id-issuing-authority'"
+                },
+                {
+                    "key": "identifierTaxId",
+                    "value": "edit-person-tax-id",
+                    "line": 1121,
+                    "expression": "'identifierTaxId' => 'edit-person-tax-id'"
+                },
+                {
+                    "key": "identifierSocialSecurityNumber",
+                    "value": "edit-person-social-security-number",
+                    "line": 1122,
+                    "expression": "'identifierSocialSecurityNumber' => 'edit-person-social-security-number'"
+                },
+                {
+                    "key": "identifierPensionInsuranceNumber",
+                    "value": "edit-person-pension-insurance-number",
+                    "line": 1123,
+                    "expression": "'identifierPensionInsuranceNumber' => 'edit-person-pension-insurance-number'"
+                },
+                {
+                    "key": "identifierResidencePermitNumber",
+                    "value": "edit-person-residence-permit-number",
+                    "line": 1124,
+                    "expression": "'identifierResidencePermitNumber' => 'edit-person-residence-permit-number'"
+                },
+                {
+                    "key": "healthInsuranceProviderId",
+                    "value": "edit-person-health-insurance-provider",
+                    "line": 1125,
+                    "expression": "'healthInsuranceProviderId' => 'edit-person-health-insurance-provider'"
+                },
+                {
+                    "key": "healthInsuranceNumber",
+                    "value": "edit-person-health-insurance-number",
+                    "line": 1126,
+                    "expression": "'healthInsuranceNumber' => 'edit-person-health-insurance-number'"
+                },
+                {
+                    "key": "documentId",
+                    "value": "edit-person-document-selection",
+                    "line": 1127,
+                    "expression": "'documentId' => 'edit-person-document-selection'"
+                },
+                {
+                    "key": "documentType",
+                    "value": "edit-person-document-type",
+                    "line": 1128,
+                    "expression": "'documentType' => 'edit-person-document-type'"
+                },
+                {
+                    "key": "documentCategory",
+                    "value": "edit-person-document-category",
+                    "line": 1129,
+                    "expression": "'documentCategory' => 'edit-person-document-category'"
+                },
+                {
+                    "key": "documentTitle",
+                    "value": "edit-person-document-title",
+                    "line": 1130,
+                    "expression": "'documentTitle' => 'edit-person-document-title'"
+                },
+                {
+                    "key": "documentNumber",
+                    "value": "edit-person-document-number",
+                    "line": 1131,
+                    "expression": "'documentNumber' => 'edit-person-document-number'"
+                },
+                {
+                    "key": "documentIssuingAuthority",
+                    "value": "edit-person-document-issuing-authority",
+                    "line": 1132,
+                    "expression": "'documentIssuingAuthority' => 'edit-person-document-issuing-authority'"
+                },
+                {
+                    "key": "documentIssuedAt",
+                    "value": "edit-person-document-issued-at",
+                    "line": 1133,
+                    "expression": "'documentIssuedAt' => 'edit-person-document-issued-at'"
+                },
+                {
+                    "key": "documentExpiresAt",
+                    "value": "edit-person-document-expires-at",
+                    "line": 1134,
+                    "expression": "'documentExpiresAt' => 'edit-person-document-expires-at'"
+                },
+                {
+                    "key": "emergencyContactName",
+                    "value": "edit-person-emergency-contact-name",
+                    "line": 1135,
+                    "expression": "'emergencyContactName' => 'edit-person-emergency-contact-name'"
+                },
+                {
+                    "key": "emergencyContactRelationship",
+                    "value": "edit-person-emergency-contact-relationship",
+                    "line": 1136,
+                    "expression": "'emergencyContactRelationship' => 'edit-person-emergency-contact-relationship'"
+                },
+                {
+                    "key": "emergencyContactPhone",
+                    "value": "edit-person-emergency-contact-phone",
+                    "line": 1137,
+                    "expression": "'emergencyContactPhone' => 'edit-person-emergency-contact-phone'"
+                },
+                {
+                    "key": "emergencyContactEmail",
+                    "value": "edit-person-emergency-contact-email",
+                    "line": 1138,
+                    "expression": "'emergencyContactEmail' => 'edit-person-emergency-contact-email'"
+                },
+                {
+                    "key": "emergencyContactPersonId",
+                    "value": "edit-person-emergency-contact-person-number",
+                    "line": 1139,
+                    "expression": "'emergencyContactPersonId' => 'edit-person-emergency-contact-person-number'"
+                },
+                {
+                    "key": "salutation",
+                    "value": "person",
+                    "line": 1175,
+                    "expression": "'salutation' => 'person'"
+                },
+                {
+                    "key": "gender",
+                    "value": "person",
+                    "line": 1176,
+                    "expression": "'gender' => 'person'"
+                },
+                {
+                    "key": "nameTitle",
+                    "value": "person",
+                    "line": 1177,
+                    "expression": "'nameTitle' => 'person'"
+                },
+                {
+                    "key": "firstName",
+                    "value": "person",
+                    "line": 1178,
+                    "expression": "'firstName' => 'person'"
+                },
+                {
+                    "key": "lastName",
+                    "value": "person",
+                    "line": 1179,
+                    "expression": "'lastName' => 'person'"
+                },
+                {
+                    "key": "middleName",
+                    "value": "person",
+                    "line": 1180,
+                    "expression": "'middleName' => 'person'"
+                },
+                {
+                    "key": "preferredName",
+                    "value": "person",
+                    "line": 1181,
+                    "expression": "'preferredName' => 'person'"
+                },
+                {
+                    "key": "birthName",
+                    "value": "person",
+                    "line": 1182,
+                    "expression": "'birthName' => 'person'"
+                },
+                {
+                    "key": "maritalStatus",
+                    "value": "person",
+                    "line": 1183,
+                    "expression": "'maritalStatus' => 'person'"
+                },
+                {
+                    "key": "birthCountryId",
+                    "value": "person",
+                    "line": 1184,
+                    "expression": "'birthCountryId' => 'person'"
+                },
+                {
+                    "key": "birthPlaceText",
+                    "value": "person",
+                    "line": 1185,
+                    "expression": "'birthPlaceText' => 'person'"
+                },
+                {
+                    "key": "dateOfBirth",
+                    "value": "person",
+                    "line": 1186,
+                    "expression": "'dateOfBirth' => 'person'"
+                },
+                {
+                    "key": "phone",
+                    "value": "contact",
+                    "line": 1187,
+                    "expression": "'phone' => 'contact'"
+                },
+                {
+                    "key": "mobile",
+                    "value": "contact",
+                    "line": 1188,
+                    "expression": "'mobile' => 'contact'"
+                },
+                {
+                    "key": "emailPrivate",
+                    "value": "contact",
+                    "line": 1189,
+                    "expression": "'emailPrivate' => 'contact'"
+                },
+                {
+                    "key": "emailWork",
+                    "value": "contact",
+                    "line": 1190,
+                    "expression": "'emailWork' => 'contact'"
+                },
+                {
+                    "key": "addressCountryId",
+                    "value": "address",
+                    "line": 1191,
+                    "expression": "'addressCountryId' => 'address'"
+                },
+                {
+                    "key": "addressPostalCode",
+                    "value": "address",
+                    "line": 1192,
+                    "expression": "'addressPostalCode' => 'address'"
+                },
+                {
+                    "key": "addressCity",
+                    "value": "address",
+                    "line": 1193,
+                    "expression": "'addressCity' => 'address'"
+                },
+                {
+                    "key": "addressStreet",
+                    "value": "address",
+                    "line": 1194,
+                    "expression": "'addressStreet' => 'address'"
+                },
+                {
+                    "key": "addressHouseNumber",
+                    "value": "address",
+                    "line": 1195,
+                    "expression": "'addressHouseNumber' => 'address'"
+                },
+                {
+                    "key": "addressLine2",
+                    "value": "address",
+                    "line": 1196,
+                    "expression": "'addressLine2' => 'address'"
+                },
+                {
+                    "key": "primaryNationalityCountryId",
+                    "value": "international",
+                    "line": 1197,
+                    "expression": "'primaryNationalityCountryId' => 'international'"
+                },
+                {
+                    "key": "primaryLanguageId",
+                    "value": "international",
+                    "line": 1198,
+                    "expression": "'primaryLanguageId' => 'international'"
+                },
+                {
+                    "key": "identifierNationalIdNumber",
+                    "value": "identification",
+                    "line": 1199,
+                    "expression": "'identifierNationalIdNumber' => 'identification'"
+                },
+                {
+                    "key": "identifierNationalIdIssuingAuthority",
+                    "value": "identification",
+                    "line": 1200,
+                    "expression": "'identifierNationalIdIssuingAuthority' => 'identification'"
+                },
+                {
+                    "key": "identifierTaxId",
+                    "value": "identification",
+                    "line": 1201,
+                    "expression": "'identifierTaxId' => 'identification'"
+                },
+                {
+                    "key": "identifierSocialSecurityNumber",
+                    "value": "identification",
+                    "line": 1202,
+                    "expression": "'identifierSocialSecurityNumber' => 'identification'"
+                },
+                {
+                    "key": "identifierPensionInsuranceNumber",
+                    "value": "identification",
+                    "line": 1203,
+                    "expression": "'identifierPensionInsuranceNumber' => 'identification'"
+                },
+                {
+                    "key": "identifierResidencePermitNumber",
+                    "value": "identification",
+                    "line": 1204,
+                    "expression": "'identifierResidencePermitNumber' => 'identification'"
+                },
+                {
+                    "key": "healthInsuranceProviderId",
+                    "value": "health-insurance",
+                    "line": 1205,
+                    "expression": "'healthInsuranceProviderId' => 'health-insurance'"
+                },
+                {
+                    "key": "healthInsuranceNumber",
+                    "value": "health-insurance",
+                    "line": 1206,
+                    "expression": "'healthInsuranceNumber' => 'health-insurance'"
+                },
+                {
+                    "key": "documentId",
+                    "value": "documents",
+                    "line": 1207,
+                    "expression": "'documentId' => 'documents'"
+                },
+                {
+                    "key": "documentType",
+                    "value": "documents",
+                    "line": 1208,
+                    "expression": "'documentType' => 'documents'"
+                },
+                {
+                    "key": "documentCategory",
+                    "value": "documents",
+                    "line": 1209,
+                    "expression": "'documentCategory' => 'documents'"
+                },
+                {
+                    "key": "documentTitle",
+                    "value": "documents",
+                    "line": 1210,
+                    "expression": "'documentTitle' => 'documents'"
+                },
+                {
+                    "key": "documentNumber",
+                    "value": "documents",
+                    "line": 1211,
+                    "expression": "'documentNumber' => 'documents'"
+                },
+                {
+                    "key": "documentIssuingAuthority",
+                    "value": "documents",
+                    "line": 1212,
+                    "expression": "'documentIssuingAuthority' => 'documents'"
+                },
+                {
+                    "key": "documentIssuedAt",
+                    "value": "documents",
+                    "line": 1213,
+                    "expression": "'documentIssuedAt' => 'documents'"
+                },
+                {
+                    "key": "documentExpiresAt",
+                    "value": "documents",
+                    "line": 1214,
+                    "expression": "'documentExpiresAt' => 'documents'"
+                },
+                {
+                    "key": "emergencyContactName",
+                    "value": "emergency-contact",
+                    "line": 1215,
+                    "expression": "'emergencyContactName' => 'emergency-contact'"
+                },
+                {
+                    "key": "emergencyContactRelationship",
+                    "value": "emergency-contact",
+                    "line": 1216,
+                    "expression": "'emergencyContactRelationship' => 'emergency-contact'"
+                },
+                {
+                    "key": "emergencyContactPhone",
+                    "value": "emergency-contact",
+                    "line": 1217,
+                    "expression": "'emergencyContactPhone' => 'emergency-contact'"
+                },
+                {
+                    "key": "emergencyContactEmail",
+                    "value": "emergency-contact",
+                    "line": 1218,
+                    "expression": "'emergencyContactEmail' => 'emergency-contact'"
+                },
+                {
+                    "key": "emergencyContactPersonId",
+                    "value": "emergency-contact",
+                    "line": 1219,
+                    "expression": "'emergencyContactPersonId' => 'emergency-contact'"
+                },
+                {
+                    "key": "source",
+                    "value": "manual",
+                    "line": 1457,
+                    "expression": "'source' => 'manual'"
+                },
+                {
+                    "key": "source",
+                    "value": "manual",
+                    "line": 1476,
+                    "expression": "'source' => 'manual'"
+                },
+                {
+                    "key": "source",
+                    "value": "manual",
+                    "line": 1500,
+                    "expression": "'source' => 'manual'"
+                },
+                {
+                    "key": "category",
+                    "value": "category",
+                    "line": 2060,
+                    "expression": "'category' => 'category'"
+                },
+                {
+                    "key": "title",
+                    "value": "COALESCE(NULLIF(title, ''), NULLIF(original_filename, ''), type)",
+                    "line": 2061,
+                    "expression": "'title' => \"COALESCE(NULLIF(title, ''), NULLIF(original_filename, ''), type)\""
+                },
+                {
+                    "key": "type",
+                    "value": "type",
+                    "line": 2062,
+                    "expression": "'type' => 'type'"
+                },
+                {
+                    "key": "number",
+                    "value": "document_number",
+                    "line": 2063,
+                    "expression": "'number' => 'document_number'"
+                },
+                {
+                    "key": "date",
+                    "value": "COALESCE(document_date, issued_at, created_at)",
+                    "line": 2064,
+                    "expression": "'date' => 'COALESCE(document_date, issued_at, created_at)'"
+                },
+                {
+                    "key": "valid_until",
+                    "value": "COALESCE(valid_until, expires_at)",
+                    "line": 2065,
+                    "expression": "'valid_until' => 'COALESCE(valid_until, expires_at)'"
+                },
+                {
+                    "key": "source",
+                    "value": "source",
+                    "line": 2066,
+                    "expression": "'source' => 'source'"
+                },
+                {
+                    "key": "file_disk",
+                    "value": "local",
+                    "line": 2185,
+                    "expression": "'file_disk' => 'local'"
+                }
+            ],
+            "methods": [
+                {
+                    "name": "mount",
+                    "line": 208,
+                    "expression": "public function mount(Person $person): void\n    {\n        $this->person = $person;\n        $this->refreshDocumentTypeOptions();\n        $this->refreshDocumentCategoryOptions();\n        $this->fillFromPerson();\n    }"
+                },
+                {
+                    "name": "createNewDocumentType",
+                    "line": 355,
+                    "expression": "public function createNewDocumentType(mixed $value, string $targetField = 'newDocumentType'): void\n    {\n        $documentType = PersonDocumentType::firstOrCreateFromLabel((string) $value);\n\n        if ($documentType === null) {\n            return;\n        }\n\n        $this->refreshDocumentTypeOptions();\n\n        if ($targetField === 'documentType') {\n            $this->documentType = $documentType->code;\n            $this->resetValidation('documentType');\n\n            return;\n        }\n\n        $this->newDocumentType = $documentType->code;\n        $this->resetValidation('newDocumentType');\n    }"
+                },
+                {
+                    "name": "createNewDocumentCategory",
+                    "line": 376,
+                    "expression": "public function createNewDocumentCategory(mixed $value, string $targetField = 'newDocumentCategory'): void\n    {\n        $label = trim((string) $value);\n\n        if ($label === '') {\n            return;\n        }\n\n        $category = Str::of(Str::ascii($label, 'de'))\n            ->lower()\n            ->replaceMatches('/[^a-z0-9]+/', '_')\n            ->trim('_')\n            ->toString();\n\n        if ($category === '') {\n            return;\n        }\n\n        $this->documentCategoryOptions[$category] = $label;\n\n        if ($targetField === 'documentCategory') {\n            $this->documentCategory = $category;\n            $this->resetValidation('documentCategory');\n\n            return;\n        }\n\n        $this->newDocumentCategory = $category;\n        $this->resetValidation('newDocumentCategory');\n    }"
+                },
+                {
+                    "name": "render",
+                    "line": 659,
+                    "expression": "public function render()\n    {\n        $this->collectRuntimeDynamicOptions();\n\n        return view('components.management.people.⚡edit-person', [\n            'birthCountryOptions' => Country::query()\n                ->active()\n                ->ordered()\n                ->get(['id', 'iso2', 'name', 'native_name']),\n            'birthPlaceOptions' => $this->birthPlaceOptions(),\n            'addressCountryOptions' => Country::query()\n                ->active()\n                ->ordered()\n                ->get(['id', 'iso2', 'name', 'native_name']),\n            'addressPostalCodeOptions' => $this->addressPostalCodeOptions(),\n            'addressCityOptions' => $this->addressCityOptions(),\n            'addressStreetOptions' => $this->addressStreetOptions(),\n            'nationalityCountryOptions' => Country::query()\n                ->active()\n                ->ordered()\n                ->get(['id', 'iso2', 'name', 'native_name']),\n            'languageOptions' => Language::query()\n                ->active()\n                ->ordered()\n                ->get(['id', 'iso639_1', 'iso639_3', 'name', 'native_name']),\n            'selectedNationalityOptions' => $this->selectedNationalityOptions(),\n            'selectedLanguageOptions' => $this->selectedLanguageOptions(),\n            'healthInsuranceProviderOptions' => InsuranceProvider::query()\n                ->active()\n                ->where('type', InsuranceProvider::TYPE_HEALTH)\n                ->ordered()\n                ->get(['id', 'name', 'short_name', 'code']),\n            'documentOptions' => $this->documentOptions(),\n            'documentArchiveRows' => $this->documentArchiveRows(),\n            'documentArchiveCounts' => $this->documentArchiveCounts(),\n            'documentIssuingAuthorityOptions' => $this->documentIssuingAuthorityOptions(),\n            'personNumberOptions' => $this->personNumberOptions(),\n        ]);\n    }"
+                },
+                {
+                    "name": "rules",
+                    "line": 699,
+                    "expression": "protected function rules(): array\n    {\n        return [\n            'salutation' => ['required', 'string', Rule::in(array_keys($this->salutationOptions))],\n            'nameTitle' => ['nullable', 'string', 'max:255'],\n            'gender' => ['required', 'string', Rule::in(array_keys($this->genderOptions))],\n            'maritalStatus' => ['required', 'string', Rule::in(array_keys($this->maritalStatusOptions))],\n            'firstName' => ['required', 'string', 'max:255'],\n            'middleName' => ['nullable', 'string', 'max:255'],\n            'preferredName' => ['nullable', 'string', 'max:255'],\n            'lastName' => ['required', 'string', 'max:255'],\n            'birthName' => ['nullable', 'string', 'max:255'],\n            'dateOfBirth' => ['required', 'date'],\n            'birthCountryId' => ['required', 'integer', Rule::exists('countries', 'id')],\n            'birthPlaceText' => ['required', 'string', 'max:255'],\n            'phone' => ['nullable', 'string', 'max:255'],\n            'mobile' => ['nullable', 'string', 'max:255'],\n            'emailPrivate' => ['nullable', 'email', 'max:255'],\n            'emailWork' => ['nullable', 'email', 'max:255'],\n            'addressCountryId' => ['nullable', 'integer', Rule::exists('countries', 'id')],\n            'addressPostalCode' => ['nullable', 'string', 'max:255'],\n            'addressCity' => ['nullable', 'string', 'max:255'],\n            'addressStreet' => ['nullable', 'string', 'max:255'],\n            'addressHouseNumber' => ['nullable', 'string', 'max:255'],\n            'addressLine2' => ['nullable', 'string', 'max:255'],\n            'primaryNationalityCountryId' => ['nullable', 'array'],\n            'primaryNationalityCountryId.*' => ['integer', Rule::exists('countries', 'id')],\n            'primaryLanguageId' => ['nullable', 'array'],\n            'primaryLanguageId.*' => ['integer', Rule::exists('languages', 'id')],\n            'languageAbilities' => ['array'],\n            'languageAbilities.*.speaking' => ['boolean'],\n            'languageAbilities.*.reading' => ['boolean'],\n            'languageAbilities.*.writing' => ['boolean'],\n            'identifierNationalIdNumber' => ['nullable', 'string', 'max:255'],\n            'identifierNationalIdIssuingAuthority' => ['nullable', 'string', 'max:255'],\n            'identifierTaxId' => ['nullable', 'string', 'max:255'],\n            'identifierSocialSecurityNumber' => ['nullable', 'string', 'max:255'],\n            'identifierPensionInsuranceNumber' => ['nullable', 'string', 'max:255'],\n            'identifierResidencePermitNumber' => ['nullable', 'string', 'max:255'],\n            'healthInsuranceProviderId' => [\n                'nullable',\n                'integer',\n                Rule::exists('insurance_providers', 'id')\n                    ->where('type', InsuranceProvider::TYPE_HEALTH)\n                    ->where('is_active', true),\n            ],\n            'healthInsuranceNumber' => ['nullable', 'string', 'max:255'],\n            'documentId' => ['nullable', 'integer', Rule::exists('person_documents', 'id')->where('person_id', $this->person->id)],\n            'documentType' => ['nullable', 'string', Rule::in($this->documentTypeOptionKeys())],\n            'documentCategory' => ['nullable', 'string', Rule::in($this->documentCategoryOptionKeys())],\n            'documentTitle' => ['nullable', 'string', 'max:255'],\n            'documentNumber' => ['nullable', 'string', 'max:255'],\n            'documentIssuingAuthority' => ['nullable', 'string', 'max:255'],\n            'documentIssuedAt' => ['nullable', 'date'],\n            'documentExpiresAt' => ['nullable', 'date', 'after_or_equal:documentIssuedAt'],\n            'emergencyContactName' => ['nullable', 'string', 'max:255'],\n            'emergencyContactRelationship' => ['nullable', 'string', Rule::in(array_keys($this->emergencyContactRelationshipOptions))],\n            'emergencyContactPhone' => ['nullable', 'string', 'max:255'],\n            'emergencyContactEmail' => ['nullable', 'email', 'max:255'],\n            'emergencyContactPersonId' => ['nullable', 'integer', Rule::exists('people', 'id')->whereNot('id', $this->person->id)],\n        ];\n    }"
+                },
+                {
+                    "name": "documentTypeOptionKeys",
+                    "line": 859,
+                    "expression": "private function documentTypeOptionKeys(): array\n    {\n        if ($this->documentTypeOptions === []) {\n            $this->refreshDocumentTypeOptions();\n        }\n\n        return array_keys($this->documentTypeOptions);\n    }"
+                },
+                {
+                    "name": "refreshDocumentTypeOptions",
+                    "line": 868,
+                    "expression": "private function refreshDocumentTypeOptions(): void\n    {\n        $this->documentTypeOptions = PersonDocumentType::options();\n    }"
+                },
+                {
+                    "name": "documentCategoryOptionKeys",
+                    "line": 876,
+                    "expression": "private function documentCategoryOptionKeys(): array\n    {\n        if ($this->documentCategoryOptions === []) {\n            $this->refreshDocumentCategoryOptions();\n        }\n\n        return array_keys($this->documentCategoryOptions);\n    }"
+                },
+                {
+                    "name": "refreshDocumentCategoryOptions",
+                    "line": 885,
+                    "expression": "private function refreshDocumentCategoryOptions(): void\n    {\n        $defaultOptions = collect(PersonDocument::CATEGORIES)\n            ->mapWithKeys(fn(string $category): array => [$category => Str::of($category)->replace('_', ' ')->headline()->toString()]);\n\n        $existingOptions = PersonDocument::query()\n            ->whereNotNull('category')\n            ->where('category', '!=', '')\n            ->distinct()\n            ->orderBy('category')\n            ->pluck('category')\n            ->mapWithKeys(fn(string $category): array => [$category => Str::of($category)->replace('_', ' ')->headline()->toString()]);\n\n        $this->documentCategoryOptions = $defaultOptions\n            ->merge($existingOptions)\n            ->all();\n    }"
+                },
+                {
+                    "name": "collectRuntimeDynamicOptions",
+                    "line": 903,
+                    "expression": "private function collectRuntimeDynamicOptions(): void\n    {\n        if (! class_exists(RuntimeDynamicTranslationCollector::class)) {\n            return;\n        }\n\n        $collector = app(RuntimeDynamicTranslationCollector::class);\n\n        $collector->options(\n            key: 'management.people.edit_person.sections.person_core.salutation_options',\n            scope: 'salutation_options',\n            values: $this->salutationOptions,\n            source: self::class . '::salutationOptions',\n            origin: 'runtime',\n            sourceType: 'runtime_options',\n        );\n\n        $collector->options(\n            key: 'management.people.edit_person.sections.person_core.gender_options',\n            scope: 'gender_options',\n            values: $this->genderOptions,\n            source: self::class . '::genderOptions',\n            origin: 'runtime',\n            sourceType: 'runtime_options',\n        );\n\n        $collector->options(\n            key: 'management.people.edit_person.sections.person_core.marital_status_options',\n            scope: 'marital_status_options',\n            values: $this->maritalStatusOptions,\n            source: self::class . '::maritalStatusOptions',\n            origin: 'runtime',\n            sourceType: 'runtime_options',\n        );\n\n        $collector->options(\n            key: 'management.people.edit_person.sections.documents.document_type_options',\n            scope: 'document_type_options',\n            values: $this->documentTypeOptions,\n            source: self::class . '::documentTypeOptions',\n            origin: 'db',\n            sourceType: 'runtime_db_options',\n        );\n\n        $collector->options(\n            key: 'management.people.edit_person.sections.documents.document_category_options',\n            scope: 'document_category_options',\n            values: $this->documentCategoryOptions,\n            source: self::class . '::documentCategoryOptions',\n            origin: 'db',\n            sourceType: 'runtime_db_options',\n        );\n\n        $collector->options(\n            key: 'management.people.edit_person.sections.documents.archive.status_options',\n            scope: 'document_archive_status_options',\n            values: $this->documentArchiveValueOptions('status', PersonDocument::STATUSES),\n            source: self::class . '::documentArchiveStatusOptions',\n            origin: 'db',\n            sourceType: 'runtime_db_options',\n        );\n\n        $collector->options(\n            key: 'management.people.edit_person.sections.documents.archive.category_options',\n            scope: 'document_archive_category_options',\n            values: $this->documentArchiveValueOptions('category', PersonDocument::CATEGORIES),\n            source: self::class . '::documentArchiveCategoryOptions',\n            origin: 'db',\n            sourceType: 'runtime_db_options',\n        );\n\n        $collector->options(\n            key: 'management.people.edit_person.sections.documents.archive.source_options',\n            scope: 'document_archive_source_options',\n            values: $this->documentArchiveValueOptions('source', PersonDocument::SOURCES),\n            source: self::class . '::documentArchiveSourceOptions',\n            origin: 'db',\n            sourceType: 'runtime_db_options',\n        );\n\n        $collector->options(\n            key: 'management.people.edit_person.sections.emergency_contact.emergency_contact_relationship_options',\n            scope: 'emergency_contact_relationship_options',\n            values: $this->emergencyContactRelationshipOptions,\n            source: self::class . '::emergencyContactRelationshipOptions',\n            origin: 'runtime',\n            sourceType: 'runtime_options',\n        );\n    }"
+                },
+                {
+                    "name": "documentArchiveValueOptions",
+                    "line": 997,
+                    "expression": "private function documentArchiveValueOptions(string $column, array $defaults): array\n    {\n        $defaultOptions = collect($defaults)\n            ->mapWithKeys(static fn(string $value): array => [\n                $value => Str::of($value)->replace('_', ' ')->headline()->toString(),\n            ]);\n\n        $existingOptions = $this->person\n            ->documentRows()\n            ->whereNotNull($column)\n            ->where($column, '!=', '')\n            ->distinct()\n            ->orderBy($column)\n            ->pluck($column)\n            ->mapWithKeys(static fn(string $value): array => [\n                $value => Str::of($value)->replace('_', ' ')->headline()->toString(),\n            ]);\n\n        return $defaultOptions\n            ->merge($existingOptions)\n            ->all();\n    }"
+                },
+                {
+                    "name": "birthPlaceOptions",
+                    "line": 1249,
+                    "expression": "private function birthPlaceOptions()\n    {\n        if ($this->birthCountryId === null) {\n            return collect();\n        }\n\n        $options = AddressLocality::query()\n            ->where('country_id', $this->birthCountryId)\n            ->ordered()\n            ->limit(100)\n            ->pluck('name')\n            ->unique()\n            ->values();\n\n        $current = trim($this->birthPlaceText);\n\n        if ($current === '' || $options->containsStrict($current)) {\n            return $options;\n        }\n\n        return $options\n            ->prepend($current)\n            ->unique()\n            ->values();\n    }"
+                },
+                {
+                    "name": "addressPostalCodeOptions",
+                    "line": 1275,
+                    "expression": "private function addressPostalCodeOptions()\n    {\n        if ($this->addressCountryId === null) {\n            return collect();\n        }\n\n        $options = AddressPostalCode::query()\n            ->where('country_id', $this->addressCountryId)\n            ->ordered()\n            ->limit(100)\n            ->pluck('postal_code');\n\n        return $this->includeCurrentAddressOption($options, $this->addressPostalCode);\n    }"
+                },
+                {
+                    "name": "addressCityOptions",
+                    "line": 1290,
+                    "expression": "private function addressCityOptions()\n    {\n        if ($this->addressCountryId === null) {\n            return collect();\n        }\n\n        $postalCode = $this->addressPostalCodeReference($this->addressPostalCode);\n\n        if ($this->addressPostalCode !== '' && $postalCode === null) {\n            return $this->includeCurrentAddressOption(collect(), $this->addressCity);\n        }\n\n        $options = AddressLocality::query()\n            ->where('country_id', $this->addressCountryId)\n            ->when($postalCode !== null, function ($query) use ($postalCode): void {\n                $query->where('postal_code_id', $postalCode->id);\n            })\n            ->ordered()\n            ->limit(100)\n            ->pluck('name');\n\n        return $this->includeCurrentAddressOption($options, $this->addressCity);\n    }"
+                },
+                {
+                    "name": "addressStreetOptions",
+                    "line": 1314,
+                    "expression": "private function addressStreetOptions()\n    {\n        if ($this->addressCountryId === null || $this->addressCity === '') {\n            return collect();\n        }\n\n        $postalCode = $this->addressPostalCodeReference($this->addressPostalCode);\n        $locality = $this->addressLocalityReference($this->addressCity, $postalCode);\n\n        if (($this->addressPostalCode !== '' && $postalCode === null) || $locality === null) {\n            return $this->includeCurrentAddressOption(collect(), $this->addressStreet);\n        }\n\n        $options = AddressStreet::query()\n            ->where('country_id', $this->addressCountryId)\n            ->when($postalCode !== null, function ($query) use ($postalCode): void {\n                $query->where('postal_code_id', $postalCode->id);\n            })\n            ->when($locality !== null, function ($query) use ($locality): void {\n                $query->where('locality_id', $locality->id);\n            })\n            ->ordered()\n            ->limit(100)\n            ->pluck('name');\n\n        return $this->includeCurrentAddressOption($options, $this->addressStreet);\n    }"
+                },
+                {
+                    "name": "includeCurrentAddressOption",
+                    "line": 1342,
+                    "expression": "private function includeCurrentAddressOption($options, string $current)\n    {\n        $current = trim($current);\n\n        if ($current === '' || $options->containsStrict($current)) {\n            return $options;\n        }\n\n        return $options\n            ->prepend($current)\n            ->unique()\n            ->values();\n    }"
+                },
+                {
+                    "name": "selectedNationalityOptions",
+                    "line": 1386,
+                    "expression": "private function selectedNationalityOptions()\n    {\n        $selectedIds = $this->normalizeSelectedIds($this->primaryNationalityCountryId);\n\n        if ($selectedIds === []) {\n            return collect();\n        }\n\n        return Country::query()\n            ->whereIn('id', $selectedIds)\n            ->get(['id', 'iso2', 'name', 'native_name'])\n            ->sortBy(fn(Country $country): int => array_search($country->id, $selectedIds, true))\n            ->values();\n    }"
+                },
+                {
+                    "name": "selectedLanguageOptions",
+                    "line": 1401,
+                    "expression": "private function selectedLanguageOptions()\n    {\n        $selectedIds = $this->normalizeSelectedIds($this->primaryLanguageId);\n\n        if ($selectedIds === []) {\n            return collect();\n        }\n\n        return Language::query()\n            ->whereIn('id', $selectedIds)\n            ->get(['id', 'iso639_1', 'iso639_3', 'name', 'native_name'])\n            ->sortBy(fn(Language $language): int => array_search($language->id, $selectedIds, true))\n            ->values();\n    }"
+                },
+                {
+                    "name": "documentOptions",
+                    "line": 1999,
+                    "expression": "private function documentOptions()\n    {\n        return $this->person\n            ->documentRows()\n            ->latest('id')\n            ->get(['id', 'type', 'title', 'document_number', 'original_filename', 'mime_type', 'created_at']);\n    }"
+                },
+                {
+                    "name": "documentIssuingAuthorityOptions",
+                    "line": 2208,
+                    "expression": "private function documentIssuingAuthorityOptions()\n    {\n        $options = PersonDocument::query()\n            ->whereNotNull('issuing_authority')\n            ->where('issuing_authority', '!=', '')\n            ->distinct()\n            ->orderBy('issuing_authority')\n            ->limit(100)\n            ->pluck('issuing_authority');\n\n        $current = trim($this->documentIssuingAuthority);\n\n        if ($current === '' || $options->containsStrict($current)) {\n            return $options;\n        }\n\n        return $options\n            ->prepend($current)\n            ->unique()\n            ->values();\n    }"
+                },
+                {
+                    "name": "personNumberOptions",
+                    "line": 2230,
+                    "expression": "private function personNumberOptions()\n    {\n        return Person::query()\n            ->whereKeyNot($this->person->id)\n            ->orderBy('person_number')\n            ->orderBy('last_name')\n            ->orderBy('first_name')\n            ->limit(100)\n            ->get(['id', 'person_number', 'first_name', 'last_name', 'avatar_path']);\n    }"
+                },
+                {
+                    "name": "documentCategoryForType",
+                    "line": 2300,
+                    "expression": "private function documentCategoryForType(string $type): string\n    {\n        return PersonDocumentType::categoryFor($type);\n    }"
+                }
+            ],
+            "constants": [
+                {
+                    "name": "DOCUMENT_ADD_FORM_KEY",
+                    "line": 39,
+                    "expression": "'management.people.edit-person.sections.documents.add-modal'"
+                },
+                {
+                    "name": "DEFAULT_DATE_OF_BIRTH_YEARS_AGO",
+                    "line": 41,
+                    "expression": "30"
+                }
+            ]
+        },
+        "app/Livewire/Admin/RoleList.php": {
+            "sha256": "ad683acce31bf906cad7b941143f86393ca2b0a2fe939874b66d735e3ea53cc1",
+            "property_defaults": [],
+            "literal_array_entries": [],
+            "methods": [
+                {
+                    "name": "createRole",
+                    "line": 183,
+                    "expression": "public function createRole(AppDisplaySettings $settings, IconRegistry $iconRegistry, AdminActivity $adminActivity): void\n    {\n        if (! Auth::user()?->hasRole('Super-Admin')) {\n            Flux::toast(\n                // i18n-native: __('admin.roles.messages.not_allowed.heading')\n                heading: __('admin.roles.messages.not_allowed.heading'),\n                // i18n-native: __('admin.roles.messages.not_allowed.only_super_admins_may_create_roles')\n                text: __('admin.roles.messages.not_allowed.only_super_admins_may_create_roles'),\n                variant: 'danger',\n                duration: 4000,\n            );\n\n            return;\n        }\n\n        $this->validate([\n            'creatingRoleName' => [\n                'required',\n                'string',\n                'max:128',\n                'regex:/^[\\pL\\pN _-]+$/u',\n                Rule::unique('roles', 'name')->where('guard_name', $this->creatingGuardName),\n            ],\n            'creatingGuardName' => ['required', 'string', 'max:64'],\n            'creatingCategory' => ['nullable', 'string', 'max:64'],\n            'creatingSortOrder' => ['required', 'integer', 'min:0', 'max:65535'],\n            'creatingDescription' => ['nullable', 'string', 'max:2000'],\n            'creatingIsAssignable' => ['boolean'],\n            'creatingBadgeColor' => [\n                'required',\n                'string',\n                Rule::in(array_keys($iconRegistry->roleUserManagementBadgeColors())),\n            ],\n            'creatingBadgeVariant' => [\n                'required',\n                'string',\n                Rule::in(array_keys($iconRegistry->roleUserManagementBadgeVariants())),\n            ],\n            'creatingBadgeIcon' => [\n                'required',\n                'string',\n                Rule::in(array_keys($iconRegistry->roleUserManagementOptions())),\n            ],\n        ]);\n\n        $roleName = trim($this->creatingRoleName);\n\n        $role = Role::query()->create([\n            'name' => $roleName,\n            'guard_name' => $this->creatingGuardName,\n            'category' => trim($this->creatingCategory) !== '' ? trim($this->creatingCategory) : null,\n            'sort_order' => $this->creatingSortOrder,\n            'description' => trim($this->creatingDescription) !== '' ? trim($this->creatingDescription) : null,\n            'is_system' => false,\n            'is_assignable' => $this->creatingIsAssignable,\n        ]);\n\n        $roleBadges = $settings->roleBadges;\n        $roleBadges[$role->name] = [\n            'color' => $this->creatingBadgeColor,\n            'variant' => $this->creatingBadgeVariant,\n            'icon' => $this->creatingBadgeIcon,\n        ];\n\n        $settings->roleBadges = $roleBadges;\n        $settings->save();\n\n        $adminActivity->roleCreated(\n            role: $role,\n            metadata: [\n                'category' => $role->category,\n                'sort_order' => $role->sort_order,\n                'description' => $role->description,\n                'is_system' => $role->is_system,\n                'is_assignable' => $role->is_assignable,\n            ],\n            badge: $roleBadges[$role->name] ?? [],\n        );\n\n        $this->resetCreateRoleModal();\n\n        Flux::toast(\n            // i18n-native: __('admin.roles.messages.role_created.heading')\n            heading: __('admin.roles.messages.role_created.heading'),\n            // i18n-native: __('admin.roles.messages.role_created.text')\n            text: __('admin.roles.messages.role_created.text', [\n                'role' => $role->name,\n            ]),\n            variant: 'success',\n            duration: 3000,\n        );\n\n        $this->dispatch('$refresh');\n    }"
+                },
+                {
+                    "name": "saveRole",
+                    "line": 340,
+                    "expression": "public function saveRole(AppDisplaySettings $settings, IconRegistry $iconRegistry, AdminActivity $adminActivity): void\n    {\n        if ($this->editingRoleId === null) {\n            return;\n        }\n\n        $this->validate([\n            'editingCategory' => ['nullable', 'string', 'max:64'],\n            'editingSortOrder' => ['required', 'integer', 'min:0', 'max:65535'],\n            'editingDescription' => ['nullable', 'string', 'max:2000'],\n            'editingIsAssignable' => ['boolean'],\n            'editingBadgeColor' => [\n                'required',\n                'string',\n                Rule::in(array_keys($iconRegistry->roleUserManagementBadgeColors())),\n            ],\n            'editingBadgeVariant' => [\n                'required',\n                'string',\n                Rule::in(array_keys($iconRegistry->roleUserManagementBadgeVariants())),\n            ],\n            'editingBadgeIcon' => [\n                'required',\n                'string',\n                Rule::in(array_keys($iconRegistry->roleUserManagementOptions())),\n            ],\n        ]);\n\n        $role = Role::query()->findOrFail($this->editingRoleId);\n\n        $beforeBadge = $settings->roleBadges[$role->name] ?? [];\n\n        $before = [\n            'metadata' => [\n                'category' => $role->category,\n                'sort_order' => $role->sort_order,\n                'description' => $role->description,\n                'is_system' => $role->is_system,\n                'is_assignable' => $role->is_assignable,\n            ],\n            'badge' => [\n                'color' => $beforeBadge['color'] ?? null,\n                'variant' => $beforeBadge['variant'] ?? null,\n                'icon' => $beforeBadge['icon'] ?? null,\n            ],\n        ];\n\n        $role->forceFill([\n            'category' => trim($this->editingCategory) !== '' ? trim($this->editingCategory) : null,\n            'sort_order' => $this->editingSortOrder,\n            'description' => trim($this->editingDescription) !== '' ? trim($this->editingDescription) : null,\n            'is_assignable' => $this->editingIsAssignable,\n        ])->save();\n\n        $roleBadges = $settings->roleBadges;\n        $roleBadges[$role->name] = [\n            'color' => $this->editingBadgeColor,\n            'variant' => $this->editingBadgeVariant,\n            'icon' => $this->editingBadgeIcon,\n        ];\n\n        $settings->roleBadges = $roleBadges;\n        $settings->save();\n\n        $role->refresh();\n\n        $after = [\n            'metadata' => [\n                'category' => $role->category,\n                'sort_order' => $role->sort_order,\n                'description' => $role->description,\n                'is_system' => $role->is_system,\n                'is_assignable' => $role->is_assignable,\n            ],\n            'badge' => [\n                'color' => $roleBadges[$role->name]['color'] ?? null,\n                'variant' => $roleBadges[$role->name]['variant'] ?? null,\n                'icon' => $roleBadges[$role->name]['icon'] ?? null,\n            ],\n        ];\n\n        $adminActivity->roleUpdated(\n            role: $role,\n            before: $before,\n            after: $after,\n        );\n\n        $savedRoleName = (string) $role->name;\n\n        $this->resetEditRoleModal();\n\n        Flux::toast(\n            // i18n-native: __('admin.roles.messages.role_saved.heading')\n            heading: __('admin.roles.messages.role_saved.heading'),\n            // i18n-native: __('admin.roles.messages.role_saved.text')\n            text: __('admin.roles.messages.role_saved.text', [\n                'role' => $savedRoleName,\n            ]),\n            variant: 'success',\n            duration: 3000,\n        );\n\n        $this->dispatch('$refresh');\n    }"
+                },
+                {
+                    "name": "render",
+                    "line": 543,
+                    "expression": "public function render(RoleBadgeResolver $roleBadgeResolver, IconRegistry $iconRegistry)\n    {\n        $rolesQuery = Role::query()\n            ->withCount('users');\n\n        $rolesQuery\n            ->when(trim($this->search) !== '', function ($query): void {\n                $search = trim($this->search);\n\n                $query->where(function ($query) use ($search): void {\n                    $query->where('name', 'ilike', \"%{$search}%\")\n                        ->orWhere('category', 'ilike', \"%{$search}%\")\n                        ->orWhere('description', 'ilike', \"%{$search}%\");\n                });\n            })\n            ->when($this->categoryFilter !== '', function ($query): void {\n                $query->where('category', $this->categoryFilter);\n            })\n            ->when($this->assignableFilter !== '', function ($query): void {\n                $query->where('is_assignable', $this->assignableFilter === 'yes');\n            })\n            ->when($this->systemFilter !== '', function ($query): void {\n                $query->where('is_system', $this->systemFilter === 'yes');\n            });\n\n        if ($this->sortField === 'users_count') {\n            $rolesQuery\n                ->orderBy('users_count', $this->sortDirection)\n                ->orderBy('category')\n                ->orderBy('sort_order')\n                ->orderBy('name');\n        } else {\n            $rolesQuery\n                ->orderBy($this->sortField, $this->sortDirection)\n                ->orderBy('category')\n                ->orderBy('sort_order')\n                ->orderBy('name');\n        }\n\n        $roles = $rolesQuery->paginate($this->normalizedPerPage());\n\n        $roleBadges = $roles\n            ->getCollection()\n            ->mapWithKeys(fn(Role $role): array => [\n                $role->name => $roleBadgeResolver->forRole($role->name),\n            ])\n            ->all();\n\n        $roleCategories = Role::query()\n            ->whereNotNull('category')\n            ->select('category')\n            ->distinct()\n            ->orderBy('category')\n            ->pluck('category')\n            ->all();\n        $this->collectRuntimeDynamicOptions($iconRegistry, $roleCategories);\n\n        return view('components.admin.⚡role-list', [\n            'roles' => $roles,\n            'roleBadges' => $roleBadges,\n            'roleBadgeColorOptions' => $iconRegistry->roleUserManagementBadgeColors(),\n            'roleBadgeVariantOptions' => $iconRegistry->roleUserManagementBadgeVariants(),\n            'roleBadgeIconOptions' => $iconRegistry->roleUserManagementOptions(),\n            'roleCategories' => $roleCategories,\n        ]);\n    }"
+                },
+                {
+                    "name": "collectRuntimeDynamicOptions",
+                    "line": 613,
+                    "expression": "private function collectRuntimeDynamicOptions(IconRegistry $iconRegistry, array $roleCategories): void\n    {\n        if (! class_exists(RuntimeDynamicTranslationCollector::class)) {\n            return;\n        }\n\n        $collector = app(RuntimeDynamicTranslationCollector::class);\n\n        foreach (['modal_create', 'modal_edit'] as $modalScope) {\n            $collector->options(\n                key: \"admin.partials.role_list.{$modalScope}.role_badge_color_options\",\n                scope: 'role_badge_color_options',\n                values: $iconRegistry->roleUserManagementBadgeColors(),\n                source: self::class . '::roleBadgeColorOptions',\n                origin: 'runtime',\n                sourceType: 'runtime_options',\n            );\n\n            $collector->options(\n                key: \"admin.partials.role_list.{$modalScope}.role_badge_variant_options\",\n                scope: 'role_badge_variant_options',\n                values: $iconRegistry->roleUserManagementBadgeVariants(),\n                source: self::class . '::roleBadgeVariantOptions',\n                origin: 'runtime',\n                sourceType: 'runtime_options',\n            );\n\n            $collector->options(\n                key: \"admin.partials.role_list.{$modalScope}.role_badge_icon_options\",\n                scope: 'role_badge_icon_options',\n                values: $iconRegistry->roleUserManagementOptions(),\n                source: self::class . '::roleBadgeIconOptions',\n                origin: 'runtime',\n                sourceType: 'runtime_options',\n            );\n        }\n\n        $collector->options(\n            key: 'admin.partials.role_list.role_categories',\n            scope: 'role_categories',\n            values: collect($roleCategories)\n                ->mapWithKeys(static fn(string $category): array => [\n                    $category => str($category)->headline()->toString(),\n                ])\n                ->all(),\n            source: self::class . '::roleCategories',\n            origin: 'db',\n            sourceType: 'runtime_db_options',\n        );\n    }"
+                }
+            ],
+            "constants": [
+                {
+                    "name": "UI_STATE_SETTING_KEY",
+                    "line": 28,
+                    "expression": "'ui.pages.admin_role_list'"
+                }
+            ]
+        },
+        "app/Livewire/Admin/UserList.php": {
+            "sha256": "842384b61203898bcdee23cdb48451fb7d680db3848937fd373b4e6d5bc13f4f",
+            "property_defaults": [],
+            "literal_array_entries": [],
+            "methods": [
+                {
+                    "name": "render",
+                    "line": 379,
+                    "expression": "public function render(RoleBadgeResolver $roleBadgeResolver)\n    {\n        $query = $this->getFilteredUserQuery()\n            ->with('roles');\n\n        if ($this->sortField === 'roles.name') {\n            $query = $query\n                ->leftJoin('model_has_roles', function ($join) {\n                    $join->on('users.id', '=', 'model_has_roles.model_id')\n                        ->where('model_has_roles.model_type', '=', User::class);\n                })\n                ->leftJoin('roles', 'model_has_roles.role_id', '=', 'roles.id')\n                ->orderBy('roles.name', $this->sortDirection)\n                ->select('users.*');\n        } else {\n            $query = $query->orderBy('users.' . $this->sortField, $this->sortDirection);\n        }\n\n        $this->perPage = $this->normalizePerPage($this->perPage);\n\n        $users = $query->paginate($this->perPage);\n\n        $assignableRoleCountsByCategory = Role::query()\n            ->where('is_assignable', true)\n            ->selectRaw(\"COALESCE(category, 'other') as category, COUNT(*) as aggregate\")\n            ->groupByRaw(\"COALESCE(category, 'other')\")\n            ->pluck('aggregate', 'category')\n            ->map(fn($value): int => (int) $value)\n            ->all();\n\n        $assignedUserCountsByRoleCategory = User::query()\n            ->join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id', 'inner', false)\n            ->where('model_has_roles.model_type', User::class)\n            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id', 'inner', false)\n            ->selectRaw(\"COALESCE(roles.category, 'other') as category, COUNT(DISTINCT users.id) as aggregate\")\n            ->groupByRaw(\"COALESCE(roles.category, 'other')\")\n            ->pluck('aggregate', 'category')\n            ->map(fn($value): int => (int) $value)\n            ->all();\n\n        $assignedUserCountsByRole = Role::query()\n            ->leftJoin('model_has_roles', function ($join) {\n                $join->on('roles.id', '=', 'model_has_roles.role_id')\n                    ->where('model_has_roles.model_type', '=', User::class);\n            })\n            ->where('roles.is_assignable', true)\n            ->selectRaw(\"\n        roles.name,\n        COALESCE(roles.category, 'other') as category,\n        roles.sort_order,\n        COUNT(DISTINCT model_has_roles.model_id) as users_count\n    \")\n            ->groupBy('roles.id', 'roles.name', 'roles.category', 'roles.sort_order')\n            ->orderBy('roles.category')\n            ->orderBy('roles.sort_order')\n            ->orderBy('roles.name')\n            ->get()\n            ->groupBy('category')\n            ->map(\n                fn($roles) => $roles\n                    ->map(fn($role): array => [\n                        'name' => (string) $role->name,\n                        'usersCount' => (int) $role->users_count,\n                    ])\n                    ->values()\n                    ->all()\n            )\n            ->all();\n\n        $summary = [\n            'totalUsers' => User::query()->count('*'),\n            'withoutRoleUsers' => User::query()->doesntHave('roles')->count('*'),\n            'assignedUsersByRoleCategory' => $assignedUserCountsByRoleCategory,\n            'assignableRolesByCategory' => $assignableRoleCountsByCategory,\n            'assignedUsersByRole' => $assignedUserCountsByRole,\n        ];\n\n        $assignableRoles = Role::query()\n            ->where('is_assignable', true)\n            ->orderBy('category')\n            ->orderBy('sort_order')\n            ->orderBy('name')\n            ->get([\n                'name',\n                'category',\n                'sort_order',\n                'description',\n            ]);\n\n        $roles = $assignableRoles\n            ->pluck('name')\n            ->all();\n\n        $roleGroups = $assignableRoles\n            ->groupBy(fn(Role $role): string => (string) ($role->category ?: 'other'))\n            ->map(fn($group) => $group->values())\n            ->all();\n\n        $this->collectRuntimeDynamicOptions(array_keys($roleGroups));\n\n        $roleBadges = collect($roles)\n            ->mapWithKeys(fn(string $role): array => [\n                $role => $roleBadgeResolver->forRole($role),\n            ])\n            ->all();\n\n        return view('components.admin.⚡user-list', [\n            'users' => $users,\n            'roles' => $roles,\n            'roleGroups' => $roleGroups,\n            'roleBadges' => $roleBadges,\n            'withoutRoleBadge' => $roleBadgeResolver->withoutRole(),\n            'summary' => $summary,\n        ]);\n    }"
+                },
+                {
+                    "name": "collectRuntimeDynamicOptions",
+                    "line": 498,
+                    "expression": "private function collectRuntimeDynamicOptions(array $roleCategories): void\n    {\n        if (! class_exists(RuntimeDynamicTranslationCollector::class)) {\n            return;\n        }\n\n        app(RuntimeDynamicTranslationCollector::class)->options(\n            key: 'admin.partials.user_list.modal.str_headline_category',\n            scope: 'Str_headline_category',\n            values: collect($roleCategories)\n                ->mapWithKeys(static fn(string $category): array => [\n                    $category => str($category)->headline()->toString(),\n                ])\n                ->all(),\n            source: self::class . '::roleGroups',\n            origin: 'db',\n            sourceType: 'runtime_db_options',\n        );\n    }"
+                }
+            ],
+            "constants": [
+                {
+                    "name": "UI_STATE_SETTING_KEY",
+                    "line": 29,
+                    "expression": "'ui.pages.admin_user_list'"
+                },
+                {
+                    "name": "LEGACY_PER_PAGE_SETTING_KEY",
+                    "line": 31,
+                    "expression": "'ui.per_page.admin_users'"
+                }
+            ]
+        },
+        "app/Support/Icons/IconRegistry.php": {
+            "sha256": "488a9a7343536b9f29471e76816026ee13d3a41d133351695a5ba6feaa1f3a0f",
+            "property_defaults": [],
+            "literal_array_entries": [
+                {
+                    "key": "name",
+                    "value": "file-x",
+                    "line": 15,
+                    "expression": "'name' => 'file-x'"
+                },
+                {
+                    "key": "label",
+                    "value": "Missing icon",
+                    "line": 16,
+                    "expression": "'label' => 'Missing icon'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.file-x",
+                    "line": 17,
+                    "expression": "'view' => 'flux.icon.file-x'"
+                }
+            ],
+            "methods": [
+                {
+                    "name": "options",
+                    "line": 21,
+                    "expression": "public function options(string $category): array\n    {\n        return $this->sortOptionsByLabel(\n            (array) config(\"buergerfrs-icons.categories.{$category}.icons\", [])\n        );\n    }"
+                },
+                {
+                    "name": "roleUserManagementOptions",
+                    "line": 28,
+                    "expression": "public function roleUserManagementOptions(): array\n    {\n        return $this->options('role_user_management');\n    }"
+                },
+                {
+                    "name": "badgeColors",
+                    "line": 33,
+                    "expression": "public function badgeColors(string $category): array\n    {\n        return $this->sortLabels(\n            (array) config(\"buergerfrs-icons.categories.{$category}.badge.colors\", [])\n        );\n    }"
+                },
+                {
+                    "name": "badgeVariants",
+                    "line": 40,
+                    "expression": "public function badgeVariants(string $category): array\n    {\n        return $this->sortLabels(\n            (array) config(\"buergerfrs-icons.categories.{$category}.badge.variants\", [])\n        );\n    }"
+                },
+                {
+                    "name": "roleUserManagementBadgeColors",
+                    "line": 47,
+                    "expression": "public function roleUserManagementBadgeColors(): array\n    {\n        return $this->badgeColors('role_user_management');\n    }"
+                },
+                {
+                    "name": "roleUserManagementBadgeVariants",
+                    "line": 52,
+                    "expression": "public function roleUserManagementBadgeVariants(): array\n    {\n        return $this->badgeVariants('role_user_management');\n    }"
+                },
+                {
+                    "name": "isValidBadgeColor",
+                    "line": 57,
+                    "expression": "public function isValidBadgeColor(string $color, string $category): bool\n    {\n        return array_key_exists($color, $this->badgeColors($category));\n    }"
+                },
+                {
+                    "name": "isValidBadgeVariant",
+                    "line": 62,
+                    "expression": "public function isValidBadgeVariant(string $variant, string $category): bool\n    {\n        return array_key_exists($variant, $this->badgeVariants($category));\n    }"
+                },
+                {
+                    "name": "names",
+                    "line": 67,
+                    "expression": "public function names(string $category): array\n    {\n        return array_keys($this->options($category));\n    }"
+                },
+                {
+                    "name": "resolve",
+                    "line": 84,
+                    "expression": "public function resolve(string $name, string $category): array\n    {\n        $name = trim($name);\n\n        if ($name === '') {\n            return $this->fallback();\n        }\n\n        $icon = Arr::get($this->options($category), $name);\n\n        if (! is_array($icon)) {\n            return $this->fallback();\n        }\n\n        $view = (string) ($icon['view'] ?? '');\n\n        if ($view === '' || ! View::exists($view)) {\n            return $this->fallback();\n        }\n\n        return [\n            'name' => $name,\n            'label' => (string) ($icon['label'] ?? $name),\n            'view' => $view,\n        ];\n    }"
+                },
+                {
+                    "name": "sortOptionsByLabel",
+                    "line": 123,
+                    "expression": "private function sortOptionsByLabel(array $items): array\n    {\n        uasort($items, static function (array $left, array $right): int {\n            return strnatcasecmp(\n                (string) ($left['label'] ?? ''),\n                (string) ($right['label'] ?? ''),\n            );\n        });\n\n        return $items;\n    }"
+                }
+            ],
+            "constants": []
+        },
+        "app/Models/PersonDocumentType.php": {
+            "sha256": "b32672f972f7fc4bcfebbe9df4fd1598dde2f620fbee14e98b9b7558fbb4501a",
+            "property_defaults": [],
+            "literal_array_entries": [
+                {
+                    "key": "label",
+                    "value": "ID card copy",
+                    "line": 27,
+                    "expression": "'label' => 'ID card copy'"
+                },
+                {
+                    "key": "label",
+                    "value": "Passport copy",
+                    "line": 32,
+                    "expression": "'label' => 'Passport copy'"
+                },
+                {
+                    "key": "label",
+                    "value": "Residence permit copy",
+                    "line": 37,
+                    "expression": "'label' => 'Residence permit copy'"
+                },
+                {
+                    "key": "label",
+                    "value": "Health insurance proof",
+                    "line": 42,
+                    "expression": "'label' => 'Health insurance proof'"
+                },
+                {
+                    "key": "label",
+                    "value": "Tax document",
+                    "line": 47,
+                    "expression": "'label' => 'Tax document'"
+                },
+                {
+                    "key": "label",
+                    "value": "Invoice",
+                    "line": 52,
+                    "expression": "'label' => 'Invoice'"
+                },
+                {
+                    "key": "label",
+                    "value": "Receipt",
+                    "line": 57,
+                    "expression": "'label' => 'Receipt'"
+                },
+                {
+                    "key": "label",
+                    "value": "Other",
+                    "line": 62,
+                    "expression": "'label' => 'Other'"
+                },
+                {
+                    "key": "is_active",
+                    "value": "boolean",
+                    "line": 160,
+                    "expression": "'is_active' => 'boolean'"
+                },
+                {
+                    "key": "sort_order",
+                    "value": "integer",
+                    "line": 161,
+                    "expression": "'sort_order' => 'integer'"
+                }
+            ],
+            "methods": [
+                {
+                    "name": "defaults",
+                    "line": 23,
+                    "expression": "public static function defaults(): array\n    {\n        return [\n            PersonDocument::TYPE_ID_CARD_COPY => [\n                'label' => 'ID card copy',\n                'category' => PersonDocument::CATEGORY_IDENTITY,\n                'sort_order' => 10,\n            ],\n            PersonDocument::TYPE_PASSPORT_COPY => [\n                'label' => 'Passport copy',\n                'category' => PersonDocument::CATEGORY_IDENTITY,\n                'sort_order' => 20,\n            ],\n            PersonDocument::TYPE_RESIDENCE_PERMIT_COPY => [\n                'label' => 'Residence permit copy',\n                'category' => PersonDocument::CATEGORY_RESIDENCE,\n                'sort_order' => 30,\n            ],\n            PersonDocument::TYPE_HEALTH_INSURANCE_PROOF => [\n                'label' => 'Health insurance proof',\n                'category' => PersonDocument::CATEGORY_INSURANCE,\n                'sort_order' => 40,\n            ],\n            PersonDocument::TYPE_TAX_DOCUMENT => [\n                'label' => 'Tax document',\n                'category' => PersonDocument::CATEGORY_TAX,\n                'sort_order' => 50,\n            ],\n            'invoice' => [\n                'label' => 'Invoice',\n                'category' => PersonDocument::CATEGORY_OTHER,\n                'sort_order' => 60,\n            ],\n            'receipt' => [\n                'label' => 'Receipt',\n                'category' => PersonDocument::CATEGORY_OTHER,\n                'sort_order' => 70,\n            ],\n            PersonDocument::TYPE_OTHER => [\n                'label' => 'Other',\n                'category' => PersonDocument::CATEGORY_OTHER,\n                'sort_order' => 999,\n            ],\n        ];\n    }"
+                },
+                {
+                    "name": "defaultOptions",
+                    "line": 72,
+                    "expression": "public static function defaultOptions(): array\n    {\n        return collect(self::defaults())\n            ->mapWithKeys(fn(array $type, string $code): array => [$code => $type['label']])\n            ->all();\n    }"
+                },
+                {
+                    "name": "options",
+                    "line": 82,
+                    "expression": "public static function options(): array\n    {\n        if (! Schema::hasTable('person_document_types')) {\n            return self::defaultOptions();\n        }\n\n        $options = self::query()\n            ->active()\n            ->ordered()\n            ->pluck('label', 'code')\n            ->all();\n\n        return $options !== [] ? $options : self::defaultOptions();\n    }"
+                },
+                {
+                    "name": "categoryFor",
+                    "line": 97,
+                    "expression": "public static function categoryFor(string $code): string\n    {\n        if (Schema::hasTable('person_document_types')) {\n            $category = self::query()\n                ->where('code', $code)\n                ->value('category');\n\n            if (is_string($category) && in_array($category, PersonDocument::CATEGORIES, true)) {\n                return $category;\n            }\n        }\n\n        return self::defaults()[$code]['category'] ?? PersonDocument::CATEGORY_OTHER;\n    }"
+                },
+                {
+                    "name": "firstOrCreateFromLabel",
+                    "line": 112,
+                    "expression": "public static function firstOrCreateFromLabel(string $label): ?self\n    {\n        $label = trim($label);\n\n        if ($label === '') {\n            return null;\n        }\n\n        $code = self::codeFromLabel($label);\n\n        if ($code === '') {\n            return null;\n        }\n\n        return self::query()->updateOrCreate(\n            ['code' => $code],\n            [\n                'label' => $label,\n                'category' => self::categoryFor($code),\n                'is_active' => true,\n            ],\n        );\n    }"
+                }
+            ],
+            "constants": []
+        },
+        "app/Models/PersonDocument.php": {
+            "sha256": "14a37ab58befc0d92e1726c32dd5ea22e5e31e9d92bd414f2aee015cdf879210",
+            "property_defaults": [],
+            "literal_array_entries": [
+                {
+                    "key": "document_date",
+                    "value": "date",
+                    "line": 155,
+                    "expression": "'document_date' => 'date'"
+                },
+                {
+                    "key": "issued_at",
+                    "value": "date",
+                    "line": 156,
+                    "expression": "'issued_at' => 'date'"
+                },
+                {
+                    "key": "expires_at",
+                    "value": "date",
+                    "line": 157,
+                    "expression": "'expires_at' => 'date'"
+                },
+                {
+                    "key": "received_at",
+                    "value": "datetime",
+                    "line": 158,
+                    "expression": "'received_at' => 'datetime'"
+                },
+                {
+                    "key": "sent_at",
+                    "value": "datetime",
+                    "line": 159,
+                    "expression": "'sent_at' => 'datetime'"
+                },
+                {
+                    "key": "valid_from",
+                    "value": "date",
+                    "line": 160,
+                    "expression": "'valid_from' => 'date'"
+                },
+                {
+                    "key": "valid_until",
+                    "value": "date",
+                    "line": 161,
+                    "expression": "'valid_until' => 'date'"
+                },
+                {
+                    "key": "is_current",
+                    "value": "boolean",
+                    "line": 162,
+                    "expression": "'is_current' => 'boolean'"
+                },
+                {
+                    "key": "file_size",
+                    "value": "integer",
+                    "line": 163,
+                    "expression": "'file_size' => 'integer'"
+                },
+                {
+                    "key": "verified_at",
+                    "value": "datetime",
+                    "line": 164,
+                    "expression": "'verified_at' => 'datetime'"
+                },
+                {
+                    "key": "archived_at",
+                    "value": "datetime",
+                    "line": 165,
+                    "expression": "'archived_at' => 'datetime'"
+                }
+            ],
+            "methods": [],
+            "constants": [
+                {
+                    "name": "STATUS_ACTIVE",
+                    "line": 48,
+                    "expression": "'active'"
+                },
+                {
+                    "name": "STATUS_EXPIRED",
+                    "line": 50,
+                    "expression": "'expired'"
+                },
+                {
+                    "name": "STATUS_REPLACED",
+                    "line": 52,
+                    "expression": "'replaced'"
+                },
+                {
+                    "name": "STATUS_ARCHIVED",
+                    "line": 54,
+                    "expression": "'archived'"
+                },
+                {
+                    "name": "STATUS_DRAFT",
+                    "line": 56,
+                    "expression": "'draft'"
+                },
+                {
+                    "name": "STATUSES",
+                    "line": 58,
+                    "expression": "[\n        self::STATUS_ACTIVE,\n        self::STATUS_EXPIRED,\n        self::STATUS_REPLACED,\n        self::STATUS_ARCHIVED,\n        self::STATUS_DRAFT,\n    ]"
+                },
+                {
+                    "name": "CATEGORY_IDENTITY",
+                    "line": 66,
+                    "expression": "'identity'"
+                },
+                {
+                    "name": "CATEGORY_INSURANCE",
+                    "line": 68,
+                    "expression": "'insurance'"
+                },
+                {
+                    "name": "CATEGORY_TAX",
+                    "line": 70,
+                    "expression": "'tax'"
+                },
+                {
+                    "name": "CATEGORY_RESIDENCE",
+                    "line": 72,
+                    "expression": "'residence'"
+                },
+                {
+                    "name": "CATEGORY_CORRESPONDENCE",
+                    "line": 74,
+                    "expression": "'correspondence'"
+                },
+                {
+                    "name": "CATEGORY_MEDICAL",
+                    "line": 76,
+                    "expression": "'medical'"
+                },
+                {
+                    "name": "CATEGORY_OTHER",
+                    "line": 78,
+                    "expression": "'other'"
+                },
+                {
+                    "name": "CATEGORIES",
+                    "line": 80,
+                    "expression": "[\n        self::CATEGORY_IDENTITY,\n        self::CATEGORY_INSURANCE,\n        self::CATEGORY_TAX,\n        self::CATEGORY_RESIDENCE,\n        self::CATEGORY_CORRESPONDENCE,\n        self::CATEGORY_MEDICAL,\n        self::CATEGORY_OTHER,\n    ]"
+                },
+                {
+                    "name": "SOURCE_UPLOAD",
+                    "line": 90,
+                    "expression": "'upload'"
+                },
+                {
+                    "name": "SOURCE_SCAN",
+                    "line": 92,
+                    "expression": "'scan'"
+                },
+                {
+                    "name": "SOURCE_GENERATED",
+                    "line": 94,
+                    "expression": "'generated'"
+                },
+                {
+                    "name": "SOURCE_CORRESPONDENCE",
+                    "line": 96,
+                    "expression": "'correspondence'"
+                },
+                {
+                    "name": "SOURCE_IMPORTED",
+                    "line": 98,
+                    "expression": "'imported'"
+                },
+                {
+                    "name": "SOURCE_MANUAL",
+                    "line": 100,
+                    "expression": "'manual'"
+                },
+                {
+                    "name": "SOURCES",
+                    "line": 102,
+                    "expression": "[\n        self::SOURCE_UPLOAD,\n        self::SOURCE_SCAN,\n        self::SOURCE_GENERATED,\n        self::SOURCE_CORRESPONDENCE,\n        self::SOURCE_IMPORTED,\n        self::SOURCE_MANUAL,\n    ]"
+                },
+                {
+                    "name": "DIRECTION_NONE",
+                    "line": 111,
+                    "expression": "'none'"
+                },
+                {
+                    "name": "DIRECTION_INCOMING",
+                    "line": 113,
+                    "expression": "'incoming'"
+                },
+                {
+                    "name": "DIRECTION_OUTGOING",
+                    "line": 115,
+                    "expression": "'outgoing'"
+                },
+                {
+                    "name": "DIRECTION_INTERNAL",
+                    "line": 117,
+                    "expression": "'internal'"
+                },
+                {
+                    "name": "DIRECTIONS",
+                    "line": 119,
+                    "expression": "[\n        self::DIRECTION_NONE,\n        self::DIRECTION_INCOMING,\n        self::DIRECTION_OUTGOING,\n        self::DIRECTION_INTERNAL,\n    ]"
+                },
+                {
+                    "name": "TYPE_ID_CARD_COPY",
+                    "line": 126,
+                    "expression": "'id_card_copy'"
+                },
+                {
+                    "name": "TYPE_PASSPORT_COPY",
+                    "line": 128,
+                    "expression": "'passport_copy'"
+                },
+                {
+                    "name": "TYPE_RESIDENCE_PERMIT_COPY",
+                    "line": 130,
+                    "expression": "'residence_permit_copy'"
+                },
+                {
+                    "name": "TYPE_HEALTH_INSURANCE_PROOF",
+                    "line": 132,
+                    "expression": "'health_insurance_proof'"
+                },
+                {
+                    "name": "TYPE_TAX_DOCUMENT",
+                    "line": 134,
+                    "expression": "'tax_document'"
+                },
+                {
+                    "name": "TYPE_OTHER",
+                    "line": 136,
+                    "expression": "'other'"
+                },
+                {
+                    "name": "TYPES",
+                    "line": 138,
+                    "expression": "[\n        self::TYPE_ID_CARD_COPY,\n        self::TYPE_PASSPORT_COPY,\n        self::TYPE_RESIDENCE_PERMIT_COPY,\n        self::TYPE_HEALTH_INSURANCE_PROOF,\n        self::TYPE_TAX_DOCUMENT,\n        self::TYPE_OTHER,\n    ]"
+                }
+            ]
+        },
+        "app/Models/PersonContact.php": {
+            "sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+            "property_defaults": [],
+            "literal_array_entries": [
+                {
+                    "key": "is_primary",
+                    "value": "boolean",
+                    "line": 87,
+                    "expression": "'is_primary' => 'boolean'"
+                },
+                {
+                    "key": "is_emergency_contact",
+                    "value": "boolean",
+                    "line": 88,
+                    "expression": "'is_emergency_contact' => 'boolean'"
+                },
+                {
+                    "key": "is_authorized_representative",
+                    "value": "boolean",
+                    "line": 89,
+                    "expression": "'is_authorized_representative' => 'boolean'"
+                },
+                {
+                    "key": "verified_at",
+                    "value": "datetime",
+                    "line": 90,
+                    "expression": "'verified_at' => 'datetime'"
+                }
+            ],
+            "methods": [],
+            "constants": [
+                {
+                    "name": "TYPE_EMERGENCY",
+                    "line": 28,
+                    "expression": "'emergency'"
+                },
+                {
+                    "name": "TYPE_FAMILY",
+                    "line": 30,
+                    "expression": "'family'"
+                },
+                {
+                    "name": "TYPE_CAREGIVER",
+                    "line": 32,
+                    "expression": "'caregiver'"
+                },
+                {
+                    "name": "TYPE_GUARDIAN",
+                    "line": 34,
+                    "expression": "'guardian'"
+                },
+                {
+                    "name": "TYPE_AUTHORIZED_REPRESENTATIVE",
+                    "line": 36,
+                    "expression": "'authorized_representative'"
+                },
+                {
+                    "name": "TYPE_OTHER",
+                    "line": 38,
+                    "expression": "'other'"
+                },
+                {
+                    "name": "TYPES",
+                    "line": 40,
+                    "expression": "[\n        self::TYPE_EMERGENCY,\n        self::TYPE_FAMILY,\n        self::TYPE_CAREGIVER,\n        self::TYPE_GUARDIAN,\n        self::TYPE_AUTHORIZED_REPRESENTATIVE,\n        self::TYPE_OTHER,\n    ]"
+                },
+                {
+                    "name": "RELATIONSHIP_PARENT",
+                    "line": 49,
+                    "expression": "'parent'"
+                },
+                {
+                    "name": "RELATIONSHIP_CHILD",
+                    "line": 51,
+                    "expression": "'child'"
+                },
+                {
+                    "name": "RELATIONSHIP_SPOUSE",
+                    "line": 53,
+                    "expression": "'spouse'"
+                },
+                {
+                    "name": "RELATIONSHIP_PARTNER",
+                    "line": 55,
+                    "expression": "'partner'"
+                },
+                {
+                    "name": "RELATIONSHIP_SIBLING",
+                    "line": 57,
+                    "expression": "'sibling'"
+                },
+                {
+                    "name": "RELATIONSHIP_GUARDIAN",
+                    "line": 59,
+                    "expression": "'guardian'"
+                },
+                {
+                    "name": "RELATIONSHIP_CAREGIVER",
+                    "line": 61,
+                    "expression": "'caregiver'"
+                },
+                {
+                    "name": "RELATIONSHIP_FRIEND",
+                    "line": 63,
+                    "expression": "'friend'"
+                },
+                {
+                    "name": "RELATIONSHIP_OTHER",
+                    "line": 65,
+                    "expression": "'other'"
+                },
+                {
+                    "name": "RELATIONSHIPS",
+                    "line": 67,
+                    "expression": "[\n        self::RELATIONSHIP_PARENT,\n        self::RELATIONSHIP_CHILD,\n        self::RELATIONSHIP_SPOUSE,\n        self::RELATIONSHIP_PARTNER,\n        self::RELATIONSHIP_SIBLING,\n        self::RELATIONSHIP_GUARDIAN,\n        self::RELATIONSHIP_CAREGIVER,\n        self::RELATIONSHIP_FRIEND,\n        self::RELATIONSHIP_OTHER,\n    ]"
+                }
+            ]
+        },
+        "config/buergerfrs-icons.php": {
+            "sha256": "31347da9fc707f2b7b78b2a26fbb068126288e86f23e2912c26d5aaa0cd5f21b",
+            "property_defaults": [],
+            "literal_array_entries": [
+                {
+                    "key": "name",
+                    "value": "file-x",
+                    "line": 22,
+                    "expression": "'name' => 'file-x'"
+                },
+                {
+                    "key": "label",
+                    "value": "Missing icon",
+                    "line": 23,
+                    "expression": "'label' => 'Missing icon'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.file-x",
+                    "line": 24,
+                    "expression": "'view' => 'flux.icon.file-x'"
+                },
+                {
+                    "key": "label",
+                    "value": "Role/User Management",
+                    "line": 29,
+                    "expression": "'label' => 'Role/User Management'"
+                },
+                {
+                    "key": "zinc",
+                    "value": "Zinc",
+                    "line": 33,
+                    "expression": "'zinc' => 'Zinc'"
+                },
+                {
+                    "key": "red",
+                    "value": "Red",
+                    "line": 34,
+                    "expression": "'red' => 'Red'"
+                },
+                {
+                    "key": "orange",
+                    "value": "Orange",
+                    "line": 35,
+                    "expression": "'orange' => 'Orange'"
+                },
+                {
+                    "key": "amber",
+                    "value": "Amber",
+                    "line": 36,
+                    "expression": "'amber' => 'Amber'"
+                },
+                {
+                    "key": "yellow",
+                    "value": "Yellow",
+                    "line": 37,
+                    "expression": "'yellow' => 'Yellow'"
+                },
+                {
+                    "key": "lime",
+                    "value": "Lime",
+                    "line": 38,
+                    "expression": "'lime' => 'Lime'"
+                },
+                {
+                    "key": "green",
+                    "value": "Green",
+                    "line": 39,
+                    "expression": "'green' => 'Green'"
+                },
+                {
+                    "key": "emerald",
+                    "value": "Emerald",
+                    "line": 40,
+                    "expression": "'emerald' => 'Emerald'"
+                },
+                {
+                    "key": "teal",
+                    "value": "Teal",
+                    "line": 41,
+                    "expression": "'teal' => 'Teal'"
+                },
+                {
+                    "key": "cyan",
+                    "value": "Cyan",
+                    "line": 42,
+                    "expression": "'cyan' => 'Cyan'"
+                },
+                {
+                    "key": "sky",
+                    "value": "Sky",
+                    "line": 43,
+                    "expression": "'sky' => 'Sky'"
+                },
+                {
+                    "key": "blue",
+                    "value": "Blue",
+                    "line": 44,
+                    "expression": "'blue' => 'Blue'"
+                },
+                {
+                    "key": "indigo",
+                    "value": "Indigo",
+                    "line": 45,
+                    "expression": "'indigo' => 'Indigo'"
+                },
+                {
+                    "key": "violet",
+                    "value": "Violet",
+                    "line": 46,
+                    "expression": "'violet' => 'Violet'"
+                },
+                {
+                    "key": "purple",
+                    "value": "Purple",
+                    "line": 47,
+                    "expression": "'purple' => 'Purple'"
+                },
+                {
+                    "key": "fuchsia",
+                    "value": "Fuchsia",
+                    "line": 48,
+                    "expression": "'fuchsia' => 'Fuchsia'"
+                },
+                {
+                    "key": "pink",
+                    "value": "Pink",
+                    "line": 49,
+                    "expression": "'pink' => 'Pink'"
+                },
+                {
+                    "key": "rose",
+                    "value": "Rose",
+                    "line": 50,
+                    "expression": "'rose' => 'Rose'"
+                },
+                {
+                    "key": "solid",
+                    "value": "Solid",
+                    "line": 54,
+                    "expression": "'solid' => 'Solid'"
+                },
+                {
+                    "key": "subtle",
+                    "value": "Subtle",
+                    "line": 55,
+                    "expression": "'subtle' => 'Subtle'"
+                },
+                {
+                    "key": "outline",
+                    "value": "Outline",
+                    "line": 56,
+                    "expression": "'outline' => 'Outline'"
+                },
+                {
+                    "key": "pill",
+                    "value": "Pill",
+                    "line": 57,
+                    "expression": "'pill' => 'Pill'"
+                },
+                {
+                    "key": "label",
+                    "value": "Tag",
+                    "line": 63,
+                    "expression": "'label' => 'Tag'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.tag",
+                    "line": 64,
+                    "expression": "'view' => 'flux.icon.tag'"
+                },
+                {
+                    "key": "label",
+                    "value": "Shield Check",
+                    "line": 68,
+                    "expression": "'label' => 'Shield Check'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.shield-check",
+                    "line": 69,
+                    "expression": "'view' => 'flux.icon.shield-check'"
+                },
+                {
+                    "key": "label",
+                    "value": "Crown",
+                    "line": 73,
+                    "expression": "'label' => 'Crown'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.crown",
+                    "line": 74,
+                    "expression": "'view' => 'flux.icon.crown'"
+                },
+                {
+                    "key": "label",
+                    "value": "User",
+                    "line": 78,
+                    "expression": "'label' => 'User'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.user",
+                    "line": 79,
+                    "expression": "'view' => 'flux.icon.user'"
+                },
+                {
+                    "key": "label",
+                    "value": "Users",
+                    "line": 83,
+                    "expression": "'label' => 'Users'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.users",
+                    "line": 84,
+                    "expression": "'view' => 'flux.icon.users'"
+                },
+                {
+                    "key": "label",
+                    "value": "Key Round",
+                    "line": 88,
+                    "expression": "'label' => 'Key Round'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.user-round-key",
+                    "line": 89,
+                    "expression": "'view' => 'flux.icon.user-round-key'"
+                },
+                {
+                    "key": "label",
+                    "value": "Lock Keyhole",
+                    "line": 93,
+                    "expression": "'label' => 'Lock Keyhole'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.lock-keyhole",
+                    "line": 94,
+                    "expression": "'view' => 'flux.icon.lock-keyhole'"
+                },
+                {
+                    "key": "label",
+                    "value": "Badge Check",
+                    "line": 98,
+                    "expression": "'label' => 'Badge Check'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.badge-check",
+                    "line": 99,
+                    "expression": "'view' => 'flux.icon.badge-check'"
+                },
+                {
+                    "key": "label",
+                    "value": "Headset",
+                    "line": 103,
+                    "expression": "'label' => 'Headset'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.headset",
+                    "line": 104,
+                    "expression": "'view' => 'flux.icon.headset'"
+                },
+                {
+                    "key": "label",
+                    "value": "User Icon Round",
+                    "line": 108,
+                    "expression": "'label' => 'User Icon Round'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.circle-user-round",
+                    "line": 109,
+                    "expression": "'view' => 'flux.icon.circle-user-round'"
+                },
+                {
+                    "key": "label",
+                    "value": "Contact Icon Round",
+                    "line": 113,
+                    "expression": "'label' => 'Contact Icon Round'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.contact-round",
+                    "line": 114,
+                    "expression": "'view' => 'flux.icon.contact-round'"
+                },
+                {
+                    "key": "label",
+                    "value": "Map Pin House",
+                    "line": 118,
+                    "expression": "'label' => 'Map Pin House'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.map-pin-house",
+                    "line": 119,
+                    "expression": "'view' => 'flux.icon.map-pin-house'"
+                },
+                {
+                    "key": "label",
+                    "value": "Globe Hemisphere West",
+                    "line": 123,
+                    "expression": "'label' => 'Globe Hemisphere West'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.globe",
+                    "line": 124,
+                    "expression": "'view' => 'flux.icon.globe'"
+                },
+                {
+                    "key": "label",
+                    "value": "ID Card",
+                    "line": 128,
+                    "expression": "'label' => 'ID Card'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.id-card",
+                    "line": 129,
+                    "expression": "'view' => 'flux.icon.id-card'"
+                },
+                {
+                    "key": "label",
+                    "value": "Heart Pulse",
+                    "line": 133,
+                    "expression": "'label' => 'Heart Pulse'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.heart-pulse",
+                    "line": 134,
+                    "expression": "'view' => 'flux.icon.heart-pulse'"
+                },
+                {
+                    "key": "label",
+                    "value": "Scroll Text",
+                    "line": 138,
+                    "expression": "'label' => 'Scroll Text'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.scroll-text",
+                    "line": 139,
+                    "expression": "'view' => 'flux.icon.scroll-text'"
+                },
+                {
+                    "key": "label",
+                    "value": "Siren",
+                    "line": 143,
+                    "expression": "'label' => 'Siren'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.siren",
+                    "line": 144,
+                    "expression": "'view' => 'flux.icon.siren'"
+                },
+                {
+                    "key": "label",
+                    "value": "File X",
+                    "line": 148,
+                    "expression": "'label' => 'File X'"
+                },
+                {
+                    "key": "view",
+                    "value": "flux.icon.file-x",
+                    "line": 149,
+                    "expression": "'view' => 'flux.icon.file-x'"
+                }
+            ],
+            "methods": [],
+            "constants": []
+        }
+    },
+    "option_lists": [
+        {
+            "path": "app/Livewire/Management/People/CreatePerson.php",
+            "class": "App\\Livewire\\Management\\People\\CreatePerson",
+            "property": "salutationOptions",
+            "source_sha256": "b39489b1a1c3aedb2be85c2ec04eac5c26c4532f48ff8172e612409163a58dd9",
+            "line": 161,
+            "complete_static_default": true,
+            "runtime_exhaustiveness_proven": false,
+            "entries": [
+                {
+                    "key": "mr",
+                    "value": "Mr.",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 162,
+                    "expression": "'mr' => 'Mr.'"
+                },
+                {
+                    "key": "mrs",
+                    "value": "Mrs.",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 163,
+                    "expression": "'mrs' => 'Mrs.'"
+                },
+                {
+                    "key": "mx",
+                    "value": "Mx.",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 164,
+                    "expression": "'mx' => 'Mx.'"
+                }
+            ]
+        },
+        {
+            "path": "app/Livewire/Management/People/CreatePerson.php",
+            "class": "App\\Livewire\\Management\\People\\CreatePerson",
+            "property": "genderOptions",
+            "source_sha256": "b39489b1a1c3aedb2be85c2ec04eac5c26c4532f48ff8172e612409163a58dd9",
+            "line": 167,
+            "complete_static_default": true,
+            "runtime_exhaustiveness_proven": false,
+            "entries": [
+                {
+                    "key": "female",
+                    "value": "Female",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 168,
+                    "expression": "'female' => 'Female'"
+                },
+                {
+                    "key": "male",
+                    "value": "Male",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 169,
+                    "expression": "'male' => 'Male'"
+                },
+                {
+                    "key": "diverse",
+                    "value": "Diverse",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 170,
+                    "expression": "'diverse' => 'Diverse'"
+                },
+                {
+                    "key": "unknown",
+                    "value": "Unknown",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 171,
+                    "expression": "'unknown' => 'Unknown'"
+                }
+            ]
+        },
+        {
+            "path": "app/Livewire/Management/People/CreatePerson.php",
+            "class": "App\\Livewire\\Management\\People\\CreatePerson",
+            "property": "maritalStatusOptions",
+            "source_sha256": "b39489b1a1c3aedb2be85c2ec04eac5c26c4532f48ff8172e612409163a58dd9",
+            "line": 186,
+            "complete_static_default": true,
+            "runtime_exhaustiveness_proven": false,
+            "entries": [
+                {
+                    "key": "single",
+                    "value": "Single",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 187,
+                    "expression": "'single' => 'Single'"
+                },
+                {
+                    "key": "married",
+                    "value": "Married",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 188,
+                    "expression": "'married' => 'Married'"
+                },
+                {
+                    "key": "registered_partnership",
+                    "value": "Registered partnership",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 189,
+                    "expression": "'registered_partnership' => 'Registered partnership'"
+                },
+                {
+                    "key": "divorced",
+                    "value": "Divorced",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 190,
+                    "expression": "'divorced' => 'Divorced'"
+                },
+                {
+                    "key": "widowed",
+                    "value": "Widowed",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 191,
+                    "expression": "'widowed' => 'Widowed'"
+                },
+                {
+                    "key": "separated",
+                    "value": "Separated",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 192,
+                    "expression": "'separated' => 'Separated'"
+                },
+                {
+                    "key": "unknown",
+                    "value": "Unknown",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 193,
+                    "expression": "'unknown' => 'Unknown'"
+                }
+            ]
+        },
+        {
+            "path": "app/Livewire/Management/People/CreatePerson.php",
+            "class": "App\\Livewire\\Management\\People\\CreatePerson",
+            "property": "emergencyContactRelationshipOptions",
+            "source_sha256": "b39489b1a1c3aedb2be85c2ec04eac5c26c4532f48ff8172e612409163a58dd9",
+            "line": 174,
+            "complete_static_default": true,
+            "runtime_exhaustiveness_proven": false,
+            "entries": [
+                {
+                    "key": "parent",
+                    "value": "Parent",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "parent",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_PARENT",
+                        "line": 49
+                    },
+                    "line": 175,
+                    "expression": "PersonContact::RELATIONSHIP_PARENT => 'Parent'"
+                },
+                {
+                    "key": "child",
+                    "value": "Child",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "child",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_CHILD",
+                        "line": 51
+                    },
+                    "line": 176,
+                    "expression": "PersonContact::RELATIONSHIP_CHILD => 'Child'"
+                },
+                {
+                    "key": "spouse",
+                    "value": "Spouse",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "spouse",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_SPOUSE",
+                        "line": 53
+                    },
+                    "line": 177,
+                    "expression": "PersonContact::RELATIONSHIP_SPOUSE => 'Spouse'"
+                },
+                {
+                    "key": "partner",
+                    "value": "Partner",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "partner",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_PARTNER",
+                        "line": 55
+                    },
+                    "line": 178,
+                    "expression": "PersonContact::RELATIONSHIP_PARTNER => 'Partner'"
+                },
+                {
+                    "key": "sibling",
+                    "value": "Sibling",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "sibling",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_SIBLING",
+                        "line": 57
+                    },
+                    "line": 179,
+                    "expression": "PersonContact::RELATIONSHIP_SIBLING => 'Sibling'"
+                },
+                {
+                    "key": "guardian",
+                    "value": "Guardian",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "guardian",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_GUARDIAN",
+                        "line": 59
+                    },
+                    "line": 180,
+                    "expression": "PersonContact::RELATIONSHIP_GUARDIAN => 'Guardian'"
+                },
+                {
+                    "key": "caregiver",
+                    "value": "Caregiver",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "caregiver",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_CAREGIVER",
+                        "line": 61
+                    },
+                    "line": 181,
+                    "expression": "PersonContact::RELATIONSHIP_CAREGIVER => 'Caregiver'"
+                },
+                {
+                    "key": "friend",
+                    "value": "Friend",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "friend",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_FRIEND",
+                        "line": 63
+                    },
+                    "line": 182,
+                    "expression": "PersonContact::RELATIONSHIP_FRIEND => 'Friend'"
+                },
+                {
+                    "key": "other",
+                    "value": "Other",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "other",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_OTHER",
+                        "line": 65
+                    },
+                    "line": 183,
+                    "expression": "PersonContact::RELATIONSHIP_OTHER => 'Other'"
+                }
+            ]
+        },
+        {
+            "path": "app/Livewire/Management/People/EditPerson.php",
+            "class": "App\\Livewire\\Management\\People\\EditPerson",
+            "property": "salutationOptions",
+            "source_sha256": "08ee85a7f81d6423e0882d2b376589f34e38ee59efb30c5a737b091a150b5185",
+            "line": 169,
+            "complete_static_default": true,
+            "runtime_exhaustiveness_proven": false,
+            "entries": [
+                {
+                    "key": "mr",
+                    "value": "Mr.",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 170,
+                    "expression": "'mr' => 'Mr.'"
+                },
+                {
+                    "key": "mrs",
+                    "value": "Mrs.",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 171,
+                    "expression": "'mrs' => 'Mrs.'"
+                },
+                {
+                    "key": "mx",
+                    "value": "Mx.",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 172,
+                    "expression": "'mx' => 'Mx.'"
+                }
+            ]
+        },
+        {
+            "path": "app/Livewire/Management/People/EditPerson.php",
+            "class": "App\\Livewire\\Management\\People\\EditPerson",
+            "property": "genderOptions",
+            "source_sha256": "08ee85a7f81d6423e0882d2b376589f34e38ee59efb30c5a737b091a150b5185",
+            "line": 175,
+            "complete_static_default": true,
+            "runtime_exhaustiveness_proven": false,
+            "entries": [
+                {
+                    "key": "female",
+                    "value": "Female",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 176,
+                    "expression": "'female' => 'Female'"
+                },
+                {
+                    "key": "male",
+                    "value": "Male",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 177,
+                    "expression": "'male' => 'Male'"
+                },
+                {
+                    "key": "diverse",
+                    "value": "Diverse",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 178,
+                    "expression": "'diverse' => 'Diverse'"
+                },
+                {
+                    "key": "unknown",
+                    "value": "Unknown",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 179,
+                    "expression": "'unknown' => 'Unknown'"
+                }
+            ]
+        },
+        {
+            "path": "app/Livewire/Management/People/EditPerson.php",
+            "class": "App\\Livewire\\Management\\People\\EditPerson",
+            "property": "maritalStatusOptions",
+            "source_sha256": "08ee85a7f81d6423e0882d2b376589f34e38ee59efb30c5a737b091a150b5185",
+            "line": 182,
+            "complete_static_default": true,
+            "runtime_exhaustiveness_proven": false,
+            "entries": [
+                {
+                    "key": "single",
+                    "value": "Single",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 183,
+                    "expression": "'single' => 'Single'"
+                },
+                {
+                    "key": "married",
+                    "value": "Married",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 184,
+                    "expression": "'married' => 'Married'"
+                },
+                {
+                    "key": "registered_partnership",
+                    "value": "Registered partnership",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 185,
+                    "expression": "'registered_partnership' => 'Registered partnership'"
+                },
+                {
+                    "key": "divorced",
+                    "value": "Divorced",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 186,
+                    "expression": "'divorced' => 'Divorced'"
+                },
+                {
+                    "key": "widowed",
+                    "value": "Widowed",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 187,
+                    "expression": "'widowed' => 'Widowed'"
+                },
+                {
+                    "key": "separated",
+                    "value": "Separated",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 188,
+                    "expression": "'separated' => 'Separated'"
+                },
+                {
+                    "key": "unknown",
+                    "value": "Unknown",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 189,
+                    "expression": "'unknown' => 'Unknown'"
+                }
+            ]
+        },
+        {
+            "path": "app/Livewire/Management/People/EditPerson.php",
+            "class": "App\\Livewire\\Management\\People\\EditPerson",
+            "property": "emergencyContactRelationshipOptions",
+            "source_sha256": "08ee85a7f81d6423e0882d2b376589f34e38ee59efb30c5a737b091a150b5185",
+            "line": 196,
+            "complete_static_default": true,
+            "runtime_exhaustiveness_proven": false,
+            "entries": [
+                {
+                    "key": "parent",
+                    "value": "Parent",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "parent",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_PARENT",
+                        "line": 49
+                    },
+                    "line": 197,
+                    "expression": "PersonContact::RELATIONSHIP_PARENT => 'Parent'"
+                },
+                {
+                    "key": "child",
+                    "value": "Child",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "child",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_CHILD",
+                        "line": 51
+                    },
+                    "line": 198,
+                    "expression": "PersonContact::RELATIONSHIP_CHILD => 'Child'"
+                },
+                {
+                    "key": "spouse",
+                    "value": "Spouse",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "spouse",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_SPOUSE",
+                        "line": 53
+                    },
+                    "line": 199,
+                    "expression": "PersonContact::RELATIONSHIP_SPOUSE => 'Spouse'"
+                },
+                {
+                    "key": "partner",
+                    "value": "Partner",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "partner",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_PARTNER",
+                        "line": 55
+                    },
+                    "line": 200,
+                    "expression": "PersonContact::RELATIONSHIP_PARTNER => 'Partner'"
+                },
+                {
+                    "key": "sibling",
+                    "value": "Sibling",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "sibling",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_SIBLING",
+                        "line": 57
+                    },
+                    "line": 201,
+                    "expression": "PersonContact::RELATIONSHIP_SIBLING => 'Sibling'"
+                },
+                {
+                    "key": "guardian",
+                    "value": "Guardian",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "guardian",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_GUARDIAN",
+                        "line": 59
+                    },
+                    "line": 202,
+                    "expression": "PersonContact::RELATIONSHIP_GUARDIAN => 'Guardian'"
+                },
+                {
+                    "key": "caregiver",
+                    "value": "Caregiver",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "caregiver",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_CAREGIVER",
+                        "line": 61
+                    },
+                    "line": 203,
+                    "expression": "PersonContact::RELATIONSHIP_CAREGIVER => 'Caregiver'"
+                },
+                {
+                    "key": "friend",
+                    "value": "Friend",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "friend",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_FRIEND",
+                        "line": 63
+                    },
+                    "line": 204,
+                    "expression": "PersonContact::RELATIONSHIP_FRIEND => 'Friend'"
+                },
+                {
+                    "key": "other",
+                    "value": "Other",
+                    "state": "constant_key_pair",
+                    "key_dependency": {
+                        "value": "other",
+                        "path": "app/Models/PersonContact.php",
+                        "source_sha256": "7ea7cd7bf19f89b568e91d9081f13c5ff129c0ef71a6b68baf2d2913991f0bca",
+                        "class": "App\\Models\\PersonContact",
+                        "constant": "RELATIONSHIP_OTHER",
+                        "line": 65
+                    },
+                    "line": 205,
+                    "expression": "PersonContact::RELATIONSHIP_OTHER => 'Other'"
+                }
+            ]
+        },
+        {
+            "path": "config/buergerfrs-icons.php",
+            "config_path": [
+                "categories",
+                "role_user_management",
+                "badge",
+                "colors"
+            ],
+            "source_sha256": "31347da9fc707f2b7b78b2a26fbb068126288e86f23e2912c26d5aaa0cd5f21b",
+            "line": 32,
+            "complete_static_default": true,
+            "runtime_exhaustiveness_proven": false,
+            "entries": [
+                {
+                    "key": "zinc",
+                    "value": "Zinc",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 33,
+                    "expression": "'zinc' => 'Zinc'"
+                },
+                {
+                    "key": "red",
+                    "value": "Red",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 34,
+                    "expression": "'red' => 'Red'"
+                },
+                {
+                    "key": "orange",
+                    "value": "Orange",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 35,
+                    "expression": "'orange' => 'Orange'"
+                },
+                {
+                    "key": "amber",
+                    "value": "Amber",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 36,
+                    "expression": "'amber' => 'Amber'"
+                },
+                {
+                    "key": "yellow",
+                    "value": "Yellow",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 37,
+                    "expression": "'yellow' => 'Yellow'"
+                },
+                {
+                    "key": "lime",
+                    "value": "Lime",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 38,
+                    "expression": "'lime' => 'Lime'"
+                },
+                {
+                    "key": "green",
+                    "value": "Green",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 39,
+                    "expression": "'green' => 'Green'"
+                },
+                {
+                    "key": "emerald",
+                    "value": "Emerald",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 40,
+                    "expression": "'emerald' => 'Emerald'"
+                },
+                {
+                    "key": "teal",
+                    "value": "Teal",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 41,
+                    "expression": "'teal' => 'Teal'"
+                },
+                {
+                    "key": "cyan",
+                    "value": "Cyan",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 42,
+                    "expression": "'cyan' => 'Cyan'"
+                },
+                {
+                    "key": "sky",
+                    "value": "Sky",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 43,
+                    "expression": "'sky' => 'Sky'"
+                },
+                {
+                    "key": "blue",
+                    "value": "Blue",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 44,
+                    "expression": "'blue' => 'Blue'"
+                },
+                {
+                    "key": "indigo",
+                    "value": "Indigo",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 45,
+                    "expression": "'indigo' => 'Indigo'"
+                },
+                {
+                    "key": "violet",
+                    "value": "Violet",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 46,
+                    "expression": "'violet' => 'Violet'"
+                },
+                {
+                    "key": "purple",
+                    "value": "Purple",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 47,
+                    "expression": "'purple' => 'Purple'"
+                },
+                {
+                    "key": "fuchsia",
+                    "value": "Fuchsia",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 48,
+                    "expression": "'fuchsia' => 'Fuchsia'"
+                },
+                {
+                    "key": "pink",
+                    "value": "Pink",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 49,
+                    "expression": "'pink' => 'Pink'"
+                },
+                {
+                    "key": "rose",
+                    "value": "Rose",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 50,
+                    "expression": "'rose' => 'Rose'"
+                }
+            ]
+        },
+        {
+            "path": "config/buergerfrs-icons.php",
+            "config_path": [
+                "categories",
+                "role_user_management",
+                "badge",
+                "variants"
+            ],
+            "source_sha256": "31347da9fc707f2b7b78b2a26fbb068126288e86f23e2912c26d5aaa0cd5f21b",
+            "line": 53,
+            "complete_static_default": true,
+            "runtime_exhaustiveness_proven": false,
+            "entries": [
+                {
+                    "key": "solid",
+                    "value": "Solid",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 54,
+                    "expression": "'solid' => 'Solid'"
+                },
+                {
+                    "key": "subtle",
+                    "value": "Subtle",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 55,
+                    "expression": "'subtle' => 'Subtle'"
+                },
+                {
+                    "key": "outline",
+                    "value": "Outline",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 56,
+                    "expression": "'outline' => 'Outline'"
+                },
+                {
+                    "key": "pill",
+                    "value": "Pill",
+                    "state": "literal_pair",
+                    "key_dependency": null,
+                    "line": 57,
+                    "expression": "'pill' => 'Pill'"
+                }
+            ]
+        }
+    ]
+}

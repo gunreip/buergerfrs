@@ -1,0 +1,1421 @@
+{
+  "mode": "preparation_only",
+  "production_reset_authorized_by_this_manifest": false,
+  "source_reports_are_one_consistent_backup": false,
+  "evidence": {
+    "checklist": {
+      "file": "transfer-checklist-2026-10-19.json",
+      "sha256": "aeed405ecb89bc0d3015fbc19ccef35a45d0e4cb3488e65cfc67d06ea5999a6f"
+    },
+    "conflicts": {
+      "file": "transfer-conflict-details-2026-10-19.json",
+      "sha256": "b5b90957f0dc1e3d4a9868a40fa383ea7a21abc164fcd9becb7bb411744d3f18"
+    },
+    "missing": {
+      "file": "transfer-missing-details-2026-10-19.json",
+      "sha256": "b69db5c78e90c9ca5f95f074965a4fb545398221bee3fb4822a4822364a5cdd7"
+    },
+    "database_only": {
+      "file": "transfer-database-only-details-2026-10-19.json",
+      "sha256": "af061f0b69ff38881ecf6a6b6fb8f4a6d1fce8b8a76074f3b0f80ae16e85bfee"
+    },
+    "extra": {
+      "file": "transfer-extra-evidence-2026-10-19.json",
+      "sha256": "85c29fa018d8a07ac5c9fb87b3073fb58d1564742894d4f7f1708c868240ad26"
+    },
+    "native": {
+      "file": "transfer-native-values-2026-10-19.json",
+      "sha256": "b1717616ad5bc417210e45b6897675d6285575188eb0f3d092bac44fac27203b"
+    },
+    "scope": {
+      "file": "archive-scope-2026-10-19.json",
+      "sha256": "33e3a310e65623f68de9034590de79eea8aaf5fec8b3b4fe1bd47a8fe0a77cff"
+    }
+  },
+  "policies": [
+    "immutable_capture_and_suggested_key",
+    "findings_independent_of_keys",
+    "no_automatic_equal_literal_merge",
+    "no_obsolete_reactivation",
+    "retain_source_and_published_lang",
+    "old_history_archived_not_replayed",
+    "no_automatic_approval_or_publication"
+  ],
+  "work_items": [
+    {
+      "id": "value-3a6ba8b355fbb67f",
+      "topic": "translation_value",
+      "evidence": {
+        "report": "conflicts",
+        "review_id": "3a6ba8b355fbb67f",
+        "locale": "de",
+        "key": "ui.all.all-entries"
+      },
+      "proposal": "Retain all distinct texts and provenance; choose in a reviewed value decision.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "value-2d6e2e67f08c5ff9",
+      "topic": "translation_value",
+      "evidence": {
+        "report": "conflicts",
+        "review_id": "2d6e2e67f08c5ff9",
+        "locale": "de",
+        "key": "ui.all.all-types"
+      },
+      "proposal": "Retain all distinct texts and provenance; choose in a reviewed value decision.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "value-2f3678707683a2e6",
+      "topic": "translation_value",
+      "evidence": {
+        "report": "conflicts",
+        "review_id": "2f3678707683a2e6",
+        "locale": "de",
+        "key": "ui.button.activate_deactivate.activate_language"
+      },
+      "proposal": "Retain all distinct texts and provenance; choose in a reviewed value decision.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "value-2910e45a656b284a",
+      "topic": "translation_value",
+      "evidence": {
+        "report": "conflicts",
+        "review_id": "2910e45a656b284a",
+        "locale": "de",
+        "key": "ui.button.activate_deactivate.deactivate_language"
+      },
+      "proposal": "Retain all distinct texts and provenance; choose in a reviewed value decision.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "value-5b80abfbeaa0cfb6",
+      "topic": "translation_value",
+      "evidence": {
+        "report": "conflicts",
+        "review_id": "5b80abfbeaa0cfb6",
+        "locale": "de",
+        "key": "ui.table.pagination.to"
+      },
+      "proposal": "Retain all distinct texts and provenance; choose in a reviewed value decision.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "value-d3255e58569e8f1a",
+      "topic": "translation_value",
+      "evidence": {
+        "report": "conflicts",
+        "review_id": "d3255e58569e8f1a",
+        "locale": "de",
+        "key": "ui.type"
+      },
+      "proposal": "Retain all distinct texts and provenance; choose in a reviewed value decision.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "value-a417059e2aa4fd45",
+      "topic": "translation_value",
+      "evidence": {
+        "report": "conflicts",
+        "review_id": "a417059e2aa4fd45",
+        "locale": "en",
+        "key": "admin.permission_list.filter.filter_by_category"
+      },
+      "proposal": "Retain all distinct texts and provenance; choose in a reviewed value decision.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "value-383c6ef1ed3a4760",
+      "topic": "translation_value",
+      "evidence": {
+        "report": "conflicts",
+        "review_id": "383c6ef1ed3a4760",
+        "locale": "en",
+        "key": "ui.all.all-entries"
+      },
+      "proposal": "Retain all distinct texts and provenance; choose in a reviewed value decision.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "value-bb25614e437bd4c0",
+      "topic": "translation_value",
+      "evidence": {
+        "report": "conflicts",
+        "review_id": "bb25614e437bd4c0",
+        "locale": "en",
+        "key": "ui.all.all-types"
+      },
+      "proposal": "Retain all distinct texts and provenance; choose in a reviewed value decision.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "value-7bcc0fe503561119",
+      "topic": "translation_value",
+      "evidence": {
+        "report": "conflicts",
+        "review_id": "7bcc0fe503561119",
+        "locale": "en",
+        "key": "ui.states.all-statuses"
+      },
+      "proposal": "Retain all distinct texts and provenance; choose in a reviewed value decision.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "locale-f84621a02fbb355e",
+      "topic": "locale_mapping",
+      "evidence": {
+        "report": "checklist",
+        "variants": [
+          "de-AT",
+          "de-at"
+        ]
+      },
+      "proposal": "Define locale mapping and fallback separately; never silently normalize or overwrite values.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "locale-de1e2eebf2cb6386",
+      "topic": "locale_mapping",
+      "evidence": {
+        "report": "checklist",
+        "variants": [
+          "de-BE",
+          "de-be"
+        ]
+      },
+      "proposal": "Define locale mapping and fallback separately; never silently normalize or overwrite values.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "locale-c0a6cd2ec02dd86f",
+      "topic": "locale_mapping",
+      "evidence": {
+        "report": "checklist",
+        "variants": [
+          "de-CH",
+          "de-ch"
+        ]
+      },
+      "proposal": "Define locale mapping and fallback separately; never silently normalize or overwrite values.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "locale-2dcb22a991230907",
+      "topic": "locale_mapping",
+      "evidence": {
+        "report": "checklist",
+        "variants": [
+          "de-DE",
+          "de-de"
+        ]
+      },
+      "proposal": "Define locale mapping and fallback separately; never silently normalize or overwrite values.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "locale-2bd2beb606128274",
+      "topic": "locale_mapping",
+      "evidence": {
+        "report": "checklist",
+        "variants": [
+          "de-IT",
+          "de-it"
+        ]
+      },
+      "proposal": "Define locale mapping and fallback separately; never silently normalize or overwrite values.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "locale-7c9716f8fb7ad35b",
+      "topic": "locale_mapping",
+      "evidence": {
+        "report": "checklist",
+        "variants": [
+          "de-LI",
+          "de-li"
+        ]
+      },
+      "proposal": "Define locale mapping and fallback separately; never silently normalize or overwrite values.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "locale-92878dd4e7583db8",
+      "topic": "locale_mapping",
+      "evidence": {
+        "report": "checklist",
+        "variants": [
+          "de-LU",
+          "de-lu"
+        ]
+      },
+      "proposal": "Define locale mapping and fallback separately; never silently normalize or overwrite values.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-1",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 1
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-2",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 2
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-3",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 3
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-4",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 4
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-5",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 5
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-6",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 6
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-7",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 7
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-8",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 8
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-9",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 9
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-10",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 10
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-11",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 11
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-12",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 12
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-13",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 13
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-14",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 14
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-15",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 15
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-16",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 16
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-17",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 17
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-18",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 18
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-19",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 19
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-20",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 20
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-21",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 21
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-22",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 22
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-23",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 23
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-24",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 24
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-25",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 25
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-26",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 26
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-27",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 27
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-28",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 28
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-29",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 29
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-30",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 30
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-31",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 31
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-32",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 32
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-33",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 33
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-34",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 34
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-35",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 35
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-36",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 36
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-37",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 37
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-38",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 38
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-39",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 39
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-40",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 40
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-41",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 41
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-42",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 42
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "old-option-43",
+      "topic": "option_assignment",
+      "evidence": {
+        "report": "extra",
+        "old_value_id": 43
+      },
+      "proposal": "Text-only candidates do not authorize a key assignment; retain the old record as evidence.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-2df875a7f5fd5d6a",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "2df875a7f5fd5d6a"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-c293b7e09478aaf9",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "c293b7e09478aaf9"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-db42a3b3aa299bed",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "db42a3b3aa299bed"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-5034613dbf81493d",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "5034613dbf81493d"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-26d4735eaaa32ad6",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "26d4735eaaa32ad6"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-85091eb2a887a570",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "85091eb2a887a570"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-f000cfcabbb49f2e",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "f000cfcabbb49f2e"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-17b1ea480a4b0b16",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "17b1ea480a4b0b16"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-02b33a26a99b0694",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "02b33a26a99b0694"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-c8f2f03ee3ce91df",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "c8f2f03ee3ce91df"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-2181784dde411211",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "2181784dde411211"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-8697ed7d366dc6ae",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "8697ed7d366dc6ae"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-10c3624544917303",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "10c3624544917303"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-217305f723069e9f",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "217305f723069e9f"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-aa06e50d7f298cc1",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "aa06e50d7f298cc1"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-d5fcc0a1818fe0a4",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "d5fcc0a1818fe0a4"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-ccaf8841c0c3a1b9",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "ccaf8841c0c3a1b9"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-5da97a9cd9b6fa5a",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "5da97a9cd9b6fa5a"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-87687d47923765b8",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "87687d47923765b8"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-97664b10ec008dac",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "97664b10ec008dac"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-41e68a507a517cb0",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "41e68a507a517cb0"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-1cdf88d95cf81e26",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "1cdf88d95cf81e26"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-816ffd6c73967ce4",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "816ffd6c73967ce4"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-2fb105d6cf617a38",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "2fb105d6cf617a38"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-13df2b8801821054",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "13df2b8801821054"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-159317d087ba3109",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "159317d087ba3109"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-f6285d7a705cc1e8",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "f6285d7a705cc1e8"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-575e8f063470ddba",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "575e8f063470ddba"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-bb2636d9bcded744",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "bb2636d9bcded744"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "db-only-03e9cc978919a7f2",
+      "topic": "database_only_context",
+      "evidence": {
+        "report": "database_only",
+        "review_id": "03e9cc978919a7f2"
+      },
+      "proposal": "Retain exact text and identity; review usage before activation or reassignment.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "package-c68ad28d0022547a",
+      "topic": "package_override",
+      "evidence": {
+        "report": "extra",
+        "path": "lang/vendor/backup/de/notifications.php",
+        "key": "notifications.backup_successful_body"
+      },
+      "proposal": "Preserve project override and installed package value; replacement needs a reviewed decision.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "package-0a276152865044da",
+      "topic": "package_override",
+      "evidence": {
+        "report": "extra",
+        "path": "lang/vendor/backup/de/notifications.php",
+        "key": "notifications.healthy_backup_found_subject_title"
+      },
+      "proposal": "Preserve project override and installed package value; replacement needs a reviewed decision.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "package-2b79937fd1b944a3",
+      "topic": "package_override",
+      "evidence": {
+        "report": "extra",
+        "path": "lang/vendor/backup/de/notifications.php",
+        "key": "notifications.unhealthy_backup_found_full"
+      },
+      "proposal": "Preserve project override and installed package value; replacement needs a reviewed decision.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-245",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 245,
+        "classification": "no_current_text_witness"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-252",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 252,
+        "classification": "no_current_text_witness"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-255",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 255,
+        "classification": "no_current_text_witness"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-543",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 543,
+        "classification": "no_current_text_witness"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-661",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 661,
+        "classification": "no_current_text_witness"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-662",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 662,
+        "classification": "no_current_text_witness"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-663",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 663,
+        "classification": "structured_payload_review"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-724",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 724,
+        "classification": "structured_payload_review"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-747",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 747,
+        "classification": "structured_payload_review"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-753",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 753,
+        "classification": "structured_payload_review"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-765",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 765,
+        "classification": "structured_payload_review"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-778",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 778,
+        "classification": "structured_payload_review"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-803",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 803,
+        "classification": "structured_payload_review"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-804",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 804,
+        "classification": "structured_payload_review"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-806",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 806,
+        "classification": "structured_payload_review"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-810",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 810,
+        "classification": "structured_payload_review"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-812",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 812,
+        "classification": "structured_payload_review"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-813",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 813,
+        "classification": "structured_payload_review"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "native-816",
+      "topic": "native_evidence",
+      "evidence": {
+        "report": "native",
+        "native_id": 816,
+        "classification": "structured_payload_review"
+      },
+      "proposal": "Preserve the original payload; do not reactivate obsolete entries or turn containers into scalar translations.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "finding-link-integrity",
+      "topic": "fresh_integrity_audit",
+      "evidence": {
+        "report": "checklist",
+        "counts": {
+          "active_findings": {
+            "sql": "SELECT count(*) FROM translation_workbench_findings WHERE status='active'",
+            "count": 18870
+          },
+          "active_links_to_obsolete_findings": {
+            "sql": "SELECT count(*) FROM translation_workbench_key_findings l JOIN translation_workbench_findings f ON f.id=l.finding_id WHERE l.status='active' AND f.status='obsolete'",
+            "count": 12
+          },
+          "multiple_active_named_key_ids": {
+            "sql": "SELECT count(*) FROM (SELECT f.id FROM translation_workbench_findings f JOIN translation_workbench_key_findings l ON l.finding_id=f.id AND l.status='active' JOIN translation_workbench_keys k ON k.id=l.key_id AND k.status<>'obsolete' WHERE f.status='active' AND nullif(k.translation_key,'') IS NOT NULL GROUP BY f.id HAVING count(DISTINCT k.id)>1) s",
+            "count": 27
+          }
+        }
+      },
+      "proposal": "Resolve exact affected IDs in the fresh copy; aggregate counts are not per-record repair instructions.",
+      "status": "open",
+      "decision": null
+    },
+    {
+      "id": "parent-source-status",
+      "topic": "dynamic_source_lifecycle",
+      "evidence": {
+        "report": "extra",
+        "counts": {
+          "active": 177,
+          "obsolete": 70
+        }
+      },
+      "proposal": "Archive obsolete-parent evidence; child active status alone does not prove current usage.",
+      "status": "open",
+      "decision": null
+    }
+  ],
+  "rehearsal_gates": [
+    {
+      "id": "consistent_backup",
+      "status": "not_completed",
+      "requirement": "Capture and checksum a coherent DB/source/lang baseline; record excluded external dependencies."
+    },
+    {
+      "id": "restore_verified",
+      "status": "not_completed",
+      "requirement": "Restore that backup into a new isolated PostgreSQL cluster and prove row counts and value hashes."
+    },
+    {
+      "id": "evidence_importer",
+      "status": "not_completed",
+      "requirement": "Implement copy-only evidence staging with explicit legacy-to-new ID mapping and loss accounting."
+    },
+    {
+      "id": "fresh_capture",
+      "status": "not_completed",
+      "requirement": "Exercise actual scanner capture on the copied source; fixture capture is not a scanner replacement."
+    },
+    {
+      "id": "unresolved_quarantine",
+      "status": "not_completed",
+      "requirement": "Keep undecided evidence separate from active assignments, approvals and publication."
+    },
+    {
+      "id": "workflow_replay",
+      "status": "not_completed",
+      "requirement": "Test first/repeated scan, move, removal, copied/handmade, shared candidates, approvals and interrupted writes on the copy."
+    },
+    {
+      "id": "comparison_report",
+      "status": "not_completed",
+      "requirement": "Prove no unique text lost, no obsolete finding reactivated, no old history replayed into the new timeline."
+    }
+  ],
+  "production_gates": [
+    "single_writer_cutover",
+    "ui_and_command_integration",
+    "explicit_review_of_cutover_result"
+  ]
+}

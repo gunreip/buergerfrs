@@ -18,6 +18,7 @@
             <flux:tab name="target">{{ __('Target workflow') }}</flux:tab>
             <flux:tab name="target-ui">{{ __('Target workflow UI') }}</flux:tab>
             <flux:tab name="write-contract">{{ __('Write contract') }}</flux:tab>
+            <flux:tab name="baseline-preview">{{ __('Baseline preview') }}</flux:tab>
         </flux:tabs>
 
         <div wire:loading wire:target="activeTab" role="status" class="py-3">
@@ -50,6 +51,11 @@
         <flux:tab.panel name="write-contract">
             @if ($activeTab === 'write-contract')
                 @include('translation-workbench::livewire.workflow.write-contract')
+            @endif
+        </flux:tab.panel>
+        <flux:tab.panel name="baseline-preview">
+            @if ($activeTab === 'baseline-preview')
+                @include('translation-workbench::livewire.workflow.baseline-preview')
             @endif
         </flux:tab.panel>
     </flux:tab.group>

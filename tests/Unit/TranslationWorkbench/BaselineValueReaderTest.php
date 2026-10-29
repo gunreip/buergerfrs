@@ -1,7 +1,7 @@
 <?php
 
+use Gunreip\TranslationWorkbench\Generation\BaselineValueReader;
 use Tests\Support\TranslationWorkbench\BaselinePrototype;
-use Tests\Support\TranslationWorkbench\BaselineValueReader;
 
 beforeEach(function () {
     $this->directory = sys_get_temp_dir().'/tw-evidence-'.bin2hex(random_bytes(8));
@@ -79,4 +79,20 @@ it('rolls back baseline rows and revisions when the work record fails', function
     $db->db->exec("CREATE TRIGGER fail_history BEFORE INSERT ON events BEGIN SELECT RAISE(ABORT,'no history'); END");
     expect(fn () => $db->captureValues('baseline', [['key' => 'ui.button.cancel', 'locale' => 'en', 'value' => 'Cancel', 'source' => 'lang_file', 'reference' => 'fixture#hash']], 7, 'Initial capture'))->toThrow(PDOException::class);
     expect($db->rows('baseline_observations'))->toBe([])->and($db->rows('keys'))->toBe([])->and($db->rows('revisions'))->toBe([]);
+});
+
+it('round trips option keys without relaxing ordinary publication array keys', function () {
+    $source = "<?php return ['choice' => ['options' => [1 => 'One', '01' => 'Leading zero', 'a%2Eb' => 'Dot', 'a%252Eb' => 'Percent']]];";
+    expect(fn () => $this->reader->treeFromBytes($source))->toThrow(RuntimeException::class);
+    $tree = $this->reader->treeFromBytes($source, allowOptionKeys: true);
+    expect($tree['choice']['options'])->toHaveCount(4)
+        ->and($this->reader->treeFromBytes('<?php return '.var_export($tree, true).';', allowOptionKeys: true))->toBe($tree);
+    foreach ([
+        "<?php return ['choice' => [1 => 'One']];",
+        "<?php return ['options' => [1 => 'One', '1' => 'Duplicate']];",
+        "<?php return ['options' => ['a.b' => 'Unencoded dot']];",
+        "<?php return ['options' => ['one' => strtoupper('one')]];",
+    ] as $invalid) {
+        expect(fn () => $this->reader->treeFromBytes($invalid, allowOptionKeys: true))->toThrow(RuntimeException::class);
+    }
 });

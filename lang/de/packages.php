@@ -91,7 +91,7 @@ return [
                         ],
                     ],
                 ],
-            ],
+            ], 'src' => ['livewire' => ['source_case_review' => ['decision_saved_in_the_new_generation_no_translation_or_source_file_was_changed' => 'Die Entscheidung wurde in der neuen Generation gespeichert. Es wurden weder die Übersetzung noch die Quelldatei geändert.']]],
         ],
     ],
 ];

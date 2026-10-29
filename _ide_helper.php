@@ -26761,7 +26761,7 @@ namespace App\Livewire\Admin {
 namespace Gunreip\TranslationWorkbench\Livewire {
     /**
      */
-    class TranslationWorkbenchEntries extends \Livewire\Component {
+    class TranslationWorkbench extends \Livewire\Component {
             }
     /**
      */

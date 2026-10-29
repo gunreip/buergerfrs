@@ -1,0 +1,23 @@
+{
+    "state": "argument_persistence_verified",
+    "production_connected": false,
+    "assertions": 82,
+    "input_dump_sha256": "c2191efa64ff387956c926661c9870e4e306cecabcbadd93d035af8930533faf",
+    "argument_report_sha256": "b19dd7afd61d2c5dd81482f40b47742b3fb2f930ac17d0f95d5321aa31526427",
+    "existing_tables_unchanged": 19,
+    "items": 59,
+    "producers": 6,
+    "counts": {
+        "overridable_default": 3,
+        "runtime_value_required": 11,
+        "producer_observations": 7,
+        "literal_key_decision_required": 10,
+        "option_arguments": 28
+    },
+    "implementation_sha256": "f97d3652a0d750a5f56f3da573a7316ff42a3b23e24b6f4cb86dbc50a8ec8834",
+    "schema_sha256": "e48af48966c0a9d1f118909d893822104a269a7202b7d6f5fb22e5437ae25ddb",
+    "runner_sha256": "070b69c5e50eb4aa1902add29227b83546d24f3a92ff2f3bfa1abe8b7911ae32",
+    "dump": "storage/app/private/dev/workbench-rehearsal/20261019-075456-18dfd037/arguments_c242939b0cf6/database.dump",
+    "dump_sha256": "8a84c83b270cb9e6d7a3568d56554a6dd1cd0db015bb3727d938f756f5586994",
+    "cluster_stopped": true
+}

@@ -5,7 +5,7 @@
         <flux:tooltip toggleable>
             <flux:button size="sm" variant="outline" icon="information-circle">{{ __('1. ScanTranslationWorkbench') }}</flux:button>
             <flux:tooltip.content class="max-w-xl whitespace-normal">
-                <p class="font-mono text-xs break-all">packages/gunreip/laravel-translation-workbench/src/_old/Console/ScanTranslationWorkbench.php::handle</p>
+                <p class="font-mono text-xs break-all">ScanTranslationWorkbench::handle · {{ __('Historical implementation removed') }}</p>
                 <p class="mt-2">{{ __('Re-scan current source files') }}</p>
             </flux:tooltip.content>
         </flux:tooltip>
@@ -26,7 +26,7 @@
         <flux:tooltip toggleable>
             <flux:button size="sm" variant="outline" icon="information-circle">{{ __('4. ImportExistingTranslations') }}</flux:button>
             <flux:tooltip.content class="max-w-xl whitespace-normal">
-                <p class="font-mono text-xs break-all">packages/gunreip/laravel-translation-workbench/src/_old/Console/ImportExistingTranslations.php::handle</p>
+                <p class="font-mono text-xs break-all">ImportExistingTranslations::handle · {{ __('Historical implementation removed') }}</p>
                 <p class="mt-2">{{ __('Refresh source-language import') }}</p>
             </flux:tooltip.content>
         </flux:tooltip>

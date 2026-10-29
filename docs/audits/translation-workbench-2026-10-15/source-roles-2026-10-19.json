@@ -1,0 +1,21 @@
+{
+    "state": "source_roles_verified",
+    "production_connected": false,
+    "assertions": 11,
+    "input_dump_sha256": "3855cb420f2bf1b5782f8d3882ff92754e35f0b5041ad5563e0b2cd881d68e5a",
+    "review_sha256": "0504a83784008789362fb5f9290e82752aefb1c586fbf3c30c0a067ad92c2de9",
+    "counts": {
+        "translation_source:captured": 19940,
+        "excluded:excluded": 108,
+        "translation_source:pending": 31,
+        "value_usage:pending": 13,
+        "option_source:pending": 28
+    },
+    "findings_unchanged": true,
+    "implementation_sha256": "45b7d3a2dd177c63d6a7e6ad7ae58a2c9700a0da456ae2c4a7e9ea14f2af0c99",
+    "schema_sha256": "7caeec8f2ed1253cdbcdfae3973421a7e3f7a2c6682e7e6d5bf8856a0961bce7",
+    "runner_sha256": "6c2684087176041d520fc0d962cae90bee7733c63e618ce2cf7950270b04f0f9",
+    "dump": "storage/app/private/dev/workbench-rehearsal/20261019-075456-18dfd037/roles_ab14414d8178/database.dump",
+    "dump_sha256": "c2191efa64ff387956c926661c9870e4e306cecabcbadd93d035af8930533faf",
+    "cluster_stopped": true
+}

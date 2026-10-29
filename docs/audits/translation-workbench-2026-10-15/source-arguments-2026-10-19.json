@@ -1,0 +1,1599 @@
+{
+    "mode": "offline_source_argument_evidence",
+    "production_connected": false,
+    "database_writes": 0,
+    "review_sha256": "0504a83784008789362fb5f9290e82752aefb1c586fbf3c30c0a067ad92c2de9",
+    "capture_manifest_sha256": "0c64bd3d2a4aa458ff3dad8a05e36b80f58ae4dbdfef4d2905448e3b0ffcdc92",
+    "implementation_sha256": "283908177a2821ee7637c2d2e0f6e7ee7a9dea6f1f34039a6c29422c7161f8e4",
+    "runner_sha256": "17fbacd663d70479b9c60cfe7587916979c9cb62b1e3974862e89cc72d39b991",
+    "counts": {
+        "overridable_default": 3,
+        "runtime_value_required": 11,
+        "producer_observations": 7,
+        "literal_key_decision_required": 10,
+        "option_arguments": 28
+    },
+    "producers": {
+        "settings_summary": {
+            "path": "packages/gunreip/laravel-translation-workbench/src/Livewire/TranslationWorkbenchSettings.php",
+            "sha256": "a2be6cba8a3a43c8fc70bae2b3c5aae162239bfafbfd1b7e664b1ee266703f98",
+            "member": "configSummary",
+            "observations": [
+                {
+                    "expression": "'Source locale'",
+                    "literal": "Source locale",
+                    "binding": "literal",
+                    "line": 186
+                },
+                {
+                    "expression": "'Scan paths'",
+                    "literal": "Scan paths",
+                    "binding": "literal",
+                    "line": 191
+                },
+                {
+                    "expression": "'Exclude paths'",
+                    "literal": "Exclude paths",
+                    "binding": "literal",
+                    "line": 196
+                },
+                {
+                    "expression": "'User'",
+                    "literal": "User",
+                    "binding": "literal",
+                    "line": 201
+                }
+            ],
+            "runtime_exhaustiveness_proven": false
+        },
+        "settings_title": {
+            "path": "packages/gunreip/laravel-translation-workbench/src/Livewire/TranslationWorkbenchSettings.php",
+            "sha256": "a2be6cba8a3a43c8fc70bae2b3c5aae162239bfafbfd1b7e664b1ee266703f98",
+            "member": "settingsGroup",
+            "observations": [
+                {
+                    "expression": "'Entries'",
+                    "literal": "Entries",
+                    "binding": "literal",
+                    "line": 46
+                },
+                {
+                    "expression": "'Raw data'",
+                    "literal": "Raw data",
+                    "binding": "literal",
+                    "line": 53
+                }
+            ],
+            "runtime_exhaustiveness_proven": false
+        },
+        "settings_description": {
+            "path": "packages/gunreip/laravel-translation-workbench/src/Livewire/TranslationWorkbenchSettings.php",
+            "sha256": "a2be6cba8a3a43c8fc70bae2b3c5aae162239bfafbfd1b7e664b1ee266703f98",
+            "member": "settingsGroup",
+            "observations": [
+                {
+                    "expression": "'Settings for the main Translation Workbench page: overview visibility, findings filters, sorting, pagination and modal behavior.'",
+                    "literal": "Settings for the main Translation Workbench page: overview visibility, findings filters, sorting, pagination and modal behavior.",
+                    "binding": "literal",
+                    "line": 47
+                },
+                {
+                    "expression": "'Settings for the Translation Workbench raw-data page: selected table, table filters, sorting and pagination.'",
+                    "literal": "Settings for the Translation Workbench raw-data page: selected table, table filters, sorting and pagination.",
+                    "binding": "literal",
+                    "line": 54
+                }
+            ],
+            "runtime_exhaustiveness_proven": false
+        },
+        "context_badges": {
+            "path": "packages/gunreip/laravel-translation-workbench/src/Livewire/TranslationWorkbenchEntries.php",
+            "sha256": "00083817fd85b0a370eab64c3b1825e9aa89bbb8dcf248d93a8e8a25451028b6",
+            "member": "lastEditedTranslationContextBadges",
+            "observations": [
+                {
+                    "expression": "'Active'",
+                    "literal": "Active",
+                    "binding": "literal",
+                    "line": 4759
+                },
+                {
+                    "expression": "'Obsolete sibling'",
+                    "literal": "Obsolete sibling",
+                    "binding": "literal",
+                    "line": 4763
+                }
+            ],
+            "runtime_exhaustiveness_proven": false
+        },
+        "critical_datasets": {
+            "path": "packages/gunreip/laravel-translation-workbench/src/Livewire/TwGraphDataDrivenDatasets.php",
+            "sha256": "d466f49c88b1cd7056d70b706b17be102b7f6f8b780f4e9aadedfbffa3690427",
+            "member": "CRITICAL_DATASETS",
+            "observations": [
+                {
+                    "expression": "'Rekey target · admin.permissions.modals.edit.title'",
+                    "literal": "Rekey target · admin.permissions.modals.edit.title",
+                    "binding": "literal",
+                    "line": 17
+                },
+                {
+                    "expression": "'Rekey target · admin.permissions.overview.title'",
+                    "literal": "Rekey target · admin.permissions.overview.title",
+                    "binding": "literal",
+                    "line": 18
+                },
+                {
+                    "expression": "'Label sides'",
+                    "literal": "Label sides",
+                    "binding": "literal",
+                    "line": 19
+                },
+                {
+                    "expression": "'Rekey source · ui.button.save.save'",
+                    "literal": "Rekey source · ui.button.save.save",
+                    "binding": "literal",
+                    "line": 20
+                },
+                {
+                    "expression": "'Branch labels and stem collisions'",
+                    "literal": "Branch labels and stem collisions",
+                    "binding": "literal",
+                    "line": 21
+                },
+                {
+                    "expression": "'Trunk gaps at merge connections'",
+                    "literal": "Trunk gaps at merge connections",
+                    "binding": "literal",
+                    "line": 22
+                },
+                {
+                    "expression": "'Multiple merges and extensions'",
+                    "literal": "Multiple merges and extensions",
+                    "binding": "literal",
+                    "line": 23
+                },
+                {
+                    "expression": "'Merge and trunk label spacing'",
+                    "literal": "Merge and trunk label spacing",
+                    "binding": "literal",
+                    "line": 24
+                },
+                {
+                    "expression": "'Rekey target · ui.save'",
+                    "literal": "Rekey target · ui.save",
+                    "binding": "literal",
+                    "line": 25
+                },
+                {
+                    "expression": "'Merge extension staggering'",
+                    "literal": "Merge extension staggering",
+                    "binding": "literal",
+                    "line": 26
+                },
+                {
+                    "expression": "'Many origins and aggregated extensions'",
+                    "literal": "Many origins and aggregated extensions",
+                    "binding": "literal",
+                    "line": 27
+                },
+                {
+                    "expression": "'Merge label and trunk start'",
+                    "literal": "Merge label and trunk start",
+                    "binding": "literal",
+                    "line": 28
+                },
+                {
+                    "expression": "'Rekey source · ui.title.title'",
+                    "literal": "Rekey source · ui.title.title",
+                    "binding": "literal",
+                    "line": 29
+                }
+            ],
+            "runtime_exhaustiveness_proven": false
+        },
+        "publication_messages": {
+            "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchPublicationRunner.php",
+            "sha256": "f6039179197f18c14dbb0ec8867fd4f63ae54f159c1a943d4fccd9943a325e68",
+            "member": "conflict",
+            "observations": [
+                {
+                    "expression": "'No new or changed translations to publish.'",
+                    "literal": "No new or changed translations to publish.",
+                    "binding": "literal",
+                    "line": 30
+                },
+                {
+                    "expression": "'The files changed after preview verification. Create a new preview.'",
+                    "literal": "The files changed after preview verification. Create a new preview.",
+                    "binding": "literal",
+                    "line": 34
+                },
+                {
+                    "expression": "'Invalid publication run ID.'",
+                    "literal": "Invalid publication run ID.",
+                    "binding": "literal",
+                    "line": 64
+                },
+                {
+                    "expression": "'This publication belongs to another translation context.'",
+                    "literal": "This publication belongs to another translation context.",
+                    "binding": "literal",
+                    "line": 68
+                },
+                {
+                    "expression": "'This publication was closed without further writing. Create a new preview.'",
+                    "literal": "This publication was closed without further writing. Create a new preview.",
+                    "binding": "literal",
+                    "line": 71
+                },
+                {
+                    "expression": "'Provide a closure reason of 1 to 2000 characters.'",
+                    "literal": "Provide a closure reason of 1 to 2000 characters.",
+                    "binding": "literal",
+                    "line": 109
+                },
+                {
+                    "expression": "'The publication or its files changed. Review the closure preview again.'",
+                    "literal": "The publication or its files changed. Review the closure preview again.",
+                    "binding": "literal",
+                    "line": 116
+                },
+                {
+                    "expression": "'Invalid publication run ID.'",
+                    "literal": "Invalid publication run ID.",
+                    "binding": "literal",
+                    "line": 137
+                },
+                {
+                    "expression": "'This publication belongs to another translation context.'",
+                    "literal": "This publication belongs to another translation context.",
+                    "binding": "literal",
+                    "line": 141
+                },
+                {
+                    "expression": "'Only unfinished publications without a completion receipt can be closed.'",
+                    "literal": "Only unfinished publications without a completion receipt can be closed.",
+                    "binding": "literal",
+                    "line": 158
+                },
+                {
+                    "expression": "'A completed publication file has changed; it will not be overwritten.'",
+                    "literal": "A completed publication file has changed; it will not be overwritten.",
+                    "binding": "literal",
+                    "line": 229
+                },
+                {
+                    "expression": "'Publication data or approvals changed. The interrupted run cannot continue.'",
+                    "literal": "Publication data or approvals changed. The interrupted run cannot continue.",
+                    "binding": "literal",
+                    "line": 240
+                },
+                {
+                    "expression": "'The prepared publication contents do not match their checksum.'",
+                    "literal": "The prepared publication contents do not match their checksum.",
+                    "binding": "literal",
+                    "line": 246
+                },
+                {
+                    "expression": "'A publication file was changed externally. It will not be overwritten.'",
+                    "literal": "A publication file was changed externally. It will not be overwritten.",
+                    "binding": "literal",
+                    "line": 250
+                },
+                {
+                    "expression": "'A written publication file changed before history could be recorded.'",
+                    "literal": "A written publication file changed before history could be recorded.",
+                    "binding": "literal",
+                    "line": 267
+                },
+                {
+                    "expression": "'A publication file changed before replacement.'",
+                    "literal": "A publication file changed before replacement.",
+                    "binding": "literal",
+                    "line": 295
+                },
+                {
+                    "expression": "'Publication blocked: this preview would remove published translations. Clearing a stored value does not authorize removal.'",
+                    "literal": "Publication blocked: this preview would remove published translations. Clearing a stored value does not authorize removal.",
+                    "binding": "literal",
+                    "line": 337
+                },
+                {
+                    "expression": "'Publication requires current value approvals, resolved conflicts and no unreviewed deletions or excluded options.'",
+                    "literal": "Publication requires current value approvals, resolved conflicts and no unreviewed deletions or excluded options.",
+                    "binding": "literal",
+                    "line": 340
+                },
+                {
+                    "expression": "'Unsafe publication file scope.'",
+                    "literal": "Unsafe publication file scope.",
+                    "binding": "literal",
+                    "line": 367
+                },
+                {
+                    "expression": "'Publication does not replace linked language paths.'",
+                    "literal": "Publication does not replace linked language paths.",
+                    "binding": "literal",
+                    "line": 371
+                },
+                {
+                    "expression": "'Resume or resolve the interrupted publication run '.$pending['id'].' before starting an overlapping run.'",
+                    "literal": null,
+                    "binding": "runtime_expression",
+                    "line": 385
+                }
+            ],
+            "runtime_exhaustiveness_proven": false
+        }
+    },
+    "items": [
+        {
+            "capture_id": "977a7b24453d86c87d3ec8e108c9f131b41a326b2704879493881457ed8172ae",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/components/ui/common/separator-code-example-tw-graph.blade.php",
+            "source_sha256": "8fd61f8098c63f77e0a177b179cf00819e2d3f70a5139fc1333265fbfc150dd8",
+            "source_line": 7,
+            "raw_expression": "__($text)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "overridable_default",
+            "default": {
+                "kind": "literal",
+                "value": "TW-Graph code examples",
+                "props_offset": 0
+            }
+        },
+        {
+            "capture_id": "60b6d6b7875c8d491ac4dc441eb6f36701f2efb31b028cbc1de6dd638fbbf47d",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/components/ui/common/separator-deep-reference-links.blade.php",
+            "source_sha256": "c0bdf9f002a16d5a506efa8e1c57824c13a83eafbce4390e4c664a8f46c18d31",
+            "source_line": 9,
+            "raw_expression": "__($text)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "overridable_default",
+            "default": {
+                "kind": "literal",
+                "value": "Deep reference links",
+                "props_offset": 0
+            }
+        },
+        {
+            "capture_id": "774c2027c68cb5da5e96e7591975f2710e448ae291411016938c38149fc1dff2",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/components/ui/common/separator-props-used-tw-graph.blade.php",
+            "source_sha256": "7df41c551d9b1760a6bde1e047b7939691a1cbec5d37beb219e4204acc0f7ec0",
+            "source_line": 7,
+            "raw_expression": "__($text)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "overridable_default",
+            "default": {
+                "kind": "literal",
+                "value": "Props used in these examples",
+                "props_offset": 0
+            }
+        },
+        {
+            "capture_id": "6b1b30569ab9840c52f631edff48ae8ac98bf3ffcfd5d27a98bdbdacc89c1e00",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/calculated-length.blade.php",
+            "source_sha256": "83a981d176d591401c1993b5c8688dbbbb3284db3441bb4a6e7ee23ff2d9fece",
+            "source_line": 21,
+            "raw_expression": "__($details['reason'])",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "runtime_value_required",
+            "producer": null,
+            "binding_review": "Reason supplied through the component details prop; arbitrary callers may supply values."
+        },
+        {
+            "capture_id": "76b00ba402874d4a7f3078a047d89c00becd4c49ee369099cc838f693c8df580",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/calculated-length.blade.php",
+            "source_sha256": "83a981d176d591401c1993b5c8688dbbbb3284db3441bb4a6e7ee23ff2d9fece",
+            "source_line": 70,
+            "raw_expression": "__($details['reason'])",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "runtime_value_required",
+            "producer": null,
+            "binding_review": "Reason supplied through the component details prop; arbitrary callers may supply values."
+        },
+        {
+            "capture_id": "3879e7ca58ab429244e28f0941a702ba0780e6d38251313d7a7f724cbbc7610b",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/findings/export-report.blade.php",
+            "source_sha256": "9a15d4139ad609d8691901c190062f63a2563408bd4a7d287c78046d5dce2e3b",
+            "source_line": 689,
+            "raw_expression": "__($badge['label'] ?? '')",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "producer_observations",
+            "producer": "context_badges",
+            "binding_review": "Manually traced in the saved source; producer expressions extracted by AST."
+        },
+        {
+            "capture_id": "01cb5493d70fd2ed62577625376c9112f4e86fd3b68330452377283cb7c7ba90",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/findings/export-report.blade.php",
+            "source_sha256": "9a15d4139ad609d8691901c190062f63a2563408bd4a7d287c78046d5dce2e3b",
+            "source_line": 796,
+            "raw_expression": "__($badge['label'] ?? '')",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "producer_observations",
+            "producer": "context_badges",
+            "binding_review": "Manually traced in the saved source; producer expressions extracted by AST."
+        },
+        {
+            "capture_id": "8641662660e53caca0b3c970a5cda5dd8ffa4ac4e779cb9814e1f84a36c5592a",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/finding-lineage.blade.php",
+            "source_sha256": "02ecd8050c86ae2a5482200a8a724ddb1bf40787ae88eb6dd7d3b6da10c464c9",
+            "source_line": 20,
+            "raw_expression": "__($version['status'])",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "runtime_value_required",
+            "producer": null,
+            "binding_review": "Status/review value supplied by the finding, link, key or review record; no complete value domain proven."
+        },
+        {
+            "capture_id": "1cce5c16f5316cdaf1b0c8e5ec554f83249728e81be0651dad3ccf0f3e36d37e",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/finding-lineage.blade.php",
+            "source_sha256": "02ecd8050c86ae2a5482200a8a724ddb1bf40787ae88eb6dd7d3b6da10c464c9",
+            "source_line": 26,
+            "raw_expression": "__($link['status'])",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "runtime_value_required",
+            "producer": null,
+            "binding_review": "Status/review value supplied by the finding, link, key or review record; no complete value domain proven."
+        },
+        {
+            "capture_id": "6c8ba1d0c3ec2d591c209c07617a4f2c92de689775ecc06e11e5ea91aaecdf76",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/key-conflict-inspection.blade.php",
+            "source_sha256": "e5bdc905648c3c4c16f543613d6e5e73061e9b5fcf0eaf23688b50cbfbff82d0",
+            "source_line": 226,
+            "raw_expression": "__($owner['status'])",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "runtime_value_required",
+            "producer": null,
+            "binding_review": "Status/review value supplied by the finding, link, key or review record; no complete value domain proven."
+        },
+        {
+            "capture_id": "3f5642cd0968b760743b1675e914371df2d6ba1527c6d4555a722046ebc09a4e",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/key-conflict-inspection.blade.php",
+            "source_sha256": "e5bdc905648c3c4c16f543613d6e5e73061e9b5fcf0eaf23688b50cbfbff82d0",
+            "source_line": 234,
+            "raw_expression": "__($owner['review_status'])",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "runtime_value_required",
+            "producer": null,
+            "binding_review": "Status/review value supplied by the finding, link, key or review record; no complete value domain proven."
+        },
+        {
+            "capture_id": "11a418f670a890699561445f71096639674f72a6e519ec0c9a07d8de63b8590c",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/key-finding-assignment.blade.php",
+            "source_sha256": "e0d1124ff487b144e3448d1a1f446fffb7c1260338e576582853a9c5a948ae0a",
+            "source_line": 149,
+            "raw_expression": "__($evidence['decision'])",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "runtime_value_required",
+            "producer": null,
+            "binding_review": "Status/review value supplied by the finding, link, key or review record; no complete value domain proven."
+        },
+        {
+            "capture_id": "13bd5655d678593ebc5e38b68f635da234d7e4fe3e31f8a77dd36e6d04a1a293",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/review/key-separation-preview.blade.php",
+            "source_sha256": "efd3dfa6b3f034a9e2646bb161485d45f00f787f17be1dd6589ef0a29805c4e5",
+            "source_line": 21,
+            "raw_expression": "__($row['status'])",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "runtime_value_required",
+            "producer": null,
+            "binding_review": "Status/review value supplied by the finding, link, key or review record; no complete value domain proven."
+        },
+        {
+            "capture_id": "c17db5fc342dfdedfa5085e93df0a9d0c79ff4bbd187e4a60ae89c57aa8e4b9e",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/settings.blade.php",
+            "source_sha256": "17836c8ec537170e36a6ef7969d77fe7853ac48bda56f2f39705323be7a819e4",
+            "source_line": 47,
+            "raw_expression": "__($summary['label'])",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "producer_observations",
+            "producer": "settings_summary",
+            "binding_review": "Manually traced in the saved source; producer expressions extracted by AST."
+        },
+        {
+            "capture_id": "ad794fa55b2019a4154f3378225ee67433275695d7c0e1381ef3226b64203791",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/settings.blade.php",
+            "source_sha256": "17836c8ec537170e36a6ef7969d77fe7853ac48bda56f2f39705323be7a819e4",
+            "source_line": 82,
+            "raw_expression": "__($group['title'])",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "producer_observations",
+            "producer": "settings_title",
+            "binding_review": "Manually traced in the saved source; producer expressions extracted by AST."
+        },
+        {
+            "capture_id": "601d26a369345f67238b159ab1a69bc02c86bad8df9e833c7637e1d97de91b53",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/settings.blade.php",
+            "source_sha256": "17836c8ec537170e36a6ef7969d77fe7853ac48bda56f2f39705323be7a819e4",
+            "source_line": 83,
+            "raw_expression": "__($group['description'])",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "producer_observations",
+            "producer": "settings_description",
+            "binding_review": "Manually traced in the saved source; producer expressions extracted by AST."
+        },
+        {
+            "capture_id": "c1b90152dbe18cfcac8d11dfcb4cb28c0889310bde4eafedf215ca7ba2f2dcaf",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/tw-graph/data-driven/dataset-detail-fields.blade.php",
+            "source_sha256": "55c7e11a1f5c3055ba207d7406cfc1018222a85ad5d86e5ae1dd9b328b7a2690",
+            "source_line": 6,
+            "raw_expression": "__(str($field)->replace('_', ' ')->headline()->toString())",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "runtime_value_required",
+            "producer": null,
+            "binding_review": "Display text is generated from a field name or document attribute; no fixed literal at this call."
+        },
+        {
+            "capture_id": "8898ed8ca8324ce4d4c7f6dbaae506c71aafe41ccb9314d65d0d017461601eb1",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/tw-graph/data-driven/dataset-selector.blade.php",
+            "source_sha256": "2693fc8bb0a2415155d3634a9a163bb2dd0de082f8cedf5b827ae69d8e297342",
+            "source_line": 120,
+            "raw_expression": "__($criticalDescription)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "producer_observations",
+            "producer": "critical_datasets",
+            "binding_review": "Manually traced in the saved source; producer expressions extracted by AST."
+        },
+        {
+            "capture_id": "965d1c3194baff65923423c4a59352678b07f0505cbcd91573a82b99a525e83c",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/workflow/target-ui.blade.php",
+            "source_sha256": "14caaee5d4360a100b7d28d92a748505be516ae990a36f6a415d5572abfabf5c",
+            "source_line": 239,
+            "raw_expression": "__('translation-workbench.php')",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "literal_key_decision_required",
+            "argument": "translation-workbench.php"
+        },
+        {
+            "capture_id": "b69a56fbb91e2b48b5229db33fde080addbca5c6b6a443253fdcc6fba0158428",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/partials/fail-summary.blade.php",
+            "source_sha256": "9156cf6983ec77f44adedbf214ed3fa6f8f8992ceb68794e5301c19901a759fc",
+            "source_line": 29,
+            "raw_expression": "__('Copied.')",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "literal_key_decision_required",
+            "argument": "Copied."
+        },
+        {
+            "capture_id": "5b77eafce8c88e197a9d9137e561e13b89ae4d171f532780d263406900e341f9",
+            "source_path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/segments/segments-fusion.blade.php",
+            "source_sha256": "1eed9ad70455dbaf60981d6a2629a99d6784e049605717d56e9b74a576972b0e",
+            "source_line": 10,
+            "raw_expression": "__('segments.fusion')",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "literal_key_decision_required",
+            "argument": "segments.fusion"
+        },
+        {
+            "capture_id": "4cbde15f8a961a334818750dc2183ba303f666e64892523aed9b12d4b542f348",
+            "source_path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchPublicationRunner.php",
+            "source_sha256": "f6039179197f18c14dbb0ec8867fd4f63ae54f159c1a943d4fccd9943a325e68",
+            "source_line": 416,
+            "raw_expression": "__($message)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "producer_observations",
+            "producer": "publication_messages",
+            "binding_review": "Manually traced in the saved source; producer expressions extracted by AST."
+        },
+        {
+            "capture_id": "eb83ebfbf29e58263b58453feff7280e912b1215026f180082151d362cb96396",
+            "source_path": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+            "source_sha256": "f4e517c2b2aee428ae4fef692a044eea09c2164ed77dbfd6e5da2949daf09095",
+            "source_line": 285,
+            "raw_expression": "__('ui.actions.cancel')",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "literal_key_decision_required",
+            "argument": "ui.actions.cancel"
+        },
+        {
+            "capture_id": "af516fba1e61bb587ea4950b84baab78a195b13f0777ee1735944b5ea55adac4",
+            "source_path": "resources/views/components/admin/partials/app-settings/⚡locale.blade.php",
+            "source_sha256": "f4e517c2b2aee428ae4fef692a044eea09c2164ed77dbfd6e5da2949daf09095",
+            "source_line": 337,
+            "raw_expression": "__('ui.actions.cancel')",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "literal_key_decision_required",
+            "argument": "ui.actions.cancel"
+        },
+        {
+            "capture_id": "0b774153ca7442499bc664945b1fa6c9123b7a008721f9193360d647bf956291",
+            "source_path": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+            "source_sha256": "53cbcaa863a4594e8dba9f93d031d6b4fde03b4dc69563be2ff3baa76e1f159c",
+            "source_line": 35,
+            "raw_expression": "__('ui.Show')",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "literal_key_decision_required",
+            "argument": "ui.Show"
+        },
+        {
+            "capture_id": "0b618d227a5ce85a3a65d74d4efca4b58d0b4b353554acab65785f957c379480",
+            "source_path": "resources/views/components/admin/partials/html-view-audit/⚡statistic.blade.php",
+            "source_sha256": "53cbcaa863a4594e8dba9f93d031d6b4fde03b4dc69563be2ff3baa76e1f159c",
+            "source_line": 36,
+            "raw_expression": "__('ui.Hide')",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "literal_key_decision_required",
+            "argument": "ui.Hide"
+        },
+        {
+            "capture_id": "8e159e3256f5387850d6494408e9cdd610c6979a18c4502b836bc3386b40a810",
+            "source_path": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+            "source_sha256": "8227b7529d67284228bc96b24aec47e503da231e90d02686e9ae3819257d1dc3",
+            "source_line": 296,
+            "raw_expression": "__('ui.Show-usage-details')",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "literal_key_decision_required",
+            "argument": "ui.Show-usage-details"
+        },
+        {
+            "capture_id": "4c24b0bf209d62e7595f9db858f5ff21f8030c06b458dec7ae038cd4a826b82e",
+            "source_path": "resources/views/components/admin/partials/html-view-audit/⚡usage-audit.blade.php",
+            "source_sha256": "8227b7529d67284228bc96b24aec47e503da231e90d02686e9ae3819257d1dc3",
+            "source_line": 297,
+            "raw_expression": "__('ui.Hide-usage-details')",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "literal_key_decision_required",
+            "argument": "ui.Hide-usage-details"
+        },
+        {
+            "capture_id": "5c9d4253492e744c8a5c9493b0cbfdd6ef06325efbbe380c4a66ae28228fbc68",
+            "source_path": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+            "source_sha256": "bbeb7b909235e8a4df6cefe162dc919e58fcfe69ce9f4df6b8e7db55a4a16ce9",
+            "source_line": 88,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('admin.partials.role_list.modal_edit.role_badge_color_options', (string) $color, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "admin.partials.role_list.modal_edit.role_badge_color_options",
+                "identity": {
+                    "expression": "(string) $color",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "ca3cf5616aca63caa3e5b22d2d5d536c2305fc8007526145f1f8020f47c8f8f4",
+            "source_path": "resources/views/components/admin/partials/role-list/⚡modal-create.blade.php",
+            "source_sha256": "bbeb7b909235e8a4df6cefe162dc919e58fcfe69ce9f4df6b8e7db55a4a16ce9",
+            "source_line": 100,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('admin.partials.role_list.modal_create.role_badge_variant_options', (string) $variant, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "admin.partials.role_list.modal_create.role_badge_variant_options",
+                "identity": {
+                    "expression": "(string) $variant",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "ad34dc285da2aa359a604e01776213d901f3d4e08022467c70e2fb524b84aff9",
+            "source_path": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+            "source_sha256": "32cd9efa7dd7a6c7765504bbb24fb445428baa6ed847037b45e5049dd159a187",
+            "source_line": 110,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('admin.partials.role_list.modal_edit.role_badge_color_options', (string) $color, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "admin.partials.role_list.modal_edit.role_badge_color_options",
+                "identity": {
+                    "expression": "(string) $color",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "327b4bc98c9836ef7d1aecb3642ca1301e5fc5fd58b7cba30cb13cf0e08163fe",
+            "source_path": "resources/views/components/admin/partials/role-list/⚡modal-edit.blade.php",
+            "source_sha256": "32cd9efa7dd7a6c7765504bbb24fb445428baa6ed847037b45e5049dd159a187",
+            "source_line": 122,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('admin.partials.role_list.modal_create.role_badge_variant_options', (string) $variant, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "admin.partials.role_list.modal_create.role_badge_variant_options",
+                "identity": {
+                    "expression": "(string) $variant",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "f02c685d126a0a971fef973fc427de970102664ddb11115a93b9fab58c927f73",
+            "source_path": "resources/views/components/admin/partials/translation-usage-audit/⚡modal-edit.blade.php",
+            "source_sha256": "9abf72b7865f8cfd5af46b4f1b048e8cf7013c55fef414f292b260e2b9071b64",
+            "source_line": 127,
+            "raw_expression": "__('admin.common.ui.example_admin_actions_save')",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "literal_key_decision_required",
+            "argument": "admin.common.ui.example_admin_actions_save"
+        },
+        {
+            "capture_id": "9e013cdc60a010eda59ab42d35dfd7196f233dc8f5c0faef05d546eed7f91bbd",
+            "source_path": "resources/views/components/admin/partials/user-list/⚡modal.blade.php",
+            "source_sha256": "df97fc36efc05fc10b4eab68c57562deb164093ceea9d50f603c59e2d7960c34",
+            "source_line": 56,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('admin.partials.user_list.modal.str_headline_category', (string) $category, Str::headline($category))",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "admin.partials.user_list.modal.str_headline_category",
+                "identity": {
+                    "expression": "(string) $category",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "Str::headline($category)",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "282bcdcf548ccd08bc323904b0f5f146e17fca50b2353d87a9e95d046a311d3c",
+            "source_path": "resources/views/components/management/people/create-person/sections/⚡documents.blade.php",
+            "source_sha256": "1285f8205e2760c1389191fa68240848e7b2fa33d92fd2967856ba94b2df34e0",
+            "source_line": 56,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.sections.documents.document_type_options', (string) $value, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.create_person.sections.documents.document_type_options",
+                "identity": {
+                    "expression": "(string) $value",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "aa327546183506f43c4fdd9806c71bc44cc2d0c6c0e39289b20fabed31a8355c",
+            "source_path": "resources/views/components/management/people/create-person/sections/⚡emergency-contact.blade.php",
+            "source_sha256": "2de90547bf0b4103e05dec9a9337317ba97a3b6c6b60b535e1112594e05c39c8",
+            "source_line": 89,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.sections.emergency_contact.emergency_contact_relationship_options', (string) $value, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.create_person.sections.emergency_contact.emergency_contact_relationship_options",
+                "identity": {
+                    "expression": "(string) $value",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "5b9691503a5c80d174c6be156882bd3df6b9354bd9df8ee5c46c845aba064efe",
+            "source_path": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "source_sha256": "4cbed567323bfeb7563dd5e108ce9c82bf1709566915c984fb0815e0b82d8358",
+            "source_line": 86,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.sections.person_core.salutation_options', (string) $value, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.create_person.sections.person_core.salutation_options",
+                "identity": {
+                    "expression": "(string) $value",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "636faf911f0eb6d09d42a6e27f9c181b2d4b9265c0a4d00cc80372219205f543",
+            "source_path": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "source_sha256": "4cbed567323bfeb7563dd5e108ce9c82bf1709566915c984fb0815e0b82d8358",
+            "source_line": 127,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.sections.person_core.gender_options', (string) $value, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.create_person.sections.person_core.gender_options",
+                "identity": {
+                    "expression": "(string) $value",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "8de8fe61df7b2d77931607bf2cdc7aa2dfdb6750f754fedeced60737ed437038",
+            "source_path": "resources/views/components/management/people/create-person/sections/⚡person-core.blade.php",
+            "source_sha256": "4cbed567323bfeb7563dd5e108ce9c82bf1709566915c984fb0815e0b82d8358",
+            "source_line": 383,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.sections.person_core.marital_status_options', (string) $value, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.create_person.sections.person_core.marital_status_options",
+                "identity": {
+                    "expression": "(string) $value",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "6b28ffe068927e9467a9d80ff2fb98f619eb1a02e0c415f8f90d4a4fd3ba4f04",
+            "source_path": "resources/views/components/management/people/create-person/⚡form-person.blade.php",
+            "source_sha256": "a76c24f0bac26345b8c855456c383f2165073c994cf3b5ad6f1803f461c4f6a3",
+            "source_line": 203,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.form_person.document_type_options', $documentType, $documentTypeOptions[$documentType] ?? $documentType)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.create_person.form_person.document_type_options",
+                "identity": {
+                    "expression": "$documentType",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$documentTypeOptions[$documentType] ?? $documentType",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "474700976b277df6a346abc992bde4183653ad61877495c8924c4918afbea12b",
+            "source_path": "resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php",
+            "source_sha256": "b33b77ab84237aa3ef8bce7fc5c2a52948edcc59d8d165b7ed4aef2c0e207c4d",
+            "source_line": 61,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.sections.documents.document_type_options', (string) $value, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.create_person.sections.documents.document_type_options",
+                "identity": {
+                    "expression": "(string) $value",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "1163cc5e2e72c52ada60cb5967689273dc8b25718487c19791103061a4dca275",
+            "source_path": "resources/views/components/management/people/edit-person/sections/documents/⚡add-modal.blade.php",
+            "source_sha256": "b33b77ab84237aa3ef8bce7fc5c2a52948edcc59d8d165b7ed4aef2c0e207c4d",
+            "source_line": 265,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.edit_person.sections.documents.document_category_options', (string) $value, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.edit_person.sections.documents.document_category_options",
+                "identity": {
+                    "expression": "(string) $value",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "4c28a316c03ae615d6ecfd550d1febb7290e18df3521b88dbe018e6755402d3d",
+            "source_path": "resources/views/components/management/people/edit-person/sections/documents/⚡archive-modal.blade.php",
+            "source_sha256": "bdead28d0548b8c95d1d6d1541e1dbc34038603d6af44f564798fc183a75dbaf",
+            "source_line": 165,
+            "raw_expression": "__(str($document->status)->headline()->toString())",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "runtime_value_required",
+            "producer": null,
+            "binding_review": "Display text is generated from a field name or document attribute; no fixed literal at this call."
+        },
+        {
+            "capture_id": "7476eee6ef39adbe66644b33b175f2a4760dba73935070a24e8f2e8f09f8fff2",
+            "source_path": "resources/views/components/management/people/edit-person/sections/documents/⚡archive-modal.blade.php",
+            "source_sha256": "bdead28d0548b8c95d1d6d1541e1dbc34038603d6af44f564798fc183a75dbaf",
+            "source_line": 196,
+            "raw_expression": "__(str($document->source)->headline()->toString())",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "runtime_value_required",
+            "producer": null,
+            "binding_review": "Display text is generated from a field name or document attribute; no fixed literal at this call."
+        },
+        {
+            "capture_id": "9a0348209e9693b15841e8390ee92baf27d1e28ff5fd79151aabd64e0ede9ac0",
+            "source_path": "resources/views/components/management/people/edit-person/sections/documents/⚡archive-modal.blade.php",
+            "source_sha256": "bdead28d0548b8c95d1d6d1541e1dbc34038603d6af44f564798fc183a75dbaf",
+            "source_line": 151,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.form_person.document_type_options', $document->type, $documentTypeOptions[$document->type] ?? $document->type)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.create_person.form_person.document_type_options",
+                "identity": {
+                    "expression": "$document->type",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$documentTypeOptions[$document->type] ?? $document->type",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "eca62d3da0e20bc13017e0c7d281cfda49249793dbaead26bd08a18b31196c4d",
+            "source_path": "resources/views/components/management/people/edit-person/sections/documents/⚡archive-modal.blade.php",
+            "source_sha256": "bdead28d0548b8c95d1d6d1541e1dbc34038603d6af44f564798fc183a75dbaf",
+            "source_line": 170,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.edit_person.sections.documents.document_category_options', (string) $document->category, str($document->category)->headline()->toString())",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.edit_person.sections.documents.document_category_options",
+                "identity": {
+                    "expression": "(string) $document->category",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "str($document->category)->headline()->toString()",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "ad5e9972f9239692068dc5162d89553fa226fbc5a4c3a62bfd1dceb3f7ab4f28",
+            "source_path": "resources/views/components/management/people/edit-person/sections/documents/⚡archive-modal.blade.php",
+            "source_sha256": "bdead28d0548b8c95d1d6d1541e1dbc34038603d6af44f564798fc183a75dbaf",
+            "source_line": 180,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.form_person.document_type_options', $document->type, $documentTypeOptions[$document->type] ?? str($document->type)->headline()->toString())",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.create_person.form_person.document_type_options",
+                "identity": {
+                    "expression": "$document->type",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$documentTypeOptions[$document->type] ?? str($document->type)->headline()->toString()",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "2f6ac9bea5af17bba9e2c2955cb75900e709fd7ed40659fde874992d2844acfa",
+            "source_path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "source_sha256": "6336acfad4adadfc3d697516756c29ccd1197358d89e734d91be9daef523b813",
+            "source_line": 5,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.form_person.document_type_options', $documentType, $documentTypeOptions[$documentType] ?? $documentType)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.create_person.form_person.document_type_options",
+                "identity": {
+                    "expression": "$documentType",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$documentTypeOptions[$documentType] ?? $documentType",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "2c17e584525cc6742056363f6111234254627a964b8947d293466fa7631408a8",
+            "source_path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "source_sha256": "6336acfad4adadfc3d697516756c29ccd1197358d89e734d91be9daef523b813",
+            "source_line": 7,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.edit_person.sections.documents.document_category_options', $documentCategory, $documentCategoryOptions[$documentCategory] ?? str($documentCategory)->headline()->toString())",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.edit_person.sections.documents.document_category_options",
+                "identity": {
+                    "expression": "$documentCategory",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$documentCategoryOptions[$documentCategory] ?? str($documentCategory)->headline()->toString()",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "ffbfa8e74edfeed952896ba9ecd5b64d90e8c76da5a080502a382899dfed6082",
+            "source_path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "source_sha256": "6336acfad4adadfc3d697516756c29ccd1197358d89e734d91be9daef523b813",
+            "source_line": 13,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.form_person.document_type_options', $selectedDocument->type, $documentTypeOptions[$selectedDocument->type] ?? $selectedDocument->type)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.create_person.form_person.document_type_options",
+                "identity": {
+                    "expression": "$selectedDocument->type",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$documentTypeOptions[$selectedDocument->type] ?? $selectedDocument->type",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "b274397fb3fa2ed40a1bdb24adc04c54b6a2cfe40ba3218f92bad1f216379567",
+            "source_path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "source_sha256": "6336acfad4adadfc3d697516756c29ccd1197358d89e734d91be9daef523b813",
+            "source_line": 154,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.edit_person.sections.documents.document_category_options', (string) $value, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.edit_person.sections.documents.document_category_options",
+                "identity": {
+                    "expression": "(string) $value",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "543a2b5cac68b2a0e37a89745be7b519c21725fbe646395f345811130389aa8b",
+            "source_path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "source_sha256": "6336acfad4adadfc3d697516756c29ccd1197358d89e734d91be9daef523b813",
+            "source_line": 305,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.form_person.document_type_options', $document->type, $documentTypeOptions[$document->type] ?? $document->type)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.create_person.form_person.document_type_options",
+                "identity": {
+                    "expression": "$document->type",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$documentTypeOptions[$document->type] ?? $document->type",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "06b7acc5f422b96a651008184166b2fe3ec27ab885e3eedb87c92d917b3aa5b3",
+            "source_path": "resources/views/components/management/people/edit-person/sections/⚡documents.blade.php",
+            "source_sha256": "6336acfad4adadfc3d697516756c29ccd1197358d89e734d91be9daef523b813",
+            "source_line": 359,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.sections.documents.document_type_options', (string) $value, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.create_person.sections.documents.document_type_options",
+                "identity": {
+                    "expression": "(string) $value",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "333709ce1441f3640df7657e8c06dbf63e374d6ac0edec1bbdfb343d1706dc1a",
+            "source_path": "resources/views/components/management/people/edit-person/sections/⚡emergency-contact.blade.php",
+            "source_sha256": "41245d441dcade2d25259559e0fdb3aa289899d3fbb1b67325b4a63893f682e5",
+            "source_line": 7,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.edit_person.sections.emergency_contact.emergency_contact_relationship_options', $emergencyContactRelationship, $emergencyContactRelationshipOptions[$emergencyContactRelationship] ?? $emergencyContactRelationship)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.edit_person.sections.emergency_contact.emergency_contact_relationship_options",
+                "identity": {
+                    "expression": "$emergencyContactRelationship",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$emergencyContactRelationshipOptions[$emergencyContactRelationship] ?? $emergencyContactRelationship",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "35a9e5d5d7bbaad85cfae7f18d65138ed864629327967bebd76514db56533412",
+            "source_path": "resources/views/components/management/people/edit-person/sections/⚡emergency-contact.blade.php",
+            "source_sha256": "41245d441dcade2d25259559e0fdb3aa289899d3fbb1b67325b4a63893f682e5",
+            "source_line": 212,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.edit_person.sections.emergency_contact.emergency_contact_relationship_options', (string) $value, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.edit_person.sections.emergency_contact.emergency_contact_relationship_options",
+                "identity": {
+                    "expression": "(string) $value",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "1cdef837075dc9a08a93bf334ea6de3393f1be63d19c3ca4772fdea4c31d5146",
+            "source_path": "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php",
+            "source_sha256": "5a95f34f638cef3ef89e0adb1ad81fe426e4d2dfee0d6cf4ec2b3b2e487b67d6",
+            "source_line": 58,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.sections.person_core.gender_options', (string) $value, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.create_person.sections.person_core.gender_options",
+                "identity": {
+                    "expression": "(string) $value",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "626c41e8fa322671eaba050312549bc1585b75b921752c5ab4414d2af51eab24",
+            "source_path": "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php",
+            "source_sha256": "5a95f34f638cef3ef89e0adb1ad81fe426e4d2dfee0d6cf4ec2b3b2e487b67d6",
+            "source_line": 101,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.create_person.sections.person_core.salutation_options', (string) $value, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.create_person.sections.person_core.salutation_options",
+                "identity": {
+                    "expression": "(string) $value",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "466bde4eae0a92e5a66a44db7f930c958eee9f93ed95dbb1c17d18b6c3b074f5",
+            "source_path": "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php",
+            "source_sha256": "5a95f34f638cef3ef89e0adb1ad81fe426e4d2dfee0d6cf4ec2b3b2e487b67d6",
+            "source_line": 380,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.edit_person.sections.person_core.marital_status_options', (string) $value, $label)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.edit_person.sections.person_core.marital_status_options",
+                "identity": {
+                    "expression": "(string) $value",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$label",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        },
+        {
+            "capture_id": "9fac51f97276349606aa77469e5220bdc46f1a2e5b40a526b4e534325227b22d",
+            "source_path": "resources/views/components/management/people/edit-person/sections/⚡person-core.blade.php",
+            "source_sha256": "5a95f34f638cef3ef89e0adb1ad81fe426e4d2dfee0d6cf4ec2b3b2e487b67d6",
+            "source_line": 387,
+            "raw_expression": "\\Gunreip\\TranslationWorkbench\\Foundation\\TranslationWorkbenchOption::label('management.people.edit_person.sections.person_core.marital_status_options', (string) $maritalStatus, $maritalStatusOptions[$maritalStatus] ?? $emptyValue)",
+            "decision": null,
+            "finding_fields_changed": false,
+            "evidence_kind": "option_arguments",
+            "arguments": {
+                "owner": "management.people.edit_person.sections.person_core.marital_status_options",
+                "identity": {
+                    "expression": "(string) $maritalStatus",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "fallback": {
+                    "expression": "$maritalStatusOptions[$maritalStatus] ?? $emptyValue",
+                    "literal": null,
+                    "binding": "runtime_expression"
+                },
+                "locale": {
+                    "expression": null,
+                    "literal": null,
+                    "binding": "helper_default"
+                }
+            },
+            "helper": {
+                "path": "packages/gunreip/laravel-translation-workbench/src/Foundation/TranslationWorkbenchOption.php",
+                "sha256": "e0540b062d870228f66744a3c5191d1cf3a2b6b0dad01e11631231716fd080e0"
+            }
+        }
+    ]
+}

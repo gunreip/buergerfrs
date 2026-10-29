@@ -1,0 +1,26 @@
+{
+    "captured_at": "2026-10-19T07:45:35+02:00",
+    "mode": "file_selection_only_no_scan_or_database_access",
+    "excluded_directory_names": [
+        "_old",
+        "-old"
+    ],
+    "before_count": 1696,
+    "after_count": 1684,
+    "removed": [
+        "packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/_old/flow-if-bypass.blade.php",
+        "packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/_old/flow-if-condition-set.blade.php",
+        "packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/_old/flow-if-condition.blade.php",
+        "packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/_old/flow-if-elseif-group.blade.php",
+        "packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/_old/flow-if-end.blade.php",
+        "packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/_old/flow-if-start.blade.php",
+        "packages/gunreip/laravel-translation-workbench/resources/views/components/ui/tw-graph/strang/_old/if-else-endif.blade.php",
+        "packages/gunreip/laravel-translation-workbench/src/_old/Console/CleanupExcludedTranslationWorkbenchPaths.php",
+        "packages/gunreip/laravel-translation-workbench/src/_old/Console/DetectDuplicateCandidates.php",
+        "packages/gunreip/laravel-translation-workbench/src/_old/Console/ImportExistingTranslations.php",
+        "packages/gunreip/laravel-translation-workbench/src/_old/Console/ScanTranslationWorkbench.php",
+        "packages/gunreip/laravel-translation-workbench/src/_old/Foundation/TranslationWorkbenchLegacyDynamicOptionSynchronizer.php"
+    ],
+    "added": [],
+    "remaining_archived_paths": []
+}

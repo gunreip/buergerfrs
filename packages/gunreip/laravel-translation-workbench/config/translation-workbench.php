@@ -23,6 +23,9 @@ return [
         'app/Console/Commands',
     ],
 
+    // Exact directory names at any depth, including explicitly requested paths.
+    'exclude_directory_names' => ['_old', '-old'],
+
     'file_patterns' => [
         '*.php',
         '*.blade.php',
@@ -42,6 +45,14 @@ return [
     ],
 
     'source_locale' => 'en',
+
+    // Assigned translation keys only: ui.* writes to lang/{locale}/ui.php, etc.
+    // Extend this list deliberately; never derive it from existing files or keys.
+    // SuggestedKey generation and scanner capture are independent of this list.
+    'allowed_first_translation_key_segments' => [
+        'ui',
+        'admin',
+    ],
 
     'runtime_collector' => [
         'enabled' => env('TRANSLATION_WORKBENCH_RUNTIME_COLLECTOR_ENABLED', true),

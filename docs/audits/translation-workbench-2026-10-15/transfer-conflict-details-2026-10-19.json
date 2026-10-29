@@ -1,0 +1,4198 @@
+{
+  "captured_at": "2026-10-19T09:25:28+02:00",
+  "mode": "read_only_targeted_conflict_evidence",
+  "checklist_sha256": "aeed405ecb89bc0d3015fbc19ccef35a45d0e4cb3488e65cfc67d06ea5999a6f",
+  "snapshot_captured_at": "2026-10-19T07:41:38+02:00",
+  "transaction_read_only": "on",
+  "items": [
+    {
+      "review_id": "3a6ba8b355fbb67f",
+      "locale": "de",
+      "key": "ui.all.all-entries",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 2,
+      "file": {
+        "path": "lang/de/ui.php",
+        "exists": true,
+        "sha256": "712c88b90ea5e0d3b5fb36fde9ef59161f0c7e5676cb53626d56491f2f57e377",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 7655,
+          "value": "Alle",
+          "status": "ok",
+          "updated_at": "2026-10-11 10:26:41",
+          "key_id": 14192,
+          "hash": "3801a35c5182283990f6c7e7cbe137e58d6d7f750f6ab2522b687dcc9aa1d91d"
+        },
+        {
+          "source": "workbench",
+          "current_candidate": true,
+          "id": 1736,
+          "value": "All entries",
+          "status": "active",
+          "value_type": "string",
+          "source_path": "lang/de/ui.php",
+          "source_hash": "75a00fa7761b2774ae7a850a3a7eff3fe1fb83b89c57418ea16b4ce63a92e08d",
+          "updated_at": "2026-08-07 11:58:58",
+          "hash": "75a00fa7761b2774ae7a850a3a7eff3fe1fb83b89c57418ea16b4ce63a92e08d"
+        },
+        {
+          "source": "file",
+          "id": "lang/de/ui.php",
+          "status": "observed",
+          "current_candidate": true,
+          "value": "Alle",
+          "hash": "3801a35c5182283990f6c7e7cbe137e58d6d7f750f6ab2522b687dcc9aa1d91d"
+        }
+      ],
+      "active_finding_references": [
+        {
+          "id": 8329,
+          "status": "active",
+          "source_line": 159,
+          "source_column": null,
+          "found_translation_key": "ui.all.all-entries",
+          "existing_key": "ui.all.all-entries",
+          "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php"
+        },
+        {
+          "id": 8331,
+          "status": "active",
+          "source_line": 425,
+          "source_column": null,
+          "found_translation_key": "ui.all.all-entries",
+          "existing_key": "ui.all.all-entries",
+          "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php"
+        }
+      ],
+      "decision": null
+    },
+    {
+      "review_id": "2d6e2e67f08c5ff9",
+      "locale": "de",
+      "key": "ui.all.all-types",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 2,
+      "file": {
+        "path": "lang/de/ui.php",
+        "exists": true,
+        "sha256": "712c88b90ea5e0d3b5fb36fde9ef59161f0c7e5676cb53626d56491f2f57e377",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 7664,
+          "value": "Alle",
+          "status": "ok",
+          "updated_at": "2026-10-11 11:44:06",
+          "key_id": 14193,
+          "hash": "3801a35c5182283990f6c7e7cbe137e58d6d7f750f6ab2522b687dcc9aa1d91d"
+        },
+        {
+          "source": "workbench",
+          "current_candidate": true,
+          "id": 1740,
+          "value": "Alle Typen",
+          "status": "active",
+          "value_type": "string",
+          "source_path": "lang/de/ui.php",
+          "source_hash": "83162aa995dbe1768cab4d697f7b2ea38d5aecb6be367661fccc809f43c2caae",
+          "updated_at": "2026-08-07 11:58:58",
+          "hash": "83162aa995dbe1768cab4d697f7b2ea38d5aecb6be367661fccc809f43c2caae"
+        },
+        {
+          "source": "file",
+          "id": "lang/de/ui.php",
+          "status": "observed",
+          "current_candidate": true,
+          "value": "Alle",
+          "hash": "3801a35c5182283990f6c7e7cbe137e58d6d7f750f6ab2522b687dcc9aa1d91d"
+        }
+      ],
+      "active_finding_references": [
+        {
+          "id": 8325,
+          "status": "active",
+          "source_line": 67,
+          "source_column": null,
+          "found_translation_key": "ui.all.all-types",
+          "existing_key": "ui.all.all-types",
+          "path": "resources/views/components/admin/partials/client-list/⚡filter.blade.php"
+        },
+        {
+          "id": 8328,
+          "status": "active",
+          "source_line": 115,
+          "source_column": null,
+          "found_translation_key": "ui.all.all-types",
+          "existing_key": "ui.all.all-types",
+          "path": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php"
+        },
+        {
+          "id": 8333,
+          "status": "active",
+          "source_line": 470,
+          "source_column": null,
+          "found_translation_key": "ui.all.all-types",
+          "existing_key": "ui.all.all-types",
+          "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php"
+        }
+      ],
+      "decision": null
+    },
+    {
+      "review_id": "2f3678707683a2e6",
+      "locale": "de",
+      "key": "ui.button.activate_deactivate.activate_language",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 2,
+      "file": {
+        "path": "lang/de/ui.php",
+        "exists": true,
+        "sha256": "712c88b90ea5e0d3b5fb36fde9ef59161f0c7e5676cb53626d56491f2f57e377",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 6607,
+          "value": "Sprache aktivieren",
+          "status": "ok",
+          "updated_at": "2026-06-08 19:42:23",
+          "key_id": 1300,
+          "hash": "9a78a91da42f293b0db530bab780ef27b264cf1db40b9dd01c5d45e6d0fe54a5"
+        },
+        {
+          "source": "workbench",
+          "current_candidate": true,
+          "id": 674,
+          "value": ":language aktivieren",
+          "status": "active",
+          "value_type": "string",
+          "source_path": "lang/de/ui.php",
+          "source_hash": "fafa5af9abe44139f08f0035e1507a77f4fc47f1bdd84bf518559e3283097e1c",
+          "updated_at": "2026-08-07 11:58:58",
+          "hash": "fafa5af9abe44139f08f0035e1507a77f4fc47f1bdd84bf518559e3283097e1c"
+        },
+        {
+          "source": "file",
+          "id": "lang/de/ui.php",
+          "status": "observed",
+          "current_candidate": true,
+          "value": "Sprache aktivieren",
+          "hash": "9a78a91da42f293b0db530bab780ef27b264cf1db40b9dd01c5d45e6d0fe54a5"
+        }
+      ],
+      "active_finding_references": [
+        {
+          "id": 2366,
+          "status": "active",
+          "source_line": 25,
+          "source_column": null,
+          "found_translation_key": "ui.button.activate_deactivate.activate_language",
+          "existing_key": "ui.button.activate_deactivate.activate_language",
+          "path": "resources/views/components/ui/button/activate-deactivate.blade.php"
+        }
+      ],
+      "decision": null
+    },
+    {
+      "review_id": "2910e45a656b284a",
+      "locale": "de",
+      "key": "ui.button.activate_deactivate.deactivate_language",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 2,
+      "file": {
+        "path": "lang/de/ui.php",
+        "exists": true,
+        "sha256": "712c88b90ea5e0d3b5fb36fde9ef59161f0c7e5676cb53626d56491f2f57e377",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 6489,
+          "value": "Deaktivieren: Sprache",
+          "status": "ok",
+          "updated_at": "2026-06-08 19:21:01",
+          "key_id": 1299,
+          "hash": "fde3de43ecaf0009c8ceb4446af3ccfed5b994f8a486a60f43fb8816dcc68a0a"
+        },
+        {
+          "source": "workbench",
+          "current_candidate": true,
+          "id": 675,
+          "value": "Deaktivieren: :language",
+          "status": "active",
+          "value_type": "string",
+          "source_path": "lang/de/ui.php",
+          "source_hash": "fd373f88e4181ca5c89fd8c6c0ee174940de01fd6428b48bc07d7cdc2933ca70",
+          "updated_at": "2026-08-07 11:58:58",
+          "hash": "fd373f88e4181ca5c89fd8c6c0ee174940de01fd6428b48bc07d7cdc2933ca70"
+        },
+        {
+          "source": "file",
+          "id": "lang/de/ui.php",
+          "status": "observed",
+          "current_candidate": true,
+          "value": "Deaktivieren: Sprache",
+          "hash": "fde3de43ecaf0009c8ceb4446af3ccfed5b994f8a486a60f43fb8816dcc68a0a"
+        }
+      ],
+      "active_finding_references": [
+        {
+          "id": 2365,
+          "status": "active",
+          "source_line": 24,
+          "source_column": null,
+          "found_translation_key": "ui.button.activate_deactivate.deactivate_language",
+          "existing_key": "ui.button.activate_deactivate.deactivate_language",
+          "path": "resources/views/components/ui/button/activate-deactivate.blade.php"
+        }
+      ],
+      "decision": null
+    },
+    {
+      "review_id": "5b80abfbeaa0cfb6",
+      "locale": "de",
+      "key": "ui.table.pagination.to",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 2,
+      "file": {
+        "path": "lang/de/ui.php",
+        "exists": true,
+        "sha256": "712c88b90ea5e0d3b5fb36fde9ef59161f0c7e5676cb53626d56491f2f57e377",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 6508,
+          "value": "zu",
+          "status": "ok",
+          "updated_at": "2026-06-08 19:25:16",
+          "key_id": 1326,
+          "hash": "82cefa8283d30fda9c86f8a976b95d79b395d4cff62a3c8242c7153039bfcde6"
+        },
+        {
+          "source": "workbench",
+          "current_candidate": true,
+          "id": 715,
+          "value": "bis",
+          "status": "active",
+          "value_type": "string",
+          "source_path": "lang/de/ui.php",
+          "source_hash": "96147cdbfd6955d797f628fb510283afaecc1aa5a8735f3fe209ff22746b6258",
+          "updated_at": "2026-08-07 11:58:58",
+          "hash": "96147cdbfd6955d797f628fb510283afaecc1aa5a8735f3fe209ff22746b6258"
+        },
+        {
+          "source": "file",
+          "id": "lang/de/ui.php",
+          "status": "observed",
+          "current_candidate": true,
+          "value": "zu",
+          "hash": "82cefa8283d30fda9c86f8a976b95d79b395d4cff62a3c8242c7153039bfcde6"
+        }
+      ],
+      "active_finding_references": [
+        {
+          "id": 2389,
+          "status": "active",
+          "source_line": 50,
+          "source_column": null,
+          "found_translation_key": "ui.table.pagination.to",
+          "existing_key": "ui.table.pagination.to",
+          "path": "resources/views/components/ui/table/pagination.blade.php"
+        }
+      ],
+      "decision": null
+    },
+    {
+      "review_id": "d3255e58569e8f1a",
+      "locale": "de",
+      "key": "ui.type",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 2,
+      "file": {
+        "path": "lang/de/ui.php",
+        "exists": true,
+        "sha256": "712c88b90ea5e0d3b5fb36fde9ef59161f0c7e5676cb53626d56491f2f57e377",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 8321,
+          "value": "Type",
+          "status": "ok",
+          "updated_at": "2026-10-11 11:11:04",
+          "key_id": 14266,
+          "hash": "baaddf70fb5d432b8bd948ef91d6f910124a6d138edae4d5f000c4610ddc8eae"
+        },
+        {
+          "source": "workbench",
+          "current_candidate": true,
+          "id": 1785,
+          "value": "Typ",
+          "status": "active",
+          "value_type": "string",
+          "source_path": "lang/de/ui.php",
+          "source_hash": "1b024183cb3368f42f0112936f75e46d8c6bf46382e0e1d1628cba727fde9dd1",
+          "updated_at": "2026-08-07 11:58:58",
+          "hash": "1b024183cb3368f42f0112936f75e46d8c6bf46382e0e1d1628cba727fde9dd1"
+        },
+        {
+          "source": "file",
+          "id": "lang/de/ui.php",
+          "status": "observed",
+          "current_candidate": true,
+          "value": "Typ",
+          "hash": "1b024183cb3368f42f0112936f75e46d8c6bf46382e0e1d1628cba727fde9dd1"
+        }
+      ],
+      "active_finding_references": [
+        {
+          "id": 6007,
+          "status": "active",
+          "source_line": 9,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/admin/partials/activity-log/table/⚡active-filter-badges.blade.php"
+        },
+        {
+          "id": 6009,
+          "status": "active",
+          "source_line": 94,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/admin/partials/activity-log/table/⚡all.blade.php"
+        },
+        {
+          "id": 6022,
+          "status": "active",
+          "source_line": 49,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/admin/partials/client-list/⚡filter.blade.php"
+        },
+        {
+          "id": 6032,
+          "status": "active",
+          "source_line": 53,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/admin/partials/client-list/⚡table.blade.php"
+        },
+        {
+          "id": 6033,
+          "status": "active",
+          "source_line": 56,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/admin/partials/client-list/⚡table.blade.php"
+        },
+        {
+          "id": 6061,
+          "status": "active",
+          "source_line": 64,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php"
+        },
+        {
+          "id": 6062,
+          "status": "active",
+          "source_line": 67,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/admin/partials/fallback-report-list/⚡table.blade.php"
+        },
+        {
+          "id": 6064,
+          "status": "active",
+          "source_line": 36,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/admin/partials/flag-reference-list/⚡filter.blade.php"
+        },
+        {
+          "id": 6066,
+          "status": "active",
+          "source_line": 31,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/admin/partials/flag-reference-list/⚡table.blade.php"
+        },
+        {
+          "id": 6072,
+          "status": "active",
+          "source_line": 83,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/admin/partials/html-view-audit/⚡modal.blade.php"
+        },
+        {
+          "id": 6077,
+          "status": "active",
+          "source_line": 93,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/admin/partials/html-view-audit/⚡table.blade.php"
+        },
+        {
+          "id": 6097,
+          "status": "active",
+          "source_line": 152,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/admin/partials/translation-list/modal-history/timeline.blade.php"
+        },
+        {
+          "id": 6100,
+          "status": "active",
+          "source_line": 462,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php"
+        },
+        {
+          "id": 6103,
+          "status": "active",
+          "source_line": 241,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/admin/partials/translation-list/⚡meta.blade.php"
+        },
+        {
+          "id": 6115,
+          "status": "active",
+          "source_line": 47,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/admin/partials/translation-statistics/⚡table.blade.php"
+        },
+        {
+          "id": 6116,
+          "status": "active",
+          "source_line": 52,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/admin/partials/translation-statistics/⚡table.blade.php"
+        },
+        {
+          "id": 6124,
+          "status": "active",
+          "source_line": 200,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/management/people/create-person/⚡form-person.blade.php"
+        },
+        {
+          "id": 6126,
+          "status": "active",
+          "source_line": 101,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "resources/views/components/management/people/edit-person/sections/documents/⚡archive-modal.blade.php"
+        },
+        {
+          "id": 6434,
+          "status": "active",
+          "source_line": 40,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/entries/findings/review-last-edits.blade.php"
+        },
+        {
+          "id": 6464,
+          "status": "active",
+          "source_line": 280,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/table-summary.blade.php"
+        },
+        {
+          "id": 8395,
+          "status": "active",
+          "source_line": 154,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/table-card.blade.php"
+        },
+        {
+          "id": 9923,
+          "status": "active",
+          "source_line": 1334,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/timeline-chains/graph-preview/tw-graph-data-driven.blade.php"
+        },
+        {
+          "id": 22851,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/chain.blade.php"
+        },
+        {
+          "id": 22852,
+          "status": "active",
+          "source_line": 80,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/chain.blade.php"
+        },
+        {
+          "id": 22853,
+          "status": "active",
+          "source_line": 125,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/chain.blade.php"
+        },
+        {
+          "id": 22854,
+          "status": "active",
+          "source_line": 153,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/chain.blade.php"
+        },
+        {
+          "id": 22855,
+          "status": "active",
+          "source_line": 241,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/chain.blade.php"
+        },
+        {
+          "id": 22856,
+          "status": "active",
+          "source_line": 293,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/chain.blade.php"
+        },
+        {
+          "id": 22857,
+          "status": "active",
+          "source_line": 387,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/chain.blade.php"
+        },
+        {
+          "id": 22858,
+          "status": "active",
+          "source_line": 481,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/chain.blade.php"
+        },
+        {
+          "id": 22859,
+          "status": "active",
+          "source_line": 566,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/chain.blade.php"
+        },
+        {
+          "id": 22860,
+          "status": "active",
+          "source_line": 654,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/chain.blade.php"
+        },
+        {
+          "id": 22861,
+          "status": "active",
+          "source_line": 706,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/chain.blade.php"
+        },
+        {
+          "id": 22862,
+          "status": "active",
+          "source_line": 800,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/chain.blade.php"
+        },
+        {
+          "id": 22863,
+          "status": "active",
+          "source_line": 897,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/chain.blade.php"
+        },
+        {
+          "id": 22864,
+          "status": "active",
+          "source_line": 955,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/chain.blade.php"
+        },
+        {
+          "id": 22865,
+          "status": "active",
+          "source_line": 1055,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/chain.blade.php"
+        },
+        {
+          "id": 22866,
+          "status": "active",
+          "source_line": 1096,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/chain.blade.php"
+        },
+        {
+          "id": 22867,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/end.blade.php"
+        },
+        {
+          "id": 22868,
+          "status": "active",
+          "source_line": 105,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/end.blade.php"
+        },
+        {
+          "id": 22869,
+          "status": "active",
+          "source_line": 133,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/end.blade.php"
+        },
+        {
+          "id": 22870,
+          "status": "active",
+          "source_line": 236,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/end.blade.php"
+        },
+        {
+          "id": 22871,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/fusion.blade.php"
+        },
+        {
+          "id": 22872,
+          "status": "active",
+          "source_line": 81,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/fusion.blade.php"
+        },
+        {
+          "id": 22873,
+          "status": "active",
+          "source_line": 114,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/fusion.blade.php"
+        },
+        {
+          "id": 22874,
+          "status": "active",
+          "source_line": 159,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/fusion.blade.php"
+        },
+        {
+          "id": 22875,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/sideways.blade.php"
+        },
+        {
+          "id": 22876,
+          "status": "active",
+          "source_line": 201,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/sideways.blade.php"
+        },
+        {
+          "id": 22877,
+          "status": "active",
+          "source_line": 229,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/sideways.blade.php"
+        },
+        {
+          "id": 22878,
+          "status": "active",
+          "source_line": 291,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/sideways.blade.php"
+        },
+        {
+          "id": 22879,
+          "status": "active",
+          "source_line": 327,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/sideways.blade.php"
+        },
+        {
+          "id": 22880,
+          "status": "active",
+          "source_line": 361,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/sideways.blade.php"
+        },
+        {
+          "id": 22881,
+          "status": "active",
+          "source_line": 413,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/sideways.blade.php"
+        },
+        {
+          "id": 22882,
+          "status": "active",
+          "source_line": 507,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/sideways.blade.php"
+        },
+        {
+          "id": 22883,
+          "status": "active",
+          "source_line": 612,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/sideways.blade.php"
+        },
+        {
+          "id": 22884,
+          "status": "active",
+          "source_line": 13,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/split.blade.php"
+        },
+        {
+          "id": 22885,
+          "status": "active",
+          "source_line": 84,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/split.blade.php"
+        },
+        {
+          "id": 22886,
+          "status": "active",
+          "source_line": 158,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/split.blade.php"
+        },
+        {
+          "id": 22887,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/start.blade.php"
+        },
+        {
+          "id": 22888,
+          "status": "active",
+          "source_line": 147,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/start.blade.php"
+        },
+        {
+          "id": 22889,
+          "status": "active",
+          "source_line": 181,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/start.blade.php"
+        },
+        {
+          "id": 22890,
+          "status": "active",
+          "source_line": 209,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/start.blade.php"
+        },
+        {
+          "id": 22891,
+          "status": "active",
+          "source_line": 261,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/start.blade.php"
+        },
+        {
+          "id": 22892,
+          "status": "active",
+          "source_line": 355,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/start.blade.php"
+        },
+        {
+          "id": 22893,
+          "status": "active",
+          "source_line": 449,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/start.blade.php"
+        },
+        {
+          "id": 22894,
+          "status": "active",
+          "source_line": 542,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/parts/start.blade.php"
+        },
+        {
+          "id": 22895,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-end.blade.php"
+        },
+        {
+          "id": 22896,
+          "status": "active",
+          "source_line": 99,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-end.blade.php"
+        },
+        {
+          "id": 22897,
+          "status": "active",
+          "source_line": 127,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-end.blade.php"
+        },
+        {
+          "id": 22898,
+          "status": "active",
+          "source_line": 231,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-end.blade.php"
+        },
+        {
+          "id": 22899,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22900,
+          "status": "active",
+          "source_line": 129,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22901,
+          "status": "active",
+          "source_line": 157,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22902,
+          "status": "active",
+          "source_line": 184,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22903,
+          "status": "active",
+          "source_line": 278,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22904,
+          "status": "active",
+          "source_line": 375,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22905,
+          "status": "active",
+          "source_line": 402,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22906,
+          "status": "active",
+          "source_line": 429,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22907,
+          "status": "active",
+          "source_line": 523,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22908,
+          "status": "active",
+          "source_line": 623,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22909,
+          "status": "active",
+          "source_line": 674,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22910,
+          "status": "active",
+          "source_line": 765,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22911,
+          "status": "active",
+          "source_line": 834,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22912,
+          "status": "active",
+          "source_line": 861,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22913,
+          "status": "active",
+          "source_line": 955,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22914,
+          "status": "active",
+          "source_line": 1055,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22915,
+          "status": "active",
+          "source_line": 1136,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22916,
+          "status": "active",
+          "source_line": 1187,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22917,
+          "status": "active",
+          "source_line": 1278,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22918,
+          "status": "active",
+          "source_line": 1305,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22919,
+          "status": "active",
+          "source_line": 1399,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22920,
+          "status": "active",
+          "source_line": 1496,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22921,
+          "status": "active",
+          "source_line": 1590,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22922,
+          "status": "active",
+          "source_line": 1623,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22923,
+          "status": "active",
+          "source_line": 1650,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22924,
+          "status": "active",
+          "source_line": 1744,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22925,
+          "status": "active",
+          "source_line": 1847,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22926,
+          "status": "active",
+          "source_line": 1917,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-left.blade.php"
+        },
+        {
+          "id": 22927,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22928,
+          "status": "active",
+          "source_line": 129,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22929,
+          "status": "active",
+          "source_line": 157,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22930,
+          "status": "active",
+          "source_line": 184,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22931,
+          "status": "active",
+          "source_line": 278,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22932,
+          "status": "active",
+          "source_line": 375,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22933,
+          "status": "active",
+          "source_line": 402,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22934,
+          "status": "active",
+          "source_line": 429,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22935,
+          "status": "active",
+          "source_line": 523,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22936,
+          "status": "active",
+          "source_line": 623,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22937,
+          "status": "active",
+          "source_line": 674,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22938,
+          "status": "active",
+          "source_line": 765,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22939,
+          "status": "active",
+          "source_line": 834,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22940,
+          "status": "active",
+          "source_line": 861,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22941,
+          "status": "active",
+          "source_line": 955,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22942,
+          "status": "active",
+          "source_line": 1055,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22943,
+          "status": "active",
+          "source_line": 1136,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22944,
+          "status": "active",
+          "source_line": 1187,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22945,
+          "status": "active",
+          "source_line": 1278,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22946,
+          "status": "active",
+          "source_line": 1305,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22947,
+          "status": "active",
+          "source_line": 1399,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22948,
+          "status": "active",
+          "source_line": 1496,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22949,
+          "status": "active",
+          "source_line": 1590,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22950,
+          "status": "active",
+          "source_line": 1623,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22951,
+          "status": "active",
+          "source_line": 1650,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22952,
+          "status": "active",
+          "source_line": 1744,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22953,
+          "status": "active",
+          "source_line": 1847,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22954,
+          "status": "active",
+          "source_line": 1917,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/branch-right.blade.php"
+        },
+        {
+          "id": 22955,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22956,
+          "status": "active",
+          "source_line": 233,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22957,
+          "status": "active",
+          "source_line": 261,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22958,
+          "status": "active",
+          "source_line": 349,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22959,
+          "status": "active",
+          "source_line": 424,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22960,
+          "status": "active",
+          "source_line": 458,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22961,
+          "status": "active",
+          "source_line": 495,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22962,
+          "status": "active",
+          "source_line": 588,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22963,
+          "status": "active",
+          "source_line": 625,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22964,
+          "status": "active",
+          "source_line": 646,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22965,
+          "status": "active",
+          "source_line": 673,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22966,
+          "status": "active",
+          "source_line": 767,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22967,
+          "status": "active",
+          "source_line": 867,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22968,
+          "status": "active",
+          "source_line": 894,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22969,
+          "status": "active",
+          "source_line": 988,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22970,
+          "status": "active",
+          "source_line": 1085,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22971,
+          "status": "active",
+          "source_line": 1112,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22972,
+          "status": "active",
+          "source_line": 1206,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22973,
+          "status": "active",
+          "source_line": 1314,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-else.blade.php"
+        },
+        {
+          "id": 22974,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22975,
+          "status": "active",
+          "source_line": 159,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22976,
+          "status": "active",
+          "source_line": 187,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22977,
+          "status": "active",
+          "source_line": 275,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22978,
+          "status": "active",
+          "source_line": 350,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22979,
+          "status": "active",
+          "source_line": 384,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22980,
+          "status": "active",
+          "source_line": 421,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22981,
+          "status": "active",
+          "source_line": 472,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22982,
+          "status": "active",
+          "source_line": 566,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22983,
+          "status": "active",
+          "source_line": 641,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22984,
+          "status": "active",
+          "source_line": 675,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22985,
+          "status": "active",
+          "source_line": 715,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22986,
+          "status": "active",
+          "source_line": 802,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22987,
+          "status": "active",
+          "source_line": 839,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22988,
+          "status": "active",
+          "source_line": 860,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22989,
+          "status": "active",
+          "source_line": 887,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22990,
+          "status": "active",
+          "source_line": 981,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22991,
+          "status": "active",
+          "source_line": 1095,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif-multi.blade.php"
+        },
+        {
+          "id": 22992,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 22993,
+          "status": "active",
+          "source_line": 159,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 22994,
+          "status": "active",
+          "source_line": 187,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 22995,
+          "status": "active",
+          "source_line": 275,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 22996,
+          "status": "active",
+          "source_line": 344,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 22997,
+          "status": "active",
+          "source_line": 378,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 22998,
+          "status": "active",
+          "source_line": 415,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 22999,
+          "status": "active",
+          "source_line": 460,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 23000,
+          "status": "active",
+          "source_line": 554,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 23001,
+          "status": "active",
+          "source_line": 629,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 23002,
+          "status": "active",
+          "source_line": 663,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 23003,
+          "status": "active",
+          "source_line": 703,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 23004,
+          "status": "active",
+          "source_line": 790,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 23005,
+          "status": "active",
+          "source_line": 827,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 23006,
+          "status": "active",
+          "source_line": 848,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 23007,
+          "status": "active",
+          "source_line": 875,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 23008,
+          "status": "active",
+          "source_line": 969,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 23009,
+          "status": "active",
+          "source_line": 1083,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-elseif.blade.php"
+        },
+        {
+          "id": 23010,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-ternary.blade.php"
+        },
+        {
+          "id": 23011,
+          "status": "active",
+          "source_line": 195,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-ternary.blade.php"
+        },
+        {
+          "id": 23012,
+          "status": "active",
+          "source_line": 223,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-ternary.blade.php"
+        },
+        {
+          "id": 23013,
+          "status": "active",
+          "source_line": 244,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-ternary.blade.php"
+        },
+        {
+          "id": 23014,
+          "status": "active",
+          "source_line": 271,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-ternary.blade.php"
+        },
+        {
+          "id": 23015,
+          "status": "active",
+          "source_line": 365,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-ternary.blade.php"
+        },
+        {
+          "id": 23016,
+          "status": "active",
+          "source_line": 465,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-ternary.blade.php"
+        },
+        {
+          "id": 23017,
+          "status": "active",
+          "source_line": 553,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-ternary.blade.php"
+        },
+        {
+          "id": 23018,
+          "status": "active",
+          "source_line": 628,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-ternary.blade.php"
+        },
+        {
+          "id": 23019,
+          "status": "active",
+          "source_line": 662,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-ternary.blade.php"
+        },
+        {
+          "id": 23020,
+          "status": "active",
+          "source_line": 699,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-ternary.blade.php"
+        },
+        {
+          "id": 23021,
+          "status": "active",
+          "source_line": 786,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-ternary.blade.php"
+        },
+        {
+          "id": 23022,
+          "status": "active",
+          "source_line": 834,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if-ternary.blade.php"
+        },
+        {
+          "id": 23023,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if.blade.php"
+        },
+        {
+          "id": 23024,
+          "status": "active",
+          "source_line": 196,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if.blade.php"
+        },
+        {
+          "id": 23025,
+          "status": "active",
+          "source_line": 224,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if.blade.php"
+        },
+        {
+          "id": 23026,
+          "status": "active",
+          "source_line": 311,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if.blade.php"
+        },
+        {
+          "id": 23027,
+          "status": "active",
+          "source_line": 348,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if.blade.php"
+        },
+        {
+          "id": 23028,
+          "status": "active",
+          "source_line": 369,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if.blade.php"
+        },
+        {
+          "id": 23029,
+          "status": "active",
+          "source_line": 396,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if.blade.php"
+        },
+        {
+          "id": 23030,
+          "status": "active",
+          "source_line": 490,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if.blade.php"
+        },
+        {
+          "id": 23031,
+          "status": "active",
+          "source_line": 590,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if.blade.php"
+        },
+        {
+          "id": 23032,
+          "status": "active",
+          "source_line": 678,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if.blade.php"
+        },
+        {
+          "id": 23033,
+          "status": "active",
+          "source_line": 753,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if.blade.php"
+        },
+        {
+          "id": 23034,
+          "status": "active",
+          "source_line": 787,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if.blade.php"
+        },
+        {
+          "id": 23035,
+          "status": "active",
+          "source_line": 835,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-if.blade.php"
+        },
+        {
+          "id": 23036,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-start.blade.php"
+        },
+        {
+          "id": 23037,
+          "status": "active",
+          "source_line": 135,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-start.blade.php"
+        },
+        {
+          "id": 23038,
+          "status": "active",
+          "source_line": 163,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-start.blade.php"
+        },
+        {
+          "id": 23039,
+          "status": "active",
+          "source_line": 215,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-start.blade.php"
+        },
+        {
+          "id": 23040,
+          "status": "active",
+          "source_line": 297,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-start.blade.php"
+        },
+        {
+          "id": 23041,
+          "status": "active",
+          "source_line": 324,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-start.blade.php"
+        },
+        {
+          "id": 23042,
+          "status": "active",
+          "source_line": 418,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-start.blade.php"
+        },
+        {
+          "id": 23043,
+          "status": "active",
+          "source_line": 515,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-start.blade.php"
+        },
+        {
+          "id": 23044,
+          "status": "active",
+          "source_line": 609,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-start.blade.php"
+        },
+        {
+          "id": 23045,
+          "status": "active",
+          "source_line": 714,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-start.blade.php"
+        },
+        {
+          "id": 23046,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-step.blade.php"
+        },
+        {
+          "id": 23047,
+          "status": "active",
+          "source_line": 148,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-step.blade.php"
+        },
+        {
+          "id": 23048,
+          "status": "active",
+          "source_line": 176,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-step.blade.php"
+        },
+        {
+          "id": 23049,
+          "status": "active",
+          "source_line": 264,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-step.blade.php"
+        },
+        {
+          "id": 23050,
+          "status": "active",
+          "source_line": 285,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-step.blade.php"
+        },
+        {
+          "id": 23051,
+          "status": "active",
+          "source_line": 312,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-step.blade.php"
+        },
+        {
+          "id": 23052,
+          "status": "active",
+          "source_line": 412,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-step.blade.php"
+        },
+        {
+          "id": 23053,
+          "status": "active",
+          "source_line": 529,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-step.blade.php"
+        },
+        {
+          "id": 23054,
+          "status": "active",
+          "source_line": 24,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-switch-case.blade.php"
+        },
+        {
+          "id": 23055,
+          "status": "active",
+          "source_line": 134,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-switch-case.blade.php"
+        },
+        {
+          "id": 23056,
+          "status": "active",
+          "source_line": 162,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-switch-case.blade.php"
+        },
+        {
+          "id": 23057,
+          "status": "active",
+          "source_line": 262,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-switch-case.blade.php"
+        },
+        {
+          "id": 23058,
+          "status": "active",
+          "source_line": 351,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-switch-case.blade.php"
+        },
+        {
+          "id": 23059,
+          "status": "active",
+          "source_line": 459,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-switch-case.blade.php"
+        },
+        {
+          "id": 23060,
+          "status": "active",
+          "source_line": 515,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-switch-case.blade.php"
+        },
+        {
+          "id": 23061,
+          "status": "active",
+          "source_line": 630,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-switch-case.blade.php"
+        },
+        {
+          "id": 23062,
+          "status": "active",
+          "source_line": 724,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-switch-case.blade.php"
+        },
+        {
+          "id": 23063,
+          "status": "active",
+          "source_line": 763,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-switch-case.blade.php"
+        },
+        {
+          "id": 23064,
+          "status": "active",
+          "source_line": 872,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-switch-case.blade.php"
+        },
+        {
+          "id": 23065,
+          "status": "active",
+          "source_line": 997,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-switch-case.blade.php"
+        },
+        {
+          "id": 23066,
+          "status": "active",
+          "source_line": 1105,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-switch-case.blade.php"
+        },
+        {
+          "id": 23067,
+          "status": "active",
+          "source_line": 1211,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-switch-case.blade.php"
+        },
+        {
+          "id": 23068,
+          "status": "active",
+          "source_line": 1262,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-switch-case.blade.php"
+        },
+        {
+          "id": 23069,
+          "status": "active",
+          "source_line": 11,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-while.blade.php"
+        },
+        {
+          "id": 23070,
+          "status": "active",
+          "source_line": 70,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-while.blade.php"
+        },
+        {
+          "id": 23071,
+          "status": "active",
+          "source_line": 94,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-while.blade.php"
+        },
+        {
+          "id": 23072,
+          "status": "active",
+          "source_line": 181,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-while.blade.php"
+        },
+        {
+          "id": 23073,
+          "status": "active",
+          "source_line": 286,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-while.blade.php"
+        },
+        {
+          "id": 23074,
+          "status": "active",
+          "source_line": 373,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/flow-while.blade.php"
+        },
+        {
+          "id": 23075,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23076,
+          "status": "active",
+          "source_line": 220,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23077,
+          "status": "active",
+          "source_line": 248,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23078,
+          "status": "active",
+          "source_line": 330,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23079,
+          "status": "active",
+          "source_line": 357,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23080,
+          "status": "active",
+          "source_line": 451,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23081,
+          "status": "active",
+          "source_line": 550,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23082,
+          "status": "active",
+          "source_line": 632,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23083,
+          "status": "active",
+          "source_line": 659,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23084,
+          "status": "active",
+          "source_line": 753,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23085,
+          "status": "active",
+          "source_line": 850,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23086,
+          "status": "active",
+          "source_line": 890,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23087,
+          "status": "active",
+          "source_line": 912,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23088,
+          "status": "active",
+          "source_line": 981,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23089,
+          "status": "active",
+          "source_line": 1008,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23090,
+          "status": "active",
+          "source_line": 1102,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23091,
+          "status": "active",
+          "source_line": 1202,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23092,
+          "status": "active",
+          "source_line": 1224,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23093,
+          "status": "active",
+          "source_line": 1239,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23094,
+          "status": "active",
+          "source_line": 1266,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23095,
+          "status": "active",
+          "source_line": 1293,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23096,
+          "status": "active",
+          "source_line": 1387,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23097,
+          "status": "active",
+          "source_line": 1490,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23098,
+          "status": "active",
+          "source_line": 1505,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23099,
+          "status": "active",
+          "source_line": 1532,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23100,
+          "status": "active",
+          "source_line": 1559,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23101,
+          "status": "active",
+          "source_line": 1653,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23102,
+          "status": "active",
+          "source_line": 1756,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23103,
+          "status": "active",
+          "source_line": 1778,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23104,
+          "status": "active",
+          "source_line": 1793,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23105,
+          "status": "active",
+          "source_line": 1820,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23106,
+          "status": "active",
+          "source_line": 1914,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23107,
+          "status": "active",
+          "source_line": 2011,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23108,
+          "status": "active",
+          "source_line": 2096,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-left.blade.php"
+        },
+        {
+          "id": 23109,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23110,
+          "status": "active",
+          "source_line": 220,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23111,
+          "status": "active",
+          "source_line": 248,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23112,
+          "status": "active",
+          "source_line": 330,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23113,
+          "status": "active",
+          "source_line": 357,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23114,
+          "status": "active",
+          "source_line": 451,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23115,
+          "status": "active",
+          "source_line": 550,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23116,
+          "status": "active",
+          "source_line": 632,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23117,
+          "status": "active",
+          "source_line": 659,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23118,
+          "status": "active",
+          "source_line": 753,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23119,
+          "status": "active",
+          "source_line": 850,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23120,
+          "status": "active",
+          "source_line": 890,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23121,
+          "status": "active",
+          "source_line": 912,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23122,
+          "status": "active",
+          "source_line": 981,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23123,
+          "status": "active",
+          "source_line": 1008,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23124,
+          "status": "active",
+          "source_line": 1102,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23125,
+          "status": "active",
+          "source_line": 1202,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23126,
+          "status": "active",
+          "source_line": 1224,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23127,
+          "status": "active",
+          "source_line": 1239,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23128,
+          "status": "active",
+          "source_line": 1266,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23129,
+          "status": "active",
+          "source_line": 1293,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23130,
+          "status": "active",
+          "source_line": 1387,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23131,
+          "status": "active",
+          "source_line": 1490,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23132,
+          "status": "active",
+          "source_line": 1505,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23133,
+          "status": "active",
+          "source_line": 1532,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23134,
+          "status": "active",
+          "source_line": 1559,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23135,
+          "status": "active",
+          "source_line": 1653,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23136,
+          "status": "active",
+          "source_line": 1756,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23137,
+          "status": "active",
+          "source_line": 1778,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23138,
+          "status": "active",
+          "source_line": 1793,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23139,
+          "status": "active",
+          "source_line": 1820,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23140,
+          "status": "active",
+          "source_line": 1914,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23141,
+          "status": "active",
+          "source_line": 2011,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23142,
+          "status": "active",
+          "source_line": 2096,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/merge-right.blade.php"
+        },
+        {
+          "id": 23143,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23144,
+          "status": "active",
+          "source_line": 135,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23145,
+          "status": "active",
+          "source_line": 163,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23146,
+          "status": "active",
+          "source_line": 245,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23147,
+          "status": "active",
+          "source_line": 272,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23148,
+          "status": "active",
+          "source_line": 366,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23149,
+          "status": "active",
+          "source_line": 463,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23150,
+          "status": "active",
+          "source_line": 545,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23151,
+          "status": "active",
+          "source_line": 572,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23152,
+          "status": "active",
+          "source_line": 666,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23153,
+          "status": "active",
+          "source_line": 763,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23154,
+          "status": "active",
+          "source_line": 803,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23155,
+          "status": "active",
+          "source_line": 872,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23156,
+          "status": "active",
+          "source_line": 899,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23157,
+          "status": "active",
+          "source_line": 993,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23158,
+          "status": "active",
+          "source_line": 1093,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23159,
+          "status": "active",
+          "source_line": 1137,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-left.blade.php"
+        },
+        {
+          "id": 23160,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23161,
+          "status": "active",
+          "source_line": 135,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23162,
+          "status": "active",
+          "source_line": 163,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23163,
+          "status": "active",
+          "source_line": 245,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23164,
+          "status": "active",
+          "source_line": 272,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23165,
+          "status": "active",
+          "source_line": 366,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23166,
+          "status": "active",
+          "source_line": 463,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23167,
+          "status": "active",
+          "source_line": 545,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23168,
+          "status": "active",
+          "source_line": 572,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23169,
+          "status": "active",
+          "source_line": 666,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23170,
+          "status": "active",
+          "source_line": 763,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23171,
+          "status": "active",
+          "source_line": 803,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23172,
+          "status": "active",
+          "source_line": 872,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23173,
+          "status": "active",
+          "source_line": 899,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23174,
+          "status": "active",
+          "source_line": 993,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23175,
+          "status": "active",
+          "source_line": 1093,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23176,
+          "status": "active",
+          "source_line": 1137,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-source-right.blade.php"
+        },
+        {
+          "id": 23177,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-left.blade.php"
+        },
+        {
+          "id": 23178,
+          "status": "active",
+          "source_line": 117,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-left.blade.php"
+        },
+        {
+          "id": 23179,
+          "status": "active",
+          "source_line": 145,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-left.blade.php"
+        },
+        {
+          "id": 23180,
+          "status": "active",
+          "source_line": 214,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-left.blade.php"
+        },
+        {
+          "id": 23181,
+          "status": "active",
+          "source_line": 241,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-left.blade.php"
+        },
+        {
+          "id": 23182,
+          "status": "active",
+          "source_line": 335,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-left.blade.php"
+        },
+        {
+          "id": 23183,
+          "status": "active",
+          "source_line": 435,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-left.blade.php"
+        },
+        {
+          "id": 23184,
+          "status": "active",
+          "source_line": 529,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-left.blade.php"
+        },
+        {
+          "id": 23185,
+          "status": "active",
+          "source_line": 556,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-left.blade.php"
+        },
+        {
+          "id": 23186,
+          "status": "active",
+          "source_line": 650,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-left.blade.php"
+        },
+        {
+          "id": 23187,
+          "status": "active",
+          "source_line": 757,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-left.blade.php"
+        },
+        {
+          "id": 23188,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-right.blade.php"
+        },
+        {
+          "id": 23189,
+          "status": "active",
+          "source_line": 117,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-right.blade.php"
+        },
+        {
+          "id": 23190,
+          "status": "active",
+          "source_line": 145,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-right.blade.php"
+        },
+        {
+          "id": 23191,
+          "status": "active",
+          "source_line": 214,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-right.blade.php"
+        },
+        {
+          "id": 23192,
+          "status": "active",
+          "source_line": 241,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-right.blade.php"
+        },
+        {
+          "id": 23193,
+          "status": "active",
+          "source_line": 335,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-right.blade.php"
+        },
+        {
+          "id": 23194,
+          "status": "active",
+          "source_line": 435,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-right.blade.php"
+        },
+        {
+          "id": 23195,
+          "status": "active",
+          "source_line": 529,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-right.blade.php"
+        },
+        {
+          "id": 23196,
+          "status": "active",
+          "source_line": 556,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-right.blade.php"
+        },
+        {
+          "id": 23197,
+          "status": "active",
+          "source_line": 650,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-right.blade.php"
+        },
+        {
+          "id": 23198,
+          "status": "active",
+          "source_line": 757,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/rekey-target-right.blade.php"
+        },
+        {
+          "id": 23199,
+          "status": "active",
+          "source_line": 14,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        },
+        {
+          "id": 23200,
+          "status": "active",
+          "source_line": 159,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        },
+        {
+          "id": 23201,
+          "status": "active",
+          "source_line": 187,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        },
+        {
+          "id": 23202,
+          "status": "active",
+          "source_line": 244,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        },
+        {
+          "id": 23203,
+          "status": "active",
+          "source_line": 283,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        },
+        {
+          "id": 23204,
+          "status": "active",
+          "source_line": 377,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        },
+        {
+          "id": 23205,
+          "status": "active",
+          "source_line": 471,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        },
+        {
+          "id": 23206,
+          "status": "active",
+          "source_line": 565,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        },
+        {
+          "id": 23207,
+          "status": "active",
+          "source_line": 665,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        },
+        {
+          "id": 23208,
+          "status": "active",
+          "source_line": 692,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        },
+        {
+          "id": 23209,
+          "status": "active",
+          "source_line": 786,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        },
+        {
+          "id": 23210,
+          "status": "active",
+          "source_line": 883,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        },
+        {
+          "id": 23211,
+          "status": "active",
+          "source_line": 965,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        },
+        {
+          "id": 23212,
+          "status": "active",
+          "source_line": 1059,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        },
+        {
+          "id": 23213,
+          "status": "active",
+          "source_line": 1086,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        },
+        {
+          "id": 23214,
+          "status": "active",
+          "source_line": 1180,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        },
+        {
+          "id": 23215,
+          "status": "active",
+          "source_line": 1289,
+          "source_column": null,
+          "found_translation_key": "ui.type",
+          "existing_key": "ui.type",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/pages/tw-graph/samples/documentation/idea-to-paper/props-and-connections/strang/trunk.blade.php"
+        }
+      ],
+      "decision": null
+    },
+    {
+      "review_id": "a417059e2aa4fd45",
+      "locale": "en",
+      "key": "admin.permission_list.filter.filter_by_category",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 2,
+      "file": {
+        "path": "lang/en/admin.php",
+        "exists": true,
+        "sha256": "4969449b612d9cbb78d0fa47c37abdc69f8b24d5477cffa7f396ce8623913f6d",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 1444,
+          "value": "v",
+          "status": "ok",
+          "updated_at": "2026-06-05 11:41:52",
+          "key_id": 4629,
+          "hash": "4c94485e0c21ae6c41ce1dfe7b6bfaceea5ab68e40a2476f50208e526f506080"
+        },
+        {
+          "source": "workbench",
+          "current_candidate": true,
+          "id": 993,
+          "value": "Filter by category",
+          "status": "active",
+          "value_type": "string",
+          "source_path": "lang/en/admin.php",
+          "source_hash": "a9b0a2e6303f4ad3a906770739467653e07c9fce3d262107b3e890251064bdc5",
+          "updated_at": "2026-08-07 11:58:58",
+          "hash": "a9b0a2e6303f4ad3a906770739467653e07c9fce3d262107b3e890251064bdc5"
+        },
+        {
+          "source": "file",
+          "id": "lang/en/admin.php",
+          "status": "observed",
+          "current_candidate": true,
+          "value": "v",
+          "hash": "4c94485e0c21ae6c41ce1dfe7b6bfaceea5ab68e40a2476f50208e526f506080"
+        }
+      ],
+      "active_finding_references": [
+        {
+          "id": 1276,
+          "status": "active",
+          "source_line": 42,
+          "source_column": null,
+          "found_translation_key": "admin.permission_list.filter.filter_by_category",
+          "existing_key": "admin.permission_list.filter.filter_by_category",
+          "path": "resources/views/components/admin/partials/role-list/⚡filter.blade.php"
+        },
+        {
+          "id": 3914,
+          "status": "active",
+          "source_line": 80,
+          "source_column": null,
+          "found_translation_key": "admin.permission_list.filter.filter_by_category",
+          "existing_key": "admin.permission_list.filter.filter_by_category",
+          "path": "resources/views/components/admin/partials/permission-list/⚡filter.blade.php"
+        }
+      ],
+      "decision": null
+    },
+    {
+      "review_id": "383c6ef1ed3a4760",
+      "locale": "en",
+      "key": "ui.all.all-entries",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 2,
+      "file": {
+        "path": "lang/en/ui.php",
+        "exists": true,
+        "sha256": "4d6153b5580bd147e32c585353813e4d871a98c2c067bdac5fc6a8e5b90301a1",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 7663,
+          "value": "All",
+          "status": "ok",
+          "updated_at": "2026-10-11 10:26:41",
+          "key_id": 14192,
+          "hash": "a52ace420f2175d08b1577a1bea5445e36801229c074ef9ed6c55a73401fd9c2"
+        },
+        {
+          "source": "workbench",
+          "current_candidate": true,
+          "id": 1735,
+          "value": "All entries",
+          "status": "active",
+          "value_type": "string",
+          "source_path": "lang/en/ui.php",
+          "source_hash": "75a00fa7761b2774ae7a850a3a7eff3fe1fb83b89c57418ea16b4ce63a92e08d",
+          "updated_at": "2026-08-07 11:59:00",
+          "hash": "75a00fa7761b2774ae7a850a3a7eff3fe1fb83b89c57418ea16b4ce63a92e08d"
+        },
+        {
+          "source": "file",
+          "id": "lang/en/ui.php",
+          "status": "observed",
+          "current_candidate": true,
+          "value": "All",
+          "hash": "a52ace420f2175d08b1577a1bea5445e36801229c074ef9ed6c55a73401fd9c2"
+        }
+      ],
+      "active_finding_references": [
+        {
+          "id": 8329,
+          "status": "active",
+          "source_line": 159,
+          "source_column": null,
+          "found_translation_key": "ui.all.all-entries",
+          "existing_key": "ui.all.all-entries",
+          "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php"
+        },
+        {
+          "id": 8331,
+          "status": "active",
+          "source_line": 425,
+          "source_column": null,
+          "found_translation_key": "ui.all.all-entries",
+          "existing_key": "ui.all.all-entries",
+          "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php"
+        }
+      ],
+      "decision": null
+    },
+    {
+      "review_id": "bb25614e437bd4c0",
+      "locale": "en",
+      "key": "ui.all.all-types",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 2,
+      "file": {
+        "path": "lang/en/ui.php",
+        "exists": true,
+        "sha256": "4d6153b5580bd147e32c585353813e4d871a98c2c067bdac5fc6a8e5b90301a1",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 7672,
+          "value": "All",
+          "status": "ok",
+          "updated_at": "2026-10-11 11:44:06",
+          "key_id": 14193,
+          "hash": "a52ace420f2175d08b1577a1bea5445e36801229c074ef9ed6c55a73401fd9c2"
+        },
+        {
+          "source": "workbench",
+          "current_candidate": true,
+          "id": 1739,
+          "value": "All types",
+          "status": "active",
+          "value_type": "string",
+          "source_path": "lang/en/ui.php",
+          "source_hash": "f10988e79e8d9a49f45a71ecf3f4ebe143a96eb9d83272156ab54101b3777046",
+          "updated_at": "2026-08-07 11:59:00",
+          "hash": "f10988e79e8d9a49f45a71ecf3f4ebe143a96eb9d83272156ab54101b3777046"
+        },
+        {
+          "source": "file",
+          "id": "lang/en/ui.php",
+          "status": "observed",
+          "current_candidate": true,
+          "value": "All",
+          "hash": "a52ace420f2175d08b1577a1bea5445e36801229c074ef9ed6c55a73401fd9c2"
+        }
+      ],
+      "active_finding_references": [
+        {
+          "id": 8325,
+          "status": "active",
+          "source_line": 67,
+          "source_column": null,
+          "found_translation_key": "ui.all.all-types",
+          "existing_key": "ui.all.all-types",
+          "path": "resources/views/components/admin/partials/client-list/⚡filter.blade.php"
+        },
+        {
+          "id": 8328,
+          "status": "active",
+          "source_line": 115,
+          "source_column": null,
+          "found_translation_key": "ui.all.all-types",
+          "existing_key": "ui.all.all-types",
+          "path": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php"
+        },
+        {
+          "id": 8333,
+          "status": "active",
+          "source_line": 470,
+          "source_column": null,
+          "found_translation_key": "ui.all.all-types",
+          "existing_key": "ui.all.all-types",
+          "path": "resources/views/components/admin/partials/translation-list/⚡filter.blade.php"
+        }
+      ],
+      "decision": null
+    },
+    {
+      "review_id": "7bcc0fe503561119",
+      "locale": "en",
+      "key": "ui.states.all-statuses",
+      "same_evidence_as_snapshot": true,
+      "current_distinct_hashes": 2,
+      "file": {
+        "path": "lang/en/ui.php",
+        "exists": true,
+        "sha256": "4d6153b5580bd147e32c585353813e4d871a98c2c067bdac5fc6a8e5b90301a1",
+        "unchanged_after_read": true
+      },
+      "evidence": [
+        {
+          "source": "legacy",
+          "current_candidate": true,
+          "id": 8293,
+          "value": "All Statuses",
+          "status": "ok",
+          "updated_at": "2026-10-11 16:11:15",
+          "key_id": 14262,
+          "hash": "05f567125eb09680c4ba23384469c58c4ed81d23a2e800d72a6c3a33b727a62f"
+        },
+        {
+          "source": "workbench",
+          "current_candidate": true,
+          "id": 1737,
+          "value": "All statuses",
+          "status": "active",
+          "value_type": "string",
+          "source_path": "lang/en/ui.php",
+          "source_hash": "8ee57323a6f24cc7a5e2395cc0bec1eafc76799ef0e0f31c7a81ddb87faf7a2b",
+          "updated_at": "2026-08-07 11:59:00",
+          "hash": "8ee57323a6f24cc7a5e2395cc0bec1eafc76799ef0e0f31c7a81ddb87faf7a2b"
+        },
+        {
+          "source": "file",
+          "id": "lang/en/ui.php",
+          "status": "observed",
+          "current_candidate": true,
+          "value": "All Statuses",
+          "hash": "05f567125eb09680c4ba23384469c58c4ed81d23a2e800d72a6c3a33b727a62f"
+        }
+      ],
+      "active_finding_references": [
+        {
+          "id": 8316,
+          "status": "active",
+          "source_line": 18,
+          "source_column": null,
+          "found_translation_key": "ui.states.all-statuses",
+          "existing_key": "ui.states.all-statuses",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/dynamic-key-values/status.blade.php"
+        },
+        {
+          "id": 8317,
+          "status": "active",
+          "source_line": 20,
+          "source_column": null,
+          "found_translation_key": "ui.states.all-statuses",
+          "existing_key": "ui.states.all-statuses",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/dynamic-source-values/status.blade.php"
+        },
+        {
+          "id": 8318,
+          "status": "active",
+          "source_line": 20,
+          "source_column": null,
+          "found_translation_key": "ui.states.all-statuses",
+          "existing_key": "ui.states.all-statuses",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/findings/status.blade.php"
+        },
+        {
+          "id": 8319,
+          "status": "active",
+          "source_line": 20,
+          "source_column": null,
+          "found_translation_key": "ui.states.all-statuses",
+          "existing_key": "ui.states.all-statuses",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/key-findings/status.blade.php"
+        },
+        {
+          "id": 8320,
+          "status": "active",
+          "source_line": 18,
+          "source_column": null,
+          "found_translation_key": "ui.states.all-statuses",
+          "existing_key": "ui.states.all-statuses",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/key-values/status.blade.php"
+        },
+        {
+          "id": 8321,
+          "status": "active",
+          "source_line": 18,
+          "source_column": null,
+          "found_translation_key": "ui.states.all-statuses",
+          "existing_key": "ui.states.all-statuses",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/keys/status.blade.php"
+        },
+        {
+          "id": 8322,
+          "status": "active",
+          "source_line": 20,
+          "source_column": null,
+          "found_translation_key": "ui.states.all-statuses",
+          "existing_key": "ui.states.all-statuses",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/lang-values/status.blade.php"
+        },
+        {
+          "id": 8324,
+          "status": "active",
+          "source_line": 18,
+          "source_column": null,
+          "found_translation_key": "ui.states.all-statuses",
+          "existing_key": "ui.states.all-statuses",
+          "path": "packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/source-files/status.blade.php"
+        },
+        {
+          "id": 8326,
+          "status": "active",
+          "source_line": 103,
+          "source_column": null,
+          "found_translation_key": "ui.states.all-statuses",
+          "existing_key": "ui.states.all-statuses",
+          "path": "resources/views/components/admin/partials/client-list/⚡filter.blade.php"
+        },
+        {
+          "id": 8327,
+          "status": "active",
+          "source_line": 64,
+          "source_column": null,
+          "found_translation_key": "ui.states.all-statuses",
+          "existing_key": "ui.states.all-statuses",
+          "path": "resources/views/components/admin/partials/html-view-audit/⚡filter.blade.php"
+        }
+      ],
+      "decision": null
+    }
+  ],
+  "finished_at": "2026-10-19T09:25:29+02:00"
+}
