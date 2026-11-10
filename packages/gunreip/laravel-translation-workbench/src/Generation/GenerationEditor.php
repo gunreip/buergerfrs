@@ -20,6 +20,23 @@ class GenerationEditor
         return $query;
     }
 
+    public function scanRequirementSummary(bool $refresh = false): array
+    {
+        $identity = $this->query('SELECT current_database() AS database, current_schema() AS schema')->fetch(PDO::FETCH_ASSOC);
+        $version = $this->query("SELECT (SELECT count(*) FROM translation_workbench_operations WHERE kind='complete_rescan') AS scans,
+            count(*) AS active, max(id) AS latest FROM translation_workbench_findings WHERE status='active'")->fetch(PDO::FETCH_ASSOC);
+        $root = $this->sourceRoot ?? base_path();
+        $key = 'tw-source-location-summary:'.hash('sha256', json_encode([$identity, $version, $root]));
+        if ($refresh) cache()->forget($key);
+
+        return cache()->remember($key, 30, function () use ($root) {
+            $rows = $this->query("SELECT f.id, s.path, f.source_line, f.source_column, f.raw_expression
+                FROM translation_workbench_findings f JOIN translation_workbench_source_files s ON s.id=f.source_file_id
+                WHERE f.status='active' ORDER BY s.path, f.id");
+            return (new SourceLocationSummary)->inspect($rows, $root);
+        });
+    }
+
     private const FINDINGS = ' FROM translation_workbench_findings f
         JOIN translation_workbench_source_files s ON s.id=f.source_file_id
         LEFT JOIN translation_workbench_key_findings l ON l.finding_id=f.id AND l.valid_to IS NULL
@@ -132,6 +149,21 @@ class GenerationEditor
 
     /** Exact captured text is evidence for a candidate, never an automatic assignment. */
     /** Per-locale progress for the visible active findings, using the same rules as the workflow tabs. */
+    public function recentWork(string $target, int $actor): array
+    {
+        return (new WorkInProgress($this->db))->recent($target, $actor);
+    }
+
+    public function workTasks(string $target, ?int $actor, string $search, int $page, int $perPage = 25): LengthAwarePaginator
+    {
+        return (new WorkInProgress($this->db))->page($target, $actor, $search, $page, $perPage);
+    }
+
+    public function workItem(int $key, string $target): ?array
+    {
+        return (new WorkInProgress($this->db))->find($key, $target);
+    }
+
     public function workflowFindingForKey(int $key): int
     {
         $id = $this->query("SELECT f.id FROM translation_workbench_key_findings l JOIN translation_workbench_findings f ON f.id=l.finding_id WHERE l.key_id=? AND l.valid_to IS NULL AND f.status='active' ORDER BY f.id LIMIT 1", [$key])->fetchColumn();
@@ -144,11 +176,25 @@ class GenerationEditor
         $context = $this->inspect($finding, 'en');
         $row = $context['finding'];
         $states = array_column($this->workflowStates([$finding])[$finding] ?? [], null, 'locale');
+        if ($row['key_id'] && ($row['namespace'] ?? '') === '') {
+            $evidence = $this->query("SELECT locale,full_name,value,path FROM published_value_evidence WHERE key_id=? AND full_name=? AND state='linked'", [$row['key_id'], $row['full_name']])->fetchAll(PDO::FETCH_ASSOC);
+            // Current working revisions always take precedence over imported publications.
+            $states += (new WorkflowFileEvidence)->languages($evidence, $this->languageRoot ?? lang_path());
+        }
         // Include source, current main language and saved variants; unused variants are not tasks.
         $locales = array_values(array_unique(['en', $target, ...array_keys($states)]));
+        $files = [];
+        if ($row['key_id'] && ($row['namespace'] ?? '') === '') {
+            try {
+                $files = array_column($this->translationFiles((int) $row['key_id'], $row['full_name'], $locales), null, 'locale');
+            } catch (RuntimeException $error) {
+                // An unsupported key must not prevent viewing the existing workflow facts.
+            }
+        }
         $languages = [];
         foreach ($locales as $locale) {
-            $languages[] = ['locale' => $locale, 'state' => $states[$locale]['state'] ?? 'missing', 'revision' => $states[$locale]['revision'] ?? null];
+            $languages[] = ['locale' => $locale, 'state' => $states[$locale]['state'] ?? 'missing', 'revision' => $states[$locale]['revision'] ?? null,
+                'file' => $files[$locale] ?? null];
         }
         $sourceSet = $confirmed = false;
         $sourceIssue = null;
@@ -246,9 +292,18 @@ class GenerationEditor
         $params = [$finding, $finding, $finding];
         $count = (int) $this->query('SELECT count(*)'.self::FINDINGS.$where, $params)->fetchColumn();
         $page = max(1, min($page, max(1, (int) ceil($count / 25))));
-        $rows = $this->query('SELECT f.id,f.suggested_key,s.path,f.source_line,f.source_column,COALESCE(f.raw_literal,f.suggested_literal) AS literal,l.key_id,n.full_name'.self::FINDINGS.$where.' ORDER BY (f.id=?) DESC,f.id LIMIT 25 OFFSET '.(($page - 1) * 25), [...$params, $finding])->fetchAll(PDO::FETCH_ASSOC);
+        $rows = $this->query('SELECT f.id,f.suggested_key,s.path,f.source_line,f.source_column,COALESCE(f.raw_literal,f.suggested_literal) AS literal,l.key_id,n.full_name, (SELECT e.reason FROM translation_workbench_events e WHERE e.event_type IN (\'key_assigned\',\'key_created_and_assigned\') AND e.details->>\'link\'=l.id::text ORDER BY e.id DESC LIMIT 1) AS assignment_reason'.self::FINDINGS.$where.' ORDER BY CASE WHEN l.key_id=(SELECT key_id FROM translation_workbench_key_findings WHERE finding_id=? AND valid_to IS NULL) THEN 1 ELSE 0 END, (f.id=?) DESC,f.id LIMIT 25 OFFSET '.(($page - 1) * 25), [...$params, $finding, $finding])->fetchAll(PDO::FETCH_ASSOC);
 
         return new LengthAwarePaginator($rows, $count, 25, $page, ['pageName' => 'sharedFindingsPage']);
+    }
+
+    public function scanStorageSummary(): array
+    {
+        return $this->query("SELECT
+            (SELECT count(*) FROM translation_workbench_operations WHERE kind='complete_rescan') AS scans,
+            (SELECT count(*) FROM translation_workbench_scan_findings f JOIN translation_workbench_operations o ON o.id=f.scan_run_id WHERE o.kind='complete_rescan') AS confirmations,
+            (SELECT COALESCE(sum(pg_column_size(s.scope_snapshot)),0) FROM translation_workbench_scan_runs s JOIN translation_workbench_operations o ON o.id=s.id WHERE o.kind='complete_rescan') AS snapshot_bytes,
+            (SELECT COALESCE(sum(pg_column_size(result)),0) FROM translation_workbench_operations WHERE kind='complete_rescan') AS result_bytes")->fetch(PDO::FETCH_ASSOC);
     }
 
     public function recentScans(): array
@@ -260,8 +315,87 @@ class GenerationEditor
             FROM translation_workbench_operations WHERE kind='complete_rescan' ORDER BY completed_at DESC,id DESC LIMIT 20")->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function scanPage(string $run, string $category, int $page): LengthAwarePaginator
+    /** Search captured source evidence and current assigned keys without duplicating findings. */
+    private function scanFindingSearch(string $search, array &$params): string
     {
+        if (trim($search) === '') return '';
+        $search = trim($search);
+        $pattern = '%'.str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $search).'%';
+        $params = [...$params, ltrim($search, '#'), $pattern, $pattern, $pattern];
+        return " AND (f.id::text=? OR s.path ILIKE ? OR f.raw_source_code_literal ILIKE ?
+            OR EXISTS (SELECT 1 FROM translation_workbench_key_findings l
+                JOIN translation_workbench_key_names n ON n.key_id=l.key_id AND n.valid_to IS NULL
+                WHERE l.finding_id=f.id AND l.valid_to IS NULL
+                    AND (CASE WHEN n.namespace='' THEN n.full_name ELSE n.namespace||'::'||n.full_name END) ILIKE ?))";
+    }
+
+    /** Current completion needs among findings confirmed or preserved by the selected scan. */
+    private function missingImmutablePage(string $run, int $page, string $search = '', int $perPage = 25): LengthAwarePaginator
+    {
+        if (! Str::isUuid($run) || ! $this->query("SELECT 1 FROM translation_workbench_operations WHERE id=? AND kind='complete_rescan'", [$run])->fetchColumn()) {
+            throw new RuntimeException('Scan not found.');
+        }
+        $scope = "WITH referenced AS (
+            SELECT finding_id AS id FROM translation_workbench_scan_findings WHERE scan_run_id=?
+            UNION
+            SELECT preserved.value::bigint FROM translation_workbench_scan_runs s,
+                LATERAL jsonb_each(CASE WHEN jsonb_typeof(s.scope_snapshot->'reviews')='object' THEN s.scope_snapshot->'reviews' ELSE '{}'::jsonb END) review,
+                LATERAL jsonb_array_elements_text(COALESCE(review.value->'preserved','[]'::jsonb)) preserved(value)
+            WHERE s.id=?
+        ) ";
+        $from = "FROM referenced r JOIN translation_workbench_findings f ON f.id=r.id
+            JOIN translation_workbench_source_files s ON s.id=f.source_file_id
+            WHERE f.status='active' AND f.raw_literal IS NULL AND f.suggested_literal IS NULL
+                AND f.raw_source_code_literal ~ '^[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+){2,}$'";
+        $params = [$run, $run];
+        $from .= $this->scanFindingSearch($search, $params);
+        $total = (int) $this->query($scope.'SELECT count(*) '.$from, $params)->fetchColumn();
+        $page = max(1, min($page, max(1, (int) ceil($total / $perPage))));
+        $rows = $this->query($scope."SELECT f.id,s.path,f.source_line,f.raw_source_code_literal AS captured_key,
+            NULL AS predecessor ".$from.' ORDER BY f.raw_source_code_literal,s.path,f.source_line,f.id LIMIT '.$perPage.' OFFSET '.(($page - 1) * $perPage), $params)->fetchAll(PDO::FETCH_ASSOC);
+
+        return new LengthAwarePaginator($rows, $total, $perPage, $page, ['pageName' => 'scanResultsPage']);
+    }
+
+    public function scanCategoryCounts(string $run): array
+    {
+        if (!Str::isUuid($run)) throw new RuntimeException('Invalid scan.');
+        $row = $this->query("SELECT COALESCE((result->>'confirmed')::int,0) AS confirmed,
+            jsonb_array_length(result->'created') AS created,jsonb_array_length(result->'moved') AS moved,
+            jsonb_array_length(result->'removed') AS removed,jsonb_array_length(result->'review_files') AS review_files,
+            COALESCE(jsonb_array_length(result->'usage_decisions'),0) AS usage_decisions
+            FROM translation_workbench_operations WHERE id=? AND kind='complete_rescan'", [$run])->fetch(PDO::FETCH_ASSOC);
+        if (!$row) throw new RuntimeException('Scan not found.');
+        $row['missing_immutable'] = $this->missingImmutablePage($run, 1)->total();
+        return array_map('intval', $row);
+    }
+
+    private function confirmedScanPage(string $run, int $page, string $search = '', int $perPage = 25): LengthAwarePaginator
+    {
+        if (!Str::isUuid($run) || !$this->query("SELECT 1 FROM translation_workbench_operations WHERE id=? AND kind='complete_rescan'", [$run])->fetchColumn()) {
+            throw new RuntimeException('Scan not found.');
+        }
+        // New captures and moved successors also have scan links, but are separate result categories.
+        $from = ' FROM translation_workbench_scan_findings sf
+            JOIN translation_workbench_findings f ON f.id=sf.finding_id
+            JOIN translation_workbench_source_files s ON s.id=f.source_file_id
+            WHERE sf.scan_run_id=? AND f.captured_scan_id<>?';
+        $params = [$run, $run];
+        $from .= $this->scanFindingSearch($search, $params);
+        $total = (int) $this->query('SELECT count(*)'.$from, $params)->fetchColumn();
+        $page = max(1, min($page, max(1, (int) ceil($total / $perPage))));
+        $rows = $this->query('SELECT f.id,s.path,f.source_line,NULL AS predecessor'.$from.
+            ' ORDER BY s.path,f.source_line,f.id LIMIT '.$perPage.' OFFSET '.(($page - 1) * $perPage), $params)->fetchAll(PDO::FETCH_ASSOC);
+        return new LengthAwarePaginator($rows, $total, $perPage, $page, ['pageName' => 'scanResultsPage']);
+    }
+
+    public function scanPage(string $run, string $category, int $page, string $search = '', int $perPage = 25): LengthAwarePaginator
+    {
+        $perPage = in_array($perPage, [10, 25, 50, 100], true) ? $perPage : 25;
+        if ($category === 'confirmed') return $this->confirmedScanPage($run, $page, $search, $perPage);
+        if ($category === 'missing_immutable') {
+            return $this->missingImmutablePage($run, $page, $search, $perPage);
+        }
         if (! Str::isUuid($run) || ! in_array($category, ['created', 'moved', 'removed', 'review_files', 'usage_decisions'], true)) {
             throw new RuntimeException('Invalid scan or result category.');
         }
@@ -269,10 +403,24 @@ class GenerationEditor
         if ($total === false) {
             throw new RuntimeException('Scan not found.');
         }
-        $page = max(1, min($page, max(1, (int) ceil($total / 25))));
-        $items = $this->query("SELECT item::text FROM translation_workbench_operations o,
+        $params = [$category, $run];
+        $from = " FROM translation_workbench_operations o,
             LATERAL jsonb_array_elements(o.result->?) WITH ORDINALITY AS entries(item,position)
-            WHERE o.id=? AND o.kind='complete_rescan' ORDER BY position LIMIT 25 OFFSET ".(($page - 1) * 25), [$category, $run])->fetchAll(PDO::FETCH_COLUMN);
+            WHERE o.id=? AND o.kind='complete_rescan'";
+        if (trim($search) !== '') {
+            if (in_array($category, ['review_files', 'usage_decisions'], true)) {
+                $params[] = '%'.str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], trim($search)).'%';
+                $from .= $category === 'review_files' ? " AND (item #>> '{}') ILIKE ?" : " AND item->>'path' ILIKE ?";
+            } else {
+                $id = $category === 'moved' ? "(item->>'successor')::bigint" : "(item #>> '{}')::bigint";
+                $from .= ' AND EXISTS (SELECT 1 FROM translation_workbench_findings f
+                    JOIN translation_workbench_source_files s ON s.id=f.source_file_id WHERE f.id='.$id
+                    .$this->scanFindingSearch($search, $params).')';
+            }
+            $total = (int) $this->query('SELECT count(*)'.$from, $params)->fetchColumn();
+        }
+        $page = max(1, min($page, max(1, (int) ceil($total / $perPage))));
+        $items = $this->query('SELECT item::text'.$from.' ORDER BY position LIMIT '.$perPage.' OFFSET '.(($page - 1) * $perPage), $params)->fetchAll(PDO::FETCH_COLUMN);
         $rows = [];
         foreach ($items as $json) {
             $item = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
@@ -305,7 +453,7 @@ class GenerationEditor
             $rows[] = $row + ['predecessor' => $category === 'moved' ? $item['predecessor'] : null];
         }
 
-        return new LengthAwarePaginator($rows, (int) $total, 25, $page, ['pageName' => 'scanResultsPage']);
+        return new LengthAwarePaginator($rows, (int) $total, $perPage, $page, ['pageName' => 'scanResultsPage']);
     }
 
     public function preservedFindingsPage(string $run, string $path, int $page): LengthAwarePaginator
@@ -423,6 +571,28 @@ class GenerationEditor
             (SELECT count(*) FROM translation_workbench_findings WHERE status='obsolete') AS archived,
             (SELECT count(*) FROM translation_workbench_keys) AS keys,
             (SELECT count(*) FROM translation_workbench_value_revisions) AS revisions")->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function translationFiles(int $key, string $name, array $locales): array
+    {
+        $root = $this->languageRoot ?? lang_path();
+        $publications = $this->query('SELECT published.* FROM ('.PublishedWorklist::CURRENT_PUBLICATIONS.
+            ") published JOIN translation_workbench_publication_runs p ON p.id=published.run WHERE published.key_id=? AND p.plan::jsonb->>'directory'=?",
+            [$key, realpath($root) ?: $root])->fetchAll(PDO::FETCH_ASSOC);
+        return (new TranslationFileOverview)->inspect($root, $name, $locales,
+            array_values($this->savedLanguageVariants($key, $locales)), $publications);
+    }
+
+    public function savedLanguageVariants(int $key, array $locales): array
+    {
+        if ($locales === []) {
+            return [];
+        }
+        $marks = implode(',', array_fill(0, count($locales), '?'));
+        $rows = $this->query("SELECT s.locale,r.id,r.value FROM translation_workbench_value_slots s
+            JOIN translation_workbench_value_revisions r ON r.id=s.current_revision_id
+            WHERE s.key_id=? AND s.kind='scalar' AND s.locale IN ($marks)", [$key, ...$locales])->fetchAll(PDO::FETCH_ASSOC);
+        return array_column($rows, null, 'locale');
     }
 
     public function inspect(int $finding, string $locale): array
@@ -599,6 +769,7 @@ class GenerationEditor
             'review' => ['revision_approved', 'revision_approval_revoked'],
             'closure' => ['publication_closed_without_writing'],
             'source_closure' => ['source_replacement_closed'],
+            'source_position' => ['source_movement_reconciled', 'source_removal_confirmed'],
             default => throw new RuntimeException('Unknown reason category.'),
         };
         $marks = implode(',', array_fill(0, count($types), '?'));
@@ -742,6 +913,129 @@ class GenerationEditor
         $this->query('INSERT INTO translation_workbench_events(operation_id,event_index,event_type,actor_id,reason,details) VALUES (?,?,?,?,?,?)', [$operation, $eventIndex, $created ? 'key_created_and_assigned' : 'key_assigned', $actor, $reason, json_encode(['finding' => $finding, 'key' => $key, 'previous_key' => $link['key_id'] ?? null, 'link' => $id, 'reason_locale' => $reasonLocale], JSON_THROW_ON_ERROR)]);
 
         return ['key' => $key, 'link' => $id];
+    }
+
+    public function checkSourceReplacementGroup(int $key, array $expectedIds): array
+    {
+        $sql = "SELECT f.id,f.raw_expression,f.source_line,f.source_column,s.path,l.id AS link_id".
+            self::FINDINGS." WHERE f.status='active' AND l.key_id=? ORDER BY f.id";
+        $rows = $this->query($sql, [$key])->fetchAll(PDO::FETCH_ASSOC);
+        $ids = array_map('intval', array_column($rows, 'id'));
+        sort($expectedIds);
+        if ($ids === [] || $ids !== $expectedIds) {
+            throw new RuntimeException('The selected findings changed. Release the selection and select the key again.');
+        }
+        $results = (new SourceOccurrenceCheck)->inspectGroup($rows, $this->sourceRoot ?? base_path());
+        if ($this->query($sql, [$key])->fetchAll(PDO::FETCH_ASSOC) !== $rows) {
+            throw new RuntimeException('The findings or assignments changed during inspection. Release the selection and check again.');
+        }
+        return ['checked_at' => now()->toIso8601String(), 'total' => count($results),
+            'confirmed' => count(array_filter($results, fn ($row) => $row['state'] === 'position_confirmed')),
+            'attention' => array_values(array_filter($results, fn ($row) => $row['state'] !== 'position_confirmed'))];
+    }
+
+    public function sourceReplacementComparison(int $finding, int $key): array
+    {
+        $row = $this->query("SELECT f.id,f.suggested_key,f.raw_expression,f.source_line,f.source_column,s.path,l.key_id,n.full_name".
+            self::FINDINGS." WHERE f.id=? AND l.key_id=? AND f.status='active'", [$finding, $key])->fetch(PDO::FETCH_ASSOC);
+        if (! $row) {
+            throw new RuntimeException('The finding or its key assignment changed. Release the selection and check again.');
+        }
+        $check = (new SourceOccurrenceCheck)->inspect($row, $this->sourceRoot ?? base_path());
+        $decision = (new SourcePositionDecision($this->db, $this->sourceRoot ?? base_path()))->prepare($finding, $key);
+        if ($decision['evidence']['state'] !== $check['state'] || $decision['evidence']['sha256'] !== ($check['sha256'] ?? null)) {
+            throw new RuntimeException('Source changed during comparison. Open it again.');
+        }
+        return ['finding' => $row, 'check' => $check, 'decision' => $decision];
+    }
+
+    public function applySourcePositionDecision(string $operation, int $finding, int $key, string $expected, string $decision, int $actor, string $reason): array
+    {
+        return (new SourcePositionDecision($this->db, $this->sourceRoot ?? base_path()))->apply(
+            $operation, $finding, $key, $expected, $decision, $actor, $reason);
+    }
+
+    public function sourceReplacementPreviewForGroup(int $finding, int $key, array $expectedIds): array
+    {
+        $group = $this->sourceReplacementGroup($finding);
+        sort($expectedIds);
+        if ($group['key_id'] !== $key || $group['finding_ids'] !== $expectedIds) {
+            throw new RuntimeException('The selected findings or key assignment changed. Release the selection and check again.');
+        }
+        $link = $this->query('SELECT id FROM translation_workbench_key_findings WHERE finding_id=? AND key_id=? AND valid_to IS NULL', [$finding, $key])->fetchColumn();
+        if ($link === false) {
+            throw new RuntimeException('The finding assignment changed. Reopen the preview.');
+        }
+        return $this->sourcePreview($finding, $key, (int) $link, 'en');
+    }
+
+    public function sourceReplacementGroup(int $finding): array
+    {
+        $row = $this->query("SELECT l.key_id,n.full_name".self::FINDINGS.
+            " WHERE f.id=? AND f.status='active' AND EXISTS (SELECT 1 FROM (".PublishedWorklist::CURRENT_PUBLICATIONS.
+            ") published WHERE published.key_id=l.key_id)", [$finding])->fetch(PDO::FETCH_ASSOC);
+        if (! $row) {
+            throw new RuntimeException('This finding is no longer an active source replacement candidate. Refresh the list.');
+        }
+        $ids = $this->query("SELECT f.id".self::FINDINGS.
+            " WHERE f.status='active' AND l.key_id=? ORDER BY f.id", [$row['key_id']])->fetchAll(PDO::FETCH_COLUMN);
+        return ['key_id' => (int) $row['key_id'], 'full_name' => $row['full_name'],
+            'finding_ids' => array_map('intval', $ids)];
+    }
+
+    /** Read-only candidates, one row per active finding; inspect only the displayed page. */
+    public function latestWorkingEventId(): int
+    {
+        return (int) $this->query('SELECT max(id) FROM translation_workbench_events')->fetchColumn();
+    }
+
+    public function sourceReplacementPage(string $search, int $page, int $perPage = 25, string $sort = 'finding', string $direction = 'asc'): LengthAwarePaginator
+    {
+        $columns = ['finding' => 'f.id', 'key_id' => 'l.key_id', 'key' => 'n.full_name', 'source' => 's.path', 'expression' => 'f.raw_expression'];
+        $order = $columns[$sort] ?? $columns['finding'];
+        $direction = $direction === 'desc' ? 'DESC' : 'ASC';
+        $order .= ' '.$direction;
+        if ($sort === 'source') {
+            $order .= ', f.source_line '.$direction.', f.source_column '.$direction;
+        }
+        $order .= ', f.id ASC';
+        $perPage = in_array($perPage, [10, 25, 50, 100], true) ? $perPage : 25;
+        $where = " WHERE f.status='active' AND EXISTS (SELECT 1 FROM (".PublishedWorklist::CURRENT_PUBLICATIONS.") published WHERE published.key_id=l.key_id)";
+        $params = [];
+        if (trim($search) !== '') {
+            $where .= ' AND (f.id::text=? OR l.key_id::text=? OR n.full_name ILIKE ? OR s.path ILIKE ?)';
+            $params = [trim($search), trim($search), '%'.trim($search).'%', '%'.trim($search).'%'];
+        }
+        $from = self::FINDINGS.$where;
+        $total = (int) $this->query('SELECT count(*)'.$from, $params)->fetchColumn();
+        $page = max(1, min($page, max(1, (int) ceil($total / $perPage))));
+        $rows = $this->query('SELECT f.id,s.path,f.source_line,f.source_column,f.raw_expression,l.key_id,l.id AS link_id,n.full_name'.$from.
+            ' ORDER BY '.$order.' LIMIT '.$perPage.' OFFSET '.(($page - 1) * $perPage), $params)->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows as &$row) {
+            $occurrence = (new SourceOccurrenceCheck)->inspect($row, $this->sourceRoot ?? base_path());
+            $row['position_candidates'] = $occurrence['positions'];
+            $row['source_check_sha256'] = $occurrence['sha256'] ?? null;
+            if ($occurrence['state'] !== 'position_confirmed') {
+                $row['check_state'] = $occurrence['state'];
+                $row['check_detail'] = $occurrence['detail'];
+                continue;
+            }
+            try {
+                $preview = $this->sourcePreview((int) $row['id'], (int) $row['key_id'], (int) $row['link_id'], 'en');
+                if ($preview['source_sha256'] !== $occurrence['sha256']) {
+                    $row['check_state'] = 'source_changed';
+                    $row['check_detail'] = 'The source file changed during inspection. Check it again.';
+                    continue;
+                }
+                $row['check_state'] = $preview['already_set'] ? 'already_set' : ($preview['ready'] ? 'ready' : 'blocked');
+                $row['check_detail'] = $preview['blocker'] ?? 'The captured occurrence matches the current source and the replacement prerequisites are satisfied.';
+            } catch (RuntimeException $error) {
+                $row['check_state'] = 'blocked';
+                $row['check_detail'] = $error->getMessage();
+            }
+        }
+        unset($row);
+        return new LengthAwarePaginator($rows, $total, $perPage, $page, ['pageName' => 'sourceReplacementPage']);
     }
 
     public function publishedWorklist(): PublishedWorklist

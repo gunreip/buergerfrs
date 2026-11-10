@@ -1,8 +1,14 @@
 <?php
 
 return [
+    'scan_result_max_age_minutes' => 120,
+
+    // Reuse extraction for identical bytes; inventories and database comparisons remain fresh.
+    // Disk only, one result per path, expires after seven days. Disable to force fresh extraction.
+    'analysis_cache' => ['enabled' => true, 'path' => null],
+
     'version' => [
-        'fallback' => '0.7.0',
+        'fallback' => '0.8.0',
         'package_path' => 'packages/gunreip/laravel-translation-workbench',
         'tag_prefixes' => [
             'translation-workbench/v',
@@ -50,8 +56,11 @@ return [
     // Extend this list deliberately; never derive it from existing files or keys.
     // SuggestedKey generation and scanner capture are independent of this list.
     'allowed_first_translation_key_segments' => [
-        'ui',
         'admin',
+        'buergerfrs',
+        'rfc',
+        'translation-workbench',
+        'ui',
     ],
 
     'runtime_collector' => [

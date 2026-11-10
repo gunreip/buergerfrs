@@ -6,7 +6,13 @@
         wire:model="keyAssignmentConfirmOpen"
     >
         <div class="space-y-4">
-            <flux:heading size="lg">{{ __('Confirm key assignment') }}</flux:heading>
+            <flux:heading
+                class="flex items-center gap-2"
+                size="lg"
+            >
+                <flux:icon.key class="size-5 shrink-0" />
+                {{ __('Confirm key assignment') }}
+            </flux:heading>
             @if ($pendingKeyAssignment)
                 <flux:callout
                     color="red"

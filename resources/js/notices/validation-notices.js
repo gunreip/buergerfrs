@@ -56,7 +56,7 @@ window.addEventListener('buergerfrs:validation-errors', (event) => {
         return;
     }
 
-    const notices = errors.map((error) => normalizeValidationErrorNotice(error));
+    const notices = errors.map((error) => normalizeValidationErrorNotice(error, event.detail.scope));
 
     window.dispatchEvent(new CustomEvent('buergerfrs:validation-errors-ready', {
         detail: {
@@ -85,7 +85,8 @@ window.addEventListener('buergerfrs:validation-errors-ready', (event) => {
 /**
  * Normalize one Livewire validation error entry into a generic notice object.
  */
-function normalizeValidationErrorNotice(error) {
+function normalizeValidationErrorNotice(error, scope) {
+    scope ||= 'validation-form';
     const field = error.field ?? 'unknown';
     const label = error.label ?? field;
     const inputId = error.inputId ?? null;
@@ -95,10 +96,10 @@ function normalizeValidationErrorNotice(error) {
         : [];
 
     return {
-        id: `validation-create-person-${field}`,
+        id: `${scope}-${field}`,
         type: 'validation',
         severity: 'error',
-        scope: 'create-person-form',
+        scope,
         field,
         label,
         inputId,
@@ -116,7 +117,6 @@ function normalizeValidationErrorNotice(error) {
             ]
             : [],
         persistent: true,
-        dismissAfterFocusMs: 5000,
     };
 }
 
@@ -127,16 +127,17 @@ function normalizeValidationErrorNotice(error) {
 */
 
 function renderValidationNotices(notices) {
-    clearNotices();
+    const scope = notices[0].scope;
+    clearNotices(scope);
 
     if (notices.length > validationNoticeFieldLimit) {
         const firstNotice = notices[0];
 
         renderNotice({
-            id: 'validation-create-person-summary',
+            id: `${scope}-summary`,
             type: 'validation',
             severity: 'error',
-            scope: 'create-person-form',
+            scope,
             field: firstNotice?.field ?? null,
             label: 'Form',
             inputId: firstNotice?.inputId ?? null,
@@ -156,7 +157,6 @@ function renderValidationNotices(notices) {
                 ]
                 : [],
             persistent: true,
-            dismissAfterFocusMs: 5000,
         });
 
         return;

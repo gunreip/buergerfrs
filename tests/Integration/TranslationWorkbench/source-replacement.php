@@ -41,8 +41,39 @@ try {
     $runProcess([$bin.'/pg_ctl', '-D', $dir.'/data', '-l', $dir.'/log', '-w', 'start']);
     $started = true;
     $runProcess([$bin.'/createdb', '-h', $dir.'/socket', '-U', 'tester', 'editor']);
-    $db = new PDO('pgsql:host='.$dir.'/socket;dbname=editor;user=tester', options: [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    $db = new class('pgsql:host='.$dir.'/socket;dbname=editor;user=tester', options: [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]) extends PDO {
+        public array $preparedStatements = [];
+        public bool $measureStatements = false;
+
+        public function prepare(string $query, array $options = []): PDOStatement|false
+        {
+            if ($this->measureStatements) {
+                $this->preparedStatements[$query] = ($this->preparedStatements[$query] ?? 0) + 1;
+            }
+            return parent::prepare($query, $options);
+        }
+    };
     (new WorkingGenerationSchema)->install($db, 'editor', 'current_generation_v2', (string) Str::uuid());
+    // Recreate a genuine v2 structure in an isolated schema and upgrade it without data writes.
+    $schemaManager = new WorkingGenerationSchema;
+    $legacyGeneration = (string) Str::uuid();
+    $schemaManager->install($db, 'editor', 'upgrade_fixture', $legacyGeneration);
+    $db->exec('SET search_path TO upgrade_fixture,pg_catalog');
+    $baselineSql = file_get_contents($root.'/packages/gunreip/laravel-translation-workbench/database/generations/v1/baseline.sql');
+    preg_match('/CREATE FUNCTION tw_capture_guard\(\).*?END \$\$;/s', $baselineSql, $guard);
+    $check(isset($guard[0]), 'Original capture guard not found');
+    $db->exec(str_replace('CREATE FUNCTION', 'CREATE OR REPLACE FUNCTION', $guard[0]));
+    $db->exec('SET search_path TO pg_catalog');
+    $hashMethod = new ReflectionMethod(WorkingGenerationSchema::class, 'catalogHash');
+    $hash = $hashMethod->invoke($schemaManager, $db, 'upgrade_fixture');
+    $db->exec('ALTER TABLE upgrade_fixture.workbench_generation DISABLE TRIGGER immutable_generation');
+    $stmt = $db->prepare("UPDATE upgrade_fixture.workbench_generation SET version=2, manifest=manifest-'v3/suggested-key-initialization.sql',catalog_sha256=?");
+    $stmt->execute([$hash]);
+    $db->exec('ALTER TABLE upgrade_fixture.workbench_generation ENABLE TRIGGER immutable_generation');
+    $check($schemaManager->verify($db, 'editor', 'upgrade_fixture', $legacyGeneration)['version'] === 2, 'Old schema is no longer readable');
+    $check($schemaManager->upgrade($db, 'editor', 'upgrade_fixture', $legacyGeneration)['changed'], 'Schema upgrade did not run');
+    $check($schemaManager->verify($db, 'editor', 'upgrade_fixture', $legacyGeneration)['version'] === 3, 'Upgraded catalog verification failed');
+    $check(!$schemaManager->upgrade($db, 'editor', 'upgrade_fixture', $legacyGeneration)['changed'], 'Repeated upgrade changed schema');
     $db->exec('CREATE TABLE public.translation_workbench_findings(id int PRIMARY KEY); INSERT INTO public.translation_workbench_findings VALUES(777)');
     $db->exec('SET search_path TO current_generation_v2,pg_catalog');
     $q = static function ($sql, $params = []) use ($db) {
@@ -52,7 +83,8 @@ try {
         return $s;
     };
     $app = new Application($dir);
-    $app->instance('config', new \Illuminate\Config\Repository);
+    $app->instance('config', new \Illuminate\Config\Repository(['translation-workbench' => ['allowed_first_translation_key_segments' => ['ui', 'admin']]]));
+    $app->instance('translator', new \Illuminate\Translation\Translator(new \Illuminate\Translation\ArrayLoader, 'en'));
     $app->instance('files', new \Illuminate\Filesystem\Filesystem);
     \Illuminate\Support\Facades\Facade::setFacadeApplication($app);
     $scanner = $app->make(TranslationWorkbenchScanner::class);
@@ -101,6 +133,7 @@ try {
     });
     $successor = $result['successors'][0]['successor'];
     $check($writer->inspect($run)['state'] === 'complete', 'No complete receipt');
+    $check($editor->inspect($successor, 'en')['review']['approved'], 'Single replacement invalidated source approval');
     $old = $editor->inspect($id, 'en')['finding'];
     $new = $editor->inspect($successor, 'en')['finding'];
     $check($old['status'] === 'obsolete' && $old['raw_expression'] === $raw['raw_expression'], 'Original capture not preserved');
@@ -215,22 +248,47 @@ try {
     $rescan = new \Gunreip\TranslationWorkbench\Generation\CompleteRescanWriter($db, $scanner);
     $languageEvidence = ['ui.multiline.save' => ['value' => $literal, 'provenance' => ['path' => 'en/ui.php', 'sha256' => hash_file('sha256', $dir.'/lang/en/ui.php')]]];
     $snapshot = fn () => $q("SELECT md5(string_agg(row_to_json(f)::text, ',' ORDER BY id)) FROM translation_workbench_findings f")->fetchColumn();
+    $initializationRequest = $rescan->prepare(['lines.php'], $languageEvidence);
+    $missing = $initializationRequest['plan']['suggestion_initializations'];
+    $check(count($missing) > 0, 'Fixture must exercise missing SuggestedKeys');
+    $reject(fn () => $q('UPDATE translation_workbench_findings SET suggested_key=? WHERE id=?', ['manual.invalid.key', $missing[0]['finding']]), 'Immutable');
+    $reject(fn () => $rescan->apply((string) Str::uuid(), $initializationRequest), 'user ID');
+    $initializationRun = (string) Str::uuid();
+    $initialized = $rescan->apply($initializationRun, $initializationRequest, actor: 7);
+    $check(count($initialized['suggested_keys_initialized']) === count($missing), 'Missing SuggestedKeys were not initialized');
+    $storedSnapshot = json_decode($q('SELECT scope_snapshot FROM translation_workbench_scan_runs WHERE id=?', [$initializationRun])->fetchColumn(), true);
+    $check($storedSnapshot['format_version'] === 2 && ! array_key_exists('usage_decisions', $storedSnapshot), 'Scan snapshot duplicated usage decisions');
+    $check($storedSnapshot['inventory'] == $initializationRequest['plan']['inventory'], 'Compact scan snapshot lost source evidence');
+    $check((int) $q("SELECT count(*) FROM translation_workbench_events WHERE operation_id=? AND event_type='suggested_key_initialized' AND actor_id=7", [$initializationRun])->fetchColumn() === count($missing), 'SuggestedKey initialization lacks audit');
+    foreach ($missing as $entry) {
+        $check($q('SELECT suggested_key FROM translation_workbench_findings WHERE id=?', [$entry['finding']])->fetchColumn() === $entry['suggested_key'], 'Initialized SuggestedKey differs from preview');
+        $reject(fn () => $q('UPDATE translation_workbench_findings SET suggested_key=? WHERE id=?', ['changed.invalid.key', $entry['finding']]), 'Immutable');
+    }
     $unchanged = $snapshot();
     $linksBefore = $q("SELECT md5(string_agg(row_to_json(l)::text, ',' ORDER BY id)) FROM translation_workbench_key_findings l")->fetchColumn();
     $eventsBefore = $q('SELECT count(*) FROM translation_workbench_events')->fetchColumn();
     for ($pass = 0; $pass < 2; $pass++) {
         $request = $rescan->prepare(['lines.php'], $languageEvidence);
-        $scanResult = $rescan->apply((string) Str::uuid(), $request);
+        $scanResult = $rescan->apply((string) Str::uuid(), $request, actor: 7);
         $check($scanResult['confirmed'] === 3 && $scanResult['created'] === [] && $scanResult['moved'] === [] && $scanResult['removed'] === [] && $scanResult['review_files'] === [], 'Rescan did not simply confirm rewritten source');
         $check($snapshot() === $unchanged, 'Unchanged rescan mutated findings');
     }
     $check($q("SELECT md5(string_agg(row_to_json(l)::text, ',' ORDER BY id)) FROM translation_workbench_key_findings l")->fetchColumn() === $linksBefore, 'Unchanged rescan mutated key assignments');
     $check($q('SELECT count(*) FROM translation_workbench_events')->fetchColumn() === $eventsBefore, 'Unchanged rescan invented working events');
+    $reviewedLinks = $q("SELECT l.id AS link,l.finding_id AS finding,l.key_id FROM translation_workbench_key_findings l JOIN translation_workbench_findings f ON f.id=l.finding_id JOIN translation_workbench_source_files s ON s.id=f.source_file_id WHERE l.valid_to IS NULL AND f.status='active' AND s.path='lines.php'")->fetchAll(PDO::FETCH_ASSOC);
     $sourceBeforeMove = file_get_contents($dir.'/lines.php');
     file_put_contents($dir.'/lines.php', "\n".$sourceBeforeMove);
     $request = $rescan->prepare(['lines.php'], $languageEvidence);
-    $scanResult = $rescan->apply((string) Str::uuid(), $request);
+    $scanResult = $rescan->apply((string) Str::uuid(), $request, actor: 7);
     $check(count($scanResult['moved']) === 3 && $scanResult['created'] === [] && $scanResult['removed'] === [], 'Source movement lost occurrence continuity');
+    foreach ($reviewedLinks as $link) {
+        $successor = array_column($scanResult['moved'], 'successor', 'predecessor')[$link['finding']];
+        $nextLink = $q('SELECT id FROM translation_workbench_key_findings WHERE finding_id=? AND valid_to IS NULL', [$successor])->fetchColumn();
+        $expected = ['key_id' => $link['key_id'], 'usages' => [['link' => $link['link'], 'finding' => $link['finding']]]];
+        $current = ['key_id' => $link['key_id'], 'usages' => [['link' => $nextLink, 'finding' => $successor]]];
+        $check(\Gunreip\TranslationWorkbench\Generation\ReviewUsageContinuity::contextMatches($db, $expected, $current), 'Regular scan movement invalidated unchanged reviewed usage');
+    }
+
     foreach ($scanResult['moved'] as $pair) {
         $old = $editor->inspect($pair['predecessor'], 'en')['finding'];
         $new = $editor->inspect($pair['successor'], 'en')['finding'];
@@ -239,7 +297,7 @@ try {
         $check(($new['key_id'] === null ? null : (int) $new['key_id']) === ($priorKey === false ? null : (int) $priorKey) && $new['raw_expression'] === $old['raw_expression'], 'Rescan movement changed key or source content');
     }
     $unchanged = $snapshot();
-    $scanResult = $rescan->apply((string) Str::uuid(), $rescan->prepare(['lines.php'], $languageEvidence));
+    $scanResult = $rescan->apply((string) Str::uuid(), $rescan->prepare(['lines.php'], $languageEvidence), actor: 7);
     $check($scanResult['confirmed'] === 3 && $snapshot() === $unchanged, 'Follow-up rescan duplicated moved findings');
 
     // Scanner history comes from the existing operation receipt, not invented user events.
@@ -253,12 +311,12 @@ try {
     }
     $scanBase = file_get_contents($dir.'/lines.php');
     file_put_contents($dir.'/lines.php', $scanBase."__('Fresh occurrence');\n");
-    $createdResult = $rescan->apply((string) Str::uuid(), $rescan->prepare(['lines.php'], $languageEvidence));
+    $createdResult = $rescan->apply((string) Str::uuid(), $rescan->prepare(['lines.php'], $languageEvidence), actor: 7);
     $fresh = $createdResult['created'][0];
     $history = $editor->inspect($fresh, 'en')['history'];
     $check(count(array_filter($history, fn ($event) => $event['event_type'] === 'scan_finding_created')) === 1, 'Created finding has no scan history');
     file_put_contents($dir.'/lines.php', $scanBase);
-    $rescan->apply((string) Str::uuid(), $rescan->prepare(['lines.php'], $languageEvidence));
+    $rescan->apply((string) Str::uuid(), $rescan->prepare(['lines.php'], $languageEvidence), actor: 7);
     $history = $editor->inspect($fresh, 'en')['history'];
     $check(count(array_filter($history, fn ($event) => $event['event_type'] === 'scan_finding_removed')) === 1, 'Archived finding has no scan history');
     $check(count(array_filter($editor->inspect($stable, 'en')['history'], fn ($event) => str_starts_with($event['event_type'], 'scan_finding_'))) === 0, 'Unrelated finding acquired scan history');
@@ -277,16 +335,17 @@ try {
     $movedPage = $editor->scanPage($movementScan['id'], 'moved', 1);
     $check($movedPage->total() === 3 && $movedPage->items()[0]['predecessor'] !== null, 'Movement list lost predecessor navigation');
     file_put_contents($dir.'/review.php', "<?php __('ui.missing.label');");
-    $reviewResult = $rescan->apply((string) Str::uuid(), $rescan->prepare(['review.php'], []));
+    $reviewResult = $rescan->apply((string) Str::uuid(), $rescan->prepare(['review.php'], []), actor: 7);
     $reviewPage = $editor->scanPage($reviewResult['scan'], 'review_files', 1);
     $check($reviewPage->total() === 1 && $reviewPage->items()[0]['path'] === 'review.php' && $reviewPage->items()[0]['id'] === null, 'Review-file list fabricated a finding link');
+    $check($editor->scanPage($reviewResult['scan'], 'review_files', 1, 'REVIEW.PHP')->total() === 1 && $editor->scanPage($reviewResult['scan'], 'review_files', 1, '%')->total() === 0, 'Review file search must match literal paths case insensitively');
     $reviewRow = $reviewPage->items()[0];
     $check($reviewRow['issues'][0]['reason'] === 'key_like_argument_without_lang_evidence' && $reviewRow['issues'][0]['line'] === 1 && $reviewRow['issues'][0]['column'] === 7 && $reviewRow['preserved_count'] === 0, 'Review reason or exact source position missing');
     $check(! array_key_exists('captures', $reviewRow), 'Review list leaked full source captures');
 
     $beforeReview = file_get_contents($dir.'/lines.php');
     file_put_contents($dir.'/lines.php', $beforeReview.'__($runtimeValue);');
-    $preservedResult = $rescan->apply((string) Str::uuid(), $rescan->prepare(['lines.php'], $languageEvidence));
+    $preservedResult = $rescan->apply((string) Str::uuid(), $rescan->prepare(['lines.php'], $languageEvidence), actor: 7);
     $preservedPage = $editor->preservedFindingsPage($preservedResult['scan'], 'lines.php', 999);
     $check($preservedPage->total() === 3 && $preservedPage->currentPage() === 1, 'Preserved findings page does not match the scan snapshot');
     $check(count(array_filter($preservedPage->items(), fn ($finding) => $finding['full_name'] === 'ui.multiline.save')) === 1, 'Preserved findings lost their current key assignment');
@@ -317,10 +376,10 @@ try {
     $captureWithDecision = $editor->scanCapturesPage($preservedResult['scan'], 'lines.php', 1)->items();
     $check($captureWithDecision[3]['usage_decision']['id'] === $decision['id'] && $captureWithDecision[0]['usage_decision'] === null && ! $captureWithDecision[0]['can_classify'], 'saved decision belongs only to its exact dynamic capture');
     $check($decision['actor_id'] === 7 && $editor->scanUsage($preservedResult['scan'], 'lines.php', 3)['decision']['id'] === $decision['id'], 'Decision not stored with its actor');
-    $reject(fn () => $rescan->apply((string) Str::uuid(), $stalePlan), 'Stale rescan database state');
+    $reject(fn () => $rescan->apply((string) Str::uuid(), $stalePlan, actor: 7), 'Stale rescan database state');
     $reject(fn () => $editor->decideScanUsage($preservedResult['scan'], 'lines.php', 3, 'translate', 'Concurrent choice', 8, 0), 'Another decision');
     $beforeApply = $snapshot();
-    $classified = $rescan->apply((string) Str::uuid(), $rescan->prepare(['lines.php'], $languageEvidence));
+    $classified = $rescan->apply((string) Str::uuid(), $rescan->prepare(['lines.php'], $languageEvidence), actor: 7);
     $check($classified['confirmed'] === 3 && $classified['review_files'] === [] && $classified['created'] === [] && $classified['removed'] === [] && $snapshot() === $beforeApply, 'DatabaseValue changed findings instead of excluding the dynamic usage');
     $check($classified['usage_decisions'][0]['event_id'] === $decision['id'], 'Scan receipt lost the applied decision');
     $linkedContext = $editor->consideredScanUsage($classified['scan'], $decision['id']);
@@ -329,9 +388,10 @@ try {
     $summary = array_values(array_filter($editor->recentScans(), fn ($row) => $row['id'] === $classified['scan']))[0];
     $check((int) $summary['usage_decisions'] === 1, 'scan summary counts considered decisions');
     $decisionPage = $editor->scanPage($classified['scan'], 'usage_decisions', 1);
+    $check($editor->scanPage($classified['scan'], 'usage_decisions', 1, 'lines.php')->total() === 1 && $editor->scanPage($classified['scan'], 'usage_decisions', 1, 'not-present')->total() === 0, 'Usage decision search must filter source paths');
     $check($decisionPage->total() === 1 && $decisionPage->items()[0]['decision_event_id'] === $decision['id'] && $decisionPage->items()[0]['id'] === null, 'Scan UI lost usage decision evidence');
     $eventCount = $q('SELECT count(*) FROM translation_workbench_events')->fetchColumn();
-    $rescan->apply((string) Str::uuid(), $rescan->prepare(['lines.php'], $languageEvidence));
+    $rescan->apply((string) Str::uuid(), $rescan->prepare(['lines.php'], $languageEvidence), actor: 7);
     $check($q('SELECT count(*) FROM translation_workbench_events')->fetchColumn() === $eventCount, 'Repeated scan duplicated the usage decision');
     $dynamic = $usageContext['capture'];
     $sourceFile = $q("SELECT id FROM translation_workbench_source_files WHERE path='lines.php'")->fetchColumn();
@@ -378,21 +438,176 @@ try {
     file_put_contents($suggestionPath, "<?php\n__('Ordinal fixture');\n__('Ordinal fixture');\n__('ui.suggestion.observed');\n");
     $suggestionEvidence = ['ui.suggestion.observed' => ['value' => 'Observed', 'provenance' => ['locale' => 'en', 'key' => 'ui.suggestion.observed', 'path' => 'missing-evidence.php', 'sha256' => str_repeat('a', 64)]]];
     $suggestionRequest = $rescan->prepare(['suggestions.php'], $suggestionEvidence);
-    $suggestionResult = $rescan->apply((string) Str::uuid(), $suggestionRequest);
+    $suggestionResult = $rescan->apply((string) Str::uuid(), $suggestionRequest, actor: 7);
     $check(count($suggestionResult['created']) === 3, 'First scan must capture each independent occurrence');
     $suggestions = array_map(fn ($id) => $editor->inspect($id, 'en')['finding']['suggested_key'], $suggestionResult['created']);
     $check($suggestions[1] === $suggestions[0].'_2', 'Collision must append an ordinal');
     $check($suggestions[2] !== null && $suggestions[2] !== 'ui.suggestion.observed', 'Existing source key must receive a source-specific suggestion');
-    $confirmedSuggestions = $rescan->apply((string) Str::uuid(), $rescan->prepare(['suggestions.php'], $suggestionEvidence));
+    $expectedGroups = array_column((new \Gunreip\TranslationWorkbench\Generation\RescanCandidateRules)->sharedCandidates($db), 'findings');
+    $check($suggestionResult['format_version'] === 2 && ! array_key_exists('shared_candidates', $suggestionResult)
+        && $suggestionResult['shared_candidate_groups'] === $expectedGroups, 'Compact receipt lost candidate group membership');
+    $ordinalGroup = array_slice($suggestionResult['created'], 0, 2);
+    $check(in_array($ordinalGroup, $suggestionResult['shared_candidate_groups'], true), 'Repeated literal must preserve both finding references');
+    $check($rescan->apply($suggestionResult['scan'], $suggestionRequest, actor: 7) == $suggestionResult, 'Replayed compact receipt differs from original result');
+    $confirmedSuggestions = $rescan->apply((string) Str::uuid(), $rescan->prepare(['suggestions.php'], $suggestionEvidence), actor: 7);
     $check($confirmedSuggestions['created'] === [] && $confirmedSuggestions['confirmed'] === 3, 'Repeat scan must not recreate suggestions');
     file_put_contents($suggestionPath, "<?php\n");
-    $rescan->apply((string) Str::uuid(), $rescan->prepare(['suggestions.php'], $suggestionEvidence));
+    $rescan->apply((string) Str::uuid(), $rescan->prepare(['suggestions.php'], $suggestionEvidence), actor: 7);
+    $archivedLiterals = $q('SELECT raw_literal FROM translation_workbench_findings WHERE id IN (?,?) ORDER BY id', $ordinalGroup)->fetchAll(PDO::FETCH_COLUMN);
+    $historicalResult = json_decode($q('SELECT result FROM translation_workbench_operations WHERE id=?', [$suggestionResult['scan']])->fetchColumn(), true);
+    $check($archivedLiterals === ['Ordinal fixture', 'Ordinal fixture'] && in_array($ordinalGroup, $historicalResult['shared_candidate_groups'], true), 'Archival lost historical shared candidate evidence');
     file_put_contents($suggestionPath, "<?php\n__('Ordinal fixture');\n");
-    $reappeared = $rescan->apply((string) Str::uuid(), $rescan->prepare(['suggestions.php'], $suggestionEvidence));
+    $reappeared = $rescan->apply((string) Str::uuid(), $rescan->prepare(['suggestions.php'], $suggestionEvidence), actor: 7);
     $check(count($reappeared['created']) === 1, 'Reappearing archived source is a new finding');
     $check($editor->inspect($reappeared['created'][0], 'en')['finding']['suggested_key'] === $suggestions[0].'_3', 'Archived suggestions must remain reserved');
 
-    echo json_encode(['checks' => $checks, 'state' => 'passed', 'production_connected' => false]).PHP_EOL;
+    // Explicit UI position decisions use only this temporary database and source tree.
+    $decisions = new \Gunreip\TranslationWorkbench\Generation\SourcePositionDecision($db, $dir);
+    [$moveId, , $moveBytes] = $make('decision-move.php');
+    $moveKey = (int) $editor->inspect($moveId, 'en')['finding']['key_id'];
+    file_put_contents($dir.'/decision-move.php', "\n".$moveBytes);
+    $plan = $decisions->prepare($moveId, $moveKey);
+    $check($plan['can_move'] && !$plan['can_remove'], 'Movement decision eligibility');
+    $reject(fn () => $decisions->apply((string) Str::uuid(), $moveId, $moveKey, $plan['fingerprint'], 'removed', 7, 'Wrong decision'), 'not supported');
+    file_put_contents($dir.'/decision-move.php', "\n\n".$moveBytes);
+    $reject(fn () => $decisions->apply((string) Str::uuid(), $moveId, $moveKey, $plan['fingerprint'], 'moved', 7, 'Confirmed movement'), 'changed');
+    $check($q('SELECT status FROM translation_workbench_findings WHERE id=?', [$moveId])->fetchColumn() === 'active', 'Stale decision changed finding');
+    $plan = $decisions->prepare($moveId, $moveKey);
+    $op = (string) Str::uuid();
+    $result = $decisions->apply($op, $moveId, $moveKey, $plan['fingerprint'], 'moved', 7, 'Confirmed movement');
+    $successor = $editor->inspect($result['successors'][0]['successor'], 'en')['finding'];
+    $check((int) $successor['source_line'] === 4 && $successor['suggested_key'] === 'immutable.suggested.key' && (int) $successor['key_id'] === $moveKey, 'Movement lost position or immutable key/assignment');
+    $check($q('SELECT status FROM translation_workbench_findings WHERE id=?', [$moveId])->fetchColumn() === 'obsolete', 'Movement did not archive predecessor');
+    $check($decisions->apply($op, $moveId, $moveKey, $plan['fingerprint'], 'moved', 7, 'Confirmed movement') == $result, 'Retry result differs');
+    $check((int) $q('SELECT count(*) FROM translation_workbench_findings WHERE predecessor_id=?', [$moveId])->fetchColumn() === 1, 'Retry created duplicate successor');
+    $check(file_get_contents($dir.'/decision-move.php') === "\n\n".$moveBytes, 'Decision rewrote source');
+
+    [$removedId] = $make('decision-removed.php');
+    unlink($dir.'/decision-removed.php');
+    $plan = $decisions->prepare($removedId, $moveKey);
+    $check($plan['can_remove'] && !$plan['can_move'], 'Missing file decision eligibility');
+    file_put_contents($dir.'/decision-removed.php', "<?php // returned");
+    $reject(fn () => $decisions->apply((string) Str::uuid(), $removedId, $moveKey, $plan['fingerprint'], 'removed', 7, 'Confirmed removal'), 'changed');
+    unlink($dir.'/decision-removed.php');
+    $plan = $decisions->prepare($removedId, $moveKey);
+    $decisions->apply((string) Str::uuid(), $removedId, $moveKey, $plan['fingerprint'], 'removed', 7, 'Confirmed removal');
+    $check($q('SELECT status FROM translation_workbench_findings WHERE id=?', [$removedId])->fetchColumn() === 'obsolete', 'Removal did not archive finding');
+    $check((int) $q('SELECT count(*) FROM translation_workbench_key_findings WHERE finding_id=? AND valid_to IS NULL', [$removedId])->fetchColumn() === 0, 'Removal left current link');
+    $check((int) $q('SELECT count(*) FROM translation_workbench_keys WHERE id=?', [$moveKey])->fetchColumn() === 1, 'Removal deleted shared key');
+    $check((int) $q("SELECT count(*) FROM translation_workbench_events WHERE event_type='source_removal_confirmed' AND details->>'finding'=?", [(string) $removedId])->fetchColumn() === 1, 'Removal history missing');
+
+    [$commentId, , $commentBytes] = $make('decision-comment.php');
+    file_put_contents($dir.'/decision-comment.php', "<?php // __('Save');\n");
+    $plan = $decisions->prepare($commentId, $moveKey);
+    $reject(fn () => $decisions->apply((string) Str::uuid(), $commentId, $moveKey, $plan['fingerprint'], 'moved', 7, 'Do not accept a comment'), 'active translation call');
+    $check($q('SELECT status FROM translation_workbench_findings WHERE id=?', [$commentId])->fetchColumn() === 'active', 'Comment decision changed finding');
+
+    // Batch: compose same-line calls once, preserve other keys, and resume per-file receipts.
+    file_put_contents($dir.'/lang/en/ui.php', "<?php return ['button'=>['save'=>'Save'], 'bulk'=>['save'=>'Save']];");
+    $batchKey = null;
+    $batchIds = [];
+    $batchOriginals = [];
+    foreach (['bulk-a.php' => "<?php\n__('Save'); __('Save'); __('Save');\n", 'bulk-b.php' => "<?php\n__('Save');\n", 'bulk-noop.php' => "<?php\n__('ui.bulk.save');\n"] as $name => $bytes) {
+        file_put_contents($dir.'/'.$name, $bytes);
+        $batchOriginals[$name] = $bytes;
+        $source = $q('INSERT INTO translation_workbench_source_files(path) VALUES(?) RETURNING id', [$name])->fetchColumn();
+        foreach ($scanner->scanSource($name, $bytes) as $index => $item) {
+            $capture = (new CopiedSourceCapture)->capture($item, $bytes, hash('sha256', $bytes), []);
+            $fid = (int) $q("INSERT INTO translation_workbench_findings(source_file_id,captured_scan_id,source_line,source_column,raw_expression,raw_source_code_literal,raw_literal,suggested_key,provenance) VALUES(?,?,?,?,?,?,?,?,'{}') RETURNING id", [$source, $scan, $capture['source_line'], $capture['source_column'], $capture['raw_expression'], $capture['raw_source_code_literal'], $capture['raw_literal'], $name.'.'.$index])->fetchColumn();
+            if ($name === 'bulk-a.php' && $index === 2) {
+                $editor->assign($fid, $moveKey, null, 7, 'Independent key');
+                $independent = $fid;
+                continue;
+            }
+            $link = $editor->assign($fid, $batchKey ?? 0, null, 7, 'Batch fixture', $batchKey === null ? 'ui.bulk.save' : null);
+            $batchKey = $link['key'];
+            $batchIds[] = $fid;
+        }
+    }
+    $ctx = $editor->inspect($batchIds[0], 'en');
+    $editor->save($batchIds[0], $batchKey, $ctx['finding']['link_id'], 'en', 'Save', null, 7, 'Batch English draft');
+    $ctx = $editor->inspect($batchIds[0], 'en');
+    $editor->review($ctx['revision']['id'], $ctx['review']['fingerprint'], true, 7, 'Review batch');
+    $batchPreview = $writer->previewBatch($batchKey, $batchIds);
+    $check($batchPreview['ready'] && count($batchPreview['items']) === 4, 'Batch preview lost selected findings');
+    $check(count(array_filter($batchPreview['items'], fn ($item) => $item['already_set'])) === 1, 'No-op not identified');
+    $reject(fn () => $writer->previewBatch($batchKey, [$batchIds[0]]), 'key group changed');
+    file_put_contents($dir.'/bulk-b.php', "\n".$batchOriginals['bulk-b.php']);
+    $reject(fn () => $writer->prepareBatch($batchKey, $batchIds, $batchPreview['fingerprint'], 7, 'Batch reason'), 'changed or is blocked');
+    file_put_contents($dir.'/bulk-b.php', $batchOriginals['bulk-b.php']);
+    $batchRun = $writer->prepareBatch($batchKey, $batchIds, $batchPreview['fingerprint'], 7, 'Batch reason');
+    $check(count($writer->inspect($batchRun)['files']) === 2, 'Must prepare one operation per changed file');
+    $check(file_get_contents($dir.'/bulk-a.php') === $batchOriginals['bulk-a.php'], 'Batch preparation wrote source');
+    $blockedBatch = $writer->previewBatch($batchKey, $batchIds);
+    $check(!$blockedBatch['ready'] && $blockedBatch['blocked'] === 3, 'Open per-file plans not blocking whole group');
+    $reject(fn () => $writer->apply($batchRun, 8), 'preparing user');
+    $reject(fn () => $writer->apply($batchRun, 7, function ($stage) {
+        if ($stage === 'after_file') throw new RuntimeException('Stop between files');
+    }), 'Stop between files');
+    $partial = $writer->inspect($batchRun);
+    $check($partial['files'][0]['state'] === 'complete' && $partial['files'][1]['state'] === 'pending', 'Partial completion not visible');
+    $check(file_get_contents($dir.'/bulk-a.php') === "<?php\n__('ui.bulk.save'); __('ui.bulk.save'); __('Save');\n", 'Combined same-line edits incorrect');
+    $independentSuccessor = $q('SELECT id FROM translation_workbench_findings WHERE predecessor_id=?', [$independent])->fetchColumn();
+    $check((int) $editor->inspect($independentSuccessor, 'en')['finding']['key_id'] === $moveKey, 'Shifted independent finding lost its own key');
+    $resumed = $writer->apply($batchRun, 7);
+    $check($writer->inspect($batchRun)['state'] === 'complete', 'Batch did not complete on resume');
+    $check(file_get_contents($dir.'/bulk-b.php') === "<?php\n__('ui.bulk.save');\n", 'Second file not replaced');
+    $check($writer->apply($batchRun, 7) == $resumed, 'Completed batch retry changed receipts');
+    $check($q('SELECT status FROM translation_workbench_findings WHERE id=?', [$batchIds[3]])->fetchColumn() === 'active', 'Unchanged call must remain active');
+
+
+    // A receipted successor must preserve approval in both PHP and SQL worklists.
+    $revisionId = (int) $ctx['revision']['id'];
+    $reviewer = new \Gunreip\TranslationWorkbench\Generation\BaselineRevisionReviewer($db);
+    $approvedInList = static fn () => (bool) $q('SELECT 1 FROM ('.\Gunreip\TranslationWorkbench\Generation\ReviewWorklist::APPROVED.') a WHERE revision=?', [$revisionId])->fetchColumn();
+    $check($reviewer->approvalIsCurrent($revisionId), 'Source replacement invalidated unchanged revision approval');
+    $check($approvedInList(), 'SQL worklist disagrees about successor approval');
+    $check($q('SELECT count(*) FROM translation_workbench_reviews WHERE revision_id=?', [$revisionId])->fetchColumn() == 1, 'Approval preservation must not write a new review');
+    $successorId = $resumed['successors'][0]['successor'];
+    $assertInvalid = static function (callable $change, string $message) use ($db, $check, $reviewer, $revisionId, $approvedInList) {
+        $db->beginTransaction();
+        try {
+            $change();
+            $check(!$reviewer->approvalIsCurrent($revisionId), $message.' (PHP)');
+            $check(!$approvedInList(), $message.' (SQL)');
+        } finally { $db->rollBack(); }
+    };
+    $assertInvalid(function () use ($db, $q, $successorId) {
+        // Simulate missing receipt evidence in the isolated fixture only.
+        $db->exec('ALTER TABLE translation_workbench_operations DISABLE TRIGGER USER');
+        $q("UPDATE translation_workbench_operations SET kind='unverified' WHERE kind='source_replacement_applied' AND result->'successors' @> ?::jsonb", [json_encode([['successor' => $successorId]])]);
+        $db->exec('ALTER TABLE translation_workbench_operations ENABLE TRIGGER USER');
+    }, 'Unreceipted successor accepted');
+    $assertInvalid(function () use ($q, $successorId, $batchKey) {
+        $q('UPDATE translation_workbench_key_findings SET valid_to=now() WHERE finding_id=? AND valid_to IS NULL', [$successorId]);
+        $q('INSERT INTO translation_workbench_key_findings(finding_id,key_id) VALUES (?,?)', [$successorId, $batchKey]);
+    }, 'A later reassignment was accepted as the original successor link');
+    $assertInvalid(function () use ($q, $successorId, $moveKey) {
+        $q('UPDATE translation_workbench_key_findings SET valid_to=now() WHERE finding_id=? AND valid_to IS NULL', [$successorId]);
+        $q('INSERT INTO translation_workbench_key_findings(finding_id,key_id) VALUES (?,?)', [$successorId, $moveKey]);
+    }, 'Different key assignment accepted');
+    $assertInvalid(fn () => $q("UPDATE translation_workbench_findings SET status='obsolete',retired_at=now() WHERE id=?", [$successorId]), 'Missing active usage accepted');
+    $assertInvalid(function () use ($q, $independentSuccessor, $batchKey) {
+        $q('UPDATE translation_workbench_key_findings SET valid_to=now() WHERE finding_id=? AND valid_to IS NULL', [$independentSuccessor]);
+        $q('INSERT INTO translation_workbench_key_findings(finding_id,key_id) VALUES (?,?)', [$independentSuccessor, $batchKey]);
+    }, 'Additional usage accepted without review');
+    $assertInvalid(function () use ($editor, $revisionId, $db) {
+        $snapshot = \Gunreip\TranslationWorkbench\Generation\RevisionReviewContext::snapshot($db, $revisionId);
+        $editor->review($revisionId, $snapshot['fingerprint'], false, 7, 'Withdraw approval');
+    }, 'Revoked review accepted');
+    $assertInvalid(function () use ($editor, $successorId, $batchKey, $revisionId, $q) {
+        $link = (int) $q('SELECT id FROM translation_workbench_key_findings WHERE finding_id=? AND valid_to IS NULL', [$successorId])->fetchColumn();
+        $editor->save($successorId, $batchKey, $link, 'en', 'Changed source text', $revisionId, 7, 'New revision');
+    }, 'Changed translation revision accepted');
+    $assertInvalid(function () use ($q, $batchKey) {
+        $q('UPDATE translation_workbench_key_names SET valid_to=now() WHERE key_id=? AND valid_to IS NULL', [$batchKey]);
+        $q("INSERT INTO translation_workbench_key_names(key_id,namespace,full_name) VALUES (?,'','ui.bulk.changed')", [$batchKey]);
+    }, 'Changed key identity accepted');
+
+
+    require __DIR__.'/scan-write-batching.php';
+    require __DIR__.'/missing-immutable.php';
+    echo json_encode(['checks' => $checks, 'state' => 'passed', 'production_connected' => false, 'scan_write_profile' => $scanWriteProfile]).PHP_EOL;
 } finally {
     if ($started) {
         $runProcess([$bin.'/pg_ctl', '-D', $dir.'/data', '-m', 'immediate', '-w', 'stop']);

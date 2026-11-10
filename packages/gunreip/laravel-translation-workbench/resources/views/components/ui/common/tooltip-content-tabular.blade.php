@@ -1,7 +1,7 @@
 {{-- Translate labels at the call site. Each row contains label and value. --}}
-@props(['heading' => null, 'rows' => []])
+@props(['heading' => null, 'rows' => [], 'maxWidth' => '24rem'])
 
-<flux:tooltip.content {{ $attributes->class(['max-w-[24rem] space-y-2 text-left']) }}>
+<flux:tooltip.content {{ $attributes->class(['space-y-2 text-left'])->style(['max-width: '.$maxWidth]) }}>
     @if ($heading !== null && $heading !== '')
         <p class="border-b border-zinc-500 pb-1 font-bold">{{ $heading }}</p>
     @endif

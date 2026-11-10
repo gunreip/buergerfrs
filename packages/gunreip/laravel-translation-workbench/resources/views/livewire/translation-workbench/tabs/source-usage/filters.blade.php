@@ -2,14 +2,20 @@
 
     {{-- Search Field Search source or expression --}}
     <flux:field class="col-span-2">
-        <flux:label>
-            <flux:callout.heading>
-                {{ __('Search source or expression') }}
-            </flux:callout.heading>
-        </flux:label>
+        <flux:tooltip>
+            <flux:label>
+                <flux:callout.heading>
+                    {{ __('Search source or expression') }}
+                </flux:callout.heading>
+            </flux:label>
+            <x-translation-workbench::ui.common.tooltip-content
+                :heading="__('Search source or expression')"
+                :text="__('Search for cases by their source file, line number, or raw expression.')"
+            />
+        </flux:tooltip>
         <flux:input.group>
             <flux:input.group.prefix>
-                <flux:icon.search class="size-4" />
+                <flux:icon.search />
             </flux:input.group.prefix>
             <flux:input
                 clearable
@@ -21,14 +27,20 @@
     </flux:field>
     {{-- Select Field Review status --}}
     <flux:field>
-        <flux:label>
-            <flux:callout.heading>
-                {{ __('Review status') }}
-            </flux:callout.heading>
-        </flux:label>
+        <flux:tooltip>
+            <flux:label>
+                <flux:callout.heading>
+                    {{ __('Review status') }}
+                </flux:callout.heading>
+            </flux:label>
+            <x-translation-workbench::ui.common.tooltip-content
+                :heading="__('Review status')"
+                :text="__('Filter cases by their review status.')"
+            />
+        </flux:tooltip>
         <flux:input.group>
             <flux:input.group.prefix>
-                <flux:icon.list-check class="size-4" />
+                <flux:icon.list-check />
             </flux:input.group.prefix>
             <flux:select
                 clearable

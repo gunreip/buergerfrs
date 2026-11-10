@@ -19,7 +19,10 @@
                         {{-- Table --}}
                         <flux:table container:class="max-h-80 overflow-x-auto rounded-t-lg">
                             {{-- Table Header Row --}}
-                            <flux:table.columns class="bg-white dark:bg-zinc-800">
+                            <flux:table.columns
+                                class="bg-white dark:bg-zinc-800"
+                                sticky
+                            >
                                 {{-- Table Header Column Run / User --}}
                                 <flux:table.column>
                                     <flux:callout.heading class="ml-2">
@@ -40,7 +43,7 @@
                                 </flux:table.column>
                                 {{-- Table Header Column Open --}}
                                 <flux:table.column>
-                                    <flux:callout.heading>
+                                    <flux:callout.heading class="mr-3">
                                         {{ __('Open') }}
                                     </flux:callout.heading>
                                 </flux:table.column>
@@ -77,14 +80,18 @@
                                         <flux:table.cell>
                                             <flux:button.group>
                                                 <flux:button
-                                                    size="sm"
-                                                    icon="package-open"
-                                                    variant="outline"
+                                                    size="xs"
+                                                    {{-- icon="package-open" --}}
+                                                    variant="filled"
+                                                    color="sky"
                                                     wire:click="openPublication('{{ $run['id'] }}')"
-                                                />
+                                                >
+                                                    <flux:icon.package-open class="size-5" />
+                                                </flux:button>
                                                 <flux:button
-                                                    size="sm"
-                                                    variant="outline"
+                                                    size="xs"
+                                                    variant="filled"
+                                                    color="sky"
                                                     wire:click="openPublication('{{ $run['id'] }}')"
                                                 >
                                                     {{ __('Open') }}

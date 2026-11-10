@@ -1,11 +1,11 @@
 {{-- Table Findings --}}
-<flux:table container:class="max-h-[100vh] overflow-x-auto rounded-t-lg">
+<flux:table container:class="max-h-120 overflow-auto rounded-t-lg">
     {{-- Table Header --}}
     <flux:table.columns
         class="bg-white dark:bg-zinc-800"
         sticky
     >
-        {{-- Column Finding ID --}}
+        {{-- Table Header Column Finding ID --}}
         <flux:table.column
             sortable
             :sorted="$findingsSort === 'id'"
@@ -22,7 +22,7 @@
                 />
             </flux:tooltip>
         </flux:table.column>
-        {{-- Column Source --}}
+        {{-- Table Header Column Source --}}
         <flux:table.column
             sortable
             :sorted="$findingsSort === 'source'"
@@ -41,7 +41,7 @@
                 />
             </flux:tooltip>
         </flux:table.column>
-        {{-- Column Open in VSC --}}
+        {{-- Table Header Column Open in VSC --}}
         <flux:table.column align="center">
             <flux:tooltip>
                 <flux:callout.heading>
@@ -55,7 +55,7 @@
                 />
             </flux:tooltip>
         </flux:table.column>
-        {{-- Column Captured expression --}}
+        {{-- Table Header Column Captured expression --}}
         <flux:table.column
             sortable
             :sorted="$findingsSort === 'expression'"
@@ -74,7 +74,7 @@
                 />
             </flux:tooltip>
         </flux:table.column>
-        {{-- Column Suggested key --}}
+        {{-- Table Header Column Suggested key --}}
         <flux:table.column
             sortable
             :sorted="$findingsSort === 'suggested_key'"
@@ -93,7 +93,7 @@
                 />
             </flux:tooltip>
         </flux:table.column>
-        {{-- Column Translation key --}}
+        {{-- Table Header Column Translation key --}}
         <flux:table.column
             sortable
             :sorted="$findingsSort === 'key'"
@@ -110,7 +110,7 @@
                 />
             </flux:tooltip>
         </flux:table.column>
-        {{-- Column Status --}}
+        {{-- Table Header Column Status --}}
         <flux:table.column>
             <flux:tooltip>
                 <flux:callout.heading>
@@ -124,7 +124,7 @@
                 />
             </flux:tooltip>
         </flux:table.column>
-        {{-- Column Action --}}
+        {{-- Table Header Column Action --}}
         <flux:table.column
             class="w-36"
             align="center"
@@ -146,7 +146,7 @@
     <flux:table.rows>
         @forelse ($rows as $row)
             <flux:table.row :key="'finding-'.$row['id']">
-                {{-- Finding ID --}}
+                {{-- Table Row Column Finding ID --}}
                 <flux:table.cell align="center">
                     <flux:callout.heading
                         class="text-right tabular-nums"
@@ -165,16 +165,17 @@
                         </flux:tooltip>
                     @endif
                 </flux:table.cell>
-                {{-- Source --}}
+                {{-- Table Row Column Source --}}
                 <flux:table.cell class="max-w-md whitespace-normal break-all">
                     <x-translation-workbench::ui.common.text-preview
+                        :mono="true"
                         :text="$row['path'] . ':' . $row['source_line'] . ':' . $row['source_column']"
                         :length="50"
                         side="center"
                         :heading="__('Source')"
                     />
                 </flux:table.cell>
-                {{-- Open in VSC --}}
+                {{-- Table Row Column Open in VSC --}}
                 <flux:table.cell align="center">
                     @if ($row['status'] === 'active' && $row['path'] !== '')
                         @php
@@ -210,10 +211,12 @@
                                 size="xs"
                                 color="sky"
                                 variant="ghost"
-                                icon="external-link"
+                                {{-- icon="external-link" --}}
                                 :href="$editorUrl"
                                 :aria-label="__('Open source in VS Code')"
-                            />
+                            >
+                                <flux:icon.external-link class="size-5" />
+                            </flux:button>
                             <x-translation-workbench::ui.common.tooltip-content
                                 :heading="__('Open source in VS Code')"
                                 :text="[__('Open the source file in VS Code using the configured editor.')]"
@@ -246,22 +249,21 @@
                         </span>
                     @endif
                 </flux:table.cell>
-                {{-- Captured Expression --}}
+                {{-- Table Row Column Captured Expression --}}
                 <flux:table.cell class="wrap-break-word max-w-md whitespace-normal">
-                    {{-- <flux:callout.text>
-                        <code>{{ $row['raw_expression'] }}</code>
-                    </flux:callout.text> --}}
                     <x-translation-workbench::ui.common.text-preview
+                        :mono="true"
                         :heading="__('Captured expression')"
                         :text="$row['raw_expression']"
                         :length="120"
                         side="center"
                     />
                 </flux:table.cell>
-                {{-- Suggested Key --}}
+                {{-- Table Row Column Suggested Key --}}
                 <flux:table.cell class="max-w-sm whitespace-normal break-all">
                     @if (($row['suggested_key'] ?? '') !== '')
                         <x-translation-workbench::ui.common.text-preview
+                            :mono="true"
                             :heading="__('Suggested key')"
                             :text="$row['suggested_key']"
                             :length="60"
@@ -276,10 +278,11 @@
                         </flux:tooltip>
                     @endif
                 </flux:table.cell>
-                {{-- Translation Key --}}
+                {{-- Table Row Column Translation Key --}}
                 <flux:table.cell class="max-w-sm whitespace-normal break-all">
                     @if ($row['key_id'])
                         <x-translation-workbench::ui.common.text-preview
+                            :mono="true"
                             :prefix-key="'#' . $row['key_id']"
                             :heading="__('Translation Key')"
                             :text="$row['full_name']"
@@ -301,7 +304,7 @@
                         </flux:tooltip>
                     @endif
                 </flux:table.cell>
-                {{-- Shared / UI candidate: informational only --}}
+                {{-- Table Row Column Shared / UI candidate: informational only --}}
                 <flux:table.cell class="whitespace-normal">
                     @if ($row['status'] !== 'active')
                         <div class="flex flex-col items-start gap-2">
@@ -387,45 +390,62 @@
                         </div>
                     @endif
                 </flux:table.cell>
-                {{-- Action --}}
+                {{-- Table Row Column Action --}}
                 <flux:table.cell>
-                    <flux:button
-                        size="sm"
-                        variant="outline"
-                        icon="queue-list"
-                        wire:click="openWorkflowStatus({{ $row['id'] }})"
-                        :tooltip="__('Workflow status')"
-                        :aria-label="__('Workflow status')"
-                    />
-                    <flux:tooltip>
-                        <flux:button.group class="ml-1 mr-3">
+                    <div class="flex justify-start gap-1">
+                        {{-- Button Workflow Status --}}
+                        <flux:tooltip>
                             <flux:button
                                 size="sm"
                                 variant="outline"
-                                wire:click="open({{ $row['id'] }})"
+                                square
+                                wire:click="openWorkflowStatus({{ $row['id'] }})"
+                                :aria-label="__('Workflow status')"
                             >
-                                <flux:icon.package-open class="size-5" />
+                                <flux:icon.queue-list size="5" />
                             </flux:button>
-                            <flux:button
-                                size="sm"
-                                variant="outline"
-                                wire:click="open({{ $row['id'] }})"
-                            >
-                                {{ __('Open') }}
-                            </flux:button>
-                        </flux:button.group>
-                        <x-translation-workbench::ui.common.tooltip-content
-                            heading="{{ __('Open') }}"
-                            :text="[
-                                __('Open the Edit finding modal for editing finding ID #:id.', ['id' => $row['id']]),
-                            ]"
-                        />
-                    </flux:tooltip>
+                            <x-translation-workbench::ui.common.tooltip-content
+                                :heading="__('Workflow status')"
+                                :text="__('View the workflow status for this finding.')"
+                            />
+                        </flux:tooltip>
+                        {{-- Button Edit Finding --}}
+                        <flux:tooltip>
+                            <flux:button.group class="mr-3">
+                                <flux:button
+                                    size="sm"
+                                    variant="filled"
+                                    color="sky"
+                                    square
+                                    wire:click="open({{ $row['id'] }})"
+                                >
+                                    <flux:icon.package-open class="size-5" />
+                                </flux:button>
+                                <flux:button
+                                    size="sm"
+                                    variant="filled"
+                                    color="sky"
+                                    wire:click="open({{ $row['id'] }})"
+                                >
+                                    {{ __('Edit finding') }}
+                                </flux:button>
+                            </flux:button.group>
+                            <x-translation-workbench::ui.common.tooltip-content
+                                heading="{{ __('Open') }}"
+                                :text="[
+                                    __('Open the Edit finding modal for editing finding ID #:id.', [
+                                        'id' => $row['id'],
+                                    ]),
+                                ]"
+                            />
+                        </flux:tooltip>
+                    </div>
                 </flux:table.cell>
             </flux:table.row>
         @empty
-            {{-- Empty --}}
+            {{-- Table Row Empty --}}
             <flux:table.row>
+                {{-- Table Row Column Empty --}}
                 <flux:table.cell colspan="8">
                     <flux:callout.text>
                         {{ __('No findings match these filters.') }}

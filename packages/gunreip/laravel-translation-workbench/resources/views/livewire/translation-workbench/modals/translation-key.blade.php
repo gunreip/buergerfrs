@@ -3,16 +3,22 @@
     name="workbench-create-translation-key"
     wire:model="translationKeyOpen"
 >
+    <x-translation-workbench::ui.common.modal-loading target="createTranslationKey" />
     @php
         $proposedKey = trim($newTranslationKey);
-        $proposedKeyValid = mb_strlen($proposedKey) <= 255
-            && \Gunreip\TranslationWorkbench\Generation\TranslationKeySegments::configured()->allows($proposedKey);
+        $proposedKeyValid =
+            mb_strlen($proposedKey) <= 255 &&
+            \Gunreip\TranslationWorkbench\Generation\TranslationKeySegments::configured()->allows($proposedKey);
     @endphp
     <form
         class="space-y-4"
         wire:submit="createTranslationKey"
     >
-        <flux:heading size="xl">
+        <flux:heading
+            class="flex items-center gap-2"
+            size="xl"
+        >
+            <flux:icon.key class="size-5 shrink-0" />
             {{ __('Create a translation key') }}
         </flux:heading>
         <flux:text>
@@ -65,7 +71,11 @@
                             {{ __('At least three dot-separated segments, for example ui.button.save.') }}
                         </flux:callout.text>
                     </flux:label>
-                    <flux:badge size="sm" :color="$proposedKeyValid ? 'green' : 'amber'" class="shrink-0">
+                    <flux:badge
+                        class="shrink-0"
+                        size="sm"
+                        :color="$proposedKeyValid ? 'green' : 'amber'"
+                    >
                         {{ $proposedKeyValid ? __('Valid translation key') : __('Invalid translation key') }}
                     </flux:badge>
                 </div>

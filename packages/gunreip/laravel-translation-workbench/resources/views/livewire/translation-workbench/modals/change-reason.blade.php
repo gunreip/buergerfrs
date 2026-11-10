@@ -3,6 +3,9 @@
     name="workbench-create-change-reason"
     wire:model="changeReasonOpen"
 >
+    <x-translation-workbench::ui.common.modal-loading
+        target="createChangeReason"
+    />
     <form
         class="space-y-4"
         wire:submit="createChangeReason"

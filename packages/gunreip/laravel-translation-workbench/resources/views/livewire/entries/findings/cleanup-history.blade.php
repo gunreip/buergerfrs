@@ -59,7 +59,7 @@
             </flux:table.column>
             {{-- Table Column Reason --}}
             <flux:table.column>
-                {{ __('Reason') }}
+                {{ __('ui.table.header.reason') }}
             </flux:table.column>
             {{-- Table Column Removed At --}}
             <flux:table.column>

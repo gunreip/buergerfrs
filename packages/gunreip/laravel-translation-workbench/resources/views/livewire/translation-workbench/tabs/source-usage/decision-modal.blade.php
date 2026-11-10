@@ -3,6 +3,7 @@
     name="source-usage-decision"
     wire:model="modalOpen"
 >
+    <x-translation-workbench::ui.common.modal-loading target="save, openWorkflowReason" />
     <div class="space-y-4">
         <flux:heading size="lg">{{ __('Decide source usage') }}</flux:heading>
         @if ($selectedCase)

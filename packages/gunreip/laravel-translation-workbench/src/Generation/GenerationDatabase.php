@@ -32,32 +32,30 @@ final class GenerationDatabase
         return (new WorkingGenerationSchema)->verify($db, $db->query('SELECT current_database()')->fetchColumn(), self::SCHEMA, $generation);
     }
 
-    /** Only unique, hash-current English file evidence can explain an existing key. */
+    /** Only unique English values verified in current files can explain an existing key. */
     public function languageEvidence(PDO $db): array
     {
         $rows = $db->query("SELECT e.full_name,e.value,e.path,s.sha256 FROM published_value_evidence e
             JOIN published_value_sources s USING(baseline_hash,path,locale) WHERE e.locale='en'")->fetchAll(PDO::FETCH_ASSOC);
-        $groups = [];
-        $hashes = [];
-        foreach ($rows as $row) {
-            $path = $row['path'];
-            if (str_starts_with($path, '/') || in_array('..', explode('/', $path), true)) {
-                continue;
-            }
-            $hashes[$path] ??= @hash_file('sha256', base_path($path));
-            if ($hashes[$path] === $row['sha256']) {
-                $groups[$row['full_name']][] = ['value' => $row['value'], 'provenance' => [
-                    'key' => $row['full_name'], 'locale' => 'en', 'path' => $path, 'sha256' => $row['sha256'],
-                ]];
-            }
-        }
-        $result = [];
-        foreach ($groups as $key => $evidence) {
-            if (count($evidence) === 1) {
-                $result[$key] = $evidence[0];
+
+        // Read completed receipts, never drafts or merely prepared publications.
+        $query = $db->prepare('SELECT published.full_name,published.value,file.key AS path FROM ('.PublishedWorklist::CURRENT_PUBLICATIONS.
+            ") published JOIN translation_workbench_publication_runs p ON p.id=published.run
+            CROSS JOIN LATERAL jsonb_each(p.plan::jsonb->'files') file
+            WHERE published.locale='en' AND published.namespace='' AND published.working_state<>2
+                AND p.plan::jsonb->>'directory'=?
+                AND file.key='en/'||split_part(published.full_name,'.',1)||'.php'");
+        $directory = realpath(lang_path()) ?: lang_path();
+        $query->execute([$directory]);
+        $root = rtrim(realpath(base_path()) ?: base_path(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+        if (str_starts_with($directory.DIRECTORY_SEPARATOR, $root)) {
+            $prefix = substr($directory.DIRECTORY_SEPARATOR, strlen($root));
+            foreach ($query->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                $row['path'] = $prefix.$row['path'];
+                $rows[] = $row;
             }
         }
 
-        return $result;
+        return (new CurrentLanguageEvidence)->resolve($rows, base_path());
     }
 }

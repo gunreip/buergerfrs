@@ -36,6 +36,7 @@ trait HasWorkflowReasons
             'review' => __('Create a review reason'),
             'publication' => __('Create a publication reason'),
             'source' => __('Create a source replacement reason'),
+            'source_position' => __('Create a source finding decision reason'),
             'closure' => __('Create a publication closure reason'),
             'source_closure' => __('Create a source replacement closure reason'),
             'usage', 'scan_usage' => __('Create a source usage decision reason'),
@@ -56,6 +57,7 @@ trait HasWorkflowReasons
             'review' => [__('Translation checked for meaning and placeholders.'), __('Return for corrections.'), __('Revoke approval because further changes are required.')],
             'publication' => [__('Publish the reviewed translation.'), __('Publish the corrected translation.')],
             'source' => [__('Replace the captured literal with its approved translation key.')],
+            'source_position' => [__('Confirmed the same occurrence at its new position.'), __('Confirmed that the occurrence was removed, not moved or renamed.')],
             'closure', 'source_closure' => [__('Cancel this operation without writing files.'), __('The prepared operation is no longer required.')],
             'usage' => [__('Value comes from the database and is displayed unchanged.'), __('Runtime value contains text that requires translation.')],
             default => [],
@@ -74,7 +76,12 @@ trait HasWorkflowReasons
         $this->newWorkflowReason = trim($search);
         if ($this->workflowReasonHasLanguage()) {
             $this->newWorkflowReasonLocale = $this->selectedReasonLocale($this->workflowReasonKind($field), $search)
-                ?? ($field === 'reviewBatchReason' ? $this->reviewBatchReasonLocale : $this->reasonTargetLocale());
+                ?? match ($field) {
+                    'reviewBatchReason' => $this->reviewBatchReasonLocale,
+                    'reviewReason' => $this->reviewReasonLocale,
+                    'publicationReason' => $this->publicationReasonLocale,
+                    default => $this->reasonTargetLocale(),
+                };
         }
         $this->resetValidation('newWorkflowReason');
         $this->workflowReasonOpen = true;

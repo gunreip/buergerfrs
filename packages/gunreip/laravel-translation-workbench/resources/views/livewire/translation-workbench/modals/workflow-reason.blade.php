@@ -3,6 +3,9 @@
     :name="'workbench-create-workflow-reason-'.$this->getId()"
     wire:model="workflowReasonOpen"
 >
+    <x-translation-workbench::ui.common.modal-loading
+        target="createWorkflowReason"
+    />
     <form
         class="space-y-4"
         wire:submit="createWorkflowReason"

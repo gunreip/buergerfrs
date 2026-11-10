@@ -37,8 +37,14 @@ function translationWorkbenchFixture(): array
     $editor->shouldReceive('reasonLocales')->andReturn([])->byDefault();
     $editor->shouldReceive('changeReasons')->andReturn(['Previously saved change reason'])->byDefault();
     $editor->shouldReceive('workflowReasons')->andReturn([])->byDefault();
+    $editor->shouldReceive('savedLanguageVariants')->andReturn([])->byDefault();
+    $editor->shouldReceive('translationFiles')->andReturn([])->byDefault();
     $editor->shouldReceive('assignmentReasons')->andReturn(['Previously saved reason'])->byDefault();
     $editor->shouldReceive('recentScans')->andReturn([])->byDefault();
+    $editor->shouldReceive('recentWork')->andReturn([])->byDefault();
+    $editor->shouldReceive('workTasks')->andReturn(new LengthAwarePaginator([], 0, 25))->byDefault();
+    $editor->shouldReceive('scanCategoryCounts')->andReturn([])->byDefault();
+    $editor->shouldReceive('scanRequirementSummary')->andReturn(['required' => false, 'findings' => 0, 'files' => 0, 'examples' => []])->byDefault();
     $editor->shouldReceive('scanUsageReasons')->andReturn([])->byDefault();
     $editor->shouldReceive('page')->andReturn(new LengthAwarePaginator([], 0, 25))->byDefault();
     $editor->shouldReceive('totals')->andReturn(['database' => 'fixture', 'active' => 1, 'archived' => 0, 'keys' => 1, 'revisions' => 0]);
@@ -66,7 +72,11 @@ it('opens the new editor and saves a draft without publishing or conflating evid
     Livewire::test(TranslationWorkbench::class)->assertSee('current_generation_v2')
         ->call('open', 11)->assertSet('editorOpen', true)->assertSet('value', '')->assertDontSeeHtml('<script>test</script>')
         ->call('copyPublished')->assertSet('value', '0')->set('reason', 'Explicit draft')->call('saveDraft')
-        ->assertHasNoErrors()->assertSet('context.revision.id', 19)->assertSee('Publication is a separate step.');
+        ->assertHasNoErrors()->assertSet('context.revision.id', 19)
+        ->assertDispatched('toast-show', fn ($event, $params) =>
+            $params['dataset']['variant'] === 'success'
+            && $params['slots']['heading'] === 'Translation drafts saved'
+            && str_contains($params['slots']['text'], 'Key record #8 · Languages: en, de'));
 });
 
 it('requires a confirmed valid assignment context and displays a stale assignment error', function () {
@@ -78,7 +88,8 @@ it('requires a confirmed valid assignment context and displays a stale assignmen
     $this->actingAs($user);
     Livewire::test(TranslationWorkbench::class)->call('open', 11)
         ->set('assignmentReason', 'Reviewed assignment')->call('confirmAssignment')->assertSet('confirmOpen', true)
-        ->call('assign')->assertHasErrors('assignment')->assertSee('The key assignment changed.');
+        ->call('assign')->assertHasErrors('assignment')->assertSee('The key assignment changed.')
+        ->assertNotDispatched('toast-show', fn ($event, $params) => ($params['dataset']['variant'] ?? '') === 'success');
 });
 
 it('denies the editor to users without editing permission', function () {
@@ -112,7 +123,11 @@ it('confirms the saved revision through its own modal and records an approval', 
     Livewire::test(TranslationWorkbench::class)->call('open', 11)->call('confirmReview', true)
         ->assertSet('reviewOpen', true)->assertSee('Confirm revision approval')->assertSee('Active linked findings')
         ->set('reviewReason', 'Checked English wording')->call('review')->assertHasNoErrors()
-        ->assertSet('reviewOpen', false)->assertSee('no language files have been written.');
+        ->assertSet('reviewOpen', false)
+        ->assertDispatched('toast-show', fn ($event, $params) =>
+            $params['dataset']['variant'] === 'success'
+            && $params['slots']['heading'] === 'Revisions approved'
+            && $params['slots']['text'] === 'Key record #8 · Revision IDs: #19');
 });
 
 it('blocks unsaved values and missing review confirmation', function () {
@@ -148,6 +163,22 @@ function generationPublicationFixture(): array
     return [$publisher, $plan];
 }
 
+it('offers the reserving publication in a toast before opening it for inspection', function () {
+    [$publisher, $plan] = generationPublicationFixture();
+    $publisher->shouldReceive('prepare')->once()->andThrow(
+        new \Gunreip\TranslationWorkbench\Generation\PublicationFileReserved($plan['run'], 'en/ui.php')
+    );
+    $publisher->shouldReceive('inspect')->once()->with($plan['run'])->andReturn($plan);
+    Livewire::test(TranslationWorkbench::class)->call('open', 11)
+        ->set('publicationReason', 'Publish reviewed English')->call('preparePublication')
+        ->assertHasNoErrors()->assertSet('publicationOpen', false)
+        ->assertDispatched('toast-show', fn ($event, $notice) =>
+            $notice['dataset']['variant'] === 'danger' && str_contains($notice['slots']['text'], 'lang/en/ui.php')
+            && $notice['action']['params']['run'] === $plan['run'])
+        ->call('openPublication', $plan['run'])->assertSet('publicationOpen', true)
+        ->assertSee('Review closure without further writes');
+});
+
 it('prepares a preview before explicitly writing and shows the completed receipt', function () {
     [$publisher, $plan] = generationPublicationFixture();
     $publisher->shouldReceive('prepare')->once()->withArgs(fn ($run, $revisions, $actor, $reason, $fingerprints) => $revisions === [19] && $actor === 7 && $reason === 'Publish reviewed English' && $fingerprints === [str_repeat('a', 64)])
@@ -166,7 +197,23 @@ it('prepares a preview before explicitly writing and shows the completed receipt
 
         return ['kind' => 'completed'];
     });
-    $component->call('publish')->assertHasNoErrors()->assertSet('publication.state', 'complete')->assertSee('File matches the publication result.');
+    $component->call('publish')->assertHasNoErrors()->assertSet('publication.state', 'complete')->assertSee('File matches the publication result.')
+        ->assertDispatched('toast-show', fn ($event, $params) =>
+            $params['dataset']['variant'] === 'success'
+            && $params['slots']['heading'] === 'Publication completed');
+});
+
+it('reports a failed publication through a contextual error toast', function () {
+    [$publisher, $plan] = generationPublicationFixture();
+    $publisher->shouldReceive('inspect')->with($plan['run'])->andReturn($plan);
+    $publisher->shouldReceive('publish')->once()->andThrow(new RuntimeException('Language file is not writable.'));
+
+    Livewire::test(TranslationWorkbench::class)->call('openPublication', $plan['run'])
+        ->call('publish')->assertHasErrors('publication')->assertSet('publicationOpen', true)
+        ->assertDispatched('toast-show', fn ($event, $params) =>
+            $params['dataset']['variant'] === 'danger'
+            && $params['slots']['heading'] === 'Publication failed'
+            && $params['slots']['text'] === 'Language file is not writable.');
 });
 
 it('renders a distinct VSC tooltip for the first and subsequent publication entries after reopening', function () {
@@ -230,6 +277,10 @@ it('requires a fresh closure preview before releasing a publication', function (
 
 it('shows a read-only exact source preview using the configured source locale', function () {
     [$editor, $context] = translationWorkbenchFixture();
+    $editor->shouldReceive('translationFiles')->once()->with(8, 'ui.button.save', ['en', 'de', 'de-AT'])->andReturn([
+        ['locale' => 'en', 'path' => 'en/ui.php', 'actual' => true, 'state' => 'published', 'detail' => 'Matches the published revision.'],
+        ['locale' => 'de-AT', 'path' => 'de-at/ui.php', 'actual' => false, 'state' => 'unavailable', 'detail' => 'Missing file.'],
+    ]);
     $editor->shouldReceive('inspect')->andReturn($context);
     $editor->shouldReceive('sourcePreview')->once()->with(11, 8, 4, 'en')->andReturn([
         'finding' => 11, 'key_id' => 8, 'key' => 'ui.button.save', 'path' => 'example.blade.php', 'line' => 2, 'column' => 3,
@@ -238,7 +289,9 @@ it('shows a read-only exact source preview using the configured source locale', 
     ]);
     Livewire::test(TranslationWorkbench::class)->call('open', 11)->set('locale', 'de')->call('previewSource')
         ->assertHasNoErrors()->assertSet('sourcePreviewOpen', true)->assertSee('Source replacement preview')
-        ->assertSee('Exact source preview')->assertSee('Preparation records a plan without writing the file.');
+        ->assertSee('Translation files')->assertSee('lang/de-at/ui.php')->assertSee('Expected')
+        ->assertDontSee('Published source-language value')->assertSee('Exact source preview')->assertSee('Preparation records a plan without writing the file.')
+        ->assertSeeHtml('wire:click="openWorkflowStatus(11)"');
 });
 
 it('shows a stale source error without leaving an earlier preview visible', function () {
@@ -287,7 +340,7 @@ it('opens the successor after source confirmation without losing the recorded pl
     [$editor, $context] = translationWorkbenchFixture();
     $editor->shouldReceive('inspect')->with(12, 'de')->andReturn($context);
     $writer = app(SourceReplacementWriter::class);
-    $plan = ['run' => 'plan-id', 'actor' => 7, 'reason' => 'Use approved key', 'preview' => ['finding' => 11, 'path' => 'example.blade.php', 'key' => 'ui.button.save', 'before' => "__('Save')", 'after' => "__('ui.button.save')"], 'state' => 'pending', 'file_state' => 'written', 'result' => null];
+    $plan = ['run' => 'plan-id', 'actor' => 7, 'reason' => 'Use approved key', 'preview' => ['finding' => 11, 'key_id' => 8, 'path' => 'example.blade.php', 'key' => 'ui.button.save', 'before' => "__('Save')", 'after' => "__('ui.button.save')"], 'state' => 'pending', 'file_state' => 'written', 'result' => null];
     $writer->shouldReceive('inspect')->with('plan-id')->andReturnUsing(function () use (&$plan) {
         return $plan;
     });
@@ -339,6 +392,60 @@ it('opens saved scan results with independent pagination and finding navigation'
 });
 
 
+it('loads current shared candidate status for findings on the scan result page', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldReceive('scanPage')->with('scan-id', 'created', 1)->andReturn(new LengthAwarePaginator([
+        ['id' => 999, 'predecessor' => null, 'path' => 'new.blade.php', 'source_line' => 2],
+    ], 1, 25, 1, ['pageName' => 'scanResultsPage']));
+    $editor->shouldReceive('sharedSummaries')->withArgs(fn ($ids) => in_array(999, $ids, true))
+        ->andReturn([999 => ['candidates' => 3, 'shared' => 0]]);
+
+    Livewire::test(TranslationWorkbench::class)->call('openScan', 'scan-id')
+        ->assertSee('Current shared status')->assertSee('Shared candidate')
+        ->assertSeeHtml('wire:click="open(999)"');
+});
+
+it('changes the scan page size independently and resets its page', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldReceive('scanPage')->with('scan-id', 'created', 1)->andReturn(new LengthAwarePaginator([], 60, 25));
+    $editor->shouldReceive('scanPage')->with('scan-id', 'created', 2)->andReturn(new LengthAwarePaginator([], 60, 25, 2));
+    $editor->shouldReceive('scanPage')->with('scan-id', 'created', 1, '', 10)->andReturn(new LengthAwarePaginator([], 60, 10));
+    Livewire::test(TranslationWorkbench::class)->call('openScan', 'scan-id')
+        ->call('setPage', 2, 'scanResultsPage')->set('scanPerPage', 10)
+        ->assertSet('paginators.scanResultsPage', 1)->assertSet('scanPerPage', 10)
+        ->set('scanPerPage', 99999)->assertSet('scanPerPage', 25);
+});
+
+it('filters scan results and resets pagination while retaining category context', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldReceive('scanPage')->with('scan-id', 'created', 1)->andReturn(new LengthAwarePaginator([], 60, 25));
+    $editor->shouldReceive('scanPage')->with('scan-id', 'created', 2)->andReturn(new LengthAwarePaginator([], 60, 25, 2));
+    $editor->shouldReceive('scanPage')->with('scan-id', 'created', 1, '#42')->andReturn(new LengthAwarePaginator([
+        ['id' => 42, 'predecessor' => null, 'path' => 'target.php', 'source_line' => 3],
+    ], 1, 25));
+    $editor->shouldReceive('scanPage')->with('scan-id', 'review_files', 1, '#42')->andReturn(new LengthAwarePaginator([], 0, 25));
+    Livewire::test(TranslationWorkbench::class)->call('openScan', 'scan-id')
+        ->assertSee('Files and usage decisions')->assertSee('Finding ID, source path or translation key')
+        ->call('setPage', 2, 'scanResultsPage')
+        ->set('scanSearch', '#42')->assertSet('paginators.scanResultsPage', 1)->assertSee('target.php:3')
+        ->set('scanCategory', 'review_files')->assertSet('paginators.scanResultsPage', 1)
+        ->assertSee('No results match this search in the selected category.')
+        ->call('openScan', 'scan-id')->assertSet('scanSearch', '');
+});
+
+it('offers missing immutable scan information without conflating ordinary scan results', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldReceive('scanPage')->with('scan-id', 'created', 1)->andReturn(new LengthAwarePaginator([], 0, 25));
+    $editor->shouldReceive('scanPage')->with('scan-id', 'missing_immutable', 1)->andReturn(new LengthAwarePaginator([
+        ['id' => 11, 'predecessor' => null, 'path' => 'legacy.php', 'source_line' => 7, 'captured_key' => 'ui.states.all'],
+    ], 1, 25, 1, ['pageName' => 'scanResultsPage']));
+    Livewire::test(TranslationWorkbench::class)->call('openScan', 'scan-id')
+        ->set('scanCategory', 'missing_immutable')->assertSet('scanCategory', 'missing_immutable')
+        ->assertSee('Missing immutable information')->assertSee('Reconstructed source text missing')
+        ->assertSee('legacy.php:7')->assertSee('ui.states.all')
+        ->set('scanCategory', 'created')->assertDontSee('Reconstructed source text missing');
+});
+
 it('explains why a scan file was preserved without inventing a finding', function () {
     [$editor] = translationWorkbenchFixture();
     $editor->shouldReceive('scanPage')->with('scan-id', 'created', 1)->andReturn(new LengthAwarePaginator([], 0, 25));
@@ -346,9 +453,10 @@ it('explains why a scan file was preserved without inventing a finding', functio
         ['id' => null, 'predecessor' => null, 'path' => 'pending.blade.php', 'source_line' => null, 'preserved_count' => 3,
             'issues' => [['line' => 17, 'column' => 9, 'reason' => 'key_like_argument_without_lang_evidence']]],
     ], 1, 25, 1, ['pageName' => 'scanResultsPage']));
-    Livewire::test(TranslationWorkbench::class)->call('openScan', 'scan-id')->set('scanCategory', 'review_files')
-        ->assertSee('pending.blade.php')->assertSee('17:9')->assertSee('Existing findings preserved: 3')
+    $component = Livewire::test(TranslationWorkbench::class)->call('openScan', 'scan-id')->set('scanCategory', 'review_files')
+        ->assertSee('pending.blade.php')->assertSee('17:9')
         ->assertSee('Translation key found, but no verified source-language value is available for this scan.');
+    expect(preg_replace('/\s+/u', ' ', strip_tags($component->html())))->toContain('Existing findings preserved: 3');
 });
 
 it('opens preserved findings from a scan review and returns to its result category', function () {
@@ -382,16 +490,20 @@ it('saves an explicit usage decision for the selected scan capture', function ()
     $editor->shouldReceive('scanPage')->andReturn(new LengthAwarePaginator([], 0, 25));
     $editor->shouldReceive('scanCapturesPage')->andReturn(new LengthAwarePaginator([], 0, 25));
     $context = ['run' => 'scan-id', 'path' => 'pending.php', 'index' => 2,
-        'capture' => ['raw_expression' => '__($databaseValue)'], 'decision' => null];
+        'capture' => ['raw_expression' => '__($databaseValue)', 'source_line' => 87, 'source_column' => 38], 'decision' => null];
     $editor->shouldReceive('scanUsage')->with('scan-id', 'pending.php', 2)->andReturnUsing(fn () => $context);
     $editor->shouldReceive('decideScanUsage')->once()->with('scan-id', 'pending.php', 2, 'database_value', 'Database output', 7, 0)->andReturn([]);
     $user = new User;
     $user->id = 7;
     $this->actingAs($user);
     Livewire::test(TranslationWorkbench::class)->call('openScan', 'scan-id')->call('openScanCaptures', 'pending.php')
+        ->call('openScanUsage', 2)->assertSet('scanUsageOpen', true)->assertSet('scanOpen', false)
+        ->assertSee('Line 87, column 38')
+        ->set('scanUsageOpen', false)->assertSet('scanUsageContext', [])->assertSet('scanOpen', true)
+        ->assertSet('scanReviewPath', 'pending.php')
         ->call('openScanUsage', 2)->assertSee('Classify source usage')->assertSee('__($databaseValue)')
         ->set('scanUsageChoice', 'database_value')->set('scanUsageReason', 'Database output')->call('saveScanUsage')
-        ->assertHasNoErrors()->assertSee('Usage decision saved. The next scan checks the unchanged source before applying it. No translation or source file was changed.');
+        ->assertHasNoErrors()->assertSet('scanUsageOpen', false)->assertSet('scanOpen', true)->assertSee('Usage decision saved. The next scan checks the unchanged source before applying it. No translation or source file was changed.');
 });
 
 it('keeps a stale scan decision open and shows its error', function () {
@@ -403,7 +515,7 @@ it('keeps a stale scan decision open and shows its error', function () {
     $editor->shouldReceive('decideScanUsage')->once()->andThrow(new RuntimeException('Source changed. Run a fresh scan before deciding.'));
     Livewire::test(TranslationWorkbench::class)->call('openScan', 'scan-id')->call('openScanCaptures', 'pending.php')
         ->call('openScanUsage', 2)->set('scanUsageChoice', 'translate')->set('scanUsageReason', 'Review usage')->call('saveScanUsage')
-        ->assertHasErrors('scanUsage')->assertSet('scanUsageContext.index', 2)->assertSet('scanUsageNotice', '');
+        ->assertHasErrors('scanUsage')->assertSet('scanUsageOpen', true)->assertSet('scanUsageContext.index', 2)->assertSet('scanUsageNotice', '');
 });
 
 
@@ -430,6 +542,8 @@ it('offers saved reasons and presets while preserving custom text when classific
 it('shows saved usage decisions beside their captured source without marking the scan complete', function () {
     [$editor] = translationWorkbenchFixture();
     $editor->shouldReceive('scanPage')->andReturn(new LengthAwarePaginator([], 0, 25));
+    app(\Gunreip\TranslationWorkbench\Support\WorkbenchUserSummary::class)->shouldReceive('find')->once()->with(7)
+        ->andReturn(['name' => 'Alex Weber', 'avatar_url' => '/storage/avatars/test.png']);
     $base = ['source_line' => 4, 'source_column' => 1, 'raw_expression' => '__($value)',
         'raw_literal' => null, 'found_translation_key' => null, 'reason' => 'dynamic_or_nonliteral_argument',
         'source_sha256' => 'hash', 'can_classify' => true];
@@ -442,6 +556,7 @@ it('shows saved usage decisions beside their captured source without marking the
     ], 3, 25));
     Livewire::test(TranslationWorkbench::class)->call('openScan', 'scan-id')->call('openScanCaptures', 'pending.php')
         ->assertSee('DatabaseValue · decision saved')->assertSee('Translate · work remains open')
+        ->assertSee('Alex Weber')->assertSeeHtml('/storage/avatars/test.png')->assertSee('#8')
         ->assertSee('No usage decision saved')->assertSee('Review usage decision')
         ->assertSee('It does not change this historical scan result.', false)
         ->assertDontSeeHtml('<script>Stored reason</script>');
@@ -462,6 +577,8 @@ it('opens the source behind a considered decision and returns to the original sc
         ->call('openConsideredScanUsage', 42)->assertHasNoErrors()
         ->assertSet('selectedScan', 'origin-scan')->assertSet('scanUsageContext.decision.id', 43)
         ->assertSet('paginators.scanCapturesPage', 2)->assertSet('scanUsageReason', 'Updated reason')
+        ->assertSet('scanUsageOpen', true)->assertSet('scanOpen', false)
+        ->set('scanUsageOpen', false)->assertSet('scanOpen', true)
         ->assertSee('You are viewing the original captured source')
         ->call('closePreservedFindings')->assertSet('selectedScan', 'result-scan')
         ->assertSet('scanDecisionReturnRun', '')->assertSet('scanCategory', 'usage_decisions');
@@ -603,7 +720,8 @@ it('starts assignment only from the current key and never preselects the immutab
         ->assertHasErrors('assignmentKey')->assertSet('confirmOpen', false)
         ->assertSet('context.finding.suggested_key', 'fixture.original.save')
         ->set('assignmentKey', 'ui.button.save')->call('confirmAssignment')
-        ->assertSet('assignmentSelection.key', 8)->assertSee('Link this finding to existing key #8.')
+        ->assertSet('assignmentSelection.key', 8)
+        ->assertSee('Translation key assignment')->assertSee('Key record ID')
         ->assertSet('context.finding.suggested_key', 'fixture.original.save')
         ->set('assignmentKey', 'ui.button.changed')->call('assign')->assertHasErrors('assignment');
 });
@@ -629,7 +747,7 @@ it('offers segments in the assignment select without extra navigation or writes'
     $component->set('assignmentKeySearch', 'ui.button.sa');
     expect($component->instance()->assignmentKeyOptions($keys))->toBe(['ui.button.save']);
     $component->set('assignmentKey', 'ui.button.save')->assertSet('assignmentKeySearch', '')
-        ->assertSee('New translation key')->assertDontSee('Incomplete translation key')
+        ->assertSee('Assigned key')->assertDontSee('Incomplete translation key')
         ->call('openTranslationKey', 'reports.new.Report')
         ->call('createTranslationKey')->assertHasNoErrors()->assertSet('assignmentKey', 'reports.new.Report')
         ->assertSet('context.finding.suggested_key', 'fixture.original.save');
@@ -802,9 +920,15 @@ it('copies the main language draft only to selected sublanguages without saving'
         ->assertSet('subLanguageValues.de-CH', "Main :name\nSecond line")
         ->assertSet('subLanguageValues.de-LI', 'Keep this unselected draft')
         ->set('value', '0')->call('copyTargetLanguageToAllSelectedSubLanguages')
+        ->assertHasNoErrors()
         ->assertSet('subLanguageValues.de-AT', '0')
+        ->assertSet('subLanguageValues.de-CH', '0')
         ->set('value', '')->call('copyTargetLanguageToAllSelectedSubLanguages')
-        ->assertSet('subLanguageValues.de-CH', '')
+        ->assertHasErrors(['value' => 'required'])
+        ->assertSet('subLanguageValues.de-AT', '0')
+        ->assertSet('subLanguageValues.de-CH', '0')
+        ->assertSet('subLanguageValues.de-LI', 'Keep this unselected draft')
+        ->set('value', 'Main language draft')
         ->set('selectedSubLanguages', [])->call('copyTargetLanguageToAllSelectedSubLanguages')
         ->assertHasErrors('selectedSubLanguages')
         ->set('selectedSubLanguages', ['fr'])->call('copyTargetLanguageToAllSelectedSubLanguages')
@@ -1000,10 +1124,12 @@ it('returns to the finding editor after confirming shared assignment and preserv
         ->assertSet('editorOpen', true)->assertSet('selected', 11)
         ->assertSet('value', 'Unsaved translation')->assertSet('sourceLanguageValue', 'Unsaved source')
         ->assertSet('sharedSelection', [])->assertSet('sharedAssignmentPlan', [])
-        ->assertSee('Selected findings now use the shared key.');
+        ->assertDispatched('toast-show', fn ($event, $params) =>
+            $params['dataset']['variant'] === 'success'
+            && $params['slots']['text'] === 'Findings linked: 1 · Key record #8.');
 });
 
-it('toggles eligible shared findings on the current page without changing other pages or assignments', function () {
+it('groups shared checkboxes without replacing selections from other pages or changing assignments', function () {
     [$editor] = translationWorkbenchFixture();
     $literal = "\n<Save>\nNext line\n";
     $editor->shouldReceive('sharedSummaries')->andReturn([11 => ['status' => 'active', 'key_id' => 8, 'literal' => $literal]]);
@@ -1018,13 +1144,16 @@ it('toggles eligible shared findings on the current page without changing other 
     $editor->shouldNotReceive('assignShared');
     $component = Livewire::test(TranslationWorkbench::class)
         ->call('openShared', 11)
-        ->assertSeeHtml('wire:click="toggleSharedPageSelection"')
+        ->assertSeeHtml('data-flux-checkbox-group')
+        ->assertDontSeeHtml('wire:click="toggleSharedPageSelection"')
         ->assertSeeHtml('&lt;Save&gt;<br />')
         ->assertDontSeeHtml('whitespace-pre-line')
         ->set('sharedSelection', ['99', '12'])
-        ->call('toggleSharedPageSelection')
+        ->set('sharedConfirmOpen', true)
+        ->set('sharedSelection', ['99', '12', '13'])
+        ->assertSet('sharedConfirmOpen', false)
         ->assertSet('sharedSelection', ['99', '12', '13'])
-        ->call('toggleSharedPageSelection')
+        ->set('sharedSelection', ['99'])
         ->assertSet('sharedSelection', ['99']);
 
     $buttons = function () use ($component): array {
@@ -1048,7 +1177,7 @@ it('toggles eligible shared findings on the current page without changing other 
 
 it('keeps already assigned shared checkboxes visible and disables select all when none remain', function () {
     [$editor, $context] = translationWorkbenchFixture();
-    $reference = [...$context['finding'], 'literal' => 'Save'];
+    $reference = [...$context['finding'], 'literal' => 'Save', 'candidates' => 2, 'shared' => 2, 'assignment_reason' => 'Use the same meaning.'];
     $rows = [$reference, [...$reference, 'id' => 12]];
     $editor->shouldReceive('sharedSummaries')->andReturn([11 => $reference]);
     $editor->shouldReceive('sharedFindings')->andReturn(new LengthAwarePaginator($rows, 2, 25));
@@ -1057,15 +1186,19 @@ it('keeps already assigned shared checkboxes visible and disables select all whe
     $dom = new DOMDocument();
     @$dom->loadHTML($component->html());
     $xpath = new DOMXPath($dom);
-    $checkboxes = $xpath->query('//ui-checkbox[@*[name()="wire:model.live"]="sharedSelection"]');
+    $checkboxes = $xpath->query('//ui-checkbox[@disabled and @checked]');
     expect($checkboxes->length)->toBe(2);
     foreach ($checkboxes as $checkbox) {
-        expect($checkbox->hasAttribute('disabled'))->toBeTrue();
+        expect($checkbox->hasAttribute('disabled'))->toBeTrue()
+            ->and($checkbox->hasAttribute('checked'))->toBeTrue()
+            ->and($checkbox->hasAttribute('wire:model.live'))->toBeFalse();
     }
-    $buttons = $xpath->query('//button[@*[name()="wire:click"]="toggleSharedPageSelection"]');
+    $buttons = $xpath->query('//ui-checkbox[@all]');
     expect($buttons->length)->toBe(1)
         ->and($buttons->item(0)->hasAttribute('disabled'))->toBeTrue();
-    $component->call('toggleSharedPageSelection')->assertSet('sharedSelection', []);
+    $component->assertSet('sharedSelection', [])->assertSee('Use the same meaning.')->assertSee('Already assigned');
+    $reason = $xpath->query('//ui-select[@*[name()="wire:model.live"]="sharedReason"]')->item(0);
+    expect($reason->hasAttribute('disabled'))->toBeTrue();
 });
 
 it('uses a language toggle only when source and target differ', function () {
@@ -1101,7 +1234,7 @@ it('restores a known reason language and does not guess a historical reason lang
     [$editor, $context] = translationWorkbenchFixture();
     $editor->shouldReceive('inspect')->andReturn($context);
     $editor->shouldReceive('reasonLocales')->with('assignment')->andReturn(['Known reason' => 'en', 'Historical reason' => null]);
-    $editor->shouldReceive('assign')->once()->with(11, 8, 4, 7, 'Historical reason', null)->andReturn([]);
+    $editor->shouldReceive('assign')->once()->with(11, 8, 4, 7, 'Historical reason', null)->andReturn(['key' => 8, 'link' => 4]);
     $user = new User;
     $user->id = 7;
     $this->actingAs($user);
@@ -1154,7 +1287,7 @@ it('creates workflow reasons from the search text only in the intended field', f
         ->assertSet($field, 'Context-specific reason')
         ->assertSet('assignmentReason', 'Keep this assignment reason')
         ->assertSet('workflowReasonOpen', false);
-})->with(['reviewReason', 'reviewTaskReason', 'publicationReason', 'closureReason', 'sourceReason', 'sourceCloseReason', 'scanUsageReason']);
+})->with(['reviewReason', 'reviewBatchReason', 'publicationReason', 'closureReason', 'sourceReason', 'sourceCloseReason', 'scanUsageReason']);
 
 it('rejects empty workflow reasons and arbitrary property targets', function () {
     translationWorkbenchFixture();
@@ -1172,7 +1305,7 @@ it('offers review reasons in both review forms without mixing publication reason
     $component = Livewire::test(TranslationWorkbench::class)
         ->call('openWorkflowReason', 'reviewReason', 'New review explanation')
         ->call('createWorkflowReason');
-    expect($component->instance()->workflowReasonOptions('reviewTaskReason'))->toContain('New review explanation');
+    expect($component->instance()->workflowReasonOptions('reviewBatchReason'))->toContain('New review explanation');
     expect($component->instance()->workflowReasonOptions('publicationReason'))->not->toContain('New review explanation');
 });
 
@@ -1257,7 +1390,12 @@ it('renders an executable create-reason action and opens the workflow reason mod
         ->assertSet('newWorkflowReason', 'Check terminology')
         ->call('createWorkflowReason')->assertHasNoErrors()
         ->assertSet('workflowReasonOpen', false)->assertSet('reviewOpen', true)
-        ->assertSet('reviewReason', 'Check terminology');
+        ->assertSet('reviewReason', 'Check terminology')
+        ->assertSeeHtml('reviewReasonLocale')
+        ->set('reviewReasonLocale', 'en')
+        ->call('openWorkflowReason', 'reviewReason', 'Checked wording')
+        ->assertSet('newWorkflowReasonLocale', 'en')
+        ->set('reviewReasonLocale', 'fr')->assertHasErrors('reviewReasonLocale');
 });
 
 it('marks shared review revisions and keeps batch and individual review controls available', function () {
@@ -1269,8 +1407,10 @@ it('marks shared review revisions and keeps batch and individual review controls
     $html = view('translation-workbench::livewire.translation-workbench.tabs.review.table', [
         'reviewTasks' => $tasks, 'reviewSort' => 'key', 'reviewDirection' => 'asc', 'selectedReviewRevisions' => [],
     ])->render();
-    expect($html)->toContain('Shared key', '3 active findings', 'toggleVisibleReviewRevisions', 'openReviewBatch', 'openReviewTask(19)', 'selectedReviewRevisions');
+    expect($html)->toContain('Shared key', '3 active findings', 'ui-checkbox-group', 'openReviewBatch', 'openReviewBatch(19)', 'selectedReviewRevisions');
     expect(preg_match_all('/>\s*Shared key\s*</', $html))->toBe(1);
+    expect($html)->toMatch('/<ui-checkbox\b[^>]*\ball(?:\s|>)/')
+        ->not->toContain('toggleVisibleReviewRevisions');
 });
 
 it('carries the batch review input language into a new reason without relabeling known reasons', function () {
@@ -1290,6 +1430,7 @@ it('carries the batch review input language into a new reason without relabeling
 it('offers the language selector for publication reasons and retains the chosen language', function () {
     generationReviewFixture();
     $component = Livewire::test(TranslationWorkbench::class)
+        ->set('publicationReasonLocale', 'de')
         ->call('openWorkflowReason', 'publicationReason', 'Veröffentlichung geprüft')
         ->assertSee('Create a publication reason')->assertSeeHtml('data-flux-toggle')
         ->assertSet('newWorkflowReasonLocale', 'de')->assertSeeHtml('lang="de"')
@@ -1297,4 +1438,680 @@ it('offers the language selector for publication reasons and retains the chosen 
         ->set('newWorkflowReason', 'Checked for publication')->call('createWorkflowReason')
         ->assertHasNoErrors()->assertSet('publicationReason', 'Checked for publication');
     expect($component->get('createdReasonLocales')['publication'][hash('sha256', 'Checked for publication')])->toBe('en');
+    $component->set('publicationReasonLocale', 'en')
+        ->call('openWorkflowReason', 'publicationReason', 'New publication reason')
+        ->assertSet('newWorkflowReasonLocale', 'en')
+        ->set('publicationReasonLocale', 'fr')->assertHasErrors('publicationReasonLocale');
+});
+
+it('summarizes finding editor validation errors in a persistent toast with a field action', function () {
+    [$editor, $context] = translationWorkbenchFixture();
+    $editor->shouldReceive('inspect')->andReturn($context);
+    $editor->shouldNotReceive('assign');
+    $component = Livewire::test(TranslationWorkbench::class)->call('open', 11)
+        ->set('assignmentKey', '')->set('assignmentReason', '')
+        ->call('confirmAssignment')
+        ->assertHasErrors(['assignmentKey', 'assignmentReason'])
+        ->assertSet('confirmOpen', false)
+        ->assertDispatched('toast-show', function ($event, $params) {
+            return $params['dataset']['variant'] === 'danger'
+                && $params['duration'] === 0
+                && count(explode("\n", $params['slots']['text'])) === 2
+                && $params['action']['event'] === 'workbench-editor-error-focus'
+                && $params['action']['params']['target'] === 'assignmentKey'
+                && $params['action']['params']['finding'] === 11
+                && $params['dataset']['noticeScope'] === $params['dataset']['replaceNoticeScope'];
+        });
+    foreach ($component->instance()->getErrorBag()->all() as $message) {
+        $component->assertDontSee($message);
+    }
+});
+
+it('reports a draft conflict without moving the editor layout or losing entered text', function () {
+    [$editor, $context] = translationWorkbenchFixture();
+    $editor->shouldReceive('inspect')->andReturn($context);
+    $editor->shouldReceive('saveDrafts')->once()->andThrow(new RuntimeException('The saved revision changed.'));
+    $user = new User;
+    $user->id = 7;
+    $this->actingAs($user);
+    Livewire::test(TranslationWorkbench::class)->call('open', 11)
+        ->set('value', 'Keep my translation')->set('reason', 'Reviewing the text')
+        ->call('saveDraft')->assertHasErrors('value')
+        ->assertSet('value', 'Keep my translation')->assertSet('editorOpen', true)
+        ->assertDontSee('The saved revision changed.')
+        ->assertDispatched('toast-show', fn ($event, $params) =>
+            $params['slots']['text'] === 'The saved revision changed.'
+            && $params['action']['params']['target'] === 'value');
+});
+
+it('keeps reason-modal validation in its own modal rather than directing to the finding editor', function () {
+    [$editor, $context] = translationWorkbenchFixture();
+    $editor->shouldReceive('inspect')->andReturn($context);
+    Livewire::test(TranslationWorkbench::class)->call('open', 11)
+        ->call('openChangeReason')->set('newChangeReason', '')
+        ->call('createChangeReason')->assertHasErrors('newChangeReason')
+        ->assertNotDispatched('toast-show');
+});
+
+
+it('distinguishes a missing change reason from an invalid reason and marks the select', function () {
+    [$editor, $context] = translationWorkbenchFixture();
+    $editor->shouldReceive('inspect')->andReturn($context);
+    $editor->shouldNotReceive('saveDrafts');
+    $component = Livewire::test(TranslationWorkbench::class)->call('open', 11)
+        ->set('reason', '')->call('saveDraft')
+        ->assertHasErrors(['reason' => 'required'])
+        ->assertSet('editorOpen', true)
+        ->assertDispatched('toast-show', fn ($event, $params) =>
+            $params['slots']['heading'] === 'Required reason is missing'
+            && $params['slots']['text'] === 'Select a reason for translation change.'
+            && $params['action']['params']['target'] === 'reason');
+    $document = new DOMDocument;
+    @$document->loadHTML($component->html());
+    $xpath = new DOMXPath($document);
+    expect($xpath->query('//*[@data-editor-error-target="reason"]//*[@data-invalid]')->length)->toBeGreaterThan(0);
+    $component->set('reason', 'x')->call('saveDraft')
+        ->assertHasErrors(['reason' => 'min'])
+        ->assertDispatched('toast-show', fn ($event, $params) =>
+            $params['slots']['heading'] === 'Check the field value'
+            && $params['action']['params']['target'] === 'reason');
+});
+
+it('reports unsaved drafts as a workflow prerequisite without marking the reason field', function () {
+    [$editor, $context] = translationWorkbenchFixture();
+    $editor->shouldReceive('inspect')->andReturn($context);
+    $editor->shouldNotReceive('reviewWorklist');
+    Livewire::test(TranslationWorkbench::class)->call('open', 11)->set('value', 'Speichern')
+        ->call('submitForReview')->assertHasErrors('submission')->assertHasNoErrors('reason')
+        ->assertSet('editorOpen', true)
+        ->assertDispatched('toast-show', fn ($event, $params) =>
+            $params['slots']['heading'] === 'Submission for review blocked'
+            && $params['action']['label'] === 'Go to translation drafts'
+            && $params['action']['params']['target'] === 'translationValues');
+});
+
+
+it('shows a persisted assignment and only enables assignment actions for a changed selection', function () {
+    [$editor, $context] = translationWorkbenchFixture();
+    $editor->shouldReceive('inspect')->andReturn($context);
+    $editor->shouldNotReceive('assign');
+    $component = Livewire::test(TranslationWorkbench::class)->call('open', 11)
+        ->assertSee('Assigned key')->assertDontSee('New translation key');
+    $disabledActions = function () use ($component) {
+        $document = new DOMDocument;
+        @$document->loadHTML($component->html());
+        $xpath = new DOMXPath($document);
+        return $xpath->query('//button[@*[name()="wire:click"]="confirmAssignment" and @disabled]')->length;
+    };
+    expect($disabledActions())->toBe(2);
+    $component->set('assignmentKey', 'ui.button.changed')->assertSee('New translation key');
+    expect($disabledActions())->toBe(0);
+    $component->set('assignmentKey', 'ui.button.save')->assertSee('Assigned key');
+    expect($disabledActions())->toBe(2);
+    $component->call('open', 11)->assertSee('Assigned key');
+    expect($disabledActions())->toBe(2);
+});
+
+
+it('keeps source-only drafts saveable but blocks empty target text from review', function () {
+    [$editor, $context] = translationWorkbenchFixture();
+    $editor->shouldReceive('inspect')->andReturn($context);
+    $editor->shouldReceive('saveDrafts')->once()->withArgs(fn ($finding, $key, $link, $drafts) =>
+        $drafts['en']['value'] === 'Save' && $drafts['de']['value'] === '')->andReturn([]);
+    $editor->shouldNotReceive('reviewWorklist');
+    $component = Livewire::test(TranslationWorkbench::class)->call('open', 11)
+        ->set('reason', 'Continue this draft later')->call('saveDraft')->assertHasNoErrors();
+    $component->set('value', '   ')->call('submitForReview')->assertHasErrors(['value' => 'required'])
+        ->assertSet('editorOpen', true);
+});
+
+it('requires selected variant text for review without deleting other variant drafts', function () {
+    [$editor, $context] = translationWorkbenchFixture();
+    $locales = Mockery::mock(TranslationWorkbenchEditorLocales::class);
+    $locales->shouldReceive('resolve')->andReturn(['source' => 'en', 'active' => 'de', 'sub' => ['de-AT', 'de-CH']]);
+    app()->instance(TranslationWorkbenchEditorLocales::class, $locales);
+    $editor->shouldReceive('inspect')->andReturn($context);
+    $editor->shouldNotReceive('reviewWorklist');
+    Livewire::test(TranslationWorkbench::class)->call('open', 11)
+        ->set('value', 'Speichern')->set('selectedSubLanguages', ['de-AT', 'de-CH'])
+        ->set('subLanguageValues.de-AT', 'Speichern in Österreich')->set('subLanguageValues.de-CH', ' ')
+        ->call('submitForReview')->assertHasErrors(['subLanguageValues.de-CH' => 'required'])
+        ->assertSet('subLanguageValues.de-AT', 'Speichern in Österreich')
+        ->set('value', '')->call('submitForReview')->assertHasErrors(['value' => 'required'])
+        ->assertSet('subLanguageValues.de-AT', 'Speichern in Österreich');
+});
+
+it('rejects an empty publication selection without opening a preview', function () {
+    translationWorkbenchFixture();
+    Livewire::test(TranslationWorkbench::class)
+        ->set('selectedPublicationRevisions', [])->call('openPublicationTask')
+        ->assertHasErrors('selectedPublicationRevisions')->assertSet('publicationTaskOpen', false)
+        ->assertSet('publicationBatch', []);
+});
+
+it('shows source replacement inspection with disabled actions and separate findings', function () {
+    [$editor] = translationWorkbenchFixture();
+    $rows = [];
+    foreach ([101 => 'ready', 102 => 'blocked', 103 => 'already_set'] as $id => $state) {
+        $rows[] = ['id' => $id, 'key_id' => 8, 'path' => 'example.blade.php', 'source_line' => 2,
+            'source_column' => 3, 'full_name' => 'ui.button.save', 'raw_expression' => "__('Save')",
+            'check_state' => $state, 'check_detail' => 'Inspection detail'];
+    }
+    $editor->shouldReceive('latestWorkingEventId')->andReturn(42);
+    $editor->shouldReceive('sourceReplacementPage')->once()->with('', 1, 25, 'finding', 'asc')
+        ->andReturn(new LengthAwarePaginator($rows, 3, 25, 1, ['pageName' => 'sourceReplacementPage']));
+    $service = Mockery::mock(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class);
+    $service->shouldReceive('target')->once()->andReturn(['database' => 'fixture', 'schema' => 'fixture', 'paths' => []]);
+    app()->instance(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class, $service);
+    $panel = Livewire::test(TranslationWorkbench::class)->set('tab', 'source-replacement')
+        ->assertSee('Ready at check time')->assertSee('Needs attention')
+        ->assertSee('Assigned key already in source')->assertSee('#101')->assertSee('#102')
+        ->assertDontSeeHtml('wire:click="previewSource"')->assertSeeHtml('wire:click="$parent.previewSelectedSource(101)"');
+    // The browser bundles reactive children with the parent, unlike a simple test call().
+    $dom = \Dom\HTMLDocument::createFromString($panel->effects['html'], LIBXML_NOERROR);
+    $table = $dom->querySelector('[wire\\:name="translation-workbench.source-replacement-table"]');
+    $response = $this->withoutMiddleware()->postJson(Livewire::getUpdateUri(), ['components' => [
+        ['snapshot' => json_encode($panel->snapshot), 'updates' => [], 'calls' => [['method' => 'openScanWorkflow', 'params' => []]]],
+        ['snapshot' => $table->getAttribute('wire:snapshot'), 'updates' => [], 'calls' => []],
+    ]], ['X-Livewire' => 'true']);
+    $response->assertOk()->assertJsonPath('components.1.skip', true);
+    expect($response->json('components.0.effects.html'))->toContain('Scan scope');
+
+});
+
+it('keeps one complete source replacement key group selected across filters until released', function () {
+    [$editor] = translationWorkbenchFixture();
+    $group = ['key_id' => 8, 'full_name' => 'ui.button.save', 'finding_ids' => [11, 12, 99]];
+    $editor->shouldReceive('sourceReplacementGroup')->once()->with(11)->andReturn($group);
+    $editor->shouldReceive('sourceReplacementGroup')->once()->with(25)->andReturn([
+        'key_id' => 9, 'full_name' => 'ui.button.close', 'finding_ids' => [25],
+    ]);
+    Livewire::test(TranslationWorkbench::class)
+        ->call('selectSourceReplacementGroup', 11)->assertSet('sourceReplacementGroup', $group)
+        ->set('sourceReplacementSearch', 'different')->set('sourceReplacementPerPage', 10)
+        ->call('selectSourceReplacementGroup', 25)->assertSet('sourceReplacementGroup', $group)
+        ->call('releaseSourceReplacementGroup')->assertSet('sourceReplacementGroup', [])
+        ->call('selectSourceReplacementGroup', 25)->assertSet('sourceReplacementGroup.key_id', 9);
+});
+
+it('leaves source replacement selection empty when the finding is no longer eligible', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldReceive('sourceReplacementGroup')->with(11)->andThrow(new RuntimeException('Finding changed.'));
+    Livewire::test(TranslationWorkbench::class)->call('selectSourceReplacementGroup', 11)
+        ->assertSet('sourceReplacementGroup', [])->assertHasErrors('sourceReplacementGroup');
+});
+
+it('sorts source replacement findings while retaining search and selection', function ($column) {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldReceive('sourceReplacementPage')->with('ui.button', 1, 25, 'finding', 'asc')
+        ->andReturn(new LengthAwarePaginator([], 0, 25));
+    $first = $column === 'finding' ? 'desc' : 'asc';
+    $second = $first === 'asc' ? 'desc' : 'asc';
+    foreach ([$first, $second] as $direction) {
+        $editor->shouldReceive('sourceReplacementPage')->with('ui.button', 1, 25, $column, $direction)
+            ->andReturn(new LengthAwarePaginator([], 0, 25));
+    }
+    $component = Livewire::test(\Gunreip\TranslationWorkbench\Livewire\SourceReplacementTable::class,
+        ['search' => 'ui.button', 'selectedIds' => '11,12']);
+    $component->instance()->setPage(3, 'sourceReplacementPage');
+    $component->call('sortBy', $column)->assertSet('sortColumn', $column)->assertSet('sortDirection', $first)
+        ->assertSet('paginators.sourceReplacementPage', 1)
+        ->assertSet('search', 'ui.button')->assertSet('selectedIds', '11,12')
+        ->call('sortBy', $column)->assertSet('sortDirection', $second)
+        ->call('sortBy', 'invalid')->assertSet('sortColumn', $column)->assertSet('sortDirection', $second);
+})->with(['finding', 'key_id', 'key', 'source', 'expression']);
+
+it('opens a read-only source comparison only for findings in the selected key group', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldReceive('sourceReplacementGroup')->with(609)->andReturn([
+        'key_id' => 1538, 'full_name' => 'ui.table.header.reason', 'finding_ids' => [609],
+    ]);
+    $editor->shouldReceive('sourceReplacementComparison')->once()->with(609, 1538)->andReturn([
+        'finding' => ['id' => 609, 'key_id' => 1538, 'full_name' => 'ui.table.header.reason', 'path' => 'example.php',
+            'source_line' => 683, 'source_column' => 130, 'raw_expression' => "__('Reason')"],
+        'check' => ['state' => 'possible_move', 'detail' => 'Possible move.', 'positions' => [['line' => 705, 'column' => 130]],
+            'contexts' => [['line' => 705, 'column' => 130, 'text' => '<script>not executable</script>',
+                'lines' => [['number' => 705, 'focus' => true, 'before' => '', 'match' => '<script>not executable</script>', 'after' => '']]]]],
+    ]);
+    Livewire::test(TranslationWorkbench::class)->call('openSourceComparison', 609)
+        ->assertHasErrors('sourceReplacementGroup')->assertSet('sourceComparisonOpen', false)
+        ->call('selectSourceReplacementGroup', 609)->call('openSourceComparison', 609)
+        ->assertSet('sourceComparisonOpen', true)->assertSee('Proposed handling — not applied')
+        ->assertSee('Position comparison')->assertSee('Lines')->assertSee('+22')->assertSee('Columns')->assertSee('+0')
+        ->assertDontSeeHtml('<script>not executable</script>')
+        ->call('releaseSourceReplacementGroup')->assertSet('sourceComparisonOpen', false)->assertSet('sourceComparison', []);
+});
+
+it('leaves the source comparison when continuing the source workflow step', function () {
+    [$editor] = translationWorkbenchFixture();
+    $overview = ['finding' => ['id' => 609, 'key_id' => 1538],
+        'steps' => [['id' => 'source', 'status' => 'current']]];
+    $editor->shouldReceive('workflowOverview')->once()->with(609, 'de')->andReturn($overview);
+    $component = Livewire::test(TranslationWorkbench::class);
+    $instance = $component->instance();
+    $instance->workflowStatusOpen = true;
+    $instance->workflowStatus = $overview;
+    $instance->sourceComparisonOpen = true;
+    $instance->sourcePreviewOpen = true;
+    $instance->continueWorkflow();
+
+    expect($instance->sourceComparisonOpen)->toBeFalse()
+        ->and($instance->sourcePreviewOpen)->toBeFalse()
+        ->and($instance->workflowStatusOpen)->toBeFalse()
+        ->and($instance->tab)->toBe('source-replacement')
+        ->and($instance->sourceReplacementSearch)->toBe('609');
+});
+
+it('checks the complete source replacement selection and clears stale results', function () {
+    [$editor] = translationWorkbenchFixture();
+    $group = ['key_id' => 8, 'full_name' => 'ui.button.save', 'finding_ids' => [11, 12, 99]];
+    $editor->shouldReceive('sourceReplacementGroup')->with(11)->andReturn($group);
+    $report = ['checked_at' => '2026-11-02T10:00:00+00:00', 'total' => 3, 'confirmed' => 2,
+        'attention' => [['id' => 99, 'detail' => 'Source file cannot be read.']]];
+    $editor->shouldReceive('checkSourceReplacementGroup')->once()->with(8, [11, 12, 99])->andReturn($report);
+    $editor->shouldReceive('checkSourceReplacementGroup')->once()->with(8, [11, 12, 99])
+        ->andThrow(new RuntimeException('Assignments changed.'));
+    Livewire::test(TranslationWorkbench::class)
+        ->call('checkSelectedSourceFindings')->assertHasErrors('sourceReplacementGroup')
+        ->call('selectSourceReplacementGroup', 11)->set('sourceReplacementSearch', 'something else')
+        ->call('checkSelectedSourceFindings')->assertSet('sourceGroupCheck', $report)
+        ->call('checkSelectedSourceFindings')->assertHasErrors('sourceReplacementGroup')->assertSet('sourceGroupCheck', [])
+        ->call('releaseSourceReplacementGroup')->assertSet('sourceGroupCheck', []);
+    $html = view('translation-workbench::livewire.translation-workbench.tabs.source-replacement.group-check',
+        ['sourceGroupCheck' => $report])->render();
+    expect($html)->toContain('3 findings checked', 'openSourceComparison(99)');
+});
+
+it('requires an explicit confirmed source position decision and releases the group after applying it', function () {
+    [$editor] = translationWorkbenchFixture();
+    $user = new User;
+    $user->id = 7;
+    $this->actingAs($user);
+    $editor->shouldReceive('sourceReplacementGroup')->with(609)->andReturn([
+        'key_id' => 1538, 'full_name' => 'ui.table.header.reason', 'finding_ids' => [609, 20483],
+    ]);
+    $editor->shouldReceive('sourceReplacementComparison')->with(609, 1538)->andReturn([
+        'finding' => ['id' => 609, 'key_id' => 1538, 'full_name' => 'ui.table.header.reason', 'path' => 'example.php',
+            'source_line' => 683, 'source_column' => 130, 'raw_expression' => "__('Reason')"],
+        'check' => ['state' => 'possible_move', 'detail' => 'Possible move.', 'positions' => [['line' => 705, 'column' => 130]]],
+        'decision' => ['fingerprint' => 'reviewed-fingerprint', 'can_move' => true, 'can_remove' => false],
+    ]);
+    $editor->shouldReceive('applySourcePositionDecision')->once()
+        ->withArgs(fn ($operation, $finding, $key, $expected, $decision, $actor, $reason) =>
+            \Illuminate\Support\Str::isUuid($operation) && $finding === 609 && $key === 1538
+            && $expected === 'reviewed-fingerprint' && $decision === 'moved' && $actor > 0 && $reason === 'Confirmed the moved call.')
+        ->andReturn(['key' => 1538, 'successors' => [['predecessor' => 609, 'successor' => 22000]]]);
+    Livewire::test(TranslationWorkbench::class)
+        ->call('selectSourceReplacementGroup', 609)->call('openSourceComparison', 609)
+        ->assertSee('Reason for source finding decision')->assertSee('Confirmed move')
+        ->call('applySourcePositionDecision')->assertHasErrors(['sourcePositionChoice', 'sourcePositionReason', 'sourcePositionConfirmed'])
+        ->set('sourcePositionChoice', 'moved')->set('sourcePositionReason', 'Confirmed the moved call.')
+        ->set('sourcePositionConfirmed', true)->call('applySourcePositionDecision')
+        ->assertHasNoErrors()->assertSet('sourceComparisonOpen', false)->assertSet('sourceReplacementGroup', [])
+        ->assertDispatched('toast-show', fn ($event, $params) =>
+            $params['dataset']['variant'] === 'success'
+            && $params['slots']['text'] === 'Finding #609 archived; successor #22000 created with the same suggested key and translation key assignment.');
+});
+
+it('opens a source replacement preview directly for a selected group and clears it on release', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldReceive('sourceReplacementGroup')->with(11)->andReturn([
+        'key_id' => 8, 'full_name' => 'ui.button.save', 'finding_ids' => [11, 12, 99],
+    ]);
+    $preview = ['finding' => 99, 'key_id' => 8, 'key' => 'ui.button.save', 'path' => 'example.blade.php', 'line' => 2, 'column' => 3,
+        'before' => "__('Save')", 'after' => "__('ui.button.save')", 'already_set' => false, 'blocker' => null,
+        'language_path' => 'en/ui.php', 'source_locale' => 'en', 'published_value' => 'Save', 'ready' => true, 'fingerprint' => 'source-hash'];
+    $editor->shouldReceive('sourceReplacementPreviewForGroup')->once()->with(99, 8, [11, 12, 99])->andReturn($preview);
+    app(SourceReplacementWriter::class)->shouldNotReceive('prepare');
+    app(SourceReplacementWriter::class)->shouldNotReceive('apply');
+    Livewire::test(TranslationWorkbench::class)
+        ->call('previewSelectedSource', 99)->assertHasErrors('sourcePreview')->assertSet('sourcePreviewOpen', false)
+        ->call('selectSourceReplacementGroup', 11)->call('previewSelectedSource', 25)->assertHasErrors('sourcePreview')
+        ->set('sourceReason', 'Previous reason')->call('previewSelectedSource', 99)->assertHasNoErrors()
+        ->assertSet('sourcePreview.finding', 99)->assertSet('sourceReason', '')->assertSet('editorOpen', false)
+        ->assertSet('sourcePreviewOpen', true)->assertSee('Prepare source replacement')
+        ->call('releaseSourceReplacementGroup')->assertSet('sourcePreviewOpen', false)->assertSet('sourcePreview', []);
+});
+
+it('rejects a stale selected source preview without keeping its old content', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldReceive('sourceReplacementGroup')->with(11)->andReturn([
+        'key_id' => 8, 'full_name' => 'ui.button.save', 'finding_ids' => [11],
+    ]);
+    $editor->shouldReceive('sourceReplacementPreviewForGroup')->with(11, 8, [11])
+        ->andThrow(new RuntimeException('The selected findings changed.'));
+    Livewire::test(TranslationWorkbench::class)->call('selectSourceReplacementGroup', 11)
+        ->call('previewSelectedSource', 11)->assertHasErrors('sourcePreview')
+        ->assertSet('sourcePreview', [])->assertSet('sourcePreviewOpen', false);
+});
+
+it('restores saved active sublanguage drafts when opening a finding without saving or leaking another key values', function () {
+    [$editor, $context] = translationWorkbenchFixture();
+    $locales = Mockery::mock(TranslationWorkbenchEditorLocales::class);
+    $locales->shouldReceive('resolve')->andReturn(['source' => 'en', 'active' => 'de', 'sub' => ['de-AT', 'de-CH', 'de-LI']]);
+    app()->instance(TranslationWorkbenchEditorLocales::class, $locales);
+    $editor->shouldReceive('inspect')->with(11, 'de')->andReturn($context);
+    $editor->shouldReceive('savedLanguageVariants')->with(8, ['de-AT', 'de-CH', 'de-LI'])->andReturn([
+        'de-AT' => ['id' => 31, 'value' => 'Gespeicherter Text'],
+        'de-CH' => ['id' => 32, 'value' => '0'],
+    ]);
+    $other = $context;
+    $other['finding']['id'] = 12;
+    $other['finding']['key_id'] = 9;
+    $editor->shouldReceive('inspect')->with(12, 'de')->andReturn($other);
+    $editor->shouldReceive('savedLanguageVariants')->with(9, ['de-AT', 'de-CH', 'de-LI'])->andReturn([]);
+    $editor->shouldNotReceive('saveDrafts');
+    Livewire::test(TranslationWorkbench::class)->call('open', 11)
+        ->assertSet('selectedSubLanguages', ['de-AT', 'de-CH'])
+        ->assertSet('subLanguageValues.de-AT', 'Gespeicherter Text')->assertSet('subLanguageValues.de-CH', '0')
+        ->assertSet('subLanguageRevisions.de-AT', 31)->assertSet('subLanguageSavedValues.de-CH', '0')
+        ->assertSeeHtml('wire:model="subLanguageValues.de-AT"')->assertDontSeeHtml('wire:model="subLanguageValues.de-LI"')
+        ->set('selectedSubLanguages', [])->call('open', 11)->assertSet('selectedSubLanguages', ['de-AT', 'de-CH'])
+        ->call('open', 12)->assertSet('selectedSubLanguages', [])->assertSet('subLanguageValues', []);
+});
+
+it('previews and prepares the complete selected source group without applying files', function () {
+    [$editor] = translationWorkbenchFixture();
+    $user = new User;
+    $user->id = 7;
+    $this->actingAs($user);
+    $editor->shouldReceive('sourceReplacementGroup')->with(11)->andReturn([
+        'key_id' => 8, 'full_name' => 'ui.button.save', 'finding_ids' => [11, 99],
+    ]);
+    $preview = ['batch' => true, 'key_id' => 8, 'key' => 'ui.button.save', 'finding' => 11, 'finding_ids' => [11, 99], 'source_locale' => 'en',
+        'fingerprint' => 'batch-hash', 'ready' => true, 'blocked' => 0, 'items' => [
+            ['finding' => 11, 'path' => 'a.php', 'before' => "__('Save')", 'after' => "__('ui.button.save')", 'already_set' => false, 'ready' => true, 'blocker' => null],
+            ['finding' => 99, 'path' => 'b.php', 'before' => "__('Save')", 'after' => "__('ui.button.save')", 'already_set' => false, 'ready' => true, 'blocker' => null],
+        ]];
+    $writer = app(SourceReplacementWriter::class);
+    $writer->shouldReceive('previewBatch')->once()->with(8, [11, 99])->andReturn($preview);
+    $writer->shouldReceive('prepareBatch')->once()->with(8, [11, 99], 'batch-hash', 7, 'Shared reason')->andReturn('batch-run');
+    $writer->shouldReceive('inspect')->with('batch-run')->andReturn([
+        'batch' => true, 'run' => 'batch-run', 'actor' => 7, 'reason' => 'Shared reason', 'preview' => $preview,
+        'state' => 'pending', 'files' => [['run' => 'file-run', 'path' => 'a.php', 'state' => 'pending', 'file_state' => 'original', 'impacts' => []]],
+    ]);
+    $writer->shouldNotReceive('apply');
+    Livewire::test(TranslationWorkbench::class)->call('previewSelectedSourceGroup')->assertHasErrors('sourcePreview')
+        ->call('selectSourceReplacementGroup', 11)->call('previewSelectedSourceGroup')
+        ->assertHasNoErrors()->assertSet('sourcePreviewOpen', true)->assertSee('Key #8 · 2 findings')->assertSee('b.php')
+        ->set('sourceReason', 'Shared reason')->call('prepareSource')
+        ->assertHasNoErrors()->assertSet('sourcePreviewOpen', false)->assertSet('sourceRunOpen', true)
+        ->assertSee('Confirm selected replacements / resume');
+});
+
+it('shows the regular scan workflow for a stale finding elsewhere in the source file', function () {
+    $item = ['finding' => 20486, 'path' => 'example.blade.php', 'before' => "__('Reason')", 'after' => "__('ui.table.reason')", 'ready' => false, 'already_set' => false,
+        'blocker' => 'Stored source position is stale', 'scan_required' => ['finding' => 522, 'path' => 'example.blade.php', 'line' => 58, 'column' => 24]];
+    $html = view('translation-workbench::livewire.translation-workbench.shared.source-batch-preview', ['sourcePreview' => [
+        'key_id' => 1538, 'key' => 'ui.table.reason', 'items' => [$item, array_replace($item, ['finding' => 20488])], 'ready' => false, 'blocked' => 2,
+    ]])->render();
+    expect($html)->toContain('New scan required', '#522', '58:24', 'php artisan translation-workbench:generation-scan --apply')
+        ->not->toContain('Open prepared operation');
+    expect(substr_count($html, 'Finding to check'))->toBe(1);
+});
+
+it('shows scan requirements in the overview before opening a source preview', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldReceive('scanRequirementSummary')->andReturn([
+        'required' => true, 'findings' => 1, 'files' => 1,
+        'examples' => [['finding' => 522, 'path' => 'example.php', 'line' => 58, 'column' => 24]],
+    ]);
+    Livewire::test(TranslationWorkbench::class)->assertSee('New scan required')
+        ->assertSee('Stored positions for findings in source files')
+        ->assertSee('Refresh source check')->assertSet('sourcePreviewOpen', false)
+        ->call('refreshScanRequirement')->assertHasNoErrors();
+});
+
+
+it('opens the scan workflow and confirms only a completed server preview', function () {
+    translationWorkbenchFixture();
+    $user = new User;
+    $user->id = 7;
+    $this->actingAs($user);
+    session()->forget('workbench.scan_workflow');
+    $target = ['database' => 'fixture', 'schema' => 'current_generation_v2', 'paths' => ['resources/views']];
+    $service = Mockery::mock(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class);
+    $service->shouldReceive('target')->once()->andReturn($target);
+    app()->instance(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class, $service);
+    $coordinator = Mockery::mock(\Gunreip\TranslationWorkbench\Generation\ScanRunCoordinator::class);
+    $id = (string) \Illuminate\Support\Str::uuid();
+    $coordinator->shouldReceive('start')->once()->with(7)->andReturn($id);
+    $coordinator->shouldReceive('confirm')->once()->with($id, 7);
+    $counts = array_fill_keys(['confirmed', 'created', 'moved', 'removed', 'review_files', 'outside_scope_files', 'suggested_keys_initialized', 'usage_decisions'], 0);
+    $coordinator->shouldReceive('status')->with($id, 7)->andReturn(
+        ['state' => 'preview_ready', 'target' => $target, 'preview' => ['counts' => $counts]],
+        ['state' => 'queued_apply', 'target' => $target, 'preview' => ['counts' => $counts]],
+    );
+    app()->instance(\Gunreip\TranslationWorkbench\Generation\ScanRunCoordinator::class, $coordinator);
+    Livewire::test(TranslationWorkbench::class)->call('openScanWorkflow')->assertHasNoErrors()
+        ->assertSee('Scan scope')->assertDontSeeHtml('wire:click="confirmScan"')
+        ->call('startScanPreview')->assertHasNoErrors()->assertSee('Scan and save results')
+        ->call('confirmScan')->assertHasNoErrors()->assertSee('Checking and saving scan results');
+});
+
+it('polls scan progress independently until the workbench needs the phase result', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldNotReceive('recentScans');
+    $id = (string) \Illuminate\Support\Str::uuid();
+    $progress = ['state' => 'scanning', 'progress' => ['steps' => [
+        ['phase' => 'scanning', 'status' => 'running', 'percent' => 40],
+    ]]];
+    $coordinator = Mockery::mock(\Gunreip\TranslationWorkbench\Generation\ScanRunCoordinator::class);
+    $coordinator->shouldReceive('status')->with($id, 7)->andReturn($progress, $progress, ['state' => 'preview_ready']);
+    app()->instance(\Gunreip\TranslationWorkbench\Generation\ScanRunCoordinator::class, $coordinator);
+    $user = new User;
+    $user->id = 7;
+    $this->actingAs($user);
+
+    $panel = Livewire::test(\Gunreip\TranslationWorkbench\Livewire\ScanProgress::class, [
+        'scanWorkflowId' => $id, 'scanWorkflow' => ['state' => 'queued_preview', 'progress' => ['steps' => []]],
+    ])->call('refreshProgress')->assertSee('40%')->assertNotDispatched('scan-phase-ended');
+    $panel->call('refreshProgress');
+    expect($panel->effects)->not->toHaveKey('html');
+    $panel->call('refreshProgress')->assertDispatched('scan-phase-ended')->assertDontSeeHtml('wire:poll.500ms');
+});
+
+it('opens unchanged recent scan results without starting a scan', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldReceive('scanPage')->with('recent-run', 'created', 1)->andReturn(new LengthAwarePaginator([], 0, 25));
+    $freshness = Mockery::mock(\Gunreip\TranslationWorkbench\Generation\ScanResultFreshness::class);
+    $freshness->shouldReceive('inspect')->once()->andReturn(['reusable' => true, 'run' => 'recent-run', 'expires' => time() + 60]);
+    app()->instance(\Gunreip\TranslationWorkbench\Generation\ScanResultFreshness::class, $freshness);
+    Livewire::test(TranslationWorkbench::class)->call('openCurrentScan')->assertHasNoErrors()
+        ->assertSet('selectedScan', 'recent-run')->assertSet('scanOpen', true)->assertSet('scanWorkflowOpen', false)->assertSee('Open last scan');
+});
+
+it('rechecks scan freshness on click instead of trusting the previous button state', function () {
+    translationWorkbenchFixture();
+    session()->forget('workbench.scan_workflow');
+    $freshness = Mockery::mock(\Gunreip\TranslationWorkbench\Generation\ScanResultFreshness::class);
+    $freshness->shouldReceive('inspect')->twice()->andReturn(
+        ['reusable' => true, 'run' => 'recent-run', 'expires' => time() + 60],
+        ['reusable' => false, 'reason' => 'Source files changed.'],
+    );
+    app()->instance(\Gunreip\TranslationWorkbench\Generation\ScanResultFreshness::class, $freshness);
+    $service = Mockery::mock(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class);
+    $service->shouldReceive('target')->once()->andReturn(['database' => 'fixture', 'schema' => 'fixture', 'paths' => []]);
+    app()->instance(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class, $service);
+    Livewire::test(TranslationWorkbench::class)->call('refreshScanFreshness')->assertSee('Open last scan')
+        ->call('openCurrentScan')->assertHasNoErrors()->assertSet('scanOpen', false)->assertSet('scanWorkflowOpen', true)
+        ->assertSee('Run new scan')->assertSee('Source files changed.');
+});
+
+it('lists confirmed scan findings and displays counts for every result category', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldReceive('scanCategoryCounts')->with('scan-id')->andReturn([
+        'created' => 0, 'confirmed' => 9004, 'moved' => 0, 'removed' => 0,
+        'review_files' => 367, 'usage_decisions' => 0, 'missing_immutable' => 0,
+    ]);
+    $editor->shouldReceive('scanPage')->with('scan-id', 'created', 1)->andReturn(new LengthAwarePaginator([], 0, 25));
+    $editor->shouldReceive('scanPage')->with('scan-id', 'confirmed', 1)->andReturn(new LengthAwarePaginator([
+        ['id' => 11, 'path' => 'confirmed.php', 'source_line' => 12, 'predecessor' => null],
+    ], 9004, 25));
+    Livewire::test(TranslationWorkbench::class)->call('openScan', 'scan-id')
+        ->assertSee('New findings')->assertSee('Unchanged confirmed findings')->assertSee('367')
+        ->set('scanCategory', 'confirmed')->assertHasNoErrors()->assertSee('confirmed.php:12');
+});
+
+it('keeps a native close control in captured scan results', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldReceive('scanPage')->andReturn(new LengthAwarePaginator([], 0, 25));
+    $editor->shouldReceive('scanCapturesPage')->andReturn(new LengthAwarePaginator([], 0, 25));
+    $component = Livewire::test(TranslationWorkbench::class)->call('openScan', 'scan-id')->call('openScanCaptures', 'example.php');
+    $html = $component->html();
+    $dom = Dom\HTMLDocument::createFromString($html, LIBXML_NOERROR);
+    $modal = $dom->querySelector('dialog[data-modal="workbench-scan-results"]');
+    expect($modal)->not->toBeNull();
+    expect($modal->querySelectorAll('[data-flux-modal-close]')->length)->toBe(1);
+    expect($modal->hasAttribute('data-flux-modal-overflow'))->toBeFalse();
+    expect($modal->querySelector('[data-flux-modal-content]'))->toBeNull();
+    expect($modal->getAttribute('class'))->toContain('relative');
+    expect($modal->querySelector('[data-flux-modal-close]')->parentElement->parentElement->isSameNode($modal))->toBeTrue();
+    expect(strpos($modal->textContent, 'Back to scan results'))->toBeLessThan(strpos($modal->textContent, 'Scan context'));
+});
+
+it('keeps targeted loading overlays inside the workbench dialogs', function () {
+    [$editor, $context] = translationWorkbenchFixture();
+    $editor->shouldReceive('inspect')->andReturn($context);
+    $component = Livewire::test(TranslationWorkbench::class)->call('open', 11);
+    $document = new DOMDocument;
+    @$document->loadHTML($component->html());
+    $xpath = new DOMXPath($document);
+    $loaders = $xpath->query('//*[@data-workbench-modal-loading]');
+    expect($loaders->length)->toBeGreaterThanOrEqual(20);
+    foreach ($loaders as $loader) {
+        expect($xpath->query('ancestor::dialog', $loader)->length)->toBe(1);
+        $targets = $loader->getAttribute('wire:target');
+        expect($targets)->not->toBe('')->not->toContain('refreshScanFreshness')->not->toContain('pollScanWorkflow');
+    }
+});
+
+
+it('confirms the persisted key id in a toast for new and existing assignments', function ($name, $key, $newName) {
+    [$editor, $context] = translationWorkbenchFixture();
+    $editor->shouldReceive('inspect')->andReturn($context);
+    $editor->shouldReceive('assign')->once()
+        ->with(11, $newName === null ? 8 : 0, 4, 7, 'Reviewed assignment', $newName)
+        ->andReturn(['key' => $key, 'link' => 99]);
+    $user = new User;
+    $user->id = 7;
+    $this->actingAs($user);
+
+    Livewire::test(TranslationWorkbench::class)->call('open', 11)
+        ->set('assignmentKey', $name)->set('assignmentReason', 'Reviewed assignment')
+        ->call('confirmAssignment')->call('assign')->assertHasNoErrors()
+        ->assertSet('confirmOpen', false)
+        ->assertDispatched('toast-show', fn ($event, $params) =>
+            $params['dataset']['variant'] === 'success'
+            && $params['slots']['heading'] === 'Translation key assignment confirmed'
+            && $params['slots']['text'] === "Finding #11 → Key record #{$key}. Translation key: {$name}");
+})->with([
+    'existing key' => ['ui.button.save', 8, null],
+    'new key' => ['ui.button.new_key', 123, 'ui.button.new_key'],
+]);
+
+it('disables assignment confirmation only for the already linked key', function ($assigned, $selectedKey, $disabled, $badge) {
+    [$editor, $context] = translationWorkbenchFixture();
+    if (! $assigned) {
+        $context['finding']['key_id'] = null;
+        $context['finding']['link_id'] = null;
+        $context['finding']['full_name'] = null;
+    }
+    $editor->shouldReceive('inspect')->andReturn($context);
+    $editor->shouldNotReceive('assign');
+    $component = Livewire::test(TranslationWorkbench::class)->call('open', 11)
+        ->set('assignmentKey', $selectedKey)
+        ->set('assignmentReason', 'Review this assignment')
+        ->call('confirmAssignment')->assertSet('confirmOpen', true)->assertHasNoErrors();
+
+    $document = new DOMDocument;
+    @$document->loadHTML('<?xml encoding="UTF-8">'.$component->html());
+    $xpath = new DOMXPath($document);
+    $buttons = $xpath->query('//button[@*[name()="wire:click" and .="assign"]]');
+    expect($buttons->length)->toBe(2);
+    foreach ($buttons as $button) {
+        expect($button->hasAttribute('disabled'))->toBe($disabled)
+            ->and($button->getAttribute('wire:loading.attr'))->toBe('disabled');
+    }
+    if ($badge !== null) {
+        $component->assertSee($badge);
+    }
+    if ($disabled) {
+        $component->assertSee('Finding #11 already uses this translation key. No further confirmation is needed.');
+    }
+})->with([
+    'unchanged assignment' => [true, 'ui.button.save', true, 'Already assigned'],
+    'different key selected' => [true, 'ui.button.new_key', false, 'Different key selected'],
+    'first assignment' => [false, 'ui.button.save', false, null],
+]);
+
+it('watches only existing Livewire properties when initializing the finding editor', function () {
+    $source = file_get_contents(resource_path('../packages/gunreip/laravel-translation-workbench/resources/views/livewire/translation-workbench/modals/finding-editor.blade.php'));
+    preg_match('/x-init="([^"]+)"/', $source, $init);
+    preg_match_all('/\$watch\(\x27\$wire\.([a-zA-Z_]+)\x27/', $init[1], $direct);
+    preg_match_all('/\[([^\]]+)\]\s*\.forEach/', $init[1], $lists);
+    $properties = $direct[1];
+    foreach ($lists[1] as $list) {
+        preg_match_all('/\x27([a-zA-Z_]+)\x27/', $list, $names);
+        array_push($properties, ...$names[1]);
+    }
+    expect($properties)->not->toBeEmpty();
+    $component = new ReflectionClass(TranslationWorkbench::class);
+    foreach ($properties as $property) {
+        expect($component->hasProperty($property), 'Unknown watched property: '.$property)->toBeTrue()
+            ->and($component->getProperty($property)->isPublic())->toBeTrue();
+    }
+});
+
+it('lists manually started shared work and resets its filters independently', function () {
+    [$editor] = translationWorkbenchFixture();
+    $user = new User;
+    $user->id = 7;
+    $this->actingAs($user);
+    $row = ['key_id' => 8, 'namespace' => '', 'full_name' => 'ui.button.save', 'finding_count' => 22,
+        'finding_id' => 505, 'locales' => 'de, de-AT, en', 'step' => 'translations',
+        'source_pending' => 20, 'occurred_at' => '2026-11-08 10:00:00+00', 'actor_id' => 7];
+    $editor->shouldReceive('recentWork')->with('de', 7)->andReturn([$row]);
+    $editor->shouldReceive('workTasks')->with('de', 7, '', 1, 25)
+        ->andReturn(new LengthAwarePaginator([$row], 1, 25));
+    $component = Livewire::test(TranslationWorkbench::class)->set('tab', 'in-progress')
+        ->assertSee('In progress')->assertSee('Recently edited')->assertSee('Shared key')
+        ->assertSee('22 active')->assertSee('Continue with finding #505')
+        ->assertSeeHtml('wire:click="resumeWork(8)"');
+    $editor->shouldReceive('workTasks')->with('de', null, 'old/path.php', 1, 25)
+        ->andReturn(new LengthAwarePaginator([], 0, 25));
+    $component->set('paginators.workPage', 3)->set('workSearch', 'old/path.php')
+        ->assertSet('paginators.workPage', 1)->set('workOnlyMine', false)
+        ->set('workPerPage', 999)->assertSet('workPerPage', 25);
+});
+
+it('resumes through the current active finding instead of a previously edited predecessor', function () {
+    [$editor, $context] = translationWorkbenchFixture();
+    $context['finding']['id'] = 22000;
+    $editor->shouldReceive('workItem')->with(8, 'de')->once()->andReturn([
+        'finding_id' => 22000, 'step' => 'translations', 'full_name' => 'ui.button.save', 'open_publication' => null,
+    ]);
+    $editor->shouldReceive('workflowOverview')->with(22000, 'de')->andReturn([
+        'finding' => $context['finding'], 'languages' => [], 'shared' => [], 'successor' => null,
+        'steps' => (new \Gunreip\TranslationWorkbench\Generation\WorkflowProgress)->steps(
+            $context['finding'], [['locale' => 'de', 'state' => 'missing', 'revision' => null]], false, false
+        ),
+    ]);
+    $editor->shouldReceive('inspect')->with(22000, 'de')->andReturn($context);
+    Livewire::test(TranslationWorkbench::class)->call('resumeWork', 8)
+        ->assertHasNoErrors()->assertSet('selected', 22000)->assertSet('editorOpen', true)
+        ->assertSet('workflowStatusOpen', false)
+        ->assertDispatched('workflow-focus', target: 'workbench-translation-values');
+});
+
+it('resumes an open publication without preparing a second run', function () {
+    [$publisher, $plan] = generationPublicationFixture();
+    $editor = app(GenerationEditor::class);
+    $editor->shouldReceive('workItem')->with(8, 'de')->once()->andReturn([
+        'finding_id' => 11, 'step' => 'publication', 'full_name' => 'ui.button.save', 'open_publication' => $plan['run'],
+    ]);
+    $publisher->shouldReceive('inspect')->with($plan['run'])->andReturn($plan);
+    $publisher->shouldNotReceive('prepare');
+    Livewire::test(TranslationWorkbench::class)->call('resumeWork', 8)
+        ->assertHasNoErrors()->assertSet('publicationOpen', true)->assertSet('publication.run', $plan['run']);
 });

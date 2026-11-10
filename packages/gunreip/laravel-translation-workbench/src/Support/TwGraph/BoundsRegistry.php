@@ -11,6 +11,18 @@ final class BoundsRegistry
      */
     private static array $bounds = [];
 
+    /** Keep only geometry metadata unless nested canvases require the complete DOM hierarchy. */
+    public static function captureMarkup(string $markup): string
+    {
+        if (str_contains($markup, 'data-tw-graph-bounds-model="true"')) {
+            return $markup;
+        }
+
+        preg_match_all('/data-tw-graph-bounds="[^"]+"|<script[^>]*data-tw-graph-component-region[^>]*>.*?<\/script>/s', $markup, $matches);
+
+        return implode("\n", $matches[0]);
+    }
+
     /** Rebuild from the primitives actually emitted by this render; no stale per-part estimates. */
     public static function capture(string $graphId, string $markup, array $context): array
     {

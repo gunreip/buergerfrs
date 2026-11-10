@@ -188,14 +188,12 @@
                             <x-ui.date-time.date
                                 class="text-2xl! font-semibold tabular-nums"
                                 :value="$generatedAt"
-                                color="callout-text-sky"
                             />
                         </span>
                         <span>
                             <x-ui.date-time.time
                                 class="text-2xl! font-semibold tabular-nums"
                                 :value="$generatedAt"
-                                color="callout-text-sky"
                             />
                         </span>
                     @else

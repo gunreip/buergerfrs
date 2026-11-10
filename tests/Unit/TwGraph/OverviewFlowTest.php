@@ -3,6 +3,7 @@
 use Gunreip\TranslationWorkbench\Livewire\TwGraphOverview;
 use Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\OverviewLayoutOverrides;
 use Gunreip\TranslationWorkbench\Support\TwGraph\Documentation\OverviewStructure;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 use Symfony\Component\Process\Process;
@@ -70,6 +71,9 @@ it('mounts then lazily loads the complete overview within 128 MiB including requ
         require 'vendor/autoload.php';
         $app = require 'bootstrap/app.php';
         $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+        if (! $app->environment('testing')) {
+            throw new RuntimeException('Overview memory test must run in the testing environment, not '.$app->environment().'.');
+        }
         // Reserve room for the surrounding page, middleware and diagnostic tooling.
         // The former full-markup replacement exhausted 128 MiB under this load.
         $requestOverhead = str_repeat('x', 28 * 1024 * 1024);
@@ -94,11 +98,18 @@ it('mounts then lazily loads the complete overview within 128 MiB including requ
             'peak' => memory_get_peak_usage(true),
         ], JSON_THROW_ON_ERROR);
     PHP_SCRIPT;
+    $compiledViews = sys_get_temp_dir().'/tw-graph-overview-'.bin2hex(random_bytes(8));
+    mkdir($compiledViews, 0700);
     $process = new Process([PHP_BINARY, '-d', 'memory_limit=128M', '-r', $script], base_path(), [
+        'APP_ENV' => 'testing', 'VIEW_COMPILED_PATH' => $compiledViews,
         'SESSION_DRIVER' => 'array', 'CACHE_STORE' => 'array',
         'DB_CONNECTION' => 'sqlite', 'DB_DATABASE' => ':memory:', 'DB_URL' => '',
     ]);
-    $process->setTimeout(90)->run();
+    try {
+        $process->setTimeout(90)->run();
+    } finally {
+        (new Filesystem)->deleteDirectory($compiledViews);
+    }
     expect($process->isSuccessful())->toBeTrue($process->getErrorOutput().$process->getOutput());
     $result = json_decode($process->getOutput(), true, flags: JSON_THROW_ON_ERROR);
     expect($result)->toMatchArray(['flow' => true, 'bounds' => true, 'files' => true, 'calculated' => true]);

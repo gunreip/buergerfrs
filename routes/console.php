@@ -17,3 +17,8 @@ Schedule::command('project:db-health --fail-on-empty --quiet-ok')
 Schedule::command('project:db-backup')
     ->everyTenMinutes()
     ->withoutOverlapping();
+
+// Expired temporary scan plans/status only; keep saved scans and finding history.
+Schedule::command('translation-workbench:prune-scan-cache')
+    ->hourly()
+    ->withoutOverlapping();

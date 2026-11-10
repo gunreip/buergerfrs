@@ -8,10 +8,10 @@ use RuntimeException;
 /** Read-only scan planning: negative evidence comes from the scanner's completed inventory. */
 final class CompleteRescanPlan
 {
-    public function build(TranslationWorkbenchScanner $scanner, array $paths, array $activeFindings, array $lang = [], array $decisions = []): array
+    public function build(TranslationWorkbenchScanner $scanner, array $paths, array $activeFindings, array $lang = [], array $decisions = [], ?callable $progress = null): array
     {
         $known = array_values(array_unique(array_column($activeFindings, 'path')));
-        $manifest = $scanner->scanWithManifest($paths, $known);
+        $manifest = $scanner->scanWithManifest($paths, $known, $progress ? fn ($phase, $done, $total) => $progress($phase, $done, 2 * $total + 1) : null);
         $byFile = [];
         foreach ($activeFindings as $finding) {
             $byFile[$finding['path']][] = $finding;
@@ -20,6 +20,9 @@ final class CompleteRescanPlan
         $files = [];
         $adapter = new CopiedSourceCapture;
         $appliedDecisions = [];
+        $totalFiles = count($manifest['scanned_paths']);
+        $comparedFiles = 0;
+        $progress && $progress('comparing', $totalFiles, 2 * $totalFiles + 1);
         foreach ($manifest['scanned_paths'] as $path) {
             $bytes = file_get_contents(base_path($path));
             $hash = $manifest['file_hashes'][$path];
@@ -60,6 +63,7 @@ final class CompleteRescanPlan
             $files[$path] = $issues !== []
                 ? ['state' => 'review', 'issues' => $issues, 'captures' => $rows, 'preserved' => array_column($byFile[$path] ?? [], 'id')]
                 : $this->compare($byFile[$path] ?? [], $rows);
+            $progress && $progress('comparing', $totalFiles + ++$comparedFiles, 2 * $totalFiles + 1);
         }
         foreach ($manifest['missing_paths'] as $path) {
             $files[$path] = ['state' => 'missing_confirmed', 'removed' => array_column($byFile[$path] ?? [], 'id')];

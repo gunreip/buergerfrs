@@ -42,7 +42,6 @@
                 :aria-label="$heading ?? __('Show full source path')"
             >
                 <x-translation-workbench::ui.common.path-preview
-                    class="mx-1"
                     :path="$path"
                     :length="$length"
                     :side="$side"

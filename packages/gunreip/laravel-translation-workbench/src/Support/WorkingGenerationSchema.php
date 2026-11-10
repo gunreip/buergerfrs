@@ -9,12 +9,13 @@ use Throwable;
 /** Explicit installation into a new schema; never registered as an automatic migration. */
 final class WorkingGenerationSchema
 {
-    public const VERSION = 2;
+    public const VERSION = 3;
 
     private const FILES = [
         'v1/baseline.sql', 'v1/capture-ledger.sql', 'v1/source-roles.sql', 'v1/source-arguments.sql',
         'v1/existing-keys.sql', 'v1/published-values.sql', 'v1/key-correction-proposals.sql',
         'v1/key-correction-applications.sql', 'v1/corrected-value-drafts.sql', 'v2/name-inventory.sql',
+        'v3/suggested-key-initialization.sql',
     ];
 
     public function install(PDO $db, string $database, string $schema, string $generation): array
@@ -75,6 +76,7 @@ final class WorkingGenerationSchema
             $rows = $query->fetchAll(PDO::FETCH_ASSOC);
             $manifest = [];
             foreach (self::FILES as $file) {
+                if ((int) ($rows[0]['version'] ?? 0) === 2 && str_starts_with($file, 'v3/')) continue;
                 $hash = hash_file('sha256', $this->directory().'/'.$file);
                 if ($hash === false) {
                     throw new RuntimeException('Generation schema source is unreadable: '.$file);
@@ -82,7 +84,7 @@ final class WorkingGenerationSchema
                 $manifest[$file] = $hash;
             }
             if (count($rows) !== 1 || $rows[0]['generation'] !== $generation
-                || (int) $rows[0]['version'] !== self::VERSION
+                || ! in_array((int) $rows[0]['version'], [2, self::VERSION], true)
                 || json_decode($rows[0]['manifest'], true, flags: JSON_THROW_ON_ERROR) != $manifest) {
                 throw new RuntimeException('Generation identity, version or SQL manifest differs');
             }
@@ -92,11 +94,45 @@ final class WorkingGenerationSchema
             }
             $db->commit();
 
-            return ['generation' => $generation, 'version' => self::VERSION, 'schema' => $schema, 'catalog_sha256' => $catalog];
+            return ['generation' => $generation, 'version' => (int) $rows[0]['version'], 'schema' => $schema, 'catalog_sha256' => $catalog];
         } catch (Throwable $error) {
             if ($db->inTransaction()) {
                 $db->rollBack();
             }
+            throw $error;
+        }
+    }
+
+    /** Explicit structural upgrade; no finding, translation or review records are edited. */
+    public function upgrade(PDO $db, string $database, string $schema, string $generation): array
+    {
+        $this->verify($db, $database, $schema, $generation);
+        $db->beginTransaction();
+        try {
+            $db->exec('SET LOCAL search_path TO "'.$schema.'", pg_catalog');
+            $db->exec('LOCK TABLE workbench_generation, translation_workbench_findings IN ACCESS EXCLUSIVE MODE');
+            $row = $db->query('SELECT * FROM workbench_generation')->fetch(PDO::FETCH_ASSOC);
+            if ((int) $row['version'] === self::VERSION) { $db->commit(); return ['version' => self::VERSION, 'changed' => false]; }
+            $db->exec('SET LOCAL search_path TO pg_catalog');
+            if ((int) $row['version'] !== 2 || !hash_equals($row['catalog_sha256'], $this->catalogHash($db, $schema))) {
+                throw new RuntimeException('Schema changed before upgrade');
+            }
+            $db->exec('SET LOCAL search_path TO "'.$schema.'", pg_catalog');
+            $file = 'v3/suggested-key-initialization.sql';
+            $db->exec(file_get_contents($this->directory().'/'.$file));
+            $manifest = json_decode($row['manifest'], true, flags: JSON_THROW_ON_ERROR);
+            $manifest[$file] = hash_file('sha256', $this->directory().'/'.$file);
+            $db->exec('SET LOCAL search_path TO pg_catalog');
+            $catalog = $this->catalogHash($db, $schema);
+            $db->exec('SET LOCAL search_path TO "'.$schema.'", pg_catalog');
+            $db->exec('ALTER TABLE workbench_generation DISABLE TRIGGER immutable_generation');
+            $query = $db->prepare('UPDATE workbench_generation SET version=?,manifest=?::jsonb,catalog_sha256=?');
+            $query->execute([self::VERSION, json_encode($manifest, JSON_THROW_ON_ERROR), $catalog]);
+            $db->exec('ALTER TABLE workbench_generation ENABLE TRIGGER immutable_generation');
+            $db->commit();
+            return ['version' => self::VERSION, 'changed' => true];
+        } catch (Throwable $error) {
+            if ($db->inTransaction()) $db->rollBack();
             throw $error;
         }
     }

@@ -3,9 +3,15 @@
     name="workbench-shared-assignment-confirmation"
     wire:model="sharedConfirmOpen"
 >
+    <x-translation-workbench::ui.common.modal-loading
+        target="assignSharedFindings"
+    />
     @if ($sharedAssignmentPlan !== [])
         <div class="space-y-4">
-            <flux:heading size="lg">
+            <flux:heading
+                size="xl"
+                icon="package-check"
+            >
                 {{ __('Confirm shared key assignment') }}
             </flux:heading>
             <flux:text>
@@ -26,12 +32,12 @@
                 :text="__('Existing different key assignments will be replaced. Translation values are not copied or merged. Captures and suggested keys remain unchanged. Publication and source files are not changed.')"
             />
             <flux:callout
-                color="red"
+                color="green"
                 heading="{{ __('Selected findings') }}"
                 icon="key"
             >
                 {{-- Table --}}
-                <flux:table container:class="max-h-[80vh] overflow-x-auto rounded-t-lg mt-3">
+                <flux:table container:class="max-h-120 overflow-x-auto rounded-t-lg mt-3">
                     {{-- Table Header --}}
                     <flux:table.columns class="bg-white dark:bg-zinc-800">
                         {{-- Column Finding --}}
@@ -42,7 +48,7 @@
                             >
                                 <flux:button
                                     size="xs"
-                                    color="red"
+                                    color="green"
                                     variant="ghost"
                                     icon="search-code"
                                 />
@@ -56,7 +62,7 @@
                             >
                                 <flux:button
                                     size="xs"
-                                    color="red"
+                                    color="green"
                                     variant="ghost"
                                     icon="globe-code"
                                 />
@@ -99,7 +105,10 @@
                                             <span class="min-w-0">
                                                 {{ !empty($sharedAssignmentPlan['reference']['namespace']) ? $sharedAssignmentPlan['reference']['namespace'] . '::' : '' }}{{ $sharedAssignmentPlan['reference']['full_name'] }}
                                                 @if ((int) $item['key_id'] === (int) $sharedAssignmentPlan['reference']['key_id'])
-                                                    <flux:badge size="sm" color="green">{{ __('Already assigned — unchanged') }}</flux:badge>
+                                                    <flux:badge
+                                                        size="sm"
+                                                        color="green"
+                                                    >{{ __('Already assigned — unchanged') }}</flux:badge>
                                                 @endif
                                             </span>
                                             <flux:tooltip

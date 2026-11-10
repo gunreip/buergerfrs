@@ -20,6 +20,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Blade touches compiled files with explicit timestamps, which requires ownership.
+        // Resolve this at runtime (also with cached config), not while building config:cache.
+        $this->app->beforeResolving('blade.compiler', function () {
+            if ($this->app->environment('local') && ! $this->app->runningUnitTests() && function_exists('posix_geteuid')) {
+                $base = storage_path('framework/views');
+                if (rtrim((string) config('view.compiled'), '/') === $base) {
+                    config(['view.compiled' => $base.'/user-'.posix_geteuid()]);
+                }
+            }
+        });
+
         // Debugbar is optional (require-dev); keep other requests on its normal view profile.
         if (class_exists(ViewsCollectorProvider::class)) {
             $this->app->bind(ViewsCollectorProvider::class, OverviewViewsCollectorProvider::class);

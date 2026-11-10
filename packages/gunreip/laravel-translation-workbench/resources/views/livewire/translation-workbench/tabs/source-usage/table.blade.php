@@ -12,10 +12,14 @@
             :direction="$sortDirection"
             wire:click="sortBy('source')"
         >
-            <flux:tooltip content="{{ __('Source of the case') }}">
+            <flux:tooltip>
                 <flux:callout.heading class="ml-2">
                     {{ __('Source') }}
                 </flux:callout.heading>
+                <x-translation-workbench::ui.common.tooltip-content
+                    :heading="__('Source')"
+                    :text="__('The source file and line number of the case.')"
+                />
             </flux:tooltip>
         </flux:table.column>
         {{-- Header Column Expression --}}
@@ -25,10 +29,14 @@
             :direction="$sortDirection"
             wire:click="sortBy('expression')"
         >
-            <flux:tooltip content="{{ __('Expression of the case') }}">
+            <flux:tooltip>
                 <flux:callout.heading>
                     {{ __('Expression') }}
                 </flux:callout.heading>
+                <x-translation-workbench::ui.common.tooltip-content
+                    :heading="__('Expression')"
+                    :text="__('The raw expression of the case.')"
+                />
             </flux:tooltip>
         </flux:table.column>
         {{-- Header Column Status --}}
@@ -38,21 +46,29 @@
             :direction="$sortDirection"
             wire:click="sortBy('status')"
         >
-            <flux:tooltip content="{{ __('Status of the case') }}">
+            <flux:tooltip>
                 <flux:callout.heading>
                     {{ __('Status') }}
                 </flux:callout.heading>
+                <x-translation-workbench::ui.common.tooltip-content
+                    :heading="__('Status')"
+                    :text="__('Status of the case')"
+                />
             </flux:tooltip>
         </flux:table.column>
         {{-- Header Column Action --}}
         <flux:table.column
-            class="w-36"
+            class="w-48"
             align="center"
         >
-            <flux:tooltip content="Action">
+            <flux:tooltip>
                 <flux:callout.heading>
                     {{ __('Action') }}
                 </flux:callout.heading>
+                <x-translation-workbench::ui.common.tooltip-content
+                    :heading="__('Action')"
+                    :text="__('Available actions for the case.')"
+                />
             </flux:tooltip>
         </flux:table.column>
     </flux:table.columns>
@@ -62,9 +78,13 @@
             <flux:table.row wire:key="case-{{ $id }}">
                 {{-- Source --}}
                 <flux:table.cell class="max-w-md whitespace-normal break-all">
-                    <flux:callout.text class="ml-2">
-                        <code>{{ $case['source_path'] }}:{{ $case['source_line'] }}</code>
-                    </flux:callout.text>
+                    <x-translation-workbench::ui.common.path-preview
+                        class="ml-2"
+                        :path="$case['source_path']"
+                        :line="$case['source_line']"
+                        :length="100"
+                        side="center"
+                    />
                 </flux:table.cell>
                 {{-- Expression --}}
                 <flux:table.cell class="wrap-break-word max-w-md whitespace-normal">
@@ -74,28 +94,58 @@
                 </flux:table.cell>
                 {{-- Status --}}
                 <flux:table.cell>
-                    <flux:callout.text>
+                    <flux:badge
+                        size="sm"
+                        :color="match($decisions[$id]['decision'] ?? '') {
+                            'database_value' => 'green',
+                            'translate' => 'sky',
+                            default => 'amber',
+                        }"
+                    >
                         {{ match ($decisions[$id]['decision'] ?? '') {'database_value' => __('DatabaseValue — review complete'),'translate' => __('Translation required'),default => __('Decision required')} }}
-                    </flux:callout.text>
+                    </flux:badge>
                 </flux:table.cell>
                 {{-- Action --}}
-                <flux:table.cell>
-                    <flux:button.group>
+                <flux:table.cell class="flex items-center gap-1">
+                    <flux:tooltip>
                         <flux:button
                             size="sm"
                             variant="outline"
-                            wire:click="open('{{ $id }}')"
+                            square
+                            wire:click="openUsageWorkflow('{{ $id }}')"
+                            :aria-label="__('Workflow status')"
                         >
-                            <flux:icon.eye class="size-5" />
+                            <flux:icon.queue-list size="5" />
                         </flux:button>
-                        <flux:button
-                            size="sm"
-                            variant="outline"
-                            wire:click="open('{{ $id }}')"
-                        >
-                            {{ __('Review') }}
-                        </flux:button>
-                    </flux:button.group>
+                        <x-translation-workbench::ui.common.tooltip-content
+                            :heading="__('Workflow status')"
+                            :text="__(
+                                'Show the source usage decision and the next step for this source occurrence.',
+                            )"
+                        />
+                    </flux:tooltip>
+                    <flux:tooltip>
+                        <flux:button.group>
+                            <flux:button
+                                size="sm"
+                                variant="outline"
+                                wire:click="open('{{ $id }}')"
+                            >
+                                <flux:icon.eye class="size-5" />
+                            </flux:button>
+                            <flux:button
+                                size="sm"
+                                variant="outline"
+                                wire:click="open('{{ $id }}')"
+                            >
+                                {{ __('Review') }}
+                            </flux:button>
+                        </flux:button.group>
+                        <x-translation-workbench::ui.common.tooltip-content
+                            :heading="__('Review')"
+                            :text="__('Open this case for review.')"
+                        />
+                    </flux:tooltip>
                 </flux:table.cell>
             </flux:table.row>
         @empty

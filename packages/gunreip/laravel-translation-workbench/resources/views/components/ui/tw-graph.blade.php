@@ -47,6 +47,7 @@
         $minWidth,
         $minHeight,
     );
+    $slotCaptureMarkup = null;
     ob_start();
 @endphp
 
@@ -70,7 +71,15 @@
 	        <div class="tw-graph-protocol-canvas tw-graph-protocol-canvas-slot content-center">
                 {{-- Stable client-owned grid slot: prepending it later shifts Livewire's sibling/block matching. --}}
                 <svg data-tw-graph-grid wire:ignore aria-hidden="true"></svg>
-	            {{ $slot }}
+	            @php
+                    // Emit the large slot directly; only metadata needs another capture buffer.
+                    $graphPrefix = ob_get_clean();
+                    $slotCaptureMarkup = $graphPrefix . \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::captureMarkup((string) $slot);
+                    echo $graphPrefix;
+                    echo $slot;
+                    unset($graphPrefix);
+                    ob_start();
+                @endphp
                 {{-- Measurement origin and padding use the same coordinate system as every primitive. --}}
                 <span data-tw-graph-bounds-origin aria-hidden="true" style="position:absolute; pointer-events:none; visibility:hidden; left:var(--tw-graph-protocol-trunk-x); bottom:var(--tw-graph-protocol-origin-bottom); width:{{ $horizontalPadding }}; height:2rem;"></span>
                 <x-translation-workbench::ui.tw-graph.line-jump-templates />
@@ -105,10 +114,10 @@
 
 @php
     $graphMarkup = ob_get_clean();
-    $boundsRecords = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::capture($context['graphId'], $graphMarkup, $context);
+    $boundsRecords = \Gunreip\TranslationWorkbench\Support\TwGraph\BoundsRegistry::capture($context['graphId'], ($slotCaptureMarkup ?? '') . $graphMarkup, $context);
     // Release the captured markup before building diagnostics; avoid a full-graph replacement copy.
     echo $graphMarkup;
-    unset($graphMarkup);
+    unset($graphMarkup, $slotCaptureMarkup);
     echo view('translation-workbench::components.ui.tw-graph.canvas-metrics', [
         'graphId' => $context['graphId'], 'dev' => $dev, 'coordinates' => $showCoordinates,
         'horizontalPadding' => $horizontalPadding, 'records' => $boundsRecords,

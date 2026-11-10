@@ -2,33 +2,55 @@
     $failureSummary = \Gunreip\TranslationWorkbench\Support\TwGraph\TestFailureDetails::summary($checks);
 @endphp
 
-<flux:callout class="mt-6" :color="$failureSummary !== '' ? 'red' : 'zinc'" icon="list-x">
-    <flux:callout.heading>{{ __('Fail Summary') }}</flux:callout.heading>
+<flux:callout
+    class="mt-6"
+    :color="$failureSummary !== '' ? 'red' : 'zinc'"
+    icon="list-x"
+>
+    <flux:callout.heading>
+        {{ __('Fail Summary') }}
+    </flux:callout.heading>
     <flux:callout.text>
         @if ($failureSummary === '')
             {{ __('No failed checks in this report.') }}
         @else
-            <div x-data="{ copied: false, copyFailed: false }">
-                <div class="mb-3 flex justify-end">
-                    <flux:button
-                        size="sm"
-                        variant="outline"
-                        icon="clipboard"
-                        x-on:click="
-                            copied = false; copyFailed = false;
-                            try {
-                                await navigator.clipboard.writeText($refs.failSummary.textContent);
-                                copied = true;
-                                setTimeout(() => copied = false, 2000);
-                            } catch (error) { copyFailed = true; }
-                        "
-                    >
-                        {{ __('Copy fail summary') }}
-                    </flux:button>
+            <div
+                class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-2"
+                x-data="{
+                    async copySummary() {
+                        try {
+                            await navigator.clipboard.writeText(this.$refs.failSummary.textContent);
+                        } catch (error) {
+                            this.$flux.toast(@js(__('translation-workbench.tw-graph-diagnostics.summary.fail-summary-failed.please-copy-the-list-manually')), { variant: 'danger', duration: 8000 });
+                            return;
+                        }
+                        this.$flux.toast(@js(__('Fail summary copied.')), { variant: 'success', duration: 3000 });
+                    }
+                }"
+            >
+                <div class="col-start-2 row-start-1 flex justify-end">
+                    <flux:button.group>
+                        <flux:button
+                            size="sm"
+                            variant="outline"
+                            x-on:click="copySummary()"
+                        >
+                            <flux:icon.circle-x class="size-5" />
+                        </flux:button>
+                        <flux:button
+                            size="sm"
+                            variant="outline"
+                            x-on:click="copySummary()"
+                        >
+                            {{ __('Copy fail summary') }}
+                        </flux:button>
+                    </flux:button.group>
                 </div>
-                <span x-cloak x-show="copied" role="status">{{ __('Copied.') }}</span>
-                <span x-cloak x-show="copyFailed" role="alert">{{ __('Copy failed. Please select and copy the list manually.') }}</span>
-                <pre x-ref="failSummary" class="max-h-96 overflow-auto whitespace-pre-wrap break-words font-mono text-xs text-red-700 dark:text-red-300" data-tw-graph-fail-summary>{{ $failureSummary }}</pre>
+                <pre
+                    class="wrap-break-word col-start-1 row-start-1 max-h-96 min-w-0 overflow-auto whitespace-pre-wrap font-mono text-xs text-red-700 dark:text-red-300"
+                    data-tw-graph-fail-summary
+                    x-ref="failSummary"
+                >{{ $failureSummary }}</pre>
             </div>
         @endif
     </flux:callout.text>

@@ -3,6 +3,9 @@
     name="generation-publication-confirmation"
     wire:model="publicationOpen"
 >
+    <x-translation-workbench::ui.common.modal-loading
+        target="publish, previewClosure, closePublication"
+    />
     @if ($publication)
         @php
             [$publicationStatusLabel, $publicationStatusColor] = match ($publication['state']) {
@@ -22,20 +25,23 @@
             }
         @endphp
         <div class="space-y-4">
-            <div class="flex items-center justify-between gap-3 pe-6">
-                <flux:heading
-                    class="flex items-center gap-2"
-                    size="xl"
-                >
+            <flux:heading
+                class="flex items-center justify-between gap-2"
+                size="xl"
+            >
+                <span class="flex items-center gap-2">
                     <flux:icon.workflow
-                        class="shrink-0"
+                        class="inline shrink-0"
                         size="sm"
                     />
                     {{ __('Publication preview and result') }}
-                </flux:heading>
-                <flux:tooltip toggleable>
+                </span>
+                <flux:tooltip
+                    class="mr-8 flex justify-end"
+                    toggleable
+                >
                     <flux:badge
-                        class="shrink-0"
+                        class="shrink-0 hover:cursor-help"
                         as="button"
                         :color="$publicationStatusColor"
                         :aria-label="__('Show publication status details')"
@@ -47,19 +53,22 @@
                         :rows="$publicationStatusDetails"
                     />
                 </flux:tooltip>
-            </div>
-            <flux:text>
+            </flux:heading>
+            <flux:callout.text>
                 {{ $publication['reason'] }}
-            </flux:text>
+            </flux:callout.text>
+
             <flux:callout
                 color="sky"
                 icon="user"
             >
-                <flux:callout.heading>{{ __('Prepared by user') }}</flux:callout.heading>
+                <flux:callout.heading>
+                    {{ __('Prepared by user') }}
+                </flux:callout.heading>
                 <flux:tooltip toggleable>
                     <flux:button
                         variant="ghost"
-                        size="sm"
+                        size="xs"
                         :aria-label="__('Show preparing user details')"
                     >
                         <flux:callout.text>
@@ -105,10 +114,10 @@
                         class="bg-white dark:bg-zinc-800"
                         sticky
                     >
-                        {{-- Column Key --}}
+                        {{-- Table Header Column Key --}}
                         <flux:table.column>
                             <flux:tooltip>
-                                <flux:callout.heading class="mx-2">
+                                <flux:callout.heading class="ml-2">
                                     {{ __('Key') }}
                                 </flux:callout.heading>
                                 <x-translation-workbench::ui.common.tooltip-content
@@ -119,10 +128,10 @@
                                 />
                             </flux:tooltip>
                         </flux:table.column>
-                        {{-- Column Language --}}
+                        {{-- Table Header Column Language --}}
                         <flux:table.column>
                             <flux:tooltip>
-                                <flux:callout.heading class="mx-2">
+                                <flux:callout.heading>
                                     {{ __('Language') }}
                                 </flux:callout.heading>
                                 <x-translation-workbench::ui.common.tooltip-content
@@ -133,7 +142,7 @@
                                 />
                             </flux:tooltip>
                         </flux:table.column>
-                        {{-- Column Open in VSC --}}
+                        {{-- Table Header Column Open in VSC --}}
                         <flux:table.column align="center">
                             <flux:tooltip>
                                 <flux:callout.heading>
@@ -147,7 +156,7 @@
                                 />
                             </flux:tooltip>
                         </flux:table.column>
-                        {{-- Column File / Translation key --}}
+                        {{-- Table Header Column File / Translation key --}}
                         <flux:table.column>
                             <flux:tooltip>
                                 <flux:callout.heading>
@@ -161,7 +170,7 @@
                                 />
                             </flux:tooltip>
                         </flux:table.column>
-                        {{-- Column Before preparation --}}
+                        {{-- Table Header Column Before preparation --}}
                         <flux:table.column>
                             <flux:tooltip>
                                 <flux:callout.heading>
@@ -175,7 +184,7 @@
                                 />
                             </flux:tooltip>
                         </flux:table.column>
-                        {{-- Column Planned value --}}
+                        {{-- Table Header Column Planned value --}}
                         <flux:table.column>
                             <flux:tooltip>
                                 <flux:callout.heading>
@@ -189,10 +198,10 @@
                                 />
                             </flux:tooltip>
                         </flux:table.column>
-                        {{-- Column Status --}}
+                        {{-- Table Header Column Status --}}
                         <flux:table.column align="center">
                             <flux:tooltip>
-                                <flux:callout.heading>
+                                <flux:callout.heading class="mr-2">
                                     {{ __('Status') }}
                                 </flux:callout.heading>
                                 <x-translation-workbench::ui.common.tooltip-content
@@ -204,8 +213,9 @@
                             </flux:tooltip>
                         </flux:table.column>
                     </flux:table.columns>
-                    {{-- Table Rows --}}
+                    {{-- Table Body Rows --}}
                     <flux:table.rows>
+
                         @foreach ($publication['changes'] as $change)
                             @php
                                 $file = $publication['files'][$change['path']];
@@ -223,17 +233,18 @@
                                         : 'exclamation-triangle');
                                 $statusColor = $matchesResult ? 'green' : ($matchesInitial ? 'sky' : 'red');
                             @endphp
-                            {{-- Table Row --}}
+
+                            {{-- Table Body Row --}}
                             <flux:table.row
                                 wire:key="publication-change-{{ $publication['run'] }}-{{ $change['revision'] }}"
                             >
-                                {{-- Column Key --}}
+                                {{-- Table Body Row Column Key --}}
                                 <flux:table.cell align="end">
                                     <flux:callout.text class="ml-2 tabular-nums">
                                         #{{ $change['key_id'] }}
                                     </flux:callout.text>
                                 </flux:table.cell>
-                                {{-- Column Locale --}}
+                                {{-- Table Body Row Column Locale --}}
                                 <flux:table.cell>
                                     <div class="flex items-center gap-2">
                                         <flux:flag
@@ -246,7 +257,7 @@
                                         </flux:callout.text>
                                     </div>
                                 </flux:table.cell>
-                                {{-- Column Open in VSC --}}
+                                {{-- Table Body Row Column Open in VSC --}}
                                 <flux:table.cell align="center">
                                     @php
                                         $languageRoot =
@@ -291,34 +302,35 @@
                                         </x-translation-workbench::ui.common.tooltip-content>
                                     </flux:tooltip>
                                 </flux:table.cell>
-                                {{-- Column File / Translation Key --}}
-                                <flux:table.cell>
-                                    <div class="flex flex-col gap-1">
-                                        <div class="flex items-center gap-1">
-                                            <flux:icon.document-text
-                                                class="size-4 shrink-0"
-                                                aria-hidden="true"
-                                            />
-                                            <x-translation-workbench::ui.common.path-preview
-                                                :path="'lang/' . $change['path']"
-                                                :length="36"
-                                                side="center"
-                                            />
-                                        </div>
-                                        <div class="flex items-center gap-1">
-                                            <flux:icon.key
-                                                class="size-4 shrink-0"
-                                                aria-hidden="true"
-                                            />
-                                            <x-translation-workbench::ui.common.text-preview
-                                                :text="$change['key']"
-                                                :length="36"
-                                                :heading="__('Translation key')"
-                                            />
-                                        </div>
+                                {{-- Table Body Row Column File / Translation Key --}}
+                                <flux:table.cell class="flex flex-col gap-1">
+                                    {{-- <div class="flex flex-col gap-1"> --}}
+                                    <div class="flex items-center gap-1">
+                                        <flux:icon.document-text
+                                            class="size-4 shrink-0"
+                                            aria-hidden="true"
+                                        />
+                                        <x-translation-workbench::ui.common.path-preview
+                                            :path="'lang/' . $change['path']"
+                                            :length="36"
+                                            side="center"
+                                        />
                                     </div>
+                                    <div class="flex items-center gap-1">
+                                        <flux:icon.key
+                                            class="size-4 shrink-0"
+                                            aria-hidden="true"
+                                        />
+                                        <x-translation-workbench::ui.common.text-preview
+                                            :mono="true"
+                                            :text="$change['key']"
+                                            :length="36"
+                                            :heading="__('Translation key')"
+                                        />
+                                    </div>
+                                    {{-- </div> --}}
                                 </flux:table.cell>
-                                {{-- Column Before Preperation --}}
+                                {{-- Table Body Row Column Before Preperation --}}
                                 <flux:table.cell>
                                     @if ($change['before'] === null)
                                         <flux:badge
@@ -338,7 +350,7 @@
                                         />
                                     @endif
                                 </flux:table.cell>
-                                {{-- Column Planned Value --}}
+                                {{-- Table Body Row Column Planned Value --}}
                                 <flux:table.cell>
                                     @if ($change['after'] === '')
                                         {{ __('Empty string') }}
@@ -350,7 +362,7 @@
                                         />
                                     @endif
                                 </flux:table.cell>
-                                {{-- Column Status --}}
+                                {{-- Table Body Row Column Status --}}
                                 <flux:table.cell align="center">
                                     <flux:tooltip toggleable>
                                         <flux:button
@@ -379,28 +391,52 @@
             </flux:callout>
 
             @if (in_array($publication['state'], ['prepared', 'writing', 'interrupted'], true))
-                <flux:text>
+                <flux:callout.text>
                     {{ __('Confirmation writes the planned language files. Current approval and file hashes are checked again. Source code is not rewritten.') }}
-                </flux:text>
-                <div class="flex flex-wrap gap-3">
+                </flux:callout.text>
+                <div class="flex flex-wrap justify-end gap-3">
                     @if ((int) $publication['actor'] === (int) auth()->id())
-                        <flux:button
-                            variant="primary"
-                            wire:click="publish"
-                        >
-                            {{ __('Confirm / resume publication') }}
-                        </flux:button>
+                        <flux:button.group>
+                            <flux:button
+                                variant="filled"
+                                color="green"
+                                size="sm"
+                                wire:click="publish"
+                            >
+                                <flux:icon.circle-dashed-check class="size-5" />
+                            </flux:button>
+                            <flux:button
+                                variant="filled"
+                                color="green"
+                                size="sm"
+                                wire:click="publish"
+                            >
+                                {{ __('Confirm / resume publication') }}
+                            </flux:button>
+                        </flux:button.group>
                     @else
-                        <flux:text>
+                        <flux:callout.text>
                             {{ __('The preparing user must confirm or resume this run.') }}
-                        </flux:text>
+                        </flux:callout.text>
                     @endif
-                    <flux:button
-                        variant="outline"
-                        wire:click="previewClosure"
-                    >
-                        {{ __('Review closure without further writes') }}
-                    </flux:button>
+                    <flux:button.group>
+                        <flux:button
+                            variant="filled"
+                            color="sky"
+                            size="sm"
+                            wire:click="previewClosure"
+                        >
+                            <flux:icon.pen-off class="size-6" />
+                        </flux:button>
+                        <flux:button
+                            variant="filled"
+                            color="sky"
+                            size="sm"
+                            wire:click="previewClosure"
+                        >
+                            {{ __('Review closure without further writes') }}
+                        </flux:button>
+                    </flux:button.group>
                 </div>
                 @if ($closure)
                     <flux:callout color="amber">
@@ -414,12 +450,24 @@
                             'translation-workbench::livewire.translation-workbench.shared.reason-select',
                             ['reasonField' => 'closureReason', 'reasonLabel' => __('Reason for closure')]
                         )
-                        <flux:button
-                            variant="outline"
-                            wire:click="closePublication"
-                        >
-                            {{ __('Confirm closure') }}
-                        </flux:button>
+                        <flux:button.group>
+                            <flux:button
+                                variant="filled"
+                                color="green"
+                                size="sm"
+                                wire:click="closePublication"
+                            >
+                                <flux:icon.check-check class="size-5" />
+                            </flux:button>
+                            <flux:button
+                                variant="filled"
+                                color="green"
+                                size="sm"
+                                wire:click="closePublication"
+                            >
+                                {{ __('Confirm closure') }}
+                            </flux:button>
+                        </flux:button.group>
                     </flux:callout>
                 @endif
             @elseif ($publication['state'] === 'complete')

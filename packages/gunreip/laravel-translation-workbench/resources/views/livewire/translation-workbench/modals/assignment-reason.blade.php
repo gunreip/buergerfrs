@@ -3,21 +3,30 @@
     name="workbench-create-assignment-reason"
     wire:model="assignmentReasonOpen"
 >
+    <x-translation-workbench::ui.common.modal-loading
+        target="createAssignmentReason"
+    />
     <form
         class="space-y-4"
         wire:submit="createAssignmentReason"
     >
         <div class="-mt-1 flex items-start justify-between gap-3 pe-6">
-            <flux:heading class="flex items-center gap-2" size="xl">
-                <flux:icon.pencil-line class="shrink-0" size="sm" />
+            <flux:heading
+                class="flex items-center gap-2"
+                size="xl"
+            >
+                <flux:icon.pencil-line
+                    class="shrink-0"
+                    size="sm"
+                />
                 {{ __('Create a translation key assignment reason') }}
             </flux:heading>
             <x-translation-workbench::ui.common.input-language-selector
+                class="shrink-0"
                 wire:model.live="newAssignmentReasonLocale"
                 :target="$this->reasonTargetLocale()"
                 :countries="$translationFlagCountries"
-                :focus="'assignment-reason-text-'.$this->getId()"
-                class="shrink-0"
+                :focus="'assignment-reason-text-' . $this->getId()"
             />
         </div>
         <flux:text>
@@ -28,9 +37,9 @@
                 {{ __('Reason for translation key assignment') }}
             </flux:label>
             <flux:textarea
+                class="min-h-12"
                 :id="'assignment-reason-text-'.$this->getId()"
                 wire:key="assignment-reason-input-{{ $newAssignmentReasonLocale }}"
-                class="min-h-12"
                 rows="3"
                 autofocus
                 wire:model="newAssignmentReason"

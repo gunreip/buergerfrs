@@ -72,7 +72,7 @@ class GenerationPublisher
                 foreach ($files as $path => $file) {
                     $this->q('SELECT pg_advisory_xact_lock(hashtextextended(?,0))', ['publication-file:'.$this->directory.'/'.$path]);
                     if ($reserved = $this->q('SELECT run_id FROM translation_workbench_file_reservations WHERE path=?', [$path])->fetchColumn()) {
-                        throw new RuntimeException('File reserved by publication '.$reserved.'. Open that run first.');
+                        throw new PublicationFileReserved($reserved, $path);
                     }
                     $this->q('INSERT INTO translation_workbench_publication_files VALUES (?,?,?,?)', [$run, $path, $file['before'], $file['after']]);
                     $this->q('INSERT INTO translation_workbench_file_reservations VALUES (?,?)', [$path, $run]);
@@ -386,13 +386,18 @@ class GenerationPublisher
     {
         $target = $this->path($path);
         if (! is_dir(dirname($target))) {
-            mkdir(dirname($target), 0755);
+            if (! @mkdir(dirname($target), 0777) && ! is_dir(dirname($target))) {
+                throw new RuntimeException('Cannot create language directory. Check permissions: '.dirname($target));
+            }
         }
-        $temp = tempnam(dirname($target), '.publish-');
+        $temp = ReplacementFileAccess::temporary($target, '.publish-');
         try {
-            if (file_put_contents($temp, $bytes) !== strlen($bytes)
-                || ! chmod($temp, is_file($target) ? (fileperms($target) & 0777) : 0644) || ! rename($temp, $target)) {
-                throw new RuntimeException('Atomic replace failed');
+            if (@file_put_contents($temp, $bytes) !== strlen($bytes)) {
+                throw new RuntimeException('Cannot write the temporary language file. Check permissions and available disk space: '.$target);
+            }
+            ReplacementFileAccess::permissions($temp, $target);
+            if (! @rename($temp, $target)) {
+                throw new RuntimeException('Cannot replace the language file. Check directory permissions, file locks and filesystem restrictions: '.$target);
             }
             if (function_exists('opcache_invalidate')) {
                 opcache_invalidate($target, true);

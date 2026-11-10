@@ -323,3 +323,22 @@ it('keeps multiple sub bounds for one strang visible in the canvas metrics', fun
             'heightRem' => 47.0,
         ]);
 });
+
+it('captures identical geometry from compact slot metadata', function (): void {
+    $record = ['id' => 'sample', 'rects' => [['x' => '1rem', 'y' => '2rem', 'width' => '3rem', 'height' => '4rem']], 'region' => 'sample-region'];
+    $encoded = htmlspecialchars(json_encode($record), ENT_QUOTES, 'UTF-8');
+    $markup = '<div data-tw-graph-bounds="'.$encoded.'">'.str_repeat('Visible content ', 100).'</div>'
+        .'<script type="application/json" data-tw-graph-component-region>{"token":"sample-region","ancestors":[]}</script>';
+    $context = ['pathWidth' => '1rem', 'nodeSize' => '2rem', 'arcRadius' => '3rem'];
+    $compact = BoundsRegistry::captureMarkup($markup);
+
+    expect(strlen($compact))->toBeLessThan(strlen($markup))
+        ->and(BoundsRegistry::capture('tw-graph-bounds-test', $compact, $context))
+        ->toBe(BoundsRegistry::capture('tw-graph-bounds-test', $markup, $context));
+});
+
+it('preserves nested canvas hierarchy for isolated bounds capture', function (): void {
+    $markup = '<div><div data-tw-graph-bounds-model="true"><span>Nested canvas</span></div></div>';
+
+    expect(BoundsRegistry::captureMarkup($markup))->toBe($markup);
+});

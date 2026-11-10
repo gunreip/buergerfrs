@@ -32,8 +32,10 @@ use Gunreip\TranslationWorkbench\Generation\GenerationEditor;
 use Gunreip\TranslationWorkbench\Generation\GenerationPublisher;
 use Gunreip\TranslationWorkbench\Generation\SourceReplacementWriter;
 use Gunreip\TranslationWorkbench\Livewire\CurrentSourceReview;
+use Gunreip\TranslationWorkbench\Livewire\ScanProgress;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbench;
 use Gunreip\TranslationWorkbench\Livewire\SourceCaseReview;
+use Gunreip\TranslationWorkbench\Livewire\SourceReplacementTable;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawDataChainPreview;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchRawDataNew;
 use Gunreip\TranslationWorkbench\Livewire\TranslationWorkbenchSettings;
@@ -108,6 +110,8 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
 
         Livewire::component('translation-workbench.tw-graph.documentation', TwGraphDocumentation::class);
         Livewire::component('translation-workbench.tw-graph.overview', TwGraphOverview::class);
+        Livewire::component('translation-workbench.scan-progress', ScanProgress::class);
+        Livewire::component('translation-workbench.source-replacement-table', SourceReplacementTable::class);
         Livewire::component('translation-workbench.entries', TranslationWorkbench::class);
         Livewire::component('translation-workbench.current-source-review', CurrentSourceReview::class);
         Livewire::component('translation-workbench.source-case-review', SourceCaseReview::class);
@@ -122,6 +126,8 @@ class TranslationWorkbenchServiceProvider extends ServiceProvider
 
         $this->commands([
             ScanWorkingGeneration::class,
+            \Gunreip\TranslationWorkbench\Console\UpgradeScanSchema::class,
+            \Gunreip\TranslationWorkbench\Console\PruneScanCache::class,
             ApplySuspiciousKeyRestores::class,
             ApplyTranslationWorkbenchCodeUpdates::class,
             ClassifyDynamicValues::class,

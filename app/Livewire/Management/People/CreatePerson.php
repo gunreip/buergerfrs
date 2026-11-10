@@ -1484,7 +1484,7 @@ class CreatePerson extends Component
             })
             ->values();
 
-        $this->dispatch('buergerfrs:validation-errors', errors: $validationErrors->all());
+        $this->dispatch('buergerfrs:validation-errors', errors: $validationErrors->all(), scope: 'create-person:'.$this->getId());
     }
 
     /**

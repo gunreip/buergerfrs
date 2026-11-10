@@ -9,24 +9,28 @@
             <code>{{ $totals['database'] }} / current_generation_v2</code>
         </flux:callout.text>
     </flux:callout.heading>
-    <flux:callout.heading>
-        {{ __('Active findings') }}:
-        <flux:callout.text>
-            {{ number_format($totals['active']) }} ·
-        </flux:callout.text>
-        {{ __('Archived findings') }}:
-        <flux:callout.text>
-            {{ number_format($totals['archived']) }} ·
-        </flux:callout.text>
-        {{ __('Keys') }}:
-        <flux:callout.text>
-            {{ number_format($totals['keys']) }} ·
-        </flux:callout.text>
-        {{ __('Draft revisions') }}:
-        <flux:callout.text>
-            {{ number_format($totals['revisions']) }}
-        </flux:callout.text>
-    </flux:callout.heading>
+    <x-translation-workbench::ui.common.details class="my-3">
+        <x-translation-workbench::ui.common.details.item
+            class="tabular-nums"
+            :label="__('Active findings')"
+            :item="number_format($totals['active'])"
+        />
+        <x-translation-workbench::ui.common.details.item
+            class="tabular-nums"
+            :label="__('Archived findings')"
+            :item="number_format($totals['archived'])"
+        />
+        <x-translation-workbench::ui.common.details.item
+            class="tabular-nums"
+            :label="__('Keys')"
+            :item="number_format($totals['keys'])"
+        />
+        <x-translation-workbench::ui.common.details.item
+            class="tabular-nums"
+            :label="__('Draft revisions')"
+            :item="number_format($totals['revisions'])"
+        />
+    </x-translation-workbench::ui.common.details>
     <flux:callout.text>
         {{ __('Edit findings, assign translation keys and save drafts. Approved revisions can be published to language files. Source occurrences can be replaced after a separate preview and confirmation. Raw Data and TW-Graph use a separate dataset; their IDs cannot be used interchangeably with Finding or Key IDs here.') }}
     </flux:callout.text>

@@ -2,6 +2,8 @@
 
 namespace Gunreip\TranslationWorkbench\Support;
 
+use App\Models\User;
+use App\Support\Avatar\UserAvatarStorage;
 use Illuminate\Support\Facades\Auth;
 
 class WorkbenchUserSummary
@@ -17,6 +19,7 @@ class WorkbenchUserSummary
         return [
             'id' => $user->getAuthIdentifier(),
             'name' => (string) ($user->name ?? ''),
+            'avatar_url' => $user instanceof User ? app(UserAvatarStorage::class)->url($user->setting('profile.avatar_path')) : null,
             'email' => (string) ($user->email ?? ''),
             'roles' => method_exists($user, 'getRoleNames') ? $user->getRoleNames()->all() : [],
         ];

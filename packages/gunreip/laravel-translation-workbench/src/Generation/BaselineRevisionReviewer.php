@@ -82,7 +82,7 @@ final class BaselineRevisionReviewer
         return $snapshot['context']['current_revision_id'] === $revision
             && $snapshot['context']['usages'] !== [] && $last
             && $last['decision'] === 'approved'
-            && $last['context_fingerprint'] === $snapshot['context_fingerprint'];
+            && ReviewUsageContinuity::contextMatches($this->db, json_decode($last['context_snapshot'], true, flags: JSON_THROW_ON_ERROR), $snapshot['context']);
     }
 
     private function event(string $operation, string $type, int $actor, string $reason, array $details): void

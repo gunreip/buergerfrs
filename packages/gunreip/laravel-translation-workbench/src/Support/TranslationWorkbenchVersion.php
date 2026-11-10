@@ -67,9 +67,9 @@ final class TranslationWorkbenchVersion
 
     private function fallbackVersion(): string
     {
-        $version = trim((string) config('translation-workbench.version.fallback', '0.7.0'));
+        $version = trim((string) config('translation-workbench.version.fallback', '0.8.0'));
 
-        return $version !== '' ? ltrim($version, 'v') : '0.7.0';
+        return $version !== '' ? ltrim($version, 'v') : '0.8.0';
     }
 
     private function exactVersionTag(): ?string

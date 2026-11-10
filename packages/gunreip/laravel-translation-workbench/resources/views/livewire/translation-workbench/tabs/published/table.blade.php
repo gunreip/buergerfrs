@@ -29,7 +29,12 @@
             </flux:tooltip>
         </flux:table.column>
         {{-- Header Column TranslationKey --}}
-        <flux:table.column>
+        <flux:table.column
+            sortable
+            :sorted="$publishedSort === 'translation_key'"
+            :direction="$publishedDirection"
+            wire:click="sortPublished('translation_key')"
+        >
             <flux:tooltip>
                 <flux:callout.heading>
                     {{ __('Translation Key') }}
@@ -133,6 +138,7 @@
                 {{-- Column TranslationKey --}}
                 <flux:table.cell class="whitespace-normal break-all">
                     <x-translation-workbench::ui.common.text-preview
+                        :mono="true"
                         :text="($task['namespace'] !== '' ? $task['namespace'].'::' : '').$task['full_name']"
                         :length="80"
                         side="center"
@@ -190,33 +196,73 @@
                 </flux:table.cell>
                 {{-- Column Actions --}}
                 <flux:table.cell>
-                    <div class="flex flex-wrap gap-2">
-                        <flux:button
-                            size="sm"
-                            variant="outline"
-                            icon="queue-list"
-                            wire:click="openKeyWorkflowStatus({{ $task['key_id'] }})"
-                            :tooltip="__('Workflow status')"
-                            :aria-label="__('Workflow status')"
-                        />
-                        <flux:button
-                            size="sm"
-                            variant="outline"
-                            icon="eye"
-                            wire:click="openPublication('{{ $task['run'] }}')"
-                        >
-                            {{ __('Publication result') }}
-                        </flux:button>
-                        @if ($task['finding_id'])
+                    <div class="flex-start flex gap-1">
+                        {{-- Button Workflow Status --}}
+                        <flux:tooltip>
                             <flux:button
                                 size="sm"
                                 variant="outline"
-                                icon="pencil-square"
-                                wire:click="open({{ $task['finding_id'] }})"
-                                :tooltip="__('Open the current key through an active finding. Editing uses the active language in Settings.')"
+                                square
+                                wire:click="openKeyWorkflowStatus({{ $task['key_id'] }})"
+                                :aria-label="__('Workflow status')"
                             >
-                                {{ __('Edit translations') }}
+                                <flux:icon.queue-list size="5" />
                             </flux:button>
+                            <x-translation-workbench::ui.common.tooltip-content
+                                :heading="__('Workflow status')"
+                                :text="__('View the workflow status for this translation key.')"
+                            />
+                        </flux:tooltip>
+                        {{-- Button Publication Result --}}
+                        <flux:tooltip>
+                            <flux:button.group>
+                                <flux:button
+                                    size="sm"
+                                    variant="outline"
+                                    wire:click="openPublication('{{ $task['run'] }}')"
+                                >
+                                    <flux:icon.eye size="5" />
+                                </flux:button>
+                                <flux:button
+                                    size="sm"
+                                    variant="outline"
+                                    wire:click="openPublication('{{ $task['run'] }}')"
+                                >
+                                    {{ __('Publication result') }}
+                                </flux:button>
+                            </flux:button.group>
+                            <x-translation-workbench::ui.common.tooltip-content
+                                :heading="__('Publication result')"
+                                :text="__('View the result of the publication for this translation key.')"
+                            />
+                        </flux:tooltip>
+
+                        @if ($task['finding_id'])
+                            {{-- Button Edit Translations --}}
+                            <flux:tooltip>
+                                <flux:button.group>
+                                    <flux:button
+                                        size="sm"
+                                        variant="outline"
+                                        wire:click="open({{ $task['finding_id'] }})"
+                                    >
+                                        <flux:icon.pencil-square size="5" />
+                                    </flux:button>
+                                    <flux:button
+                                        size="sm"
+                                        variant="outline"
+                                        wire:click="open({{ $task['finding_id'] }})"
+                                    >
+                                        {{ __('Edit translations') }}
+                                    </flux:button>
+                                </flux:button.group>
+                                <x-translation-workbench::ui.common.tooltip-content
+                                    :heading="__('Edit translations')"
+                                    :text="__(
+                                        'Open the current key through an active finding. Editing uses the active language in Settings.',
+                                    )"
+                                />
+                            </flux:tooltip>
                         @else
                             <flux:badge
                                 size="sm"

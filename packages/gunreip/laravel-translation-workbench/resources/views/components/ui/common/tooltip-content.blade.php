@@ -1,7 +1,7 @@
 {{-- Pass translated text; an array renders one paragraph per entry. --}}
-@props(['heading', 'text' => []])
+@props(['heading', 'text' => [], 'maxWidth' => '24rem'])
 
-<flux:tooltip.content {{ $attributes->class(['max-w-[24rem] space-y-2 hyphens-auto text-justify']) }}>
+<flux:tooltip.content {{ $attributes->class(['space-y-2 hyphens-auto text-justify'])->style(['max-width: '.$maxWidth]) }}>
     <p class="border-b border-zinc-500 pb-1 font-bold">{{ $heading }}</p>
     @foreach (is_array($text) ? $text : [$text] as $paragraph)
         <p class="tabular-nums dark:text-zinc-300">{{ $paragraph }}</p>

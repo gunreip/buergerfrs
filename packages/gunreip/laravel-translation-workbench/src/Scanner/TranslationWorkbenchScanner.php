@@ -34,17 +34,26 @@ class TranslationWorkbenchScanner
      * @param  iterable<string>  $knownPaths  Previously recorded source paths, supplied by the caller.
      * @return array{items: Collection<int, DiscoveredTranslation>, scanned_paths: array<int, string>, missing_paths: array<int, string>, scanned_directories: array<int, string>, reconciliation_paths: array<int, string>}
      */
-    public function scanWithManifest(?array $paths = null, iterable $knownPaths = []): array
+    public function scanWithManifest(?array $paths = null, iterable $knownPaths = [], ?callable $progress = null): array
     {
         $session = app(TranslationWorkbenchScanSession::class);
         if ($session->active()) {
-            return $session->resolve($paths, fn (array $scope, array $known): array => $this->captureManifest($scope, $known));
+            return $session->resolve($paths, fn (array $scope, array $known): array => $this->captureManifest($scope, $known, $progress));
         }
 
-        return $this->captureManifest($paths, $knownPaths);
+        return $this->captureManifest($paths, $knownPaths, $progress);
     }
 
-    private function captureManifest(?array $paths, iterable $knownPaths): array
+    /** Fresh byte inventory for the final concurrency check; no extraction or session snapshot reuse. */
+    public function scanInventory(?array $paths = null, iterable $knownPaths = [], ?callable $progress = null): array
+    {
+        $manifest = $this->captureManifest($paths, $knownPaths, $progress, false);
+        unset($manifest['items']);
+
+        return $manifest;
+    }
+
+    private function captureManifest(?array $paths, iterable $knownPaths, ?callable $progress = null, bool $extract = true): array
     {
         $paths ??= (array) config('translation-workbench.paths', []);
         $directories = collect($paths)
@@ -55,12 +64,20 @@ class TranslationWorkbenchScanner
         $items = collect();
         $scannedPaths = [];
         $fileHashes = [];
-        foreach ($this->scannableFiles($paths) as $file) {
+        $files = collect($this->scannableFiles($paths))->all();
+        $completed = 0;
+        $analysisCache = $extract ? SourceAnalysisCache::configured() : null;
+        $progress && $progress('scanning', 0, count($files));
+        foreach ($files as $file) {
             $contents = File::get($file->getPathname());
-            $items = $items->merge($this->scanContents($file->getPathname(), $contents));
+            if ($extract) {
+                $analyze = fn () => $this->scanContents($file->getPathname(), $contents);
+                $items = $items->merge($analysisCache?->remember($file->getPathname(), $contents, $analyze) ?? $analyze());
+            }
             $relative = $this->relativePath($file->getPathname());
             $scannedPaths[] = $relative;
             $fileHashes[$relative] = hash('sha256', $contents);
+            $progress && $progress('scanning', ++$completed, count($files));
         }
 
         // scannableFiles completes directory discovery, and every eligible file has

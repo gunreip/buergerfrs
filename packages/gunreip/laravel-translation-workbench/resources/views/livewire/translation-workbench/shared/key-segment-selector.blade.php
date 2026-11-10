@@ -2,11 +2,13 @@
     $segmentOptions = $this->assignmentKeyOptions($keys);
 @endphp
 
-<flux:input.group>
+<flux:input.group class="min-w-0">
     <flux:input.group.prefix>
         <flux:icon.key />
     </flux:input.group.prefix>
     <flux:select
+        class="min-w-0 flex-1"
+        data-editor-error-target="assignmentKey"
         wire:model.live="assignmentKey"
         variant="listbox"
         searchable

@@ -24,9 +24,11 @@ final class ReviewWorklist
             WHERE event_type='revision_submitted' AND details->>'revision'=r.id::text
             ORDER BY id DESC LIMIT 1
         ) e ON true
+        JOIN LATERAL (SELECT e.details->'context'->'usages' AS review_usages, s.key_id AS review_key) usage_inputs ON true
         WHERE s.kind='scalar'
             AND e.details->'context'->>'key_name_id'=n.id::text
-            AND e.details->'context'->'usages' = (
+        SQL. ' AND '.ReviewUsageContinuity::RESOLVED.<<<'SQL'
+             = (
                 SELECT COALESCE(jsonb_agg(jsonb_build_object('link',l.id,'finding',f.id) ORDER BY l.id),'[]'::jsonb)
                 FROM translation_workbench_key_findings l
                 JOIN translation_workbench_findings f ON f.id=l.finding_id AND f.status='active'
@@ -50,9 +52,11 @@ final class ReviewWorklist
         JOIN translation_workbench_value_revisions r ON r.id=s.current_revision_id
         JOIN translation_workbench_key_names n ON n.key_id=s.key_id AND n.valid_to IS NULL
         JOIN LATERAL (SELECT * FROM translation_workbench_reviews WHERE revision_id=r.id ORDER BY id DESC LIMIT 1) d ON true
+        JOIN LATERAL (SELECT d.context_snapshot->'usages' AS review_usages, s.key_id AS review_key) usage_inputs ON true
         WHERE s.kind='scalar' AND d.decision='approved'
             AND d.context_snapshot->>'key_name_id'=n.id::text
-            AND d.context_snapshot->'usages'=(
+        SQL. ' AND '.ReviewUsageContinuity::RESOLVED.<<<'SQL'
+             = (
                 SELECT COALESCE(jsonb_agg(jsonb_build_object('link',l.id,'finding',f.id) ORDER BY l.id),'[]'::jsonb)
                 FROM translation_workbench_key_findings l
                 JOIN translation_workbench_findings f ON f.id=l.finding_id AND f.status='active'

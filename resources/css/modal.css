@@ -5,6 +5,62 @@ dialog[data-open]::backdrop {
 }
 
 /* CSS-toasts */
+/* Keep Flux's actions and lifecycle; place actions below the message.
+   These child selectors follow the installed Flux toast template. */
+[data-flux-toast-dialog]>div>div {
+    position: relative;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    overflow: visible;
+    min-width: 0;
+}
+
+[data-flux-toast-dialog]>div>div>div:first-child {
+    flex: none;
+    min-width: 0;
+}
+
+[data-flux-toast-dialog]>div>div>div:first-child>div {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+[data-flux-toast-dialog]>div>div>div:first-child>div>div:first-child {
+    padding-inline-end: 2rem;
+}
+
+[data-flux-toast-dialog]>div>div>div:first-child>div>div:nth-child(2) {
+    text-align: justify;
+    hyphens: auto;
+}
+
+[data-flux-toast-dialog]>div>div>div:last-child {
+    justify-content: flex-end;
+    min-width: 0;
+}
+
+[data-flux-toast-dialog] [data-flux-toast-action] {
+    max-width: 100%;
+    margin-top: 0.5rem;
+}
+
+[data-flux-toast-dialog] [data-flux-toast-action-button],
+[data-flux-toast-dialog] [data-flux-toast-action-link] {
+    white-space: normal;
+    height: auto;
+    min-height: 2rem;
+    padding-block: 0.375rem;
+    overflow-wrap: anywhere;
+}
+
+[data-flux-toast-dialog] ui-close {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+}
+
 [data-flux-toast-dialog][data-variant="success"]>div {
     border-left-width: 4px;
     border-left-color: rgb(132 204 22);
@@ -22,8 +78,8 @@ dialog[data-open]::backdrop {
 [data-flux-toast-dialog][data-variant="info"]>div {
     border-left-width: 4px;
     border-left-color: rgb(6 182 212);
-    border-left-width: 4px;
-    border-left-color: rgb(6 182 212);
+    border-right-width: 4px;
+    border-right-color: rgb(6 182 212);
 }
 
 [data-flux-toast-dialog][data-variant="danger"]>div {

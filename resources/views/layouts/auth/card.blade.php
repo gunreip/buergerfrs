@@ -22,11 +22,7 @@
             </div>
         </div>
 
-        @persist('toast')
-            <flux:toast.group>
-                <flux:toast />
-            </flux:toast.group>
-        @endpersist
+        <x-common.toasts />
 
         @fluxScripts
     </body>

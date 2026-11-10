@@ -121,6 +121,7 @@ return [
         'save' => [
             'save' => 'Speichern',
             'save_role' => 'Rolle speichern',
+            'save_decision' => 'Entscheidung speichern',
         ],
         'show-hide' => [
             'hide' => 'Ausblenden',
@@ -350,7 +351,7 @@ return [
     ],
     'table' => [
         'headers' => [
-            'actions' => 'Aktionen',
+            'actions' => 'Aktionen', 'decision' => 'Entscheidung',
         ],
         'pagination' => [
             'results' => 'Ergebnisse',

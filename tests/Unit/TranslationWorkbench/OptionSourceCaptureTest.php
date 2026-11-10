@@ -43,3 +43,20 @@ it('captures option arguments separately without executing them or assigning the
         'locale_expression' => null, 'fallback_literal' => null, 'state' => 'requires_option_value_evidence',
     ]],
 ]);
+
+it('keeps an incomplete captured expression for review instead of generating a key from null', function () {
+    $directory = storage_path('framework/testing/incomplete-capture-'.uniqid());
+    File::ensureDirectoryExists($directory);
+    $path = $directory.'/example.blade.php';
+    try {
+        File::put($path, "{{ __('Save') }}");
+        $item = app(TranslationWorkbenchScanner::class)->scanFile($path)->sole();
+        $bytes = "{{ __('Save'";
+        $capture = (new CopiedSourceCapture)->capture($item, $bytes, hash('sha256', $bytes), []);
+        expect($capture['raw_expression'])->toBeNull()
+            ->and($capture['suggested_key'])->toBeNull()
+            ->and($capture['status'])->toBe('pending_review');
+    } finally {
+        File::deleteDirectory($directory);
+    }
+});

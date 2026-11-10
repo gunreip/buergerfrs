@@ -6,6 +6,7 @@ use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchEditorAccess;
 use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchEditorLocales;
 use Gunreip\TranslationWorkbench\Generation\GenerationEditor;
 use Gunreip\TranslationWorkbench\Generation\GenerationPublisher;
+use Gunreip\TranslationWorkbench\Generation\PublicationFileReserved;
 use Gunreip\TranslationWorkbench\Generation\SourceReplacementWriter;
 use Gunreip\TranslationWorkbench\Support\RuntimeOptionPreview;
 use Illuminate\Support\Str;
@@ -23,14 +24,15 @@ class TranslationWorkbench extends Component
     use Concerns\SelectsWorkflowLanguages;
     use Concerns\BrowsesTranslationKeySegments;
     use Concerns\HasReasonLanguages;
+    use Concerns\NotifiesFindingEditorErrors;
 
     protected function workflowReasonFields(): array
     {
         return [
-            'reviewReason' => 'review', 'reviewTaskReason' => 'review', 'reviewBatchReason' => 'review',
+            'reviewReason' => 'review', 'reviewBatchReason' => 'review',
             'publicationReason' => 'publication', 'closureReason' => 'closure',
             'sourceReason' => 'source', 'sourceCloseReason' => 'source_closure',
-            'scanUsageReason' => 'scan_usage',
+            'scanUsageReason' => 'scan_usage', 'sourcePositionReason' => 'source_position',
         ];
     }
 
@@ -82,6 +84,56 @@ class TranslationWorkbench extends Component
     #[Url]
     public string $tab = 'findings';
 
+    public string $workSearch = '';
+    public int $workPerPage = 25;
+    public bool $workOnlyMine = true;
+
+    public function updatedWorkSearch(): void
+    {
+        $this->resetPage('workPage');
+    }
+
+    public function updatedWorkOnlyMine(): void
+    {
+        $this->resetPage('workPage');
+    }
+
+    public function updatedWorkPerPage(): void
+    {
+        if (!in_array($this->workPerPage, [10, 25, 50, 100], true)) {
+            $this->workPerPage = 25;
+        }
+        $this->resetPage('workPage');
+    }
+
+    public function resumeWork(int $key): void
+    {
+        $this->resetValidation('resumeWork');
+        try {
+            $task = app(GenerationEditor::class)->workItem($key, $this->reasonTargetLocale());
+            if (!$task || !$task['finding_id']) {
+                throw new \RuntimeException(__('No finding is available for this work item.'));
+            }
+            if (!empty($task['open_publication'])) {
+                $this->openPublication($task['open_publication']);
+                return;
+            }
+            if (!empty($task['open_source'])) {
+                $this->openSourceRun($task['open_source']);
+                return;
+            }
+            $this->openWorkflowStatus((int) $task['finding_id']);
+            if (!in_array($task['step'], ['archived', 'complete'], true)) {
+                $this->continueWorkflow();
+                if ($this->tab === 'source-replacement') {
+                    $this->sourceReplacementSearch = $task['full_name'];
+                }
+            }
+        } catch (\RuntimeException $error) {
+            $this->addError('resumeWork', $error->getMessage());
+        }
+    }
+
     #[Locked]
     public string $findingsSort = 'id';
 
@@ -92,6 +144,8 @@ class TranslationWorkbench extends Component
     public string $selectedScan = '';
 
     public bool $scanOpen = false;
+
+    public bool $scanUsageOpen = false;
 
     #[Locked]
     public string $scanReviewPath = '';
@@ -116,6 +170,10 @@ class TranslationWorkbench extends Component
     public string $scanDecisionReturnRun = '';
 
     public string $scanCategory = 'created';
+
+    public string $scanSearch = '';
+
+    public int $scanPerPage = 25;
 
     public string $search = '';
 
@@ -180,6 +238,9 @@ class TranslationWorkbench extends Component
     #[Locked]
     public array $subLanguageRevisions = [];
 
+    #[Locked]
+    public array $subLanguageSavedValues = [];
+
     public string $value = '';
 
     public string $sourceLanguageValue = '';
@@ -212,11 +273,15 @@ class TranslationWorkbench extends Component
     #[Locked]
     public array $assignmentSelection = [];
 
-    public string $notice = '';
-
     public bool $reviewOpen = false;
 
     public string $reviewReason = '';
+    public string $reviewReasonLocale = 'en';
+
+    public function updatedReviewReasonLocale(): void
+    {
+        $this->validate(['reviewReasonLocale' => ['required', Rule::in(['en', $this->reasonTargetLocale()])]]);
+    }
 
     #[Locked]
     public array $reviewDecision = [];
@@ -233,6 +298,12 @@ class TranslationWorkbench extends Component
     public bool $publicationOpen = false;
 
     public string $publicationReason = '';
+    public string $publicationReasonLocale = 'en';
+
+    public function updatedPublicationReasonLocale(): void
+    {
+        $this->validate(['publicationReasonLocale' => ['required', Rule::in(['en', $this->reasonTargetLocale()])]]);
+    }
 
     public string $closureReason = '';
 
@@ -349,8 +420,6 @@ class TranslationWorkbench extends Component
 
     public string $sharedReason = '';
 
-    public string $sharedNotice = '';
-
     #[Locked]
     public bool $assignmentReasonForShared = false;
 
@@ -376,18 +445,8 @@ class TranslationWorkbench extends Component
             ->map(fn ($match) => (string) $match['id'])->values()->all();
     }
 
-    public function toggleSharedPageSelection(): void
+    public function updatedSharedSelection(): void
     {
-        if (! $this->sharedOpen) {
-            return;
-        }
-
-        $rows = app(GenerationEditor::class)->sharedFindings($this->sharedFinding, (int) $this->getPage('sharedFindingsPage'));
-        $ids = $this->selectableSharedIds($rows->items());
-        $selected = array_map('strval', $this->sharedSelection);
-        $this->sharedSelection = array_values(array_diff($ids, $selected) === []
-            ? array_diff($selected, $ids)
-            : array_unique([...$selected, ...$ids]));
         $this->sharedConfirmOpen = false;
         $this->sharedAssignmentPlan = [];
     }
@@ -395,7 +454,6 @@ class TranslationWorkbench extends Component
     public function reviewSharedAssignment(): void
     {
         $this->sharedConfirmOpen = false;
-        $this->sharedNotice = '';
         $this->sharedAssignmentPlan = [];
         $this->resetValidation('sharedAssignment');
         $this->sharedReason = trim($this->sharedReason);
@@ -434,7 +492,7 @@ class TranslationWorkbench extends Component
             return;
         }
         try {
-            app(GenerationEditor::class)->assignShared($this->sharedAssignmentPlan, (int) auth()->id(), $this->sharedConfirmedReason, ...$this->reasonLocaleArguments('assignment', $this->sharedConfirmedReason));
+            $assignment = app(GenerationEditor::class)->assignShared($this->sharedAssignmentPlan, (int) auth()->id(), $this->sharedConfirmedReason, ...$this->reasonLocaleArguments('assignment', $this->sharedConfirmedReason));
             $this->sharedSelection = [];
             $this->sharedAssignmentPlan = [];
             $this->sharedConfirmOpen = false;
@@ -445,7 +503,8 @@ class TranslationWorkbench extends Component
                 // Refresh the displayed history without replacing unsaved drafts or revision snapshots.
                 $this->context['history'] = $freshContext['history'];
             }
-            $this->sharedNotice = $this->notice = __('Selected findings now use the shared key. Captures, suggested keys and translation values are unchanged.');
+            $this->successToast(__('Shared key assignment confirmed'),
+                __('Findings linked: :count · Key record #:key.', ['count' => count($ids), 'key' => $assignment['key']]));
             $this->resetValidation('sharedAssignment');
         } catch (\RuntimeException $error) {
             $this->addError('sharedAssignment', $error->getMessage());
@@ -461,7 +520,6 @@ class TranslationWorkbench extends Component
         $this->sharedAssignmentPlan = [];
         $this->sharedConfirmOpen = false;
         $this->resetValidation(['sharedAssignment', 'sharedSelection', 'sharedReason']);
-        $this->sharedNotice = '';
         $this->sharedFinding = $finding;
         $this->resetPage('sharedFindingsPage');
         $this->sharedOpen = true;
@@ -475,7 +533,8 @@ class TranslationWorkbench extends Component
         $this->selectedSubLanguages = [];
         $this->subLanguageValues = [];
         $this->subLanguageRevisions = [];
-        $this->reason = $this->assignmentReason = $this->notice = '';
+        $this->subLanguageSavedValues = [];
+        $this->reason = $this->assignmentReason = '';
         $this->assignmentReasonOpen = false;
         $this->newAssignmentReason = '';
         $this->changeReasonOpen = false;
@@ -515,6 +574,7 @@ class TranslationWorkbench extends Component
         $this->publicationLocales = [];
         $this->reviewReason = '';
         $this->publicationReason = '';
+        $this->publicationReasonLocale = $this->reasonTargetLocale();
         $this->context = app(GenerationEditor::class)->inspect($this->selected, $this->locale);
         $this->loadedLocale = $this->locale;
         $finding = $this->context['finding'];
@@ -529,6 +589,19 @@ class TranslationWorkbench extends Component
         $this->value = $this->context['revision']['value'] ?? '';
         $this->subLanguageValues = [];
         $this->subLanguageRevisions = [];
+        $this->subLanguageSavedValues = [];
+        $allowed = app(TranslationWorkbenchEditorLocales::class)->resolve()['sub'];
+        $saved = ! empty($finding['key_id'])
+            ? app(GenerationEditor::class)->savedLanguageVariants((int) $finding['key_id'], $allowed)
+            : [];
+        // Restore persisted variants on opening/reloading, in the configured language order.
+        $this->selectedSubLanguages = array_values(array_filter($allowed,
+            fn ($code) => isset($saved[$code]) || in_array($code, $this->selectedSubLanguages, true)));
+        foreach ($saved as $code => $revision) {
+            $this->subLanguageValues[$code] = (string) $revision['value'];
+            $this->subLanguageSavedValues[$code] = $revision['value'];
+            $this->subLanguageRevisions[$code] = (int) $revision['id'];
+        }
         $this->updatedSelectedSubLanguages();
     }
 
@@ -547,6 +620,7 @@ class TranslationWorkbench extends Component
             if (! array_key_exists($code, $this->subLanguageValues)) {
                 $variant = app(GenerationEditor::class)->inspect($this->selected, $code);
                 $this->subLanguageValues[$code] = (string) ($variant['revision']['value'] ?? '');
+                $this->subLanguageSavedValues[$code] = $variant['revision']['value'] ?? null;
                 $this->subLanguageRevisions[$code] = isset($variant['revision']['id']) ? (int) $variant['revision']['id'] : null;
             }
         }
@@ -585,7 +659,7 @@ class TranslationWorkbench extends Component
         $locales = app(TranslationWorkbenchEditorLocales::class)->resolve();
         $this->validate([
             'locale' => ['required', Rule::in([$locales['active']])],
-            'value' => 'present|string|max:100000',
+            'value' => 'required|string|max:100000',
             'selectedSubLanguages' => 'required|array|min:1',
             'selectedSubLanguages.*' => ['string', 'distinct', Rule::in($locales['sub'])],
         ]);
@@ -712,6 +786,12 @@ class TranslationWorkbench extends Component
         $this->confirmOpen = true;
     }
 
+    private function successToast(string $heading, string $text): void
+    {
+        $this->dispatch('buergerfrs:clear-notices', scope: 'finding-editor:'.$this->getId());
+        \Flux\Flux::toast(heading: $heading, text: $text, variant: 'success', duration: 6000);
+    }
+
     public function assign(): void
     {
         $selection = $this->resolveAssignment();
@@ -722,12 +802,15 @@ class TranslationWorkbench extends Component
         }
         $finding = $this->context['finding'] ?? [];
         try {
-            app(GenerationEditor::class)->assign($this->selected, (int) $selection['key'],
+            $assignment = app(GenerationEditor::class)->assign($this->selected, (int) $selection['key'],
                 isset($finding['link_id']) ? (int) $finding['link_id'] : null, (int) auth()->id(), $selection['reason'],
                 $selection['key'] === null ? $selection['name'] : null, ...$this->reasonLocaleArguments('assignment', $selection['reason']));
             $this->reload();
             $this->confirmOpen = false;
-            $this->notice = __('Key assignment saved. The source occurrence and its immutable capture are unchanged.');
+            $this->successToast(__('Translation key assignment confirmed'),
+                __('Finding #:finding → Key record #:key. Translation key: :name', [
+                    'finding' => $this->selected, 'key' => $assignment['key'], 'name' => $selection['name'],
+                ]));
         } catch (\RuntimeException $error) {
             $this->addError('assignment', $error->getMessage());
         }
@@ -744,7 +827,11 @@ class TranslationWorkbench extends Component
             'selectedSubLanguages' => 'array',
             'selectedSubLanguages.*' => ['string', 'distinct', Rule::in($locales['sub'])],
         ];
-        $this->validate($rules);
+        $this->validate($rules, [
+            'reason.required' => __('Select a reason for translation change.'),
+            'reason.min' => __('The reason for translation change must contain at least 3 characters.'),
+            'reason.max' => __('The reason for translation change must not exceed 2000 characters.'),
+        ]);
         foreach ($this->selectedSubLanguages as $code) {
             $this->validate(['subLanguageValues.'.$code => 'present|string|max:100000']);
             if (! array_key_exists($code, $this->subLanguageRevisions)) {
@@ -772,7 +859,10 @@ class TranslationWorkbench extends Component
             app(GenerationEditor::class)->saveDrafts($this->selected, (int) ($finding['key_id'] ?? 0),
                 isset($finding['link_id']) ? (int) $finding['link_id'] : null, $drafts, (int) auth()->id(), $this->reason, ...$this->reasonLocaleArguments('change', $this->reason));
             $this->reload();
-            $this->notice = __('Drafts saved for the source language, main language and selected variants. Publication is a separate step.');
+            $this->successToast(__('Translation drafts saved'),
+                __('Key record #:key · Languages: :languages. Publication is a separate step.', [
+                    'key' => $finding['key_id'], 'languages' => implode(', ', array_keys($drafts)),
+                ]));
         } catch (\RuntimeException $error) {
             $this->addError('value', $error->getMessage());
         }
@@ -810,11 +900,6 @@ class TranslationWorkbench extends Component
 
     public string $reviewSearch = '';
     public int $reviewPerPage = 25;
-    public bool $reviewTaskOpen = false;
-    public string $reviewTaskReason = '';
-
-    #[Locked]
-    public array $reviewTask = [];
 
     public function updatedReviewSearch(): void
     {
@@ -836,9 +921,19 @@ class TranslationWorkbench extends Component
             return;
         }
         $this->validate([
+            'sourceLanguageValue' => 'required|string',
+            'value' => 'required|string',
             'selectedSubLanguages' => 'array',
             'selectedSubLanguages.*' => ['string', 'distinct', Rule::in(app(TranslationWorkbenchEditorLocales::class)->resolve()['sub'])],
+        ], [
+            'sourceLanguageValue.required' => __('Enter the English source text before submitting for review.'),
+            'value.required' => __('Enter the main target-language translation before submitting for review.'),
         ]);
+        foreach ($this->selectedSubLanguages as $code) {
+            $this->validate(['subLanguageValues.'.$code => 'required|string'], [
+                'subLanguageValues.'.$code.'.required' => __('Enter the translation for :locale or deselect this language variant before submitting for review.', ['locale' => $code]),
+            ]);
+        }
         $drafts = [
             'en' => ['value' => $this->sourceLanguageValue, 'revision' => $this->context['sourceRevision'] ?? null],
             $this->loadedLocale => ['value' => $this->value, 'revision' => $this->context['revision']['id'] ?? null],
@@ -864,7 +959,10 @@ class TranslationWorkbench extends Component
                 $expected[(int) $draft['revision']] = $current['review']['fingerprint'];
             }
             $editor->reviewWorklist()->submit($expected, (int) auth()->id());
-            $this->notice = __('Saved language revisions submitted for review. No files were written.');
+            $this->successToast(__('Translation drafts submitted for review'),
+                __('Key record #:key · Languages: :languages.', [
+                    'key' => $this->context['finding']['key_id'], 'languages' => implode(', ', array_keys($drafts)),
+                ]));
             $this->editorOpen = false;
             $this->tab = 'review';
             $this->resetPage('reviewPage');
@@ -902,6 +1000,10 @@ class TranslationWorkbench extends Component
             return;
         }
 
+        // When continuing from the preview's status dialog, do not leave the preview over the destination.
+        $this->sourcePreviewOpen = false;
+        $this->sourceComparisonOpen = false;
+
         $key = (string) ($this->workflowStatus['finding']['key_id'] ?? '');
         $reviewReady = $step['id'] === 'review'
             && collect($step['languages'])->contains('state', 'review');
@@ -924,15 +1026,19 @@ class TranslationWorkbench extends Component
             return;
         }
 
+        if ($step['id'] === 'source') {
+            $this->sourceReplacementSearch = (string) $finding;
+            $this->tab = 'source-replacement';
+            $this->workflowStatusOpen = false;
+            $this->editorOpen = false;
+            return;
+        }
+
         // Keep any unsaved input when returning to the already open finding.
         if (! $this->editorOpen || $this->selected !== $finding) {
             $this->open($finding);
         }
         $this->workflowStatusOpen = false;
-        if ($step['id'] === 'source') {
-            $this->previewSource();
-            return;
-        }
         $this->dispatch('workflow-focus', target: $step['id'] === 'assignment'
             ? 'workbench-key-assignment' : 'workbench-translation-values');
     }
@@ -956,31 +1062,25 @@ class TranslationWorkbench extends Component
     #[Locked]
     public array $reviewBatch = [];
 
-    public function toggleVisibleReviewRevisions(): void
-    {
-        $page = app(GenerationEditor::class)->reviewWorklist()->page($this->reviewSearch, (int) $this->getPage('reviewPage'), $this->reviewPerPage, $this->reviewSort, $this->reviewDirection, $this->reviewKeyId, $this->reviewLanguage);
-        $visible = array_map('strval', array_column($page->items(), 'revision'));
-        $selected = array_map('strval', $this->selectedReviewRevisions);
-        $this->selectedReviewRevisions = array_values(array_diff($visible, $selected) === []
-            ? array_diff($selected, $visible) : array_unique(array_merge($selected, $visible)));
-    }
-
     public function updatedReviewBatchReasonLocale(): void
     {
         $this->validate(['reviewBatchReasonLocale' => ['required', Rule::in(['en', $this->reasonTargetLocale()])]]);
     }
 
-    public function openReviewBatch(): void
+    public function openReviewBatch(?int $revision = null): void
     {
         $this->resetValidation(['reviewBatch', 'reviewBatchReason']);
         $this->reviewBatch = [];
         $this->reviewBatchReason = '';
         $this->reviewBatchReasonLocale = $this->reasonTargetLocale();
         $this->reviewBatchOpen = false;
-        $this->validate(['selectedReviewRevisions' => 'required|array|min:1', 'selectedReviewRevisions.*' => 'required|integer|min:1']);
+        if ($revision === null) {
+            $this->validate(['selectedReviewRevisions' => 'required|array|min:1', 'selectedReviewRevisions.*' => 'required|integer|min:1']);
+        }
+        $revisions = $revision === null ? array_unique($this->selectedReviewRevisions) : [$revision];
         try {
             $tasks = [];
-            foreach (array_unique($this->selectedReviewRevisions) as $revision) {
+            foreach ($revisions as $revision) {
                 $tasks[] = app(GenerationEditor::class)->reviewWorklist()->inspect((int) $revision);
             }
             $this->reviewBatch = $tasks;
@@ -1005,39 +1105,10 @@ class TranslationWorkbench extends Component
             $this->selectedReviewRevisions = array_values(array_diff($this->selectedReviewRevisions, array_keys($revisions)));
             $this->reviewBatchOpen = false;
             $this->reviewBatch = [];
-            $this->notice = $approve ? __('Selected revisions approved.') : __('Selected revisions returned for correction.');
+            $this->successToast($approve ? __('Revisions approved') : __('Revisions returned for correction'),
+                __('Revision IDs: :ids', ['ids' => '#' . implode(', #', array_keys($revisions))]));
         } catch (\RuntimeException $error) {
             $this->addError('reviewBatch', $error->getMessage());
-        }
-    }
-
-    public function openReviewTask(int $revision): void
-    {
-        $this->resetValidation('reviewTask');
-        $this->reviewTask = [];
-        $this->reviewTaskReason = '';
-        try {
-            $this->reviewTask = app(GenerationEditor::class)->reviewWorklist()->inspect($revision);
-            $this->reviewTaskOpen = true;
-        } catch (\RuntimeException $error) {
-            $this->addError('reviewTask', $error->getMessage());
-        }
-    }
-
-    public function decideReviewTask(bool $approve): void
-    {
-        $this->validate(['reviewTaskReason' => 'required|string|min:3|max:2000']);
-        if (! $this->reviewTaskOpen || $this->reviewTask === []) {
-            return;
-        }
-        try {
-            app(GenerationEditor::class)->reviewWorklist()->decide((int) $this->reviewTask['context']['revision_id'],
-                $this->reviewTask['fingerprint'], $approve, (int) auth()->id(), $this->reviewTaskReason, ...$this->reasonLocaleArguments('review', $this->reviewTaskReason));
-            $this->reviewTaskOpen = false;
-            $this->reviewTask = [];
-            $this->notice = $approve ? __('Revision approved. No language files were written.') : __('Revision returned to Translations for correction.');
-        } catch (\RuntimeException $error) {
-            $this->addError('reviewTask', $error->getMessage());
         }
     }
 
@@ -1069,6 +1140,7 @@ class TranslationWorkbench extends Component
         $this->reviewDecision = ['revision' => (int) $this->context['revision']['id'], 'fingerprint' => $review['fingerprint'], 'approve' => $approve];
         $this->reviewReason = '';
         $this->reviewOpen = true;
+        $this->reviewReasonLocale = $this->reasonTargetLocale();
     }
 
     public function review(): void
@@ -1091,9 +1163,10 @@ class TranslationWorkbench extends Component
             }
             $approved = $this->reviewDecision['approve'];
             $this->reload();
-            $this->notice = $approved
-                ? __('Selected revisions approved. This records the review; no language files have been written.')
-                : __('Revision approval revoked. Existing language files remain unchanged.');
+            $this->successToast($approved ? __('Revisions approved') : __('Revision approval revoked'),
+                __('Key record #:key · Revision IDs: :ids', [
+                    'key' => $this->context['finding']['key_id'], 'ids' => '#' . implode(', #', array_keys($revisions)),
+                ]));
         } catch (\RuntimeException $error) {
             $this->addError('review', $error->getMessage());
         }
@@ -1177,6 +1250,129 @@ class TranslationWorkbench extends Component
 
     public string $publicationSearch = '';
     public int $publicationPerPage = 25;
+    #[Locked]
+    public array $sourceReplacementGroup = [];
+
+    #[Locked]
+    public array $sourceGroupCheck = [];
+
+    public function checkSelectedSourceFindings(): void
+    {
+        $this->resetValidation('sourceReplacementGroup');
+        $this->sourceGroupCheck = [];
+        if ($this->sourceReplacementGroup === []) {
+            $this->addError('sourceReplacementGroup', __('Select a translation key first.'));
+            return;
+        }
+        try {
+            $this->sourceGroupCheck = app(GenerationEditor::class)->checkSourceReplacementGroup(
+                $this->sourceReplacementGroup['key_id'], $this->sourceReplacementGroup['finding_ids']);
+            $this->sourceReplacementCheckVersion++;
+        } catch (\RuntimeException $error) {
+            $this->addError('sourceReplacementGroup', $error->getMessage());
+        }
+    }
+
+    public string $sourcePositionChoice = '';
+    public string $sourcePositionReason = '';
+    public bool $sourcePositionConfirmed = false;
+    #[Locked]
+    public string $sourcePositionOperation = '';
+
+    public function applySourcePositionDecision(): void
+    {
+        $this->validate(['sourcePositionChoice' => 'required|in:moved,removed',
+            'sourcePositionReason' => 'required|string|min:3|max:2000', 'sourcePositionConfirmed' => 'accepted']);
+        $finding = (int) ($this->sourceComparison['finding']['id'] ?? 0);
+        if (! $this->sourceComparisonOpen || ! in_array($finding, $this->sourceReplacementGroup['finding_ids'] ?? [], true)
+            || $this->sourcePositionOperation === '' || empty($this->sourceComparison['decision']['fingerprint'])) {
+            $this->addError('sourcePositionDecision', __('Reopen the source comparison before applying a decision.'));
+            return;
+        }
+        try {
+            $result = app(GenerationEditor::class)->applySourcePositionDecision($this->sourcePositionOperation,
+                $finding, (int) $this->sourceReplacementGroup['key_id'], $this->sourceComparison['decision']['fingerprint'],
+                $this->sourcePositionChoice, (int) auth()->id(), $this->sourcePositionReason);
+            $this->releaseSourceReplacementGroup();
+            $this->successToast(__('Source position decision saved'), isset($result['successors'][0])
+                ? __('Finding #:old archived; successor #:new created with the same suggested key and translation key assignment.',
+                    ['old' => $finding, 'new' => $result['successors'][0]['successor']])
+                : __('Finding #:id archived as removed. The translation key and translations were retained.', ['id' => $finding]));
+        } catch (\RuntimeException $error) {
+            $this->addError('sourcePositionDecision', $error->getMessage());
+        }
+    }
+
+    public bool $sourceComparisonOpen = false;
+
+    #[Locked]
+    public array $sourceComparison = [];
+
+    public function openSourceComparison(int $finding): void
+    {
+        $this->resetValidation(['sourcePositionChoice', 'sourcePositionReason', 'sourcePositionConfirmed', 'sourcePositionDecision']);
+        $this->sourcePositionChoice = '';
+        $this->sourcePositionReason = '';
+        $this->sourcePositionConfirmed = false;
+        $this->sourcePositionOperation = (string) \Illuminate\Support\Str::uuid();
+        $this->resetValidation('sourceReplacementGroup');
+        $this->sourceComparisonOpen = false;
+        $this->sourceComparison = [];
+        if (! in_array($finding, $this->sourceReplacementGroup['finding_ids'] ?? [], true)) {
+            $this->addError('sourceReplacementGroup', __('Select this translation key before inspecting its findings.'));
+            return;
+        }
+        try {
+            $this->sourceComparison = app(GenerationEditor::class)->sourceReplacementComparison($finding, $this->sourceReplacementGroup['key_id']);
+            $this->sourceComparisonOpen = true;
+        } catch (\RuntimeException $error) {
+            $this->addError('sourceReplacementGroup', $error->getMessage());
+        }
+    }
+
+    public function selectSourceReplacementGroup(int $finding): void
+    {
+        $this->resetValidation('sourceReplacementGroup');
+        // A group stays fixed until explicitly released, including across pages and filters.
+        if ($this->sourceReplacementGroup !== []) {
+            return;
+        }
+        try {
+            $this->sourceReplacementGroup = app(GenerationEditor::class)->sourceReplacementGroup($finding);
+        } catch (\RuntimeException $error) {
+            $this->addError('sourceReplacementGroup', $error->getMessage());
+        }
+    }
+
+    public function releaseSourceReplacementGroup(): void
+    {
+        $this->sourcePreviewOpen = false;
+        $this->sourcePreview = [];
+        $this->sourceComparisonOpen = false;
+        $this->sourceComparison = [];
+        $this->sourceReplacementGroup = [];
+        $this->sourceGroupCheck = [];
+        $this->resetValidation('sourceReplacementGroup');
+    }
+
+    #[Locked]
+    public int $sourceReplacementCheckVersion = 0;
+
+    public string $sourceReplacementSearch = '';
+    public int $sourceReplacementPerPage = 25;
+
+    public function updatedSourceReplacementPerPage(): void
+    {
+        if (! in_array($this->sourceReplacementPerPage, [10, 25, 50, 100], true)) {
+            $this->sourceReplacementPerPage = 25;
+        }
+    }
+
+    public array $selectedPublicationRevisions = [];
+
+    #[Locked]
+    public array $publicationBatch = [];
+
     public bool $publicationTaskOpen = false;
 
     #[Locked]
@@ -1195,14 +1391,24 @@ class TranslationWorkbench extends Component
         $this->resetPage('publicationPage');
     }
 
-    public function openPublicationTask(int $revision): void
+    public function openPublicationTask(?int $revision = null): void
     {
-        $this->resetValidation('publicationTask');
+        $this->resetValidation(['publicationTask', 'publicationReason', 'selectedPublicationRevisions']);
+        $this->publicationBatch = [];
         $this->publicationTask = [];
         $this->publicationTaskOpen = false;
         $this->publicationReason = '';
+        $this->publicationReasonLocale = $this->reasonTargetLocale();
         try {
-            $this->publicationTask = app(GenerationEditor::class)->reviewWorklist()->inspectPublication($revision);
+            if ($revision === null) {
+                $this->validate(['selectedPublicationRevisions' => 'required|array|min:1', 'selectedPublicationRevisions.*' => 'required|integer|min:1']);
+            }
+            $tasks = [];
+            foreach ($revision === null ? array_unique($this->selectedPublicationRevisions) : [$revision] as $id) {
+                $tasks[] = app(GenerationEditor::class)->reviewWorklist()->inspectPublication((int) $id);
+            }
+            $this->publicationBatch = $tasks;
+            $this->publicationTask = $tasks[0];
             $this->publicationTaskOpen = true;
         } catch (\RuntimeException $error) {
             $this->addError('publicationTask', $error->getMessage());
@@ -1216,12 +1422,19 @@ class TranslationWorkbench extends Component
             return;
         }
         try {
-            $revision = (int) $this->publicationTask['context']['revision_id'];
-            app(GenerationEditor::class)->reviewWorklist()->inspectPublication($revision);
-            $run = app(GenerationPublisher::class)->prepare((string) Str::uuid(), [$revision],
-                (int) auth()->id(), $this->publicationReason, [$this->publicationTask['fingerprint']], ...$this->reasonLocaleArguments('publication', $this->publicationReason));
+            $revisions = [];
+            foreach ($this->publicationBatch ?: [$this->publicationTask] as $task) {
+                $revision = (int) $task['context']['revision_id'];
+                app(GenerationEditor::class)->reviewWorklist()->inspectPublication($revision);
+                $revisions[$revision] = $task['fingerprint'];
+            }
+            $run = app(GenerationPublisher::class)->prepare((string) Str::uuid(), array_keys($revisions),
+                (int) auth()->id(), $this->publicationReason, array_values($revisions), ...$this->reasonLocaleArguments('publication', $this->publicationReason));
             $this->publicationTaskOpen = false;
+            $this->selectedPublicationRevisions = array_values(array_diff($this->selectedPublicationRevisions, array_keys($revisions)));
             $this->openPublication($run['run']);
+        } catch (PublicationFileReserved $error) {
+            $this->notifyPublicationReservation($error);
         } catch (\RuntimeException $error) {
             $this->addError('publicationTask', $error->getMessage());
         }
@@ -1246,9 +1459,29 @@ class TranslationWorkbench extends Component
                 (int) auth()->id(), $this->publicationReason, array_values($revisions), ...$this->reasonLocaleArguments('publication', $this->publicationReason));
             $this->publicationSelectionOpen = false;
             $this->openPublication($run['run']);
+        } catch (PublicationFileReserved $error) {
+            $this->notifyPublicationReservation($error);
         } catch (\RuntimeException $error) {
             $this->addError('publication', $error->getMessage());
         }
+    }
+
+    private function notifyPublicationReservation(PublicationFileReserved $error): void
+    {
+        $scope = 'publication-reservation:'.$this->getId();
+        $this->dispatch('toast-show',
+            slots: [
+                'heading' => __('Language file reserved'),
+                'text' => __('An open publication reserves lang/:path. Open that run to continue publication or release the file reservation.', ['path' => $error->relativePath]),
+            ],
+            dataset: ['variant' => 'danger', 'noticeScope' => $scope, 'replaceNoticeScope' => $scope],
+            duration: 0,
+            action: [
+                'label' => __('Open reserving publication'),
+                'event' => 'workbench-open-reserving-publication',
+                'params' => ['component' => $this->getId(), 'run' => $error->runId],
+            ],
+        );
     }
 
     public function openPublication(string $run): void
@@ -1256,11 +1489,13 @@ class TranslationWorkbench extends Component
         $this->resetValidation('publication');
         try {
             $this->publication = app(GenerationPublisher::class)->inspect($run);
+            $this->publicationTaskOpen = false;
+            $this->publicationSelectionOpen = false;
             $this->closure = [];
             $this->closureReason = '';
             $this->publicationOpen = true;
         } catch (\RuntimeException $error) {
-            $this->addError('publication', $error->getMessage());
+            $this->publicationActionError($error->getMessage(), __('Publication could not be opened'));
         }
     }
 
@@ -1278,10 +1513,11 @@ class TranslationWorkbench extends Component
             if ($this->editorOpen) {
                 $this->reload();
             }
-            \Flux\Flux::toast(variant: 'success', text: __('Publication completed and file hashes verified. Source code was not rewritten.'));
+            $this->successToast(__('Publication completed'),
+                __('Run: :run. Language files written and file hashes verified.', ['run' => $run]));
         } catch (\RuntimeException $error) {
             $this->publication = app(GenerationPublisher::class)->inspect($run);
-            $this->publicationActionError($error->getMessage());
+            $this->publicationActionError($error->getMessage(), __('Publication failed'));
         }
     }
 
@@ -1293,7 +1529,7 @@ class TranslationWorkbench extends Component
         try {
             $this->closure = app(GenerationPublisher::class)->closurePreview($this->publication['run']);
         } catch (\RuntimeException $error) {
-            $this->publicationActionError($error->getMessage());
+            $this->publicationActionError($error->getMessage(), __('Publication closure could not be checked'));
         }
     }
 
@@ -1302,7 +1538,7 @@ class TranslationWorkbench extends Component
         try {
             $this->validate(['closureReason' => 'required|string|min:3|max:2000']);
         } catch (\Illuminate\Validation\ValidationException $error) {
-            \Flux\Flux::toast(variant: 'danger', text: collect($error->errors())->flatten()->first(), duration: 8000);
+            \Flux\Flux::toast(heading: __('Publication closure reason is invalid'), variant: 'danger', text: collect($error->errors())->flatten()->first(), duration: 8000);
             return;
         }
         if (! $this->publicationOpen || ! $this->publication || ! $this->closure) {
@@ -1313,16 +1549,66 @@ class TranslationWorkbench extends Component
         try {
             app(GenerationPublisher::class)->close($this->publication['run'], $this->closure['fingerprint'], (int) auth()->id(), $this->closureReason);
             $this->openPublication($this->publication['run']);
-            \Flux\Flux::toast(variant: 'success', text: __('Publication run closed without further writes.'));
+            $this->successToast(__('Publication run closed'),
+                __('Run: :run. Closed without further writes.', ['run' => $this->publication['run']]));
         } catch (\RuntimeException $error) {
-            $this->publicationActionError($error->getMessage());
+            $this->publicationActionError($error->getMessage(), __('Publication run could not be closed'));
         }
     }
 
-    private function publicationActionError(string $message): void
+    private function publicationActionError(string $message, ?string $heading = null): void
     {
         $this->addError('publication', $message);
-        \Flux\Flux::toast(variant: 'danger', text: $message, duration: 8000);
+        \Flux\Flux::toast(heading: $heading ?? __('Publication action could not be completed'), variant: 'danger', text: $message, duration: 8000);
+    }
+
+    public function previewSelectedSourceGroup(): void
+    {
+        $this->resetValidation('sourcePreview');
+        $this->sourcePreviewOpen = false;
+        $this->sourcePreview = [];
+        $this->sourceReason = '';
+        if ($this->sourceReplacementGroup === []) {
+            $this->addError('sourcePreview', __('Select a translation key first.'));
+            return;
+        }
+        try {
+            $this->sourcePreview = app(SourceReplacementWriter::class)->previewBatch(
+                $this->sourceReplacementGroup['key_id'], $this->sourceReplacementGroup['finding_ids']);
+            $languages = app(TranslationWorkbenchEditorLocales::class)->resolve();
+            $this->sourcePreview['translation_files'] = app(GenerationEditor::class)->translationFiles(
+                (int) $this->sourcePreview['key_id'], $this->sourcePreview['key'],
+                array_values(array_unique(['en', $languages['active'], ...$languages['sub']])));
+            $this->editorOpen = $this->sourceComparisonOpen = false;
+            $this->sourcePreviewOpen = true;
+        } catch (\RuntimeException $error) {
+            $this->addError('sourcePreview', $error->getMessage());
+        }
+    }
+
+    public function previewSelectedSource(int $finding): void
+    {
+        $this->resetValidation('sourcePreview');
+        $this->sourcePreview = [];
+        $this->sourcePreviewOpen = false;
+        $this->sourceReason = '';
+        if (! in_array($finding, $this->sourceReplacementGroup['finding_ids'] ?? [], true)) {
+            $this->addError('sourcePreview', __('Select this translation key before opening its source preview.'));
+            return;
+        }
+        try {
+            $this->sourcePreview = app(GenerationEditor::class)->sourceReplacementPreviewForGroup(
+                $finding, $this->sourceReplacementGroup['key_id'], $this->sourceReplacementGroup['finding_ids']);
+            $this->editorOpen = false;
+            $this->sourceComparisonOpen = false;
+            $languages = app(TranslationWorkbenchEditorLocales::class)->resolve();
+            $this->sourcePreview['translation_files'] = app(GenerationEditor::class)->translationFiles(
+                (int) $this->sourcePreview['key_id'], $this->sourcePreview['key'],
+                array_values(array_unique(['en', $languages['active'], ...$languages['sub']])));
+            $this->sourcePreviewOpen = true;
+        } catch (\RuntimeException $error) {
+            $this->addError('sourcePreview', $error->getMessage());
+        }
     }
 
     public function previewSource(): void
@@ -1338,6 +1624,10 @@ class TranslationWorkbench extends Component
         try {
             $this->sourcePreview = app(GenerationEditor::class)->sourcePreview($this->selected,
                 (int) $this->context['finding']['key_id'], (int) $this->context['finding']['link_id'], 'en');
+            $languages = app(TranslationWorkbenchEditorLocales::class)->resolve();
+            $this->sourcePreview['translation_files'] = app(GenerationEditor::class)->translationFiles(
+                (int) $this->sourcePreview['key_id'], $this->sourcePreview['key'],
+                array_values(array_unique(['en', $languages['active'], ...$languages['sub']])));
             $this->sourcePreviewOpen = true;
         } catch (\RuntimeException $error) {
             $this->addError('sourcePreview', $error->getMessage());
@@ -1353,11 +1643,19 @@ class TranslationWorkbench extends Component
             return;
         }
         try {
-            $run = app(SourceReplacementWriter::class)->prepare($this->sourcePreview['finding'], $this->sourcePreview['source_locale'],
-                $this->sourcePreview['fingerprint'], (int) auth()->id(), $this->sourceReason);
+            $run = ($this->sourcePreview['batch'] ?? false)
+                ? app(SourceReplacementWriter::class)->prepareBatch($this->sourcePreview['key_id'], $this->sourcePreview['finding_ids'],
+                    $this->sourcePreview['fingerprint'], (int) auth()->id(), $this->sourceReason)
+                : app(SourceReplacementWriter::class)->prepare($this->sourcePreview['finding'], $this->sourcePreview['source_locale'],
+                    $this->sourcePreview['fingerprint'], (int) auth()->id(), $this->sourceReason);
             $this->sourcePreviewOpen = false;
             $this->openSourceRun($run);
         } catch (\RuntimeException $error) {
+            if ($error instanceof \Gunreip\TranslationWorkbench\Generation\SourceScanRequired) {
+                $this->sourcePreview['ready'] = false;
+                $this->sourcePreview['blocker'] = $error->getMessage();
+                $this->sourcePreview['scan_required'] = $error->details();
+            }
             $this->addError('sourcePreview', $error->getMessage());
         }
     }
@@ -1387,7 +1685,19 @@ class TranslationWorkbench extends Component
             if ($this->editorOpen) {
                 $this->open((int) $result['successors'][0]['successor']);
             }
-            $this->notice = __('Source updated. The original finding is archived and linked to its successor.');
+            if ($this->sourceReplacementGroup !== []) {
+                $this->sourceGroupCheck = [];
+                try {
+                    $this->sourceReplacementGroup = app(GenerationEditor::class)->sourceReplacementGroup((int) $result['successors'][0]['successor']);
+                } catch (\RuntimeException) {
+                    $this->sourceReplacementGroup = [];
+                }
+            }
+            $this->successToast(__('Source replacement completed'),
+                __('Run: :run · Successor finding IDs: :ids', [
+                    'run' => $this->sourceRun['run'],
+                    'ids' => '#' . implode(', #', array_column($result['successors'], 'successor')),
+                ]));
         } catch (\RuntimeException $error) {
             try {
                 $this->sourceRun = app(SourceReplacementWriter::class)->inspect($this->sourceRun['run']);
@@ -1424,6 +1734,7 @@ class TranslationWorkbench extends Component
             $this->scanUsageNotice = '';
             $this->selectedScan = $run;
             $this->scanCategory = $category;
+            $this->scanSearch = '';
             $this->resetPage('scanResultsPage');
             $this->scanOpen = true;
         } catch (\RuntimeException $error) {
@@ -1431,12 +1742,23 @@ class TranslationWorkbench extends Component
         }
     }
 
+    public function updatedScanPerPage(): void
+    {
+        if (!in_array($this->scanPerPage, [10, 25, 50, 100], true)) $this->scanPerPage = 25;
+        $this->resetPage('scanResultsPage');
+    }
+
+    public function updatedScanSearch(): void
+    {
+        $this->resetPage('scanResultsPage');
+    }
+
     public function updatedScanCategory(): void
     {
         $this->scanReviewPath = '';
         $this->scanUsageContext = [];
         $this->scanUsageNotice = '';
-        if (! in_array($this->scanCategory, ['created', 'moved', 'removed', 'review_files', 'usage_decisions'], true)) {
+        if (! in_array($this->scanCategory, ['created', 'confirmed', 'moved', 'removed', 'review_files', 'usage_decisions', 'missing_immutable'], true)) {
             $this->scanCategory = 'created';
         }
         $this->resetPage('scanResultsPage');
@@ -1471,6 +1793,9 @@ class TranslationWorkbench extends Component
             $this->scanUsageNotice = '';
             $this->resetErrorBag('scanUsage');
             $this->loadScanUsageReasons();
+            $this->resetValidation(['scanUsageChoice', 'scanUsageReason']);
+            $this->scanOpen = false;
+            $this->scanUsageOpen = true;
         } catch (\RuntimeException $error) {
             $this->addError('scanReview', $error->getMessage());
         }
@@ -1512,8 +1837,20 @@ class TranslationWorkbench extends Component
             $this->scanUsageChoice = $this->scanUsageContext['decision']['decision'] ?? '';
             $this->scanUsageReason = $this->scanUsageContext['decision']['reason'] ?? '';
             $this->loadScanUsageReasons();
+            $this->resetValidation(['scanUsageChoice', 'scanUsageReason']);
+            $this->scanOpen = false;
+            $this->scanUsageOpen = true;
         } catch (\RuntimeException $error) {
             $this->addError('scanUsage', $error->getMessage());
+        }
+    }
+
+    public function updatedScanUsageOpen(bool $open): void
+    {
+        if (! $open && $this->scanUsageContext !== []) {
+            $this->scanOpen = true;
+            $this->scanUsageContext = [];
+            $this->resetValidation(['scanUsage', 'scanUsageChoice', 'scanUsageReason']);
         }
     }
 
@@ -1528,8 +1865,9 @@ class TranslationWorkbench extends Component
             $context = $this->scanUsageContext;
             app(GenerationEditor::class)->decideScanUsage($context['run'], $context['path'], $context['index'],
                 $this->scanUsageChoice, $this->scanUsageReason, (int) auth()->id(), (int) ($context['decision']['id'] ?? 0));
-            $this->scanUsageContext = app(GenerationEditor::class)->scanUsage($context['run'], $context['path'], $context['index']);
-            $this->loadScanUsageReasons();
+            $this->scanUsageOpen = false;
+            $this->scanOpen = true;
+            $this->scanUsageContext = [];
             $this->scanUsageNotice = __('Usage decision saved. The next scan checks the unchanged source before applying it. No translation or source file was changed.');
         } catch (\RuntimeException $error) {
             $this->addError('scanUsage', $error->getMessage());
@@ -1564,9 +1902,153 @@ class TranslationWorkbench extends Component
         $this->resetErrorBag('scanReview');
     }
 
+    #[Locked]
+    public array $scanStorage = [];
+
+    public function refreshScanStorage(): void
+    {
+        app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchEditorAccess::class)->authorize();
+        if (!$this->scanWorkflowOpen || $this->testToken !== '') return;
+        try {
+            $this->scanStorage = app(GenerationEditor::class)->scanStorageSummary();
+            $this->scanStorage['cache'] = app(\Gunreip\TranslationWorkbench\Generation\ScanCacheMaintenance::class)->summary();
+        } catch (\Throwable $error) { $this->addError('scanWorkflow', $error->getMessage()); }
+    }
+
+    public bool $scanWorkflowOpen = false;
+    #[Locked]
+    public string $scanWorkflowId = '';
+    #[Locked]
+    public array $scanWorkflow = [];
+
+    #[Locked]
+    public array $scanFreshness = [];
+
+    public function refreshScanFreshness(): void
+    {
+        app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchEditorAccess::class)->authorize();
+        $this->scanFreshness = ['reusable' => false];
+        if ($this->testToken !== '') return;
+        try {
+            $this->scanFreshness = app(\Gunreip\TranslationWorkbench\Generation\ScanResultFreshness::class)->inspect();
+        } catch (\Throwable $error) {
+            $this->scanFreshness['reason'] = __('The latest scan could not be verified. Open the scan dialog to check the source.');
+            report($error);
+        }
+    }
+
+    public function openCurrentScan(): void
+    {
+        $this->refreshScanFreshness();
+        if ($this->scanFreshness['reusable'] ?? false) {
+            $this->openScan($this->scanFreshness['run']);
+            return;
+        }
+        $this->openScanWorkflow();
+        // Keep running work or a prepared preview; do not reopen an obsolete completed result.
+        if (($this->scanWorkflow['state'] ?? '') === 'complete') {
+            $this->scanWorkflowId = '';
+            session()->forget('workbench.scan_workflow');
+            $this->scanWorkflow = ['state' => 'idle', 'target' => app(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class)->target()];
+        }
+    }
+
+    public function openScanWorkflow(): void
+    {
+        app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchEditorAccess::class)->authorize();
+        $this->resetValidation('scanWorkflow');
+        $this->scanWorkflowOpen = true;
+        if ($this->testToken !== '') {
+            $this->addError('scanWorkflow', __('Regular source scans are available for working data. UI test fixtures are reset through the testcase toggle.'));
+            return;
+        }
+        try {
+            if ($this->scanWorkflowId === '') $this->scanWorkflowId = (string) session('workbench.scan_workflow', '');
+            if ($this->scanWorkflowId !== '') { $this->pollScanWorkflow(); return; }
+            $this->scanWorkflow = ['state' => 'idle', 'target' => app(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class)->target()];
+        } catch (\Throwable $error) { $this->addError('scanWorkflow', $error->getMessage()); }
+    }
+
+    public function startScanPreview(): void
+    {
+        app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchEditorAccess::class)->authorize();
+        if (!$this->scanWorkflowOpen || $this->testToken !== '') return;
+        if (in_array($this->scanWorkflow['state'] ?? '', ['queued_preview', 'scanning', 'queued_apply', 'applying'], true)) return;
+        try {
+            $this->resetValidation('scanWorkflow');
+            $this->scanWorkflowId = app(\Gunreip\TranslationWorkbench\Generation\ScanRunCoordinator::class)->start((int) auth()->id());
+            session(['workbench.scan_workflow' => $this->scanWorkflowId]);
+            $this->pollScanWorkflow();
+        } catch (\Throwable $error) { $this->addError('scanWorkflow', $error->getMessage()); }
+    }
+
+    public function confirmScan(): void
+    {
+        app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchEditorAccess::class)->authorize();
+        if (!$this->scanWorkflowOpen || $this->testToken !== '') return;
+        try {
+            $this->resetValidation('scanWorkflow');
+            app(\Gunreip\TranslationWorkbench\Generation\ScanRunCoordinator::class)->confirm($this->scanWorkflowId, (int) auth()->id());
+            $this->pollScanWorkflow();
+        } catch (\Throwable $error) { $this->addError('scanWorkflow', $error->getMessage()); }
+    }
+
+    public function pollScanWorkflow(): void
+    {
+        if (!$this->scanWorkflowOpen || $this->scanWorkflowId === '' || $this->testToken !== '') return;
+        try {
+            $previous = $this->scanWorkflow['state'] ?? '';
+            $this->scanWorkflow = app(\Gunreip\TranslationWorkbench\Generation\ScanRunCoordinator::class)->status($this->scanWorkflowId, (int) auth()->id());
+            if ($this->scanWorkflow['state'] === 'complete' && $previous !== 'complete') {
+                $this->sourceReplacementCheckVersion++;
+                app(GenerationEditor::class)->scanRequirementSummary(true);
+                $this->releaseSourceReplacementGroup();
+                $this->refreshScanFreshness();
+            }
+        } catch (\Throwable $error) {
+            $this->scanWorkflowId = '';
+            session()->forget('workbench.scan_workflow');
+            $this->scanWorkflow = ['state' => 'failed', 'error' => $error->getMessage()];
+        }
+    }
+
+    public function showWorkflowScanResult(): void
+    {
+        $this->pollScanWorkflow();
+        if (($this->scanWorkflow['state'] ?? '') !== 'complete') return;
+        $run = $this->scanWorkflow['result']['scan'];
+        $this->scanWorkflowOpen = false;
+        $this->openScan($run);
+    }
+
+    public function refreshScanRequirement(): void
+    {
+        app(GenerationEditor::class)->scanRequirementSummary(true);
+    }
+
     public function render()
     {
         $repository = app(GenerationEditor::class);
+
+        $workTarget = $this->reasonTargetLocale();
+        $recentWork = $repository->recentWork($workTarget, (int) auth()->id());
+        $workTasks = $this->tab === 'in-progress'
+            ? $repository->workTasks($workTarget, $this->workOnlyMine ? (int) auth()->id() : null,
+                $this->workSearch, (int) $this->getPage('workPage'), $this->workPerPage)
+            : null;
+        $workActors = [];
+        $workLocales = [];
+        foreach ([...$recentWork, ...($workTasks?->items() ?? [])] as $work) {
+            array_push($workLocales, ...array_filter(array_map('trim', explode(',', $work['locales'] ?? ''))));
+            $actor = (int) $work['actor_id'];
+            if (!array_key_exists($actor, $workActors)) {
+                $workActors[$actor] = app(\Gunreip\TranslationWorkbench\Support\WorkbenchUserSummary::class)->find($actor);
+            }
+        }
+
+        if ($this->tab === 'in-progress' && !array_key_exists((int) auth()->id(), $workActors)) {
+            $workActors[(int) auth()->id()] = app(\Gunreip\TranslationWorkbench\Support\WorkbenchUserSummary::class)->find((int) auth()->id());
+        }
 
         $sharedRows = $this->sharedOpen ? $repository->sharedFindings($this->sharedFinding, (int) $this->getPage('sharedFindingsPage')) : null;
 
@@ -1574,7 +2056,14 @@ class TranslationWorkbench extends Component
         $translationTasks = $this->tab === 'translations' ? $repository->translationTasks($this->translationSearch, (int) $this->getPage('translationsPage'), $this->translationPerPage, $this->translationSort, $this->translationDirection, $this->translationKeyId) : null;
         $publishedTasks = $this->tab === 'published' ? $repository->publishedWorklist()->page($this->publishedSearch, (int) $this->getPage('publishedPage'), $this->publishedPerPage, $this->publishedKeyId, $this->publishedLanguage, $this->publishedSort, $this->publishedDirection) : null;
         $filterLanguages = in_array($this->tab, ['review', 'publication', 'published'], true) ? $this->locales() : [];
-        $taskLocales = array_column($publishedTasks?->items() ?? [], 'locale');
+        $publicationTasks = $this->tab === 'publication' ? $repository->reviewWorklist()->publicationPage($this->publicationSearch, (int) $this->getPage('publicationPage'), $this->publicationPerPage, $this->publicationKeyId, $this->publicationLanguage, $this->publicationSort, $this->publicationDirection) : null;
+        $taskLocales = [...array_column($publishedTasks?->items() ?? [], 'locale'), ...array_column($publicationTasks?->items() ?? [], 'locale')];
+        foreach ($this->publicationBatch as $task) {
+            $taskLocales[] = $task['context']['locale'];
+        }
+        foreach ($this->reviewBatch as $task) {
+            $taskLocales[] = $task['context']['locale'];
+        }
         foreach ($translationTasks?->items() ?? [] as $task) {
             array_push($taskLocales, ...array_column($task['locales'], 'locale'));
         }
@@ -1586,15 +2075,30 @@ class TranslationWorkbench extends Component
             }
         }
         array_push($taskLocales, ...array_keys($this->reviewChoices), ...array_keys($this->publicationChoices));
-        $summaryIds = array_column($rows->items(), 'id');
+        $scanRows = $this->scanOpen && $this->scanReviewPath === '' ? $repository->scanPage($this->selectedScan, $this->scanCategory, (int) $this->getPage('scanResultsPage'), ...($this->scanPerPage !== 25 ? [$this->scanSearch, $this->scanPerPage] : ($this->scanSearch !== '' ? [$this->scanSearch] : []))) : null;
+        $summaryIds = [...array_column($rows->items(), 'id'), ...array_filter(array_column($scanRows?->items() ?? [], 'id'))];
         if ($this->editorOpen) {
             $summaryIds[] = $this->selected;
         }
+        $captureRows = $this->scanOpen && $this->scanReviewPath !== '' && $this->scanCaptureView ? $repository->scanCapturesPage($this->selectedScan, $this->scanReviewPath, (int) $this->getPage('scanCapturesPage')) : null;
+        $decisionActors = [];
+        foreach ($captureRows ?? [] as $capture) {
+            $actorId = $capture['usage_decision']['actor_id'] ?? null;
+            if ($actorId !== null && ($capture['can_classify'] ?? false) && ! array_key_exists($actorId, $decisionActors)) {
+                $decisionActors[$actorId] = app(\Gunreip\TranslationWorkbench\Support\WorkbenchUserSummary::class)->find((int) $actorId);
+            }
+        }
         return view('translation-workbench::livewire.translation-workbench', [
-            'captureRows' => $this->scanOpen && $this->scanReviewPath !== '' && $this->scanCaptureView ? $repository->scanCapturesPage($this->selectedScan, $this->scanReviewPath, (int) $this->getPage('scanCapturesPage')) : null,
+            'workTasks' => $workTasks,
+            'recentWork' => $recentWork,
+            'workActors' => $workActors,
+            'captureRows' => $captureRows,
+            'decisionActors' => $decisionActors,
             'preservedRows' => $this->scanOpen && $this->scanReviewPath !== '' && ! $this->scanCaptureView ? $repository->preservedFindingsPage($this->selectedScan, $this->scanReviewPath, (int) $this->getPage('preservedFindingsPage')) : null,
+            'scanRequirement' => $repository->scanRequirementSummary(),
             'scanRuns' => $repository->recentScans(),
-            'scanRows' => $this->scanOpen && $this->scanReviewPath === '' ? $repository->scanPage($this->selectedScan, $this->scanCategory, (int) $this->getPage('scanResultsPage')) : null,
+            'scanCategoryCounts' => $this->scanOpen ? $repository->scanCategoryCounts($this->selectedScan) : [],
+            'scanRows' => $scanRows,
             'publications' => app(GenerationPublisher::class)->recent(),
             'publicationActor' => $this->publicationOpen && $this->publication
                 ? app(\Gunreip\TranslationWorkbench\Support\WorkbenchUserSummary::class)->find((int) $this->publication['actor']) : null,
@@ -1604,7 +2108,8 @@ class TranslationWorkbench extends Component
             'translationTasks' => $translationTasks,
             'publishedTasks' => $publishedTasks,
             'filterLanguages' => $filterLanguages,
-            'publicationTasks' => $this->tab === 'publication' ? $repository->reviewWorklist()->publicationPage($this->publicationSearch, (int) $this->getPage('publicationPage'), $this->publicationPerPage, $this->publicationKeyId, $this->publicationLanguage, $this->publicationSort, $this->publicationDirection) : null,
+            'sourceReplacementLastEvent' => $this->tab === 'source-replacement' ? $repository->latestWorkingEventId() : null,
+            'publicationTasks' => $publicationTasks,
             'reviewTasks' => $this->tab === 'review' ? $repository->reviewWorklist()->page($this->reviewSearch, (int) $this->getPage('reviewPage'), $this->reviewPerPage, $this->reviewSort, $this->reviewDirection, $this->reviewKeyId, $this->reviewLanguage) : null,
             'sharedSummaries' => $repository->sharedSummaries(array_values(array_unique($summaryIds))),
             'sharedRows' => $sharedRows,
@@ -1613,7 +2118,7 @@ class TranslationWorkbench extends Component
             'keys' => $this->editorOpen ? $repository->keys() : [],
             'locales' => $this->editorOpen ? $this->locales() : [],
             'subLanguages' => $this->editorOpen ? app(TranslationWorkbenchEditorLocales::class)->resolve()['sub'] : [],
-            'translationFlagCountries' => $this->publicationOpen || $this->workflowStatusOpen || $this->editorOpen || $translationTasks !== null || $publishedTasks !== null || $filterLanguages !== [] || $findingStates !== [] ? $this->translationFlagCountries([...$taskLocales, ...array_column($this->workflowStatus['languages'] ?? [], 'locale'), ...array_column($this->publication['changes'] ?? [], 'locale')]) : [],
+            'translationFlagCountries' => $this->sourcePreviewOpen || $this->publicationTaskOpen || $this->reviewBatchOpen || $this->publicationOpen || $this->workflowStatusOpen || $this->editorOpen || $translationTasks !== null || $publishedTasks !== null || $publicationTasks !== null || $filterLanguages !== [] || $findingStates !== [] || $workLocales !== [] ? $this->translationFlagCountries([...array_column($this->sourcePreview['translation_files'] ?? [], 'locale'), ...$taskLocales, ...$workLocales, ...array_column($this->workflowStatus['languages'] ?? [], 'locale'), ...array_column($this->publication['changes'] ?? [], 'locale')]) : [],
             'runtimeOptions' => $this->tab === 'source-usage' ? ($this->testToken !== '' ? app(WorkbenchTestEnvironment::class)->runtimeOptions() : app(RuntimeOptionPreview::class)->load()) : null,
         ]);
     }

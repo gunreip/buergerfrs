@@ -97,3 +97,30 @@ it('sorts source cases before pagination while retaining identities and filters'
         ->set('search', '')->set('filter', 'open')
         ->assertViewHas('rows', fn ($rows) => $rows->total() === 10 && ! isset($rows->items()['case-1']) && ! isset($rows->items()['case-2']));
 });
+
+it('shows source usage workflow states without inventing translation progress', function () {
+    $case = ['capture_id' => 'case-a', 'source_path' => 'composer.json', 'source_line' => 1,
+        'source_sha256' => hash_file('sha256', base_path('composer.json')), 'raw_expression' => '$record->name'];
+    $db = new PDO('sqlite::memory:');
+    $decisions = [];
+    $service = Mockery::mock(GenerationCaseDecisions::class);
+    $service->shouldReceive('snapshot')->andReturn(['cases' => ['case-a' => $case]]);
+    $service->shouldReceive('connection')->andReturn($db);
+    $service->shouldReceive('decisions')->andReturnUsing(function () use (&$decisions) { return $decisions; });
+    app()->instance(GenerationCaseDecisions::class, $service);
+    $access = Mockery::mock(TranslationWorkbenchEditorAccess::class);
+    $access->shouldReceive('authorize')->times(2);
+    app()->instance(TranslationWorkbenchEditorAccess::class, $access);
+    $test = Livewire::test(SourceCaseReview::class)
+        ->call('openUsageWorkflow', 'case-a')->assertSet('usageWorkflowOpen', true)
+        ->assertSee('Source occurrence captured')->assertSee('Decide source usage')
+        ->assertViewHas('workflowDecision', null);
+    $decisions['case-a'] = ['decision' => 'translate', 'reason' => 'Needs translation'];
+    $test->call('$refresh')->assertSee('This source usage case has no verified finding link in this view.');
+    $decisions['case-a'] = ['id' => 1, 'decision' => 'database_value', 'reason' => 'Display database value', 'actor_id' => 7, 'occurred_at' => '2026-11-01'];
+    $test->call('$refresh')->assertSee('DatabaseValue — review complete')
+        ->assertDontSee('This source usage case has no verified finding link in this view.')
+        ->call('reviewWorkflowCase')->assertSet('usageWorkflowOpen', false)
+        ->assertSet('modalOpen', true)->assertSet('selected', 'case-a')
+        ->assertSet('decision', 'database_value');
+});

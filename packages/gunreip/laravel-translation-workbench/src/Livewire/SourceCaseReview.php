@@ -64,6 +64,26 @@ class SourceCaseReview extends Component
     }
 
 
+    public bool $usageWorkflowOpen = false;
+
+    #[Locked]
+    public string $workflowCaseId = '';
+
+    public function openUsageWorkflow(string $id): void
+    {
+        app(TranslationWorkbenchEditorAccess::class)->authorize();
+        $snapshot = app(GenerationCaseDecisions::class)->snapshot();
+        abort_unless(isset($snapshot['cases'][$id]), 404);
+        $this->workflowCaseId = $id;
+        $this->usageWorkflowOpen = true;
+    }
+
+    public function reviewWorkflowCase(): void
+    {
+        $this->open($this->workflowCaseId);
+        $this->usageWorkflowOpen = false;
+    }
+
     public bool $modalOpen = false;
 
     public string $decision = '';
@@ -177,6 +197,8 @@ class SourceCaseReview extends Component
             'openCount' => $all->filter(fn ($case, $id) => ! isset($decisions[$id]))->count(),
             'rows' => new LengthAwarePaginator($rows->slice(($page - 1) * $this->perPage, $this->perPage), $rows->count(), $this->perPage, $page, ['pageName' => 'sourceCasesPage']),
             'selectedCase' => $selectedCase, 'sourceChanged' => $sourceChanged,
+            'workflowCase' => $snapshot['cases'][$this->workflowCaseId] ?? null,
+            'workflowDecision' => $decisions[$this->workflowCaseId] ?? null,
         ]);
     }
 }

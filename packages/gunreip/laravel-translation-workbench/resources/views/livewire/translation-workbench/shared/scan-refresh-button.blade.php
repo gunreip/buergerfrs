@@ -2,17 +2,19 @@
     <flux:button
         class="shrink-0"
         size="sm"
-        variant="outline"
-        icon="refresh-ccw"
+        variant="filled"
+        color="green"
         wire:click="$refresh"
         wire:loading.attr="disabled"
         wire:target="$refresh"
-    />
+    >
+        <flux:icon.refresh-ccw size="4" />
+    </flux:button>
     <flux:button
         class="shrink-0"
         size="sm"
-        variant="outline"
-        {{-- icon="refresh-ccw" --}}
+        variant="filled"
+        color="green"
         wire:click="$refresh"
         wire:loading.attr="disabled"
         wire:target="$refresh"

@@ -64,6 +64,10 @@ try {
     $access = Mockery::mock(TranslationWorkbenchEditorAccess::class);
     $access->shouldReceive('authorize');
     $app->instance(TranslationWorkbenchEditorAccess::class, $access);
+    // Account metadata belongs to the host application, outside this isolated workbench schema.
+    $userSummary = Mockery::mock(\Gunreip\TranslationWorkbench\Support\WorkbenchUserSummary::class);
+    $userSummary->shouldReceive('find')->andReturn(null);
+    $app->instance(\Gunreip\TranslationWorkbench\Support\WorkbenchUserSummary::class, $userSummary);
     $environment = app(WorkbenchTestEnvironment::class);
     $token = $environment->start();
     $firstRoot = $environment->root();
@@ -85,7 +89,11 @@ try {
     $check((int) $summaries[$shared]['candidates'] > 3, 'Matching text with different assignments should remain a candidate');
     $check((int) $summaries[$archived]['candidates'] === 0 && (int) $summaries[$archived]['shared'] === 0, 'Archived findings must not be candidates');
     $matches = $editor->sharedFindings($shared, 1);
-    $check((int) $matches->items()[0]['id'] === $shared && ! in_array($archived, array_column($matches->items(), 'id')), 'Matching findings must start with the current finding and exclude archived records');
+    $check(! in_array($archived, array_column($matches->items(), 'id')), 'Matching findings exclude archived records');
+    $assignedFlags = array_map(fn ($row) => (int) ((int) $row['key_id'] === (int) $summaries[$shared]['key_id']), $matches->items());
+    $sortedFlags = $assignedFlags;
+    sort($sortedFlags);
+    $check($assignedFlags === $sortedFlags && $assignedFlags[0] === 0, 'Unassigned candidates precede findings already using the shared target');
     $check($matches->total() === (int) $summaries[$shared]['candidates'], 'All exact text matches should be available');
 
     $unassigned = $caseId('unassigned');
@@ -301,13 +309,9 @@ try {
     $check($worklist->submit($duplicate, 7)['submitted'] === [], 'Repeated submission must not create duplicate review events');
 
     $revisionIds = array_map('strval', array_column($pending, 'revision'));
-    $component->set('selectedReviewRevisions', [end($revisionIds)])
-        ->set('reviewLanguage', $pending[0]['locale'])->call('toggleVisibleReviewRevisions');
-    $check(count($component->get('selectedReviewRevisions')) === 2, 'Select page preserves selections outside the filtered page');
-    $component->call('toggleVisibleReviewRevisions');
-    $check($component->get('selectedReviewRevisions') === [end($revisionIds)], 'Deselect page preserves selections outside the filtered page');
+    // Flux page selection is covered by the browser regression.
     $component->set('reviewLanguage', '')->set('selectedReviewRevisions', $revisionIds)
-        ->call('openReviewBatch')->assertSet('reviewBatchOpen', true)->assertSee('Review selected revisions')
+        ->call('openReviewBatch')->assertSet('reviewBatchOpen', true)->assertSee('Review '.count($revisionIds).' selected revisions')
         ->assertSet('reviewBatchReasonLocale', 'de')->assertSeeHtml('reviewBatchReasonLocale')
         ->set('reviewBatchReasonLocale', 'en');
     $reviewDom = new DOMDocument();
@@ -324,18 +328,23 @@ try {
 
     $check(app(GenerationEditor::class)->translationTasks('ui.test.editor_workflow', 1)->total() === 0, 'Fully submitted or approved key must leave Translations');
     $sourceReview = array_values(array_filter($pending, fn ($row) => $row['locale'] === 'en'))[0];
-    $component->call('openReviewTask', (int) $sourceReview['revision'])->assertSet('reviewTaskOpen', true)
-        ->set('reviewTaskReason', 'Source needs a correction')->call('decideReviewTask', false)->assertHasNoErrors();
+    $otherReviewIds = array_values(array_diff($revisionIds, [(string) $sourceReview['revision']]));
+    $component->set('selectedReviewRevisions', $revisionIds)
+        ->call('openReviewBatch', (int) $sourceReview['revision'])->assertSet('reviewBatchOpen', true)
+        ->assertSee('Review 1 selected revision')->assertSet('selectedReviewRevisions', $revisionIds)
+        ->assertSet('reviewBatch', fn ($tasks) => count($tasks) === 1 && (int) $tasks[0]['context']['revision_id'] === (int) $sourceReview['revision'])
+        ->set('reviewBatchReason', 'Source needs a correction')->call('decideReviewBatch', false)->assertHasNoErrors()
+        ->assertSet('selectedReviewRevisions', $otherReviewIds)->assertSet('reviewBatchOpen', false);
     $check($statesFor($unassigned)['en'] === 'draft', 'Returned revision must be a draft again');
     $check($worklist->page('', 1)->total() === 1, 'Returned source must leave Review');
     $check(app(GenerationEditor::class)->translationTasks('ui.test.editor_workflow', 1)->total() === 1, 'Returned revision must remain editable in Translations');
     $component->call('open', $unassigned)->set('selectedSubLanguages', ['de-AT'])->call('submitForReview')->assertHasNoErrors();
     $check($worklist->page('', 1)->total() === 2, 'Returned revision can be explicitly resubmitted');
-    $component->call('openReviewTask', (int) $sourceReview['revision'])
-        ->call('openWorkflowReason', 'reviewTaskReason', 'Quelle geprüft')
+    $component->call('openReviewBatch', (int) $sourceReview['revision'])
+        ->call('openWorkflowReason', 'reviewBatchReason', 'Quelle geprüft')
         ->assertSee('Create a review reason')->assertSeeHtml('data-flux-toggle')
         ->assertSet('newWorkflowReasonLocale', 'de')->call('createWorkflowReason')
-        ->assertSet('reviewTaskReason', 'Quelle geprüft')->call('decideReviewTask', true)->assertHasNoErrors();
+        ->assertSet('reviewBatchReason', 'Quelle geprüft')->call('decideReviewBatch', true)->assertHasNoErrors();
     $check(app(GenerationEditor::class)->reasonLocales('review')['Quelle geprüft'] === 'de', 'Review reason language must persist independently of the reviewed English revision');
     $check($statesFor($unassigned)['en'] === 'approved', 'Approved revision must await publication');
     $check($worklist->publicationPage('', 1)->total() === 1, 'Only approved unpublished source must enter Publication');

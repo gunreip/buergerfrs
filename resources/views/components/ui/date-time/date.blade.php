@@ -5,7 +5,7 @@
     'format' => config('buergerfrs_formats.date_time.formats.date', 'LL'),
     'timezone' => config('buergerfrs_formats.date_time.timezone', config('app.timezone')),
     'locale' => app()->getLocale(),
-    'color' => 'muted',
+    'color' => null,
     'size' => 'sm',
     'empty' => '—',
 ])

@@ -3,16 +3,23 @@
     name="workbench-shared-findings"
     wire:model="sharedOpen"
 >
+    <x-translation-workbench::ui.common.modal-loading
+        target="gotoPage, nextPage, previousPage, setPage, reviewSharedAssignment, sharedSelection, openAssignmentReason"
+    />
     @if ($sharedOpen && $sharedRows)
         <div class="relative space-y-4">
-            <x-ui.loading.lazy-indicator
-                class="absolute inset-0 z-40"
-                target="gotoPage, nextPage, previousPage, setPage, reviewSharedAssignment, assignSharedFindings, toggleSharedPageSelection"
-                :text="__('Loading')"
-            />
-            <flux:heading size="xl">
+            <flux:heading
+                size="xl"
+                icon="group"
+            >
                 {{ __('Shared / UI candidate') }} · #{{ $sharedFinding }}
             </flux:heading>
+            @php
+                $candidateCount = (int) ($sharedReference['candidates'] ?? 0);
+                $sharedCount = (int) ($sharedReference['shared'] ?? 0);
+                $countsMatch = $candidateCount === $sharedCount;
+                $canAddSharedFindings = !empty($sharedReference['key_id']) && $sharedRows->total() > $sharedCount;
+            @endphp
             <flux:text>
                 {{ __('Active findings with exactly the same captured literal or the same assigned key, including the current finding. Select which findings should use the target key. Unselected findings keep their existing assignments.') }}
             </flux:text>
@@ -35,9 +42,30 @@
                     color="green"
                     icon="key"
                 >
-                    <flux:callout.heading>
-                        {{ __('Shared target key') }} · #{{ $sharedReference['key_id'] }}
-                    </flux:callout.heading>
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <flux:callout.heading>
+                            {{ __('Shared target key') }} · #{{ $sharedReference['key_id'] }}
+                        </flux:callout.heading>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <flux:badge :color="$countsMatch ? 'green' : 'amber'">
+                                {{ __('Shared candidates') }} · {{ $candidateCount }}
+                            </flux:badge>
+                            <flux:tooltip>
+                                <flux:badge
+                                    tabindex="0"
+                                    :color="$countsMatch ? 'green' : 'red'"
+                                >
+                                    {{ __('Shared translations') }} · {{ $sharedCount }}
+                                </flux:badge>
+                                <x-translation-workbench::ui.common.tooltip-content
+                                    :heading="__('Shared translations')"
+                                    :text="__(
+                                        'Number of active findings already using this target key, across all pages. This counts key assignments, not translated languages. Checked, disabled rows are already assigned; other candidates are listed first.',
+                                    )"
+                                />
+                            </flux:tooltip>
+                        </div>
+                    </div>
                     <flux:callout>
                         <flux:callout.text class="break-all">
                             {{ !empty($sharedReference['namespace']) ? $sharedReference['namespace'] . '::' : '' }}{{ $sharedReference['full_name'] ?? '' }}
@@ -54,109 +82,164 @@
                 />
             @endif
 
-            @if ($sharedNotice !== '')
-                <flux:callout
-                    color="green"
-                    :text="$sharedNotice"
-                />
-            @endif
 
             <flux:error name="sharedAssignment" />
             <flux:error name="sharedSelection" />
 
             <flux:callout color="amber">
                 {{-- Table of shared findings: --}}
-                <flux:table container:class="max-h-[60vh] overflow-x-auto rounded-t-lg">
-                    {{-- Table Header --}}
-                    <flux:table.columns class="bg-white dark:bg-zinc-800">
-                        {{-- Column Select --}}
-                        <flux:table.column>
-                            <span class="ml-2">{{ __('Select') }}</span>
-                        </flux:table.column>
-                        <flux:table.column>
-                            {{ __('Finding') }}
-                        </flux:table.column>
-                        <flux:table.column>
-                            {{ __('Literal') }}
-                        </flux:table.column>
-                        <flux:table.column>
-                            {{ __('Source') }}
-                        </flux:table.column>
-                        <flux:table.column>
-                            {{ __('Suggested key') }}
-                        </flux:table.column>
-                        <flux:table.column>
-                            {{ __('Translation key / Assignment') }}</flux:table.column>
-                    </flux:table.columns>
-                    <flux:table.rows>
-                        @forelse ($sharedRows as $match)
-                            <flux:table.row :key="'shared-finding-'.$match['id']">
-                                <flux:table.cell>
-                                    <div class="ml-2 flex items-center justify-center gap-2">
-                                        <flux:checkbox
-                                            wire:model.live="sharedSelection"
-                                            :value="(string) $match['id']"
-                                            :disabled="!in_array((string) $match['id'], $selectableSharedIds, true)"
-                                            :aria-label="__('Select finding #:id', ['id' => $match['id']])"
-                                        />
-                                        @if ($loop->first)
-                                            <flux:button
-                                                size="xs"
-                                                variant="ghost"
-                                                icon="list-checks"
-                                                :disabled="$selectableSharedIds === []"
-                                                :tooltip="__('Select all eligible findings on this page; click again to clear this page.')"
-                                                :aria-label="__('Toggle selection of all eligible findings on this page')"
-                                                wire:click="toggleSharedPageSelection"
-                                                wire:loading.attr="disabled"
-                                                wire:target="toggleSharedPageSelection"
-                                            />
-                                        @endif
-                                    </div>
-                                </flux:table.cell>
-                                <flux:table.cell>
-                                    #{{ $match['id'] }}
-                                    @if ((int) $match['id'] === $sharedFinding)
-                                        <div class="mt-1"><flux:badge size="sm" color="sky">{{ __('Current finding') }}</flux:badge></div>
-                                    @endif
-                                </flux:table.cell>
-                                <flux:table.cell class="wrap-break-word max-w-sm whitespace-normal">
-                                    {{ $match['literal'] ?? '—' }}</flux:table.cell>
-                                <flux:table.cell class="max-w-md whitespace-normal break-all">
-                                    {{ $match['path'] }}:{{ $match['source_line'] }}:{{ $match['source_column'] }}
-                                </flux:table.cell>
-                                <flux:table.cell class="max-w-sm whitespace-normal break-all">
-                                    {{ $match['suggested_key'] ?? '—' }}</flux:table.cell>
-                                <flux:table.cell class="max-w-sm whitespace-normal break-all">
-                                    @if ($match['key_id'])
-                                        #{{ $match['key_id'] }} · {{ $match['full_name'] }}
-                                        <div class="mt-1">
-                                            @if ($match['key_id'] == ($sharedReference['key_id'] ?? null))
-                                                <flux:badge
-                                                    color="green"
-                                                    size="sm"
-                                                >{{ __('Same assigned key') }}</flux:badge>
+                <flux:checkbox.group>
+                    <flux:table container:class="max-h-120 overflow-x-auto rounded-t-lg">
+                        {{-- Table Header --}}
+                        <flux:table.columns class="bg-white dark:bg-zinc-800">
+                            {{-- Table Header Column Select --}}
+                            <flux:table.column>
+                                <div class="ml-2 flex items-center gap-2">
+                                    <flux:checkbox.all
+                                        :disabled="$selectableSharedIds === []"
+                                        :aria-label="__('Select or clear all eligible findings on this page')"
+                                        :tooltip="__('Select or clear all eligible findings on this page. Selections on other pages are kept.')"
+                                    />
+                                    <span>{{ __('Select') }}</span>
+                                </div>
+                            </flux:table.column>
+                            {{-- Table HeaderColumn Finding --}}
+                            <flux:table.column>
+                                {{ __('Finding') }}
+                            </flux:table.column>
+                            {{-- Table Header Column Literal --}}
+                            <flux:table.column>
+                                {{ __('Literal') }}
+                            </flux:table.column>
+                            {{-- Table Header Column Source --}}
+                            <flux:table.column>
+                                {{ __('Source') }}
+                            </flux:table.column>
+                            {{-- Table Header Column Suggested Key --}}
+                            <flux:table.column>
+                                {{ __('Suggested key') }}
+                            </flux:table.column>
+                            {{-- Table Header Column Translation Key / Assignment --}}
+                            <flux:table.column>
+                                {{ __('Translation key / Assignment') }}
+                            </flux:table.column>
+                        </flux:table.columns>
+                        {{-- Table Body Rows --}}
+                        <flux:table.rows>
+                            @forelse ($sharedRows as $match)
+                                {{-- Table Body Row --}}
+                                <flux:table.row :key="'shared-finding-'.$match['id']">
+                                    {{-- Table Body Column Select --}}
+                                    <flux:table.cell>
+                                        <div class="ml-2 flex items-center justify-center gap-2">
+                                            @if (!empty($sharedReference['key_id']) && $match['key_id'] == $sharedReference['key_id'])
+                                                <flux:checkbox
+                                                    checked
+                                                    disabled
+                                                    :value="(string) $match['id']"
+                                                    :aria-label="__('Finding #:id already uses this key', ['id' => $match['id']])"
+                                                />
                                             @else
-                                                <flux:badge size="sm">{{ __('Different assigned key') }}
-                                                </flux:badge>
+                                                <flux:checkbox
+                                                    wire:model.live="sharedSelection"
+                                                    :value="(string) $match['id']"
+                                                    :disabled="!in_array((string) $match['id'], $selectableSharedIds, true)"
+                                                    :aria-label="__('Select finding #:id', ['id' => $match['id']])"
+                                                />
                                             @endif
                                         </div>
-                                    @else
-                                        <flux:badge
-                                            color="amber"
-                                            size="sm"
-                                        >{{ __('Not assigned') }}</flux:badge>
-                                    @endif
-                                </flux:table.cell>
-                            </flux:table.row>
-                        @empty
-                            <flux:table.row>
-                                <flux:table.cell colspan="6">{{ __('No matching active findings.') }}
-                                </flux:table.cell>
-                            </flux:table.row>
-                        @endforelse
-                    </flux:table.rows>
-                </flux:table>
+                                    </flux:table.cell>
+                                    {{-- Table Body Column Finding --}}
+                                    <flux:table.cell>
+                                        #{{ $match['id'] }}
+                                        @if ((int) $match['id'] === $sharedFinding)
+                                            <div class="mt-1">
+                                                <flux:badge
+                                                    size="sm"
+                                                    color="sky"
+                                                >{{ __('Current finding') }}</flux:badge>
+                                            </div>
+                                        @endif
+                                    </flux:table.cell>
+                                    {{-- Table Body Column Literal --}}
+                                    <flux:table.cell class="wrap-break-word max-w-sm whitespace-normal">
+                                        {{ $match['literal'] ?? '—' }}
+                                    </flux:table.cell>
+                                    {{-- Table Body Column Source --}}
+                                    <flux:table.cell class="max-w-md whitespace-normal break-all">
+                                        <x-translation-workbench::ui.common.path-preview
+                                            :heading="__('Source')"
+                                            :path="$match['path']"
+                                            :line="$match['source_line']"
+                                            :column="$match['source_column']"
+                                            :length="60"
+                                            side="center"
+                                        />
+                                    </flux:table.cell>
+                                    {{-- Table Body Column Suggested Key --}}
+                                    <flux:table.cell class="max-w-sm whitespace-normal break-all">
+                                        <x-translation-workbench::ui.common.text-preview :mono="true"
+                                            :heading="__('Suggested key')"
+                                            :text="$match['suggested_key'] ?? '—'"
+                                            :length="60"
+                                            side="center"
+                                        />
+                                    </flux:table.cell>
+                                    {{-- Table Body ColumnTranslation Key / Assignment --}}
+                                    <flux:table.cell class="max-w-sm whitespace-normal break-all">
+                                        @if ($match['key_id'])
+                                            #{{ $match['key_id'] }} · {{ $match['full_name'] }}
+                                            <div class="mt-1">
+                                                @if ($match['key_id'] == ($sharedReference['key_id'] ?? null))
+                                                    <flux:badge
+                                                        class="mb-1"
+                                                        color="green"
+                                                        size="sm"
+                                                    >
+                                                        {{ __('Same assigned key') }}
+                                                    </flux:badge>
+                                                    <flux:tooltip>
+                                                        <flux:badge
+                                                            tabindex="0"
+                                                            color="green"
+                                                            size="sm"
+                                                        >
+                                                            {{ __('Assignment reason') }}
+                                                        </flux:badge>
+                                                        <x-translation-workbench::ui.common.tooltip-content
+                                                            :heading="__('Saved assignment reason')"
+                                                            :text="$match['assignment_reason'] ??
+                                                                __(
+                                                                    'No explicit reason is recorded for this assignment.',
+                                                                )"
+                                                        />
+                                                    </flux:tooltip>
+                                                @else
+                                                    <flux:badge size="sm">
+                                                        {{ __('Different assigned key') }}
+                                                    </flux:badge>
+                                                @endif
+                                            </div>
+                                        @else
+                                            <flux:badge
+                                                color="amber"
+                                                size="sm"
+                                            >{{ __('Not assigned') }}</flux:badge>
+                                        @endif
+                                    </flux:table.cell>
+                                </flux:table.row>
+                            @empty
+                                {{-- Table Body Empty State --}}
+                                <flux:table.row>
+                                    {{-- Table Body Column Empty State --}}
+                                    <flux:table.cell colspan="6">
+                                        {{ __('No matching active findings.') }}
+                                    </flux:table.cell>
+                                </flux:table.row>
+                            @endforelse
+                        </flux:table.rows>
+                    </flux:table>
+                </flux:checkbox.group>
             </flux:callout>
 
             <flux:pagination :paginator="$sharedRows" />
@@ -167,6 +250,23 @@
                         <flux:label class="shrink-0">
                             {{ __('Reason for assignment') }}
                         </flux:label>
+                        @unless ($canAddSharedFindings)
+                            <flux:tooltip>
+                                <flux:badge
+                                    tabindex="0"
+                                    color="green"
+                                    size="sm"
+                                >
+                                    {{ __('Already assigned') }}
+                                </flux:badge>
+                                <x-translation-workbench::ui.common.tooltip-content
+                                    :heading="__('Already assigned')"
+                                    :text="__(
+                                        'All listed findings already use this key. No new assignment reason is needed. Saved reasons can be inspected beside each assigned finding.',
+                                    )"
+                                />
+                            </flux:tooltip>
+                        @endunless
                         <flux:error
                             class="mt-0! min-w-0 truncate"
                             name="sharedReason"
@@ -178,6 +278,7 @@
                         searchable
                         clearable
                         wire:model.live="sharedReason"
+                        :disabled="!$canAddSharedFindings"
                         x-data="{ reasonSearch: '' }"
                     >
                         <x-slot name="search">
@@ -206,7 +307,7 @@
                             :disabled="$sharedSelection === [] || count($sharedSelection) > 100 || mb_strlen(trim($sharedReason)) <
                                 3 || mb_strlen(trim($sharedReason)) > 2000"
                             wire:loading.attr="disabled"
-                            wire:target="sharedReason, sharedSelection, toggleSharedPageSelection, reviewSharedAssignment"
+                            wire:target="sharedReason, sharedSelection, reviewSharedAssignment"
                         />
                         <flux:button
                             size="sm"
@@ -216,7 +317,7 @@
                             :disabled="$sharedSelection === [] || count($sharedSelection) > 100 || mb_strlen(trim($sharedReason)) <
                                 3 || mb_strlen(trim($sharedReason)) > 2000"
                             wire:loading.attr="disabled"
-                            wire:target="sharedReason, sharedSelection, toggleSharedPageSelection, reviewSharedAssignment"
+                            wire:target="sharedReason, sharedSelection, reviewSharedAssignment"
                         >
                             {{ __('Assign selected findings to this translation key') }}
                         </flux:button>

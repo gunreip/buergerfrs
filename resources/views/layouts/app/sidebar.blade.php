@@ -45,14 +45,7 @@
     {{ $slot }}
 
     {{-- Global Toast --}}
-    @persist('toast')
-        <flux:toast.group
-            position="top end"
-            expanded
-        >
-            <flux:toast />
-        </flux:toast.group>
-    @endpersist
+    <x-common.toasts />
 
     {{-- Global Tooltip --}}
     <template id="global-tooltip-template">

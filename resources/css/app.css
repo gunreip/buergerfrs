@@ -48,8 +48,15 @@
     }
 }
 
-[data-flux-icon] {
-    stroke-width: 0.75;
+[data-flux-icon]:not([data-flux-checkbox-indicator] *) {
+    stroke-width: 1.00;
+}
+
+/* Improve neutral timeline connectors on dark callout backgrounds.
+   Completed connectors retain Flux's accent color. */
+:where(.dark, .dark *) [data-flux-timeline-item]:not([data-flux-timeline-status="complete"])>[data-flux-timeline-line-trailing]>div,
+:where(.dark, .dark *) [data-flux-timeline-item]:not([data-flux-timeline-status="complete"] + [data-flux-timeline-item])>[data-flux-timeline-line-leading]>div {
+    background-color: var(--color-zinc-400);
 }
 
 [data-flux-field]:not(ui-radio, ui-checkbox) {

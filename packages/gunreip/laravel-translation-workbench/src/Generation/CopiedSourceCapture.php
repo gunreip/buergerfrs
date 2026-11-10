@@ -35,7 +35,7 @@ final class CopiedSourceCapture
             'source_line' => $line, 'source_column' => $column, 'source_offset' => $offset,
             'column_unit' => 'bytes', 'raw_expression' => $raw,
             'raw_source_code_literal' => null, 'raw_literal' => null,
-            'suggested_literal' => null, 'suggested_key' => (new SuggestedKeyFactory)->forDynamicExpressionAtSource($raw, $item->sourcePath)->key, 'found_translation_key' => null,
+            'suggested_literal' => null, 'suggested_key' => null, 'found_translation_key' => null,
             'scanner_kind' => $item->kind, 'status' => 'pending_review', 'reason' => null,
             'provenance' => ['source' => 'copied_source', 'scanner' => $item->meta['scanner'] ?? null],
         ];
@@ -52,6 +52,7 @@ final class CopiedSourceCapture
 
             return $row;
         }
+        $row['suggested_key'] = (new SuggestedKeyFactory)->forDynamicExpressionAtSource($raw, $item->sourcePath)->key;
         // Parse only the captured expression. Blade directives are syntactic wrappers.
         $parseable = preg_replace('/^@(lang|js)\s*\(/', '__(', $raw);
         try {

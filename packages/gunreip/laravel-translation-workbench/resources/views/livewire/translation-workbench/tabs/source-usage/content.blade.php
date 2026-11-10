@@ -4,33 +4,32 @@
         color="sky"
         icon="star"
     >
-        <x-ui.loading.lazy-indicator
-            class="absolute inset-0 z-40"
-            role="status"
-            box-class="h-full w-full rounded-lg bg-white/75 dark:bg-zinc-900/75"
-            :text="__('Loading')"
-        />
+        @if (!$modalOpen && !$usageWorkflowOpen && !$workflowReasonOpen)
+            <x-ui.loading.lazy-indicator
+                :overlay="true"
+                role="status"
+                :text="__('Loading')"
+            />
+        @endif
         @include('translation-workbench::livewire.translation-workbench.tabs.source-usage.header')
         @if (!$ready)
             <flux:callout.text>
                 {{ __('The writable generation is unavailable. No decision can be saved.') }}
             </flux:callout.text>
         @else
-            <flux:callout.heading>
-                {{ __('Data source') }}:
-                <flux:callout.text>
-                    <code>{{ $databaseName }} / {{ $schemaName }}</code>.
-                    {{ __('This list contains source-usage review cases. Captured findings and their translation drafts are available in the Findings tab.') }}
-                </flux:callout.text>
-            </flux:callout.heading>
-            @if ($notice !== '')
-                <flux:callout
-                    class="my-3"
-                    color="green"
-                >
-                    {{ $notice }}
-                </flux:callout>
-            @endif
+            <x-translation-workbench::ui.common.details>
+                <x-translation-workbench::ui.common.details.item :label="__('Data source')">
+                    <flux:callout.text>
+                        <code>{{ $databaseName }} / {{ $schemaName }}
+                        </code>
+                    </flux:callout.text>
+                </x-translation-workbench::ui.common.details.item>
+            </x-translation-workbench::ui.common.details>
+            <flux:callout.text>
+                {{ __('This list contains source-usage review cases. Captured findings and their translation drafts are available in the Findings tab.') }}
+            </flux:callout.text>
+
+
             @include('translation-workbench::livewire.translation-workbench.tabs.source-usage.filters')
 
             @include('translation-workbench::livewire.translation-workbench.tabs.source-usage.table')
@@ -38,7 +37,7 @@
     </flux:callout>
 
     @include('translation-workbench::livewire.translation-workbench.tabs.source-usage.decision-modal')
-
+    @include('translation-workbench::livewire.translation-workbench.tabs.source-usage.workflow-modal')
     @include('translation-workbench::livewire.translation-workbench.modals.workflow-reason')
 
 </div>
