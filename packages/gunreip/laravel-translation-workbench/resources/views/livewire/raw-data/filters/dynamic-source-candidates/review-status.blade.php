@@ -2,7 +2,7 @@
 
 <flux:field class="{{ $fieldClass ?? '' }}">
     <flux:label>
-        {{ __('Review') }}
+        {{ __('ui.button.review.review') }}
     </flux:label>
     <flux:input.group>
         <flux:input.group.prefix>

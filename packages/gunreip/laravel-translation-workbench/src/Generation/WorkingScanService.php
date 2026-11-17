@@ -28,12 +28,22 @@ class WorkingScanService
 
     public function apply(array $preview, int $actor, ?callable $progress = null): array
     {
+        return $this->save($preview['target'], $actor, $progress, $preview['fingerprint']);
+    }
+
+    public function scanAndSave(array $target, int $actor, ?callable $progress = null): array
+    {
+        return $this->save($target, $actor, $progress, null);
+    }
+
+    private function save(array $expectedTarget, int $actor, ?callable $progress, ?string $fingerprint): array
+    {
         if ($actor < 1) throw new RuntimeException('A user ID is required to save a scan.');
-        return $this->locked(function ($db, $target) use ($preview, $actor, $progress) {
-            if ($target !== $preview['target']) throw new RuntimeException('The scan target or configuration changed. Start a new preview.');
+        return $this->locked(function ($db, $target) use ($expectedTarget, $actor, $progress, $fingerprint) {
+            if ($target !== $expectedTarget) throw new RuntimeException('The scan target or configuration changed. Start a new preview.');
             if ($target['schema_version'] < 3) throw new RuntimeException('Upgrade the workbench schema before saving a scan: php artisan translation-workbench:upgrade-scan-schema --apply');
             $fresh = $this->prepare($db, $target, $progress);
-            if (!hash_equals($preview['fingerprint'], $fresh['fingerprint'])) return ['state' => 'changed', 'preview' => $fresh];
+            if ($fingerprint !== null && !hash_equals($fingerprint, $fresh['fingerprint'])) return ['state' => 'changed', 'preview' => $fresh];
             $result = (new CompleteRescanWriter($db, $this->scanner, $progress))->apply((string) Str::uuid(), $fresh['request'], actor: $actor);
             return ['state' => 'complete', 'result' => $result, 'counts' => $fresh['counts']];
         });
@@ -45,7 +55,9 @@ class WorkingScanService
         $counts = ['confirmed' => 0, 'created' => 0, 'moved' => 0, 'removed' => 0, 'review_files' => 0, 'outside_scope_files' => 0,
             'suggested_keys_initialized' => count($request['plan']['suggestion_initializations'])];
         foreach ($request['plan']['files'] as $file) {
-            foreach (['confirmed', 'created', 'moved', 'removed'] as $key) $counts[$key] += count($file[$key] ?? []);
+            if (in_array($file['state'], ['review', 'ready', 'missing_confirmed', 'relocation_review'], true)) {
+                foreach (['confirmed', 'created', 'moved', 'removed'] as $key) $counts[$key] += count($file[$key] ?? []);
+            }
             $counts['review_files'] += (int) in_array($file['state'], ['review', 'relocation_review'], true);
             $counts['outside_scope_files'] += (int) ($file['state'] === 'outside_scope');
         }

@@ -10,23 +10,52 @@ final class WorkInProgress
 {
     public function __construct(private PDO $db) {}
 
-    public function page(string $target, ?int $actor, string $search, int $page, int $perPage = 25): LengthAwarePaginator
+    private const OPEN = " WHERE (step NOT IN ('complete','archived') OR open_publication IS NOT NULL OR open_source IS NOT NULL)";
+
+    public function countOpen(string $target, ?int $actor): int
+    {
+        [$sql, $params] = $this->tasks($target, $actor);
+        return (int) $this->query($sql.' SELECT count(*) FROM tasks'.self::OPEN, $params)->fetchColumn();
+    }
+
+    public function page(string $target, ?int $actor, string $search, int $page, int $perPage = 25, bool $caseSensitive = false, bool $wholeWord = false, string $findingId = '', string $keyId = ''): LengthAwarePaginator
     {
         $perPage = in_array($perPage, [10, 25, 50, 100], true) ? $perPage : 25;
         [$sql, $params] = $this->tasks($target, $actor);
-        $where = " WHERE (step NOT IN ('complete','archived') OR open_publication IS NOT NULL OR open_source IS NOT NULL)";
+        $where = self::OPEN;
         if (trim($search) !== '') {
-            $where .= ' AND (full_name ILIKE ? OR key_id::text=? OR EXISTS (
+            [$operator, $pattern] = FindingSearch::condition($search, $caseSensitive, $wholeWord);
+            $where .= " AND (full_name {$operator} ? OR EXISTS (
                 SELECT 1 FROM translation_workbench_key_findings search_link
                 JOIN translation_workbench_findings search_finding ON search_finding.id=search_link.finding_id
                 JOIN translation_workbench_source_files search_file ON search_file.id=search_finding.source_file_id
-                WHERE search_link.key_id=tasks.key_id AND (search_finding.id::text=? OR search_file.path ILIKE ?)))';
-            $needle = trim($search);
-            array_push($params, '%'.addcslashes($needle, '\\%_').'%', ltrim($needle, '#'), ltrim($needle, '#'), '%'.addcslashes($needle, '\\%_').'%');
+                WHERE search_link.key_id=tasks.key_id AND search_file.path {$operator} ?))";
+            array_push($params, $pattern, $pattern);
         }
-        $total = (int) $this->query($sql.' SELECT count(*) FROM tasks'.$where, $params)->fetchColumn();
-        $page = max(1, min($page, max(1, (int) ceil($total / $perPage))));
-        $rows = $this->query($sql.' SELECT * FROM tasks'.$where.' ORDER BY occurred_at DESC,event_id DESC,key_id DESC LIMIT '.$perPage.' OFFSET '.(($page - 1) * $perPage), $params)->fetchAll(PDO::FETCH_ASSOC);
+        foreach (['finding' => $findingId, 'key' => $keyId] as $kind => $id) {
+            if (trim($id) === '') continue;
+            $id = trim($id);
+            if (! ctype_digit($id) || strlen($id) > 18) {
+                $where .= ' AND FALSE';
+            } else {
+                $where .= $kind === 'key' ? ' AND tasks.key_id=?' : ' AND EXISTS (
+                    SELECT 1 FROM translation_workbench_key_findings id_link
+                    WHERE id_link.key_id=tasks.key_id AND id_link.finding_id=?)';
+                $params[] = $id;
+            }
+        }
+        // Evaluate the workflow once for both the total and the requested page.
+        $rows = $this->query($sql.', filtered AS MATERIALIZED (SELECT * FROM tasks'.$where.')
+            SELECT filtered.*, count(*) OVER () AS filtered_total FROM filtered
+            ORDER BY occurred_at DESC,event_id DESC,key_id DESC LIMIT ?
+            OFFSET (SELECT LEAST(?::bigint, GREATEST(count(*) - 1, 0) / ?) * ? FROM filtered)',
+            [...$params, $perPage, max(1, $page) - 1, $perPage, $perPage])->fetchAll(PDO::FETCH_ASSOC);
+        $total = (int) ($rows[0]['filtered_total'] ?? 0);
+        $page = max(1, min($page, (int) ceil($total / $perPage)));
+        foreach ($rows as &$row) {
+            unset($row['filtered_total']);
+        }
+        unset($row);
 
         return new LengthAwarePaginator($rows, $total, $perPage, $page, ['pageName' => 'workPage']);
     }
@@ -56,7 +85,7 @@ final class WorkInProgress
                     'key_assigned','key_created_and_assigned','value_changed','revision_submitted',
                     'revision_approved','revision_approval_revoked','revisions_published',
                     'publication_closed_without_writing','source_movement_reconciled',
-                    'source_rewrite_reconciled','source_removal_confirmed','source_replacement_closed'
+                    'source_rewrite_reconciled','source_removal_confirmed', 'duplicate_source_capture_archived','source_replacement_closed'
                 )
                 AND ((SELECT actor FROM input) IS NULL OR e.actor_id=(SELECT actor FROM input))
             ), event_keys AS (

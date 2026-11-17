@@ -60,7 +60,7 @@
                         </flux:select.option>
                         <flux:select.option
                             value="usage_decisions"
-                            icon="check"
+                            icon="package-question-mark"
                         >
                             {{ __('Usage decisions considered') }} (<x-ui.number :value="$scanCategoryCounts['usage_decisions'] ?? 0" />)
                         </flux:select.option>
@@ -89,10 +89,23 @@
             </flux:input.group>
         </flux:field>
     </div>
-    <flux:callout.text>
-        {{ __('Matching results') }}: <x-ui.number :value="$scanRows->total()" />
-        · {{ __('Category total') }}: <x-ui.number :value="$scanCategoryCounts[$scanCategory] ?? 0" />
-    </flux:callout.text>
+
+    <div class="grid grid-cols-3">
+        <x-translation-workbench::ui.common.details>
+            <x-translation-workbench::ui.common.details.item
+                class="tabular-nums"
+                :label="__('Matching results')"
+                :item="$scanRows->total()"
+            />
+        </x-translation-workbench::ui.common.details>
+        <x-translation-workbench::ui.common.details>
+            <x-translation-workbench::ui.common.details.item
+                class="tabular-nums"
+                :label="__('Category total')"
+                :item="$scanCategoryTotal"
+            />
+        </x-translation-workbench::ui.common.details>
+    </div>
 
     <flux:callout.text>
         {{ $scanCategory === 'missing_immutable'
@@ -128,7 +141,7 @@
     icon="radar"
     color="sky"
 >
-    <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
+    <div class="mb-1 flex flex-wrap items-start justify-between gap-3">
         <flux:callout.heading>
             {{ __('Scan results for category »:category«', [
                 'category' => match ($scanCategory) {
@@ -153,7 +166,7 @@
                 </flux:input.group.prefix>
                 <flux:select
                     class="w-32"
-                    {{-- size="xs" --}}
+                    size="sm"
                     variant="listbox"
                     options:class="min-w-48"
                     wire:model.live="scanPerPage"
@@ -288,19 +301,27 @@
                     <flux:table.cell class="w-px whitespace-nowrap">
                         <div class="mr-3 flex flex-col items-start gap-2">
                             @if ($scanCategory === 'usage_decisions')
-                                {{ $scanRow['usage_decision'] === 'database_value' ? __('DatabaseValue') : __('Translate') }}
-                                · {{ __('Decision') }} #{{ $scanRow['decision_event_id'] }}
+                                <div class="flex items-center gap-1">
+                                    <flux:badge color="amber">
+                                        {{ $scanRow['usage_decision'] === 'database_value' ? __('DatabaseValue') : __('Translate') }}
+                                    </flux:badge>
+                                    <flux:badge color="red">
+                                        {{ __('Decision') }} #{{ $scanRow['decision_event_id'] }}
+                                    </flux:badge>
+                                </div>
                                 <flux:button.group>
                                     <flux:button
+                                        color="fuchsia"
                                         size="sm"
-                                        variant="outline"
+                                        variant="filled"
                                         wire:click="openConsideredScanUsage({{ $scanRow['decision_event_id'] }})"
                                     >
                                         <flux:icon.gavel size="4" />
                                     </flux:button>
                                     <flux:button
+                                        color="fuchsia"
                                         size="sm"
-                                        variant="outline"
+                                        variant="filled"
                                         wire:click="openConsideredScanUsage({{ $scanRow['decision_event_id'] }})"
                                     >
                                         {{ __('Review source and current decision') }}

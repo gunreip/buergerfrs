@@ -89,6 +89,11 @@ return [
         'the_current_application_language_cannot_be_removed_from_the_available_languages' => 'The current application language cannot be removed from the available languages.',
         'this_application_language_is_mandatory_and_cannot_be_disabled' => 'This application language is mandatory and cannot be disabled.',
         'without_role' => 'Without role',
+        'settings' => [
+            'heading' => [
+                'manage_your_profile_and_account_settings' => 'Manage your profile and account settings',
+            ],
+        ],
     ],
     'client_list' => [
         'client_management' => 'Client Management',

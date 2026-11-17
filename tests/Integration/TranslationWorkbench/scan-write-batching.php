@@ -99,3 +99,49 @@ foreach (['created' => $created['scan'], 'confirmed' => $confirmed['scan'], 'mov
     $check(count($sized->items()) === 10 && $sized->perPage() === 10 && $sized->currentPage() === 2, 'Scan page size not applied: '.$category);
 }
 $check($scanEditor->scanPage($confirmed['scan'], 'confirmed', 1, '', 99999)->perPage() === 25, 'Invalid page size must be bounded');
+
+// A missing file can have several plausible successors. Its former assignment must not block the key group.
+$relocationScope = ['relocation-cases'];
+mkdir($dir.'/relocation-cases');
+$oldPath = $dir.'/relocation-cases/old.php';
+file_put_contents($oldPath, "<?php\n__('Decision');\n__('Removed label');\n");
+$initial = $rescan->apply((string) Str::uuid(), $rescan->prepare($relocationScope), actor: 7);
+$oldFinding = $initial['created'][0];
+$q('INSERT INTO translation_workbench_key_findings(finding_id,key_id) VALUES (?,?)', [$oldFinding, $batchKey]);
+unlink($oldPath);
+foreach (['first', 'second'] as $name) {
+    file_put_contents($dir.'/relocation-cases/'.$name.'.php', "<?php\n__('Decision');\n");
+}
+$request = $rescan->prepare($relocationScope);
+$check(count($request['plan']['relocations']) === 1 && count($request['plan']['relocations'][0]['candidates']) === 2, 'Retain both possible destinations as evidence');
+$reconciled = $rescan->apply((string) Str::uuid(), $request, actor: 7);
+$check($reconciled['removed'] === $initial['created'] && count($reconciled['created']) === 2 && !$reconciled['moved'], 'Archive missing occurrences and capture both actual occurrences independently');
+$check(!$q('SELECT 1 FROM translation_workbench_key_findings WHERE finding_id=? AND valid_to IS NULL', [$oldFinding])->fetchColumn(), 'Missing occurrence still has a current key assignment');
+$repeat = $rescan->apply((string) Str::uuid(), $rescan->prepare($relocationScope), actor: 7);
+$check($repeat['confirmed'] === 2 && !$repeat['created'] && !$repeat['removed'] && !$repeat['moved'], 'Unchanged rescan must confirm both occurrences without duplicates');
+
+$survivingUsage = $q('SELECT id AS link,finding_id AS finding FROM translation_workbench_key_findings WHERE key_id=? AND valid_to IS NULL ORDER BY id LIMIT 1', [$batchKey])->fetch(PDO::FETCH_ASSOC);
+$retiredUsage = $q('SELECT id AS link,finding_id AS finding FROM translation_workbench_key_findings WHERE key_id=? AND finding_id=?', [$batchKey, $oldFinding])->fetch(PDO::FETCH_ASSOC);
+$reviewed = ['key_id' => $batchKey, 'usages' => [$survivingUsage, $retiredUsage]];
+$current = ['key_id' => $batchKey, 'usages' => [$survivingUsage]];
+$check(\Gunreip\TranslationWorkbench\Generation\ReviewUsageContinuity::contextMatches($db, $reviewed, $current), 'A receipted scan removal must preserve approval for surviving reviewed usages');
+$check(!\Gunreip\TranslationWorkbench\Generation\ReviewUsageContinuity::contextMatches($db, $reviewed, ['key_id' => $batchKey, 'usages' => []]), 'An unexplained missing usage must still invalidate approval');
+
+// Preserve two distinct occurrences when only the first call is reformatted.
+$formatScope = ['format.php'];
+file_put_contents($dir.'/format.php', "<?php\n__('Already current');\n\n\n__('Already current');\n");
+$original = $rescan->apply((string) Str::uuid(), $rescan->prepare($formatScope), actor: 7);
+[$first, $sibling] = $original['created'];
+$link = $q('INSERT INTO translation_workbench_key_findings(finding_id,key_id) VALUES (?,?) RETURNING id', [$first, $batchKey])->fetchColumn();
+file_put_contents($dir.'/format.php', "<?php\n__(\n  'Already current',\n);\n__('Already current');\n");
+$formatted = $rescan->apply((string) Str::uuid(), $rescan->prepare($formatScope), actor: 7);
+$check(count($formatted['moved']) === 1 && $formatted['moved'][0]['predecessor'] === $first
+    && $formatted['moved'][0]['evidence']['method'] === 'formatting_only' && !$formatted['created'] && !$formatted['removed'], 'Reformat must create just one linked successor');
+$next = $formatted['moved'][0]['successor'];
+$nextLink = $q('SELECT id FROM translation_workbench_key_findings WHERE finding_id=? AND key_id=? AND valid_to IS NULL', [$next,$batchKey])->fetchColumn();
+$check(\Gunreip\TranslationWorkbench\Generation\ReviewUsageContinuity::contextMatches($db,
+    ['key_id' => $batchKey,'usages' => [['finding' => $first,'link' => $link]]],
+    ['key_id' => $batchKey,'usages' => [['finding' => $next,'link' => $nextLink]]]), 'Reformatted successor must retain the reviewed usage');
+$again = $rescan->apply((string) Str::uuid(), $rescan->prepare($formatScope), actor: 7);
+$check($again['confirmed'] === 2 && !$again['moved'] && !$again['created'] && !$again['removed']
+    && $q('SELECT status FROM translation_workbench_findings WHERE id=?', [$sibling])->fetchColumn() === 'active', 'Second scan must confirm the successor and the untouched sibling');

@@ -4,7 +4,7 @@
         color="sky"
         icon="star"
     >
-        @if (!$modalOpen && !$usageWorkflowOpen && !$workflowReasonOpen)
+        @if (!$workbenchPageLoading && !$modalOpen && !$usageWorkflowOpen && !$workflowReasonOpen)
             <x-ui.loading.lazy-indicator
                 :overlay="true"
                 role="status"

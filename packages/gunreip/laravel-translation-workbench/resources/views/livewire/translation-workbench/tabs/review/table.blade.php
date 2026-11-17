@@ -1,7 +1,7 @@
-{{-- <flux:error name="selectedReviewRevisions" /> --}}
-
-{{-- <flux:error name="reviewBatch" /> --}}
-
+@php
+    $selectedRevisionIds = array_fill_keys($selectedReviewRevisions, true);
+    $selectedCount = count($selectedRevisionIds);
+@endphp
 {{-- Table --}}
 <flux:checkbox.group>
     <flux:table container:class="max-h-[100vh] overflow-x-auto rounded-t-lg">
@@ -83,7 +83,7 @@
                 </flux:tooltip>
             </flux:table.column>
             {{-- Column Select --}}
-            <flux:table.column>
+            <flux:table.column align="center">
                 <flux:checkbox.all
                     class="hover:cursor-pointer"
                     :disabled="$reviewTasks->isEmpty()"
@@ -97,15 +97,30 @@
                     <flux:callout.heading>
                         <div class="flex items-center justify-end gap-3">
                             {{ __('Actions') }}
-
-                            <flux:button
-                                class="hover:cursor-pointer"
-                                size="sm"
-                                wire:click="openReviewBatch"
-                                :disabled="count($selectedReviewRevisions) === 0"
-                            >
-                                {{ __('Review selected revisions') }} ({{ count($selectedReviewRevisions) }})
-                            </flux:button>
+                            <flux:button.group>
+                                <flux:button
+                                    class="hover:cursor-pointer"
+                                    square
+                                    size="sm"
+                                    wire:click="openReviewBatch"
+                                    variant="filled"
+                                    :color="$selectedCount > 0 ? 'green' : null"
+                                    :disabled="$selectedCount === 0"
+                                >
+                                    <flux:icon.eye class="size-6" />
+                                </flux:button>
+                                <flux:button
+                                    class="hover:cursor-pointer"
+                                    size="sm"
+                                    wire:click="openReviewBatch"
+                                    variant="filled"
+                                    :color="$selectedCount > 0 ? 'green' : null"
+                                    :disabled="$selectedCount === 0"
+                                >
+                                    {{ __('Review selected revisions') }}
+                                    ({{ $selectedCount }})
+                                </flux:button>
+                            </flux:button.group>
                         </div>
                     </flux:callout.heading>
                     <x-translation-workbench::ui.common.tooltip-content
@@ -116,22 +131,27 @@
                     />
                 </flux:tooltip>
 
-                <flux:error name="selectedReviewRevisions" />
-
-                <flux:error name="reviewBatch" />
-
             </flux:table.column>
         </flux:table.columns>
         {{-- Table Rows --}}
         <flux:table.rows>
             @forelse ($reviewTasks as $task)
+                @php
+                    $isSelected = isset($selectedRevisionIds[$task['revision']]);
+                    $canReviewIndividually = $selectedCount <= 1 || !$isSelected;
+                @endphp
                 {{-- Table Row --}}
                 <flux:table.row :key="'review-task-'.$task['submission']">
                     {{-- Column Key --}}
                     <flux:table.cell class="whitespace-normal">
                         <flux:callout.text class="ml-2">
                             <code>#{{ $task['key_id'] }} ·
-                                {{ $task['namespace'] !== '' ? $task['namespace'] . '::' : '' }}{{ $task['full_name'] }}</code>
+                                <x-ui.text.highlight
+                                    :value="($task['namespace'] !== '' ? $task['namespace'].'::' : '').$task['full_name']"
+                                    :search="$reviewSearch"
+                                    :case-sensitive="$textSearchOptions['reviewSearch']['case'] ?? false"
+                                    :whole-word="$textSearchOptions['reviewSearch']['word'] ?? false"
+                                /></code>
                         </flux:callout.text>
                     </flux:table.cell>
                     {{-- Column Language --}}
@@ -162,7 +182,7 @@
                         @endif
                     </flux:table.cell>
                     {{-- Column Select --}}
-                    <flux:table.cell>
+                    <flux:table.cell align="center">
                         <flux:checkbox
                             class="hover:cursor-pointer"
                             wire:model.live="selectedReviewRevisions"
@@ -176,6 +196,7 @@
                             <flux:button
                                 size="sm"
                                 variant="outline"
+                                square
                                 :tooltip="__('Workflow status')"
                                 :aria-label="__('Workflow status')"
                                 wire:click="openKeyWorkflowStatus({{ $task['key_id'] }})"
@@ -186,19 +207,22 @@
                             <flux:button.group>
                                 <flux:button
                                     size="sm"
-                                    variant="outline"
+                                    variant="filled"
+                                    square
                                     :tooltip="__('Review revision')"
                                     :aria-label="__('Review revision')"
                                     wire:click="openReviewBatch({{ $task['revision'] }})"
-                                    :disabled="count($selectedReviewRevisions) > 1 && in_array((string) $task['revision'], array_map('strval', $selectedReviewRevisions), true)"
+                                    :color="$isSelected && $canReviewIndividually ? 'green' : null"
+                                    :disabled="!$canReviewIndividually"
                                 >
                                     <flux:icon.eye size="5" />
                                 </flux:button>
                                 <flux:button
                                     size="sm"
-                                    variant="outline"
+                                    variant="filled"
                                     wire:click="openReviewBatch({{ $task['revision'] }})"
-                                    :disabled="count($selectedReviewRevisions) > 1 && in_array((string) $task['revision'], array_map('strval', $selectedReviewRevisions), true)"
+                                    :color="$isSelected && $canReviewIndividually ? 'green' : null"
+                                    :disabled="!$canReviewIndividually"
                                 >
                                     {{ __('Review revision') }}
                                 </flux:button>

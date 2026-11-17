@@ -32,6 +32,7 @@
                         <flux:timeline>
                             @foreach ($step['translation_group'] as $translationStep)
                                 <flux:timeline.item
+                                    :class="$translationStep['status'] === 'disabled' ? 'opacity-60' : ''"
                                     wire:key="workflow-shared-{{ $sharedKey['id'] }}-{{ $translationStep['id'] }}"
                                 >
                                     <flux:timeline.indicator :color="$translationStep['color']">
@@ -41,122 +42,148 @@
                                         />
                                     </flux:timeline.indicator>
                                     <flux:timeline.content>
-                                        <flux:heading>
-                                            @if (($translationStep['description'] ?? null) || ($translationStep['hint'] ?? null))
-                                                <flux:tooltip toggleable>
-                                                    <button type="button" class="cursor-help text-left">{{ $translationStep['label'] }}</button>
-                                                    <x-translation-workbench::ui.common.tooltip-content
-                                                        :heading="$translationStep['label']"
-                                                        :text="array_filter([
-                                                            $translationStep['description'] ?? '',
-                                                            $translationStep['hint'] ?? '',
-                                                            $translationStep['action'] ?? '',
-                                                        ])"
-                                                    />
-                                                </flux:tooltip>
-                                            @else
-                                                {{ $translationStep['label'] }}
-                                            @endif
-                                        </flux:heading>
-                                        @if ($navigable && $translationStep['status'] === 'current')
-                                            <flux:tooltip
-                                                :content="__('Continue the translation workflow for this shared key.')"
-                                            >
-                                                <flux:button
-                                                    size="xs"
-                                                    variant="filled"
-                                                    color="sky"
-                                                    icon:trailing="arrow-right"
-                                                    wire:click="continueWorkflow"
-                                                    wire:loading.attr="disabled"
-                                                    wire:target="continueWorkflow"
-                                                >
-                                                    <flux:icon.arrow-right-from-line />
-                                                </flux:button>
-                                                <flux:button
-                                                    size="xs"
-                                                    variant="filled"
-                                                    color="sky"
-                                                    icon:trailing="arrow-right"
-                                                    wire:click="continueWorkflow"
-                                                    wire:loading.attr="disabled"
-                                                    wire:target="continueWorkflow"
-                                                >
-                                                    {{ __('Next step') }}
-                                                </flux:button>
-                                            </flux:tooltip>
-                                        @else
-                                            <flux:text>
-                                                {{ $translationStep['summary'] ?? ($translationStep['done'] ? __('Complete') : ($translationStep['status'] === 'current' ? __('Next step') : __('Pending'))) }}
-                                            </flux:text>
-                                        @endif
-                                        @foreach (collect($translationStep['languages'])->groupBy(fn($language) => strtolower(explode('-', str_replace('_', '-', $language['locale']))[0])) as $languages)
-                                            <flux:callout.text>
-                                                @foreach ($languages->sortBy(fn($language) => str_contains(str_replace('_', '-', $language['locale']), '-') ? 1 : 0) as $language)
-                                                    @php
-                                                        $languageState = match ($language['state']) {
-                                                            'existing_publication' => __(
-                                                                'Existing publication verified in the language file',
-                                                            ),
-                                                            'published' => __('Published'),
-                                                            'approved' => __('Approved'),
-                                                            'review' => __('Waiting for review'),
-                                                            'draft' => __('Draft'),
-                                                            default => __('Not saved'),
-                                                        };
-                                                        $languageDetails =
-                                                            $language['locale'] .
-                                                            ' · ' .
-                                                            $languageState .
-                                                            ($language['revision']
-                                                                ? ' · #' . $language['revision']
-                                                                : '') .
-                                                            ' — ' .
-                                                            ($language['review_unrecorded'] ?? false
-                                                                ? __('No review was recorded for this imported value.')
-                                                                : ($language['done']
-                                                                    ? __('This step is complete for this language.')
-                                                                    : __(
-                                                                        'This step is still pending for this language.',
-                                                                    )));
-                                                    @endphp
-                                                    <flux:tooltip toggleable>
-                                                        <flux:button
-                                                            size="xs"
-                                                            variant="ghost"
-                                                            :aria-label="$language['locale'].
-                                                            ' · '.$languageState"
-                                                        >
-                                                            @if ($countries[$language['locale']] ?? null)
-                                                                <flux:flag
-                                                                    :country="$countries[$language['locale']]"
-                                                                    size="xs"
-                                                                />
-                                                            @endif
-                                                            {{ $language['locale'] }}
-                                                            <flux:icon
-                                                                :name="($language['review_unrecorded'] ?? false) ?
-                                                                'information-circle' : ($language['done'] ? 'check' :
-                                                                    'x-mark')"
-                                                                variant="micro"
+                                        <div class="flex flex-nowrap items-start gap-4">
+                                            <div class="w-48 min-w-0 flex-none">
+                                                <flux:heading>
+                                                    @if (($translationStep['description'] ?? null) || ($translationStep['hint'] ?? null))
+                                                        <flux:tooltip toggleable>
+                                                            <button
+                                                                class="cursor-help text-left"
+                                                                type="button"
+                                                            >{{ $translationStep['label'] }}</button>
+                                                            <x-translation-workbench::ui.common.tooltip-content
+                                                                :heading="$translationStep['label']"
+                                                                :text="array_filter([
+                                                                    $translationStep['description'] ?? '',
+                                                                    $translationStep['hint'] ?? '',
+                                                                    $translationStep['action'] ?? '',
+                                                                ])"
                                                             />
-                                                        </flux:button>
-                                                        <x-translation-workbench::ui.common.tooltip-content
-                                                            :heading="__('Language')"
-                                                            :text="$languageDetails"
-                                                        >
-                                                            @if ($translationStep['id'] === 'publication' && !empty($language['file']))
-                                                                <p class="mt-2 break-all">
-                                                                    {{ $language['file']['actual'] ? __('Language file') : __('Expected language file') }}:
-                                                                    lang/{{ $language['file']['path'] }}</p>
-                                                                <p class="mt-2">{{ __($language['file']['detail']) }}
-                                                                </p>
-                                                            @endif
-                                                        </x-translation-workbench::ui.common.tooltip-content>
+                                                        </flux:tooltip>
+                                                    @else
+                                                        {{ $translationStep['label'] }}
+                                                    @endif
+                                                </flux:heading>
+                                                @if ($navigable && $translationStep['status'] === 'current')
+                                                    <flux:tooltip
+                                                        :content="__('Continue the translation workflow for this shared key.')"
+                                                    >
+                                                        <flux:button.group>
+                                                            <flux:button
+                                                                size="xs"
+                                                                variant="filled"
+                                                                color="sky"
+                                                                {{-- icon:trailing="arrow-right" --}}
+                                                                wire:click="continueWorkflow"
+                                                                wire:loading.attr="disabled"
+                                                                wire:target="continueWorkflow"
+                                                            >
+                                                                <flux:icon.arrow-right-from-line
+                                                                    class="size-5"
+                                                                    square
+                                                                />
+                                                            </flux:button>
+                                                            <flux:button
+                                                                size="xs"
+                                                                variant="filled"
+                                                                color="sky"
+                                                                {{-- icon:trailing="arrow-right" --}}
+                                                                wire:click="continueWorkflow"
+                                                                wire:loading.attr="disabled"
+                                                                wire:target="continueWorkflow"
+                                                            >
+                                                                {{ __('Next step') }}
+                                                            </flux:button>
+                                                        </flux:button.group>
                                                     </flux:tooltip>
-                                                @endforeach
-                                            </flux:callout.text>
-                                        @endforeach
+                                                @elseif ($translationStep['status'] !== 'disabled')
+                                                    <flux:text>
+                                                        {{ $translationStep['summary'] ?? ($translationStep['done'] ? __('Complete') : ($translationStep['status'] === 'current' ? __('Next step') : __('Pending'))) }}
+                                                    </flux:text>
+                                                @endif
+                                            </div>
+                                            @if ($translationStep['languages'])
+                                                <div class="min-w-0 flex-1 space-y-2">
+                                                    @foreach (collect($translationStep['languages'])->groupBy(fn($language) => strtolower(explode('-', str_replace('_', '-', $language['locale']))[0])) as $languages)
+                                                        <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                                            @foreach ($languages->sortBy(fn($language) => str_contains(str_replace('_', '-', $language['locale']), '-') ? 1 : 0) as $language)
+                                                                @php
+                                                                    $languageState = match ($language['state']) {
+                                                                        'existing_publication' => __(
+                                                                            'Existing publication verified in the language file',
+                                                                        ),
+                                                                        'published' => __('Published'),
+                                                                        'approved' => __('Approved'),
+                                                                        'review' => __('Waiting for review'),
+                                                                        'draft' => __('Draft'),
+                                                                        default => __('Not saved'),
+                                                                    };
+                                                                    $languageDetails =
+                                                                        $language['locale'] .
+                                                                        ' · ' .
+                                                                        $languageState .
+                                                                        ($language['revision']
+                                                                            ? ' · #' . $language['revision']
+                                                                            : '') .
+                                                                        ' — ' .
+                                                                        ($language['review_unrecorded'] ?? false
+                                                                            ? __(
+                                                                                'No review was recorded for this imported value.',
+                                                                            )
+                                                                            : ($language['done']
+                                                                                ? __(
+                                                                                    'This step is complete for this language.',
+                                                                                )
+                                                                                : __(
+                                                                                    'This step is still pending for this language.',
+                                                                                )));
+                                                                @endphp
+                                                                <flux:tooltip toggleable>
+                                                                    <flux:button
+                                                                        size="xs"
+                                                                        variant="ghost"
+                                                                        :aria-label="$language['locale'].
+                                                                        ' · '.$languageState"
+                                                                    >
+                                                                        @if ($countries[$language['locale']] ?? null)
+                                                                            <flux:flag
+                                                                                :country="$countries[$language['locale']]"
+                                                                                size="xs"
+                                                                            />
+                                                                        @endif
+                                                                        <flux:callout.heading>{{ $language['locale'] }}
+                                                                        </flux:callout.heading>
+                                                                        <flux:icon
+                                                                            :name="($language['review_unrecorded'] ?? false) ?
+                                                                            'information-circle' : ($language['done'] ?
+                                                                                'check' :
+                                                                                'x-mark')"
+                                                                            :class="($language['review_unrecorded'] ?? false) ?
+                                                                            'text-zinc-500' : ($language['done'] ?
+                                                                                'text-green-500' : 'text-red-500')"
+                                                                            variant="micro"
+                                                                        />
+                                                                    </flux:button>
+                                                                    <x-translation-workbench::ui.common.tooltip-content
+                                                                        :heading="__('Language')"
+                                                                        :text="$languageDetails"
+                                                                    >
+                                                                        @if ($translationStep['id'] === 'publication' && !empty($language['file']))
+                                                                            <p class="mt-2 break-all">
+                                                                                {{ $language['file']['actual'] ? __('Language file') : __('Expected language file') }}:
+                                                                                lang/{{ $language['file']['path'] }}</p>
+                                                                            <p class="mt-2">
+                                                                                {{ __($language['file']['detail']) }}
+                                                                            </p>
+                                                                        @endif
+                                                                    </x-translation-workbench::ui.common.tooltip-content>
+                                                                </flux:tooltip>
+                                                            @endforeach
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
                                     </flux:timeline.content>
                                 </flux:timeline.item>
                             @endforeach
@@ -167,6 +194,7 @@
         @else
             <flux:timeline.item
                 wire:key="workflow-step-{{ $step['id'] }}"
+                :class="$step['status'] === 'disabled' ? 'opacity-60' : ''"
                 :status="$step['status']"
             >
                 {{-- Explicit colors take precedence over Flux's item-status selectors. --}}
@@ -186,65 +214,68 @@
                     <div class="flex flex-nowrap items-start gap-4">
                         <div class="w-48 min-w-0 flex-none">
                             <flux:callout.heading>
-                            @if (($step['description'] ?? null) || ($step['hint'] ?? null))
-                                <flux:tooltip toggleable>
-                                    <button type="button" class="cursor-help text-left">{{ $step['label'] }}</button>
-                                    <x-translation-workbench::ui.common.tooltip-content
-                                        :heading="$step['label']"
-                                        :text="array_filter([
-                                            $step['description'] ?? '',
-                                            $step['hint'] ?? '',
-                                            $step['action'] ?? '',
-                                        ])"
-                                    >
-                                        @if ($step['scan_action'] ?? false)
-                                            @if ($testMode)
-                                                {{ __('The Artisan scan operates on the working database, not on these UI test cases.') }}
-                                            @else
-                                                @foreach ([['label' => __('Preview scan (read-only)'), 'command' => 'php artisan translation-workbench:generation-scan'], ['label' => __('Save scan results'), 'command' => 'php artisan translation-workbench:generation-scan --apply']] as $commandItem)
-                                                    <span class="mt-2 block">{{ $commandItem['label'] }}:</span>
-                                                    <span
-                                                        class="flex items-start gap-2"
-                                                        x-data="{ copied: false, failed: false }"
-                                                    >
-                                                        <code
-                                                            class="min-w-0 break-all">{{ $commandItem['command'] }}</code>
-                                                        <flux:button
-                                                            class="shrink-0"
-                                                            type="button"
-                                                            size="xs"
-                                                            variant="ghost"
-                                                            :aria-label="__('Copy command')"
-                                                            :title="__('Copy command')"
-                                                            x-on:click.stop="try { await navigator.clipboard.writeText({{ \Illuminate\Support\Js::from($commandItem['command']) }}); copied = true; failed = false; setTimeout(() => copied = false, 2000); } catch { copied = false; failed = true; }"
-                                                        >
-                                                            <flux:icon.clipboard-document
-                                                                class="size-4"
-                                                                x-show="!copied"
-                                                            />
-                                                            <flux:icon.check
-                                                                class="size-4 text-green-500"
-                                                                x-show="copied"
-                                                                x-cloak
-                                                            />
-                                                        </flux:button>
+                                @if (($step['description'] ?? null) || ($step['hint'] ?? null))
+                                    <flux:tooltip toggleable>
+                                        <button
+                                            class="cursor-help text-left"
+                                            type="button"
+                                        >{{ $step['label'] }}</button>
+                                        <x-translation-workbench::ui.common.tooltip-content
+                                            :heading="$step['label']"
+                                            :text="array_filter([
+                                                $step['description'] ?? '',
+                                                $step['hint'] ?? '',
+                                                $step['action'] ?? '',
+                                            ])"
+                                        >
+                                            @if ($step['scan_action'] ?? false)
+                                                @if ($testMode)
+                                                    {{ __('The Artisan scan operates on the working database, not on these UI test cases.') }}
+                                                @else
+                                                    @foreach ([['label' => __('Preview scan (read-only)'), 'command' => 'php artisan translation-workbench:generation-scan'], ['label' => __('Save scan results'), 'command' => 'php artisan translation-workbench:generation-scan --apply']] as $commandItem)
+                                                        <span class="mt-2 block">{{ $commandItem['label'] }}:</span>
                                                         <span
-                                                            class="text-red-500"
-                                                            role="status"
-                                                            x-show="failed"
-                                                            x-cloak
+                                                            class="flex items-start gap-2"
+                                                            x-data="{ copied: false, failed: false }"
                                                         >
-                                                            {{ __('Could not copy command.') }}
+                                                            <code
+                                                                class="min-w-0 break-all">{{ $commandItem['command'] }}</code>
+                                                            <flux:button
+                                                                class="shrink-0"
+                                                                type="button"
+                                                                size="xs"
+                                                                variant="ghost"
+                                                                :aria-label="__('Copy command')"
+                                                                :title="__('Copy command')"
+                                                                x-on:click.stop="try { await navigator.clipboard.writeText({{ \Illuminate\Support\Js::from($commandItem['command']) }}); copied = true; failed = false; setTimeout(() => copied = false, 2000); } catch { copied = false; failed = true; }"
+                                                            >
+                                                                <flux:icon.clipboard-document
+                                                                    class="size-4"
+                                                                    x-show="!copied"
+                                                                />
+                                                                <flux:icon.check
+                                                                    class="size-4 text-green-500"
+                                                                    x-show="copied"
+                                                                    x-cloak
+                                                                />
+                                                            </flux:button>
+                                                            <span
+                                                                class="text-red-500"
+                                                                role="status"
+                                                                x-show="failed"
+                                                                x-cloak
+                                                            >
+                                                                {{ __('Could not copy command.') }}
+                                                            </span>
                                                         </span>
-                                                    </span>
-                                                @endforeach
+                                                    @endforeach
+                                                @endif
                                             @endif
-                                        @endif
-                                    </x-translation-workbench::ui.common.tooltip-content>
-                                </flux:tooltip>
-                            @else
-                                {{ $step['label'] }}
-                            @endif
+                                        </x-translation-workbench::ui.common.tooltip-content>
+                                    </flux:tooltip>
+                                @else
+                                    {{ $step['label'] }}
+                                @endif
                             </flux:callout.heading>
                             @if ($navigable && $step['status'] === 'current')
                                 <flux:tooltip>
@@ -293,7 +324,7 @@
                                         }"
                                     />
                                 </flux:tooltip>
-                            @else
+                            @elseif ($step['status'] !== 'disabled')
                                 <flux:callout.text size="sm">
                                     {{ $step['summary'] ?? ($step['done'] ? __('Complete') : ($step['status'] === 'current' ? __('Next step') : __('Pending'))) }}
                                 </flux:callout.text>

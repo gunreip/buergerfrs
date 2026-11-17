@@ -11,7 +11,7 @@ class SuggestedKeyFactory
     public function forLiteral(string $literal, string $sourcePath): SuggestedKeyResult
     {
         $pathSegments = $this->pathSegments($sourcePath);
-        $keyName = $this->shortenKeySegment($this->slugSegment($literal));
+        $keyName = $this->slugSegment($literal);
 
         return $this->forPathAndKeyName($pathSegments, $keyName !== '' ? $keyName : 'literal');
     }
@@ -24,7 +24,7 @@ class SuggestedKeyFactory
             ->values()
             ->all();
 
-        $keyName = $this->shortenKeySegment((string) (end($segments) ?: 'translation'));
+        $keyName = (string) (end($segments) ?: 'translation');
 
         return $this->forPathAndKeyName(
             pathSegments: $this->pathSegments($sourcePath),
@@ -34,7 +34,7 @@ class SuggestedKeyFactory
 
     public function forDynamicExpressionAtSource(string $keyName, string $sourcePath): SuggestedKeyResult
     {
-        $keyName = $this->shortenKeySegment($this->slugSegment($keyName));
+        $keyName = $this->slugSegment($keyName);
 
         return $this->forPathAndKeyName(
             pathSegments: $this->pathSegments($sourcePath),
@@ -102,6 +102,8 @@ class SuggestedKeyFactory
      */
     private function forPathAndKeyName(array $pathSegments, string $keyName): SuggestedKeyResult
     {
+        $originalName = $keyName;
+        $keyName = $this->shortenKeySegment($originalName);
         $key = $this->shortenKeyCandidate(implode('.', array_filter([
             ...$pathSegments,
             $keyName,
@@ -113,6 +115,7 @@ class SuggestedKeyFactory
             group: $this->groupFromSegments($pathSegments),
             pathSegments: $pathSegments,
             keyName: $keyName,
+            copyableLeaf: $originalName === $keyName ? $keyName : substr($keyName, 0, strrpos($keyName, '_')),
         );
     }
 

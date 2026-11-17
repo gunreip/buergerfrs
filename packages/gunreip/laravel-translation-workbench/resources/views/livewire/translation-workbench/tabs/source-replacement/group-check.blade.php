@@ -54,7 +54,7 @@
                         <flux:table.row :key="'source-group-result-'.$result['id']">
                             {{-- Table Body Row Column Finding --}}
                             <flux:table.cell>
-                                <flux:callout.text>
+                                <flux:callout.text class="ml-2">
                                     #{{ $result['id'] }}
                                 </flux:callout.text>
                             </flux:table.cell>
@@ -65,11 +65,12 @@
                                 </flux:callout.text>
                             </flux:table.cell>
                             {{-- Table Body Row Column Actions --}}
-                            <flux:table.cell class="flex items-center gap-1">
+                            <flux:table.cell class="flex items-center gap-1 pr-3">
                                 <flux:button.group>
                                     <flux:button
                                         size="sm"
                                         variant="outline"
+                                        square
                                         wire:click="openSourceComparison({{ $result['id'] }})"
                                         wire:loading.attr="disabled"
                                     >

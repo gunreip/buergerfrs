@@ -152,7 +152,7 @@
                         __('ui.type') . ': ' . $historyEvent->event_type,
                         __('Renderer') . ': ' . ($usesTimelineFallback ? __('Fallback') : __('Specific component')),
                         $historyLocale ? __('Locale') . ': ' . strtoupper($historyLocale) : null,
-                        $historyEvent->reason ? __('admin.translation_list.modal_history.reason') . ': ' . $historyEvent->reason : null,
+                        $historyEvent->reason ? __('ui.table.header.reason') . ': ' . $historyEvent->reason : null,
                     ])
                         ->filter()
                         ->implode(' · ');

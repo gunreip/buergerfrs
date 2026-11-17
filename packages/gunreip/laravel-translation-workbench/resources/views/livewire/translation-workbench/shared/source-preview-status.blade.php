@@ -13,6 +13,9 @@
         $blocker === 'Save and approve a revision in the source language before replacing the literal.' => __(
             'Save and approve the source-language text in Edit finding, then reopen this preview.',
         ),
+        $blocker === \Gunreip\TranslationWorkbench\Generation\SourceReplacementPreview::REVIEW_REQUIRED => __(
+            'Approve the existing source-language revision once for this key, then reopen the replacement preview.',
+        ),
         $blocker === 'Publish the approved source-language revision first. The file does not contain that value.' => __(
             'Publish the approved source-language revision, then reopen this preview.',
         ),

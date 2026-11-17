@@ -80,13 +80,13 @@ final class ReviewWorklist
 
     public const PUBLICATION_SORTS = ['revision' => 'revision', 'key' => 'key_id', 'language' => 'locale'];
 
-    public function publicationPage(string $search, int $page, int $perPage = 25, string $keyId = '', string $locale = '', string $sort = 'revision', string $direction = 'asc'): LengthAwarePaginator
+    public function publicationPage(string $search, int $page, int $perPage = 25, string $keyId = '', string $locale = '', string $sort = 'revision', string $direction = 'asc', bool $caseSensitive = false, bool $wholeWord = false): LengthAwarePaginator
     {
         if (! isset(self::PUBLICATION_SORTS[$sort]) || ! in_array($direction, ['asc', 'desc'], true)) {
             throw new RuntimeException('Invalid publication sort.');
         }
         $order = self::PUBLICATION_SORTS[$sort].' '.$direction.', revision '.$direction;
-        return $this->workPage(self::PUBLICATION_PENDING, 'publicationPage', $search, $page, $perPage, $order, $keyId, $locale);
+        return $this->workPage(self::PUBLICATION_PENDING, 'publicationPage', $search, $page, $perPage, $order, $keyId, $locale, $caseSensitive, $wholeWord);
     }
 
     public function inspectPublication(int $revision): array
@@ -134,24 +134,38 @@ final class ReviewWorklist
 
     public const SORTS = ['key' => 'key_id', 'language' => 'locale', 'submitted' => 'occurred_at'];
 
-    public function page(string $search, int $page, int $perPage = 25, string $sort = 'submitted', string $direction = 'asc', string $keyId = '', string $locale = ''): LengthAwarePaginator
+    public function page(string $search, int $page, int $perPage = 25, string $sort = 'submitted', string $direction = 'asc', string $keyId = '', string $locale = '', bool $caseSensitive = false, bool $wholeWord = false): LengthAwarePaginator
     {
         if (! isset(self::SORTS[$sort]) || ! in_array($direction, ['asc', 'desc'], true)) {
             throw new RuntimeException('Invalid review sort.');
         }
         $order = self::SORTS[$sort].' '.$direction.' NULLS LAST, submission '.$direction.', revision '.$direction;
-        return $this->workPage(self::PENDING, 'reviewPage', $search, $page, $perPage, $order, $keyId, $locale);
+        return $this->workPage(self::PENDING, 'reviewPage', $search, $page, $perPage, $order, $keyId, $locale, $caseSensitive, $wholeWord);
     }
 
-    private function workPage(string $query, string $pageName, string $search, int $page, int $perPage, string $order = 'submission ASC NULLS LAST, revision ASC', string $keyId = '', string $locale = ''): LengthAwarePaginator
+    private function workPage(string $query, string $pageName, string $search, int $page, int $perPage, string $order = 'submission ASC NULLS LAST, revision ASC', string $keyId = '', string $locale = '', bool $caseSensitive = false, bool $wholeWord = false): LengthAwarePaginator
     {
         $perPage = in_array($perPage, [10, 25, 50, 100], true) ? $perPage : 25;
-        [$condition, $params] = TranslationTaskFilter::build($search, $keyId, $locale);
+        [$condition, $params] = TranslationTaskFilter::build($search, $keyId, $locale, caseSensitive: $caseSensitive, wholeWord: $wholeWord);
         $where = $condition === '' ? '' : ' WHERE '.$condition;
-        $from = ' FROM ('.$query.') p'.$where;
-        $total = (int) $this->query('SELECT count(*)'.$from, $params)->fetchColumn();
-        $page = max(1, min($page, max(1, (int) ceil($total / $perPage))));
-        $rows = $this->query("SELECT p.*, (SELECT count(DISTINCT l.finding_id) FROM translation_workbench_key_findings l JOIN translation_workbench_findings f ON f.id=l.finding_id WHERE l.key_id=p.key_id AND l.valid_to IS NULL AND f.status='active') AS active_findings_count".$from.' ORDER BY '.$order.' LIMIT '.$perPage.' OFFSET '.(($page - 1) * $perPage), $params)->fetchAll(PDO::FETCH_ASSOC);
+        // Resolve review eligibility once. The count also clamps requests beyond the last page.
+        $sql = 'WITH eligible AS MATERIALIZED (SELECT * FROM ('.$query.') p'.$where.'),
+            totals AS (SELECT count(*) AS total FROM eligible)
+            SELECT page.*, totals.total AS filtered_total,
+                (SELECT count(DISTINCT l.finding_id) FROM translation_workbench_key_findings l
+                    JOIN translation_workbench_findings f ON f.id=l.finding_id
+                    WHERE l.key_id=page.key_id AND l.valid_to IS NULL AND f.status=\'active\') AS active_findings_count
+            FROM (SELECT * FROM eligible ORDER BY '.$order.' LIMIT ?
+                OFFSET (SELECT LEAST(?::bigint, GREATEST(total - 1, 0) / ?) * ? FROM totals)) page
+            CROSS JOIN totals ORDER BY '.$order;
+        $rows = $this->query($sql, [...$params, $perPage, max(1, $page) - 1, $perPage, $perPage])->fetchAll(PDO::FETCH_ASSOC);
+        $total = (int) ($rows[0]['filtered_total'] ?? 0);
+        $page = max(1, min($page, (int) ceil($total / $perPage)));
+        foreach ($rows as &$row) {
+            unset($row['filtered_total']);
+        }
+        unset($row);
+
         return new LengthAwarePaginator($rows, $total, $perPage, $page, ['pageName' => $pageName]);
     }
 

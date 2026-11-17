@@ -44,7 +44,7 @@
                     variant="ghost"
                     x-model="sourceSelected"
                     x-bind:disabled="switching"
-                    :aria-label="__('Set input / select language').
+                    :aria-label="__('translation-workbench.modals.label.set-input-select-language').
                     ': '.$source.
                     ' / '.$target"
                 >
@@ -74,7 +74,7 @@
                     </x-slot:icon>
                 </flux:toggle>
             </div>
-            <x-translation-workbench::ui.common.tooltip-content :heading="__('Set input / select language')">
+            <x-translation-workbench::ui.common.tooltip-content :heading="__('translation-workbench.modals.label.set-input-select-language')">
                 <div class="space-y-2 text-start">
                     @foreach (['Source language' => $source, 'Target language' => $target] as $label => $code)
                         <div class="flex flex-nowrap items-center gap-3 whitespace-nowrap">

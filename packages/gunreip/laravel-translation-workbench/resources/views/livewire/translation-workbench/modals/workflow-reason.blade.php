@@ -35,7 +35,7 @@
             {{ __('The reason is selected in the form. It is saved only when you confirm the corresponding action.') }}
         </flux:text>
         <flux:field>
-            <flux:label>{{ __('Reason') }}</flux:label>
+            <flux:label>{{ __('ui.table.header.reason') }}</flux:label>
             <flux:textarea
                 class="min-h-12"
                 spellcheck="true"

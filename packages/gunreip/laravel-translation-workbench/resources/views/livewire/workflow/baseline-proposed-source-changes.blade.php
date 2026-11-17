@@ -34,7 +34,7 @@
                                     <flux:table.columns>
                                         <flux:table.column>{{ __('Kind') }}</flux:table.column>
                                         <flux:table.column>{{ __('File') }}</flux:table.column>
-                                        <flux:table.column>{{ __('Reason') }}</flux:table.column>
+                                        <flux:table.column>{{ __('ui.table.header.reason') }}</flux:table.column>
                                     </flux:table.columns>
                                     <flux:table.rows>
                                         @foreach ($baselineProposedChanges['issues'] as $proposalIssue)
@@ -60,7 +60,7 @@
                         @endif
                     </flux:callout>
                 @endif
-                <flux:select variant="listbox" searchable wire:model.live="baselineProposedSourceFile" :label="__('Source file')" :placeholder="__('Select a source file')">
+                <flux:select variant="listbox" searchable wire:model.live="baselineProposedSourceFile" :label="__('translation-workbench.literal.source_file')" :placeholder="__('Select a source file')">
                     @foreach (array_unique(array_column($selected['blocked_sources'] ?? [], 'path')) as $proposedPath)
                         <flux:select.option :value="$proposedPath">{{ $proposedPath }}</flux:select.option>
                     @endforeach

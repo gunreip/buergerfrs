@@ -90,7 +90,14 @@ try {
     $check((int) $summaries[$archived]['candidates'] === 0 && (int) $summaries[$archived]['shared'] === 0, 'Archived findings must not be candidates');
     $matches = $editor->sharedFindings($shared, 1);
     $check(! in_array($archived, array_column($matches->items(), 'id')), 'Matching findings exclude archived records');
-    $assignedFlags = array_map(fn ($row) => (int) ((int) $row['key_id'] === (int) $summaries[$shared]['key_id']), $matches->items());
+    $check((int) $matches->items()[0]['id'] === $shared, 'The current finding leads the default order');
+    foreach (['finding', 'literal', 'source', 'suggested_key', 'translation_key'] as $sort) {
+        foreach (['asc', 'desc'] as $direction) {
+            $first = $editor->sharedFindings($shared, 1, 10, $sort, $direction)->items()[0];
+            $check((int) $first['id'] === $shared, "The current finding leads $sort $direction");
+        }
+    }
+    $assignedFlags = array_map(fn ($row) => (int) ((int) $row['key_id'] === (int) $summaries[$shared]['key_id']), array_slice($matches->items(), 1));
     $sortedFlags = $assignedFlags;
     sort($sortedFlags);
     $check($assignedFlags === $sortedFlags && $assignedFlags[0] === 0, 'Unassigned candidates precede findings already using the shared target');
@@ -113,11 +120,11 @@ try {
             $publisher = app(GenerationPublisher::class);
             $allowedSegments = config('translation-workbench.allowed_first_translation_key_segments');
             config(['translation-workbench.allowed_first_translation_key_segments' => ['admin']]);
-            $reject(fn () => $publisher->prepare((string) Str::uuid(), [$revision], 7, 'Reject unconfigured root'), 'configured first key segment');
+            $reject(fn () => $publisher->prepare((string) Str::uuid(), [$revision], 7, 'Reject unconfigured root'), 'Allowed translation groups');
             config(['translation-workbench.allowed_first_translation_key_segments' => $allowedSegments]);
             $plan = $publisher->prepare((string) Str::uuid(), [$revision], 7, 'UI test publication');
             config(['translation-workbench.allowed_first_translation_key_segments' => ['admin']]);
-            $reject(fn () => $publisher->publish($plan['run'], $plan['fingerprint']), 'configured first key segment');
+            $reject(fn () => $publisher->publish($plan['run'], $plan['fingerprint']), 'Allowed translation groups');
             $check(!is_file($firstRoot.'/lang/en/ui.php'), 'Removed config root must block writing a prepared publication');
             config(['translation-workbench.allowed_first_translation_key_segments' => $allowedSegments]);
             $publisher->publish($plan['run'], $plan['fingerprint']);
@@ -174,6 +181,9 @@ try {
         throw new RuntimeException('Old real-mode page accepted');
     } catch (HttpException $e) {
         $check($e->getStatusCode() === 409, 'Old real-mode page must require reload');
+        $response = app(\Illuminate\Contracts\Debug\ExceptionHandler::class)->render(request(), $e);
+        $check($response->getStatusCode() === 409 && $response->headers->get('X-Workbench-Mode-Changed') === '1'
+            && isset($response->getData(true)['action']), 'Mode conflict must provide the reload notice');
     }
     $locales = Mockery::mock(TranslationWorkbenchEditorLocales::class);
     $locales->shouldReceive('resolve')->andReturn(['source' => 'en', 'active' => 'de', 'sub' => ['de-AT']]);
@@ -352,6 +362,9 @@ try {
         $check($worklist->publicationPage('', 1, sort: $sort, direction: 'asc')->total() === 1, 'Publication sort must retain approved rows');
         $check($worklist->publicationPage('', 1, sort: $sort, direction: 'desc')->total() === 1, 'Publication reverse sort must retain approved rows');
     }
+    $lastPage = $worklist->publicationPage('', 99, 10);
+    $check($lastPage->currentPage() === 1 && $lastPage->items() === $worklist->publicationPage('', 1, 10)->items(),
+        'An out-of-range publication page returns the last available page');
     $reject(fn () => $worklist->publicationPage('', 1, sort: 'invalid'), 'Invalid publication sort');
 
     $check($worklist->publicationPage('ui.test.editor_workflow', 1, keyId: $filterKeyId, locale: 'en')->total() === 1, 'Publication filters must combine');
@@ -360,7 +373,14 @@ try {
     $check($worklist->publicationPage('', 1, 10, locale: 'en')->total() === 1, 'Publication search must find locale');
     $component->set('tab', 'publication')->assertSee('ui.test.editor_workflow')
         ->call('openPublicationTask', (int) $sourceReview['revision'])->assertSet('publicationTaskOpen', true)
-        ->set('publicationReason', 'Publish reviewed English source')->call('preparePublicationTask')
+        ->set('publicationReason', 'Publish reviewed English source');
+    $allowedSegments = config('translation-workbench.allowed_first_translation_key_segments');
+    config(['translation-workbench.allowed_first_translation_key_segments' => ['admin']]);
+    $component->call('preparePublicationTask')->assertDispatched('toast-show', fn ($event, $params) =>
+        $params['slots']['heading'] === 'First key segment “ui” is not allowed'
+        && str_contains($params['slots']['text'], 'ui.test.editor_workflow'));
+    config(['translation-workbench.allowed_first_translation_key_segments' => $allowedSegments]);
+    $component->call('preparePublicationTask')
         ->assertHasNoErrors()->assertSet('publicationTaskOpen', false)->assertSet('publication.state', 'prepared');
     $check($statesFor($unassigned)['en'] === 'approved', 'Prepared publication must not show Published');
     $check($worklist->publicationPage('', 1)->total() === 1, 'Preparation must not mark a revision published');
@@ -387,7 +407,11 @@ try {
     $check($worklist->page('', 1)->total() === 0, 'New source assignment must invalidate the pending review context');
     $check($statesFor($unassigned)['de'] === 'draft', 'Changed linkage must not present stale approval as current Published status');
     $check($worklist->publicationPage('', 1)->total() === 0, 'Changed source linkage must invalidate publication approval');
-    $component->set('publicationReason', 'Attempt stale publication')->call('preparePublicationTask')->assertHasErrors('publicationTask');
+    $component->set('publicationReason', 'Attempt stale publication')->call('preparePublicationTask')
+        ->assertSet('publicationTaskOpen', true)
+        ->assertDispatched('toast-show', fn ($event, $params) =>
+            $params['dataset']['variant'] === 'danger' && str_contains($params['slots']['text'], 'no longer waiting for publication'))
+        ->assertDontSee('This is the same occurrence at a new position');
 
 
     $archivedRows = app(GenerationEditor::class)->page('', '', 'obsolete', 1)->items();

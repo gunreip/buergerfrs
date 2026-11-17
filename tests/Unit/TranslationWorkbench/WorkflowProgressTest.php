@@ -77,8 +77,13 @@ it('renders the flux timeline with language and blocker details', function () {
 
 it('does not suggest continuing an archived finding and completes only a verified workflow', function () {
     $language = [['locale' => 'en', 'state' => 'published', 'revision' => 1]];
-    $archived = (new WorkflowProgress)->steps(['status' => 'obsolete', 'key_id' => null], [], false, false);
-    expect(array_column($archived, 'status'))->not->toContain('current');
+    $archived = (new WorkflowProgress)->steps(['status' => 'obsolete', 'key_id' => null, 'retired_reason' => 'Duplicate capture'], [], false, false);
+    expect(array_column($archived, 'status', 'id'))->toBe([
+        'capture' => 'complete', 'assignment' => 'disabled', 'draft' => 'disabled', 'review' => 'disabled',
+        'publication' => 'disabled', 'source' => 'disabled', 'scan' => 'disabled', 'archived' => 'complete',
+    ]);
+    $html = Illuminate\Support\Facades\Blade::render('<x-translation-workbench::ui.common.workflow-timeline :steps="$archived" navigable />', compact('archived'));
+    expect($html)->toContain('Workflow closed', 'Duplicate capture')->not->toContain('Next step', 'Pending', 'php artisan');
     $complete = (new WorkflowProgress)->steps(['status' => 'active', 'key_id' => 8], $language, true, true);
     expect(array_unique(array_column($complete, 'status')))->toBe(['complete']);
 });

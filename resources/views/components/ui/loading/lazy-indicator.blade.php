@@ -23,6 +23,8 @@
     'wrapperClass' => null,
     'contentClass' => null,
     'overlay' => false,
+    'viewport' => false,
+    'delay' => true,
 ])
 
 @php
@@ -30,18 +32,30 @@
 @endphp
 
 <div
-    {{ $attributes->class(['hidden', 'absolute inset-0 z-40 rounded-lg bg-white/75 dark:bg-zinc-900/75' => $overlay, $wrapperClass => filled($wrapperClass)]) }}
-    wire:loading.delay.class.remove="hidden"
-    wire:loading.delay.class="block"
+    {{ $attributes->class([
+        'hidden' => !$attributes->has('x-show'),
+        'fixed inset-0 z-50 bg-black/40 backdrop-blur-xs' => $viewport,
+        'absolute inset-0 z-40 rounded-lg bg-white/75 dark:bg-zinc-900/75' => $overlay && !$viewport,
+        $wrapperClass => filled($wrapperClass),
+    ]) }}
+    @unless ($attributes->has('x-show'))
+        @if ($delay)
+            wire:loading.delay.class.remove="hidden"
+            wire:loading.delay.class="block"
+        @else
+            wire:loading.class.remove="hidden"
+        @endif
+    @endunless
     @if ($targetAttribute !== null) wire:target="{{ $targetAttribute }}" @endif
 >
     <div @class([
         'flex items-center justify-center px-4 py-3',
-        'absolute inset-0' => $overlay,
-        $boxClass => !$overlay,
+        'absolute inset-0' => $overlay || $viewport,
+        $boxClass => !$overlay && !$viewport,
     ])>
         <div @class([
             'inline-flex items-center gap-2 whitespace-nowrap rounded-md px-3 py-2',
+            'bg-white dark:bg-zinc-900' => $viewport,
             $colorClass,
             $contentClass => filled($contentClass),
         ])>

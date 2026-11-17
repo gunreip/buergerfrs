@@ -5,7 +5,7 @@ namespace Gunreip\TranslationWorkbench\Generation;
 /** Independent key ID, key text and language filters, combined with AND. */
 final class TranslationTaskFilter
 {
-    public static function build(string $search, string $keyId, string $locale = '', string $prefix = ''): array
+    public static function build(string $search, string $keyId, string $locale = '', string $prefix = '', bool $caseSensitive = false, bool $wholeWord = false): array
     {
         $conditions = [];
         $parameters = [];
@@ -19,8 +19,9 @@ final class TranslationTaskFilter
             }
         }
         if (trim($search) !== '') {
-            $conditions[] = $prefix.'full_name ILIKE ?';
-            $parameters[] = '%'.str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], trim($search)).'%';
+            [$operator, $pattern] = FindingSearch::condition($search, $caseSensitive, $wholeWord);
+            $conditions[] = $prefix.'full_name '.$operator.' ?';
+            $parameters[] = $pattern;
         }
         if (trim($locale) !== '') {
             $conditions[] = $prefix.'locale=?';

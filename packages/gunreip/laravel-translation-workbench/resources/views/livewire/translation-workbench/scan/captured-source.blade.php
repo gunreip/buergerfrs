@@ -24,7 +24,9 @@
                                 icon="magnifying-glass"
                                 color="sky"
                             >
-                                @php($decision = $capture['usage_decision'] ?? null)
+                                @php
+                                    $decision = $capture['usage_decision'] ?? null;
+                                @endphp
                                 <div class="flex flex-wrap items-center gap-2">
                                     <flux:callout.heading>
                                         {{ __('Line :line, column :column', ['line' => $capture['source_line'], 'column' => $capture['source_column']]) }}
@@ -84,7 +86,33 @@
                                         class="break-all"
                                         :label="__('Capture reason')"
                                     >
-                                        <code>{{ $capture['reason'] }}</code>
+                                        @php
+                                            $explanation = match ($capture['reason']) {
+                                                'literal_candidate' => __('The first argument is text written directly in the translation call. The scanner captured it as the source literal.'),
+                                                'key_with_exact_lang_evidence' => __('The first argument was classified as a translation key. The scan found an exact entry for it in the source-language data.'),
+                                                'key_like_argument_without_lang_evidence' => __('The argument looks like a translation key, but the scan found no matching source-language entry. It may also be ordinary text.'),
+                                                'dynamic_or_nonliteral_argument' => __('The first argument is a variable or another expression. The scanner could not read a fixed string from it.'),
+                                                'incomplete_expression' => __('The scanner located the start of the call but could not capture the complete expression.'),
+                                                'special_call_requires_context' => __('The meaning of the captured string depends on how this particular call uses its arguments.'),
+                                                'commented_source' => __('The expression occurs inside a comment, so the scanner excluded it.'),
+                                                'context_excluded_string' => __('The apparent call is part of a quoted string, so the scanner excluded it.'),
+                                                'context_excluded_verbatim' => __('The expression is inside a Blade verbatim block and is rendered as text.'),
+                                                'context_excluded_escaped_blade' => __('The Blade expression is escaped and is rendered as text.'),
+                                                'context_unresolved' => __('The scanner could not confirm an active translation call at this position.'),
+                                                default => null,
+                                            };
+                                        @endphp
+                                        @if ($explanation !== null)
+                                            <flux:tooltip>
+                                                <code tabindex="0" class="cursor-help">{{ $capture['reason'] }}</code>
+                                                <x-translation-workbench::ui.common.tooltip-content
+                                                    :heading="__('Capture reason')"
+                                                    :text="$explanation"
+                                                />
+                                            </flux:tooltip>
+                                        @else
+                                            <code>{{ $capture['reason'] }}</code>
+                                        @endif
                                     </x-translation-workbench::ui.common.details.item>
                                 </x-translation-workbench::ui.common.details>
                                 @if (($capture['can_classify'] ?? false) && $decision)
@@ -98,7 +126,9 @@
                                             <flux:callout.text class="wrap-break-word">
                                                 <span class="whitespace-pre-wrap">{{ $decision['reason'] }}</span>
                                             </flux:callout.text>
-                                            @php($actor = $decisionActors[$decision['actor_id']] ?? null)
+                                            @php
+                                                $actor = $decisionActors[$decision['actor_id']] ?? null;
+                                            @endphp
                                             <div class="flex flex-wrap items-center gap-2">
                                                 <flux:avatar
                                                     icon:variant="outline"

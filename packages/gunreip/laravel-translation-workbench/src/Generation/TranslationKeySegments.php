@@ -35,6 +35,26 @@ final class TranslationKeySegments
             && in_array(explode('.', $key, 2)[0], $this->allowedFirstSegments, true);
     }
 
+    public function publicationIssue(string $key): ?array
+    {
+        if ($this->allows($key)) {
+            return null;
+        }
+
+        $group = explode('.', $key, 2)[0];
+        if ($group !== '' && !in_array($group, $this->allowedFirstSegments, true)) {
+            return [
+                'heading' => __('First key segment “:segment” is not allowed', ['segment' => $group]),
+                'hint' => __('Allowed translation groups: :groups.', ['groups' => implode(', ', $this->allowedFirstSegments)]),
+            ];
+        }
+
+        return [
+            'heading' => __('Invalid translation key format'),
+            'hint' => __('Use at least three dot-separated segments. Only the final segment may contain uppercase letters.'),
+        ];
+    }
+
     /** Only immediate child segments are offered; configured roots need no stored key. */
     public function options(array $keys, string $prefix = ''): array
     {

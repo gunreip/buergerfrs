@@ -24,14 +24,17 @@ class ScanResultFreshness
         $snapshot = json_decode($row['scope_snapshot'], true, flags: JSON_THROW_ON_ERROR);
         $expires = strtotime($row['completed_at']) + max(1, (int) config('translation-workbench.scan_result_max_age_minutes', 120)) * 60;
         $base = ['run' => $row['id'], 'expires' => $expires];
-        if (time() >= $expires) return $base + ['reusable' => false, 'reason' => __('The last scan has reached the configured age limit.')];
+        if (time() >= $expires) return $base + ['reusable' => false, 'reason' => __('translation-workbench.buttons.tooltips.the_last_scan_has_reached_the_configured_age_limit')];
+        if (!empty($snapshot['relocations']) && empty($snapshot['relocations_applied'])) {
+            return $base + ['reusable' => false, 'reason' => __('Run a new scan to reconcile missing files and their possible replacement locations.')];
+        }
         if (($snapshot['configuration'] ?? null) !== self::configuration()) return $base + ['reusable' => false, 'reason' => __('The scan configuration changed or was not recorded by the last scan.')];
         $inventory = $snapshot['inventory'] ?? [];
         $known = array_unique([...array_keys($inventory['hashes'] ?? []), ...($inventory['missing'] ?? [])]);
         $current = app(TranslationWorkbenchScanner::class)->scanInventory(null, $known);
         return $base + ['reusable' => self::matches($inventory, $current), 'reason' => self::matches($inventory, $current)
             ? __('The source files and scan configuration are unchanged.')
-            : __('Source files were added, changed or removed, or could not be checked.')];
+            : __('translation-workbench.buttons.tooltips.source_files_were_added_changed_or_removed_or_could_not_be_checked')];
     }
 
     public static function matches(array $previous, array $current): bool

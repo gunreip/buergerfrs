@@ -188,9 +188,12 @@ class GenerationPublisher
             $plan = $this->plan($run);
             $row = $this->q('SELECT state,error,plan_hash FROM translation_workbench_publication_runs WHERE id=?', [$run])->fetch(PDO::FETCH_ASSOC);
             $changes = [];
+            $blocker = null;
+            $segments = TranslationKeySegments::configured();
             foreach ($plan['contexts'] as $context) {
                 $c = $context['context'];
-                [$path, $nested] = $this->destination($c);
+                $blocker ??= $segments->publicationIssue($c['full_name']);
+                [$path, $nested] = $this->fileEntry($c);
                 $original = $plan['files'][$path]['original'] ?? null;
                 $before = $original === null ? null : (new BaselineValueReader)->treeFromBytes($original, true);
                 foreach (explode('.', $nested) as $part) {
@@ -200,7 +203,7 @@ class GenerationPublisher
             }
 
             return ['run' => $run, 'fingerprint' => $row['plan_hash'], 'state' => $row['state'], 'error' => $row['error'],
-                'actor' => $plan['actor'], 'reason' => $plan['reason'], 'changes' => $changes, 'files' => $this->snapshot($plan)];
+                'actor' => $plan['actor'], 'reason' => $plan['reason'], 'blocker' => $blocker, 'changes' => $changes, 'files' => $this->snapshot($plan)];
         });
     }
 
@@ -248,7 +251,16 @@ class GenerationPublisher
         if ($context['namespace'] !== '') {
             throw new RuntimeException('Namespace publication requires an explicit loader-root mapping');
         }
-        TranslationKeySegments::configured()->assertAllowed($context['full_name']);
+        if ($issue = TranslationKeySegments::configured()->publicationIssue($context['full_name'])) {
+            throw new InvalidPublicationKey($issue['heading'], __('Revision #:revision (:locale) · :key', [
+                'revision' => $context['revision_id'], 'locale' => $context['locale'], 'key' => $context['full_name'],
+            ]).' '.$issue['hint'].' '.__('Update the key assignment in Edit finding.'), (int) $context['key_id']);
+        }
+        return $this->fileEntry($context);
+    }
+
+    private function fileEntry(array $context): array
+    {
         if (! preg_match('/^[A-Za-z][A-Za-z0-9]*(?:[-_][A-Za-z0-9]+)*$/D', $context['locale'])
             || ! preg_match('/^[A-Za-z_][A-Za-z0-9_-]*(\.[A-Za-z_][A-Za-z0-9_-]*){2,}$/D', $context['full_name'])) {
             throw new RuntimeException('Unsupported publication key or locale');

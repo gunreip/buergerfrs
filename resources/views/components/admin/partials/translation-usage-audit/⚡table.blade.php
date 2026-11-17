@@ -202,10 +202,10 @@
                     >
                         <x-ui.tooltip.trigger
                             class="ml-3"
-                            :title="__('Decision')"
+                            :title="__('ui.table.headers.decision')"
                             :text="__('Saved usage-audit decision state for this source-language literal')"
                         >
-                            {{ __('Decision') }}
+                            {{ __('ui.table.headers.decision') }}
                         </x-ui.tooltip.trigger>
                     </flux:table.column>
 

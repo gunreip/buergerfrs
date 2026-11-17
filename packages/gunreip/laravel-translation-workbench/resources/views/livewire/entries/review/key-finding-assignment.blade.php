@@ -124,9 +124,9 @@
                                 <flux:accordion.content>
                                     <flux:table container:class="max-h-64 overflow-auto">
                                         <flux:table.columns>
-                                            <flux:table.column>{{ __('Review') }}</flux:table.column>
+                                            <flux:table.column>{{ __('ui.button.review.review') }}</flux:table.column>
                                             <flux:table.column>{{ __('Scope') }}</flux:table.column>
-                                            <flux:table.column>{{ __('Decision') }}</flux:table.column>
+                                            <flux:table.column>{{ __('ui.table.headers.decision') }}</flux:table.column>
                                             <flux:table.column>{{ __('Translation key') }}</flux:table.column>
                                             <flux:table.column>{{ __('Reviewed at') }}</flux:table.column>
                                         </flux:table.columns>

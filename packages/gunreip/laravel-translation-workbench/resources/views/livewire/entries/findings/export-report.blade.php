@@ -110,7 +110,7 @@
                             <flux:table.column>{{ __('Lang key') }}</flux:table.column>
                             <flux:table.column>{{ __('Blocking key') }}</flux:table.column>
                             <flux:table.column>{{ __('Usage') }}</flux:table.column>
-                            <flux:table.column>{{ __('Reason') }}</flux:table.column>
+                            <flux:table.column>{{ __('ui.table.header.reason') }}</flux:table.column>
                             <flux:table.column align="end">{{ __('Actions') }}</flux:table.column>
                         </flux:table.columns>
                         <flux:table.rows>
@@ -288,7 +288,7 @@
                             </flux:table.column>
                             {{-- Table Header Row Column Reason --}}
                             <flux:table.column>
-                                {{ __('Reason') }}
+                                {{ __('ui.table.header.reason') }}
                             </flux:table.column>
                         </flux:table.columns>
                         {{-- Table Body Rows --}}

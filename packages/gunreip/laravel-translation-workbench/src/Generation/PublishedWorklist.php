@@ -38,7 +38,7 @@ final class PublishedWorklist
             LEFT JOIN translation_workbench_key_names n ON n.key_id=p.key_id AND n.valid_to IS NULL
             SQL;
 
-    public function page(string $search, int $page, int $perPage = 25, string $keyId = '', string $locale = '', string $sort = 'published', string $direction = 'desc'): LengthAwarePaginator
+    public function page(string $search, int $page, int $perPage = 25, string $keyId = '', string $locale = '', string $sort = 'published', string $direction = 'desc', bool $caseSensitive = false, bool $wholeWord = false): LengthAwarePaginator
     {
         if (! isset(self::SORTS[$sort]) || ! in_array($direction, ['asc', 'desc'], true)) {
             throw new \RuntimeException('Invalid published sort.');
@@ -47,7 +47,7 @@ final class PublishedWorklist
         $perPage = in_array($perPage, [10, 25, 50, 100], true) ? $perPage : 25;
         // Choose the latest destination BEFORE searching: older publications must not reappear.
         $sql = self::CURRENT_PUBLICATIONS;
-        [$condition, $params] = TranslationTaskFilter::build($search, $keyId, $locale);
+        [$condition, $params] = TranslationTaskFilter::build($search, $keyId, $locale, caseSensitive: $caseSensitive, wholeWord: $wholeWord);
         $where = $condition === '' ? '' : ' WHERE '.$condition;
         $from = ' FROM ('.$sql.') published'.$where;
         $total = (int) $this->query('SELECT count(*)'.$from, $params)->fetchColumn();

@@ -125,10 +125,10 @@
                     class="mr-2 w-36 shrink-0 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
                 >
                     <x-ui.tooltip.trigger
-                        :title="__('Decision')"
+                        :title="__('ui.table.headers.decision')"
                         :text="__('Filter candidates by current lang ballast review decision status.')"
                     >
-                        {{ __('Decision') }}
+                        {{ __('ui.table.headers.decision') }}
                     </x-ui.tooltip.trigger>
                 </span>
 

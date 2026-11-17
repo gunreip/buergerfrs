@@ -5,6 +5,7 @@ namespace Gunreip\TranslationWorkbench\Livewire;
 use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchEditorAccess;
 use Gunreip\TranslationWorkbench\Generation\GenerationEditor;
 use Gunreip\TranslationWorkbench\Support\WorkbenchTestEnvironment;
+use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchEditorLocales;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -17,15 +18,29 @@ class SourceReplacementTable extends Component
     #[Locked]
     public string $testToken = '';
 
+    #[Locked]
+    public bool $completed = false;
+
     #[Reactive]
     public string $search = '';
 
     #[Reactive]
-    public int $perPage = 25;
+    public bool $caseSensitive = false;
 
-    // Scalar reactive props let Livewire skip the child on unchanged parent updates.
     #[Reactive]
-    public string $selectedIds = '';
+    public bool $wholeWord = false;
+
+    #[Reactive]
+    public string $findingId = '';
+
+    #[Reactive]
+    public string $keyId = '';
+
+    #[Locked]
+    public array $previousFilters = [];
+
+    #[Reactive]
+    public int $perPage = 25;
 
     // Refresh the displayed checks after a recorded change or an explicit group check.
     #[Reactive]
@@ -40,6 +55,13 @@ class SourceReplacementTable extends Component
     #[Locked]
     public string $sortDirection = 'asc';
 
+    public bool $includeAwaitingScan = false;
+
+    public function updatedIncludeAwaitingScan(): void
+    {
+        $this->resetPage('sourceReplacementPage');
+    }
+
     public function sortBy(string $column): void
     {
         if (! in_array($column, ['finding', 'key_id', 'key', 'source', 'expression'], true)) {
@@ -47,7 +69,7 @@ class SourceReplacementTable extends Component
         }
         $this->sortDirection = $this->sortColumn === $column && $this->sortDirection === 'asc' ? 'desc' : 'asc';
         $this->sortColumn = $column;
-        $this->resetPage('sourceReplacementPage');
+        $this->resetPage($this->completed ? 'completedPage' : 'sourceReplacementPage');
     }
 
     public function boot(TranslationWorkbenchEditorAccess $access): void
@@ -62,20 +84,25 @@ class SourceReplacementTable extends Component
 
     public function updatedSearch(): void
     {
-        $this->resetPage('sourceReplacementPage');
+        $this->resetPage($this->completed ? 'completedPage' : 'sourceReplacementPage');
     }
 
     public function updatedPerPage(): void
     {
-        $this->resetPage('sourceReplacementPage');
+        $this->resetPage($this->completed ? 'completedPage' : 'sourceReplacementPage');
     }
 
     public function render()
     {
-        return view('translation-workbench::livewire.translation-workbench.tabs.source-replacement.table', [
-            'selectedFindings' => $this->selectedIds === '' ? [] : array_flip(explode(',', $this->selectedIds)),
+        $filters = [$this->search, $this->perPage, $this->caseSensitive, $this->wholeWord, $this->findingId, $this->keyId];
+        if ($this->previousFilters !== [] && $this->previousFilters !== $filters) {
+            $this->resetPage($this->completed ? 'completedPage' : 'sourceReplacementPage');
+        }
+        $this->previousFilters = $filters;
+
+        return view($this->completed ? 'translation-workbench::livewire.translation-workbench.tabs.completed.table' : 'translation-workbench::livewire.translation-workbench.tabs.source-replacement.table', [
             'sourceReplacementTasks' => app(GenerationEditor::class)->sourceReplacementPage(
-                $this->search, (int) $this->getPage('sourceReplacementPage'), $this->perPage, $this->sortColumn, $this->sortDirection
+                $this->search, (int) $this->getPage($this->completed ? 'completedPage' : 'sourceReplacementPage'), $this->perPage, $this->sortColumn, $this->sortDirection, $this->caseSensitive, $this->wholeWord, $this->findingId, $this->keyId, $this->completed, app(TranslationWorkbenchEditorLocales::class)->resolve()['active'], $this->includeAwaitingScan
             ),
         ]);
     }

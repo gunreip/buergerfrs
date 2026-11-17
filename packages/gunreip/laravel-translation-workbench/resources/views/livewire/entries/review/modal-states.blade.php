@@ -232,7 +232,7 @@
                     size="sm"
                     variant="subtle"
                 >
-                    <span class="mr-1">{{ __('Review') }}: {{ $reviewFinding->review_status }}</span>
+                    <span class="mr-1">{{ __('ui.button.review.review') }}: {{ $reviewFinding->review_status }}</span>
                     <x-ui.tooltip.simple
                         :header="__('Translation review status')"
                         :text="__(

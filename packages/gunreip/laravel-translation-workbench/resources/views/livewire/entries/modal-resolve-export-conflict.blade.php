@@ -349,7 +349,7 @@
                                                 icon="scan-search"
                                                 wire:click="openBlockingFindingReviewFromExportConflict({{ $finding->id }})"
                                             >
-                                                {{ __('Review') }}
+                                                {{ __('ui.button.review.review') }}
                                             </flux:button>
                                         </flux:table.cell>
                                     </flux:table.row>

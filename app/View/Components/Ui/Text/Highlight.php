@@ -7,7 +7,6 @@ namespace App\View\Components\Ui\Text;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\HtmlString;
-use Illuminate\Support\Str;
 use Illuminate\View\Component;
 
 class Highlight extends Component
@@ -28,6 +27,7 @@ class Highlight extends Component
         mixed $search = '',
         string $markClass = 'highlight',
         bool $caseSensitive = false,
+        public bool $wholeWord = false,
     ) {
         $this->value = (string) $value;
         $this->search = trim((string) $search);
@@ -56,16 +56,25 @@ class Highlight extends Component
             return new HtmlString($escapedValue);
         }
 
-        $modifiers = $this->caseSensitive ? 'u' : 'iu';
-
-        $highlighted = Str::of($escapedValue)
-            ->replaceMatches(
-                '/' . preg_quote($escapedSearch, '/') . '/' . $modifiers,
-                '<mark class="' . e($this->markClass) . '">$0</mark>',
-            )
-            ->toString();
+        // Match the original text, then escape each fragment. HTML entities must
+        // never become searchable words or be split by a mark element.
+        preg_match_all(self::pattern($this->search, $this->caseSensitive, $this->wholeWord), $this->value, $matches, PREG_OFFSET_CAPTURE);
+        $highlighted = '';
+        $offset = 0;
+        foreach ($matches[0] as [$match, $position]) {
+            $highlighted .= e(substr($this->value, $offset, $position - $offset));
+            $highlighted .= '<mark class="'.e($this->markClass).'">'.e($match).'</mark>';
+            $offset = $position + strlen($match);
+        }
+        $highlighted .= e(substr($this->value, $offset));
 
         return new HtmlString($highlighted);
+    }
+
+    public static function pattern(string $search, bool $caseSensitive = false, bool $wholeWord = false): string
+    {
+        $literal = preg_quote($search, '/');
+        return '/'.($wholeWord ? '(?<![\p{L}\p{N}])'.$literal.'(?![\p{L}\p{N}])' : $literal).'/'.($caseSensitive ? 'u' : 'iu');
     }
 
     /**

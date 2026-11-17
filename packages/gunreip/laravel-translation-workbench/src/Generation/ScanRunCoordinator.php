@@ -9,15 +9,15 @@ use RuntimeException;
 
 class ScanRunCoordinator
 {
-    public function start(int $actor): string
+    public function start(int $actor, bool $save = false): string
     {
         if ($actor < 1) throw new RuntimeException('A user ID is required to start a scan.');
         if (in_array(config('cache.default'), ['array', 'null'], true)) throw new RuntimeException('Background scans require a shared persistent cache.');
         $target = app(WorkingScanService::class)->target();
         $id = (string) Str::uuid();
-        $record = ['id' => $id, 'actor' => $actor, 'target' => $target, 'state' => 'queued_preview', 'updated' => time()];
+        $record = ['id' => $id, 'actor' => $actor, 'target' => $target, 'direct_save' => $save, 'state' => $save ? 'queued_apply' : 'queued_preview', 'updated' => time()];
         $this->store($id, $record);
-        try { RunWorkbenchScan::dispatch($id, false)->onConnection('background'); }
+        try { RunWorkbenchScan::dispatch($id, $save)->onConnection('background'); }
         catch (\Throwable $error) { Cache::forget($this->key($id)); throw $error; }
         return $id;
     }
@@ -60,6 +60,11 @@ class ScanRunCoordinator
     public function store(string $id, array $record): void
     {
         if (isset($record['preview']['request'])) {
+            foreach ($record['preview']['request']['plan']['files'] ?? [] as $path => $file) {
+                if (empty($file['position_preview']) || $file['state'] !== 'review') continue;
+                $record['preview']['position_files'][] = $path;
+                Cache::put($this->key($id).':positions:'.hash('sha256', $path), $file['position_preview'], 7200);
+            }
             $payload = gzencode(json_encode($record['preview']['request'], JSON_THROW_ON_ERROR));
             if ($payload === false) throw new RuntimeException('Could not encode the scan plan.');
             Cache::put($this->key($id).':plan', $payload, 7200);
@@ -70,6 +75,13 @@ class ScanRunCoordinator
             $record['result'] = ['scan' => $record['result']['scan']];
         }
         Cache::put($this->key($id), $record, 7200);
+    }
+
+    public function positionPreview(string $id, int $actor, string $path): array
+    {
+        $record = $this->owned($id, $actor);
+        if (!in_array($path, $record['preview']['position_files'] ?? [], true)) return [];
+        return Cache::get($this->key($id).':positions:'.hash('sha256', $path), []);
     }
 
     public function previewForWorker(string $id, array $record): array

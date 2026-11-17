@@ -130,7 +130,7 @@
                     <flux:table.columns sticky>
                         <flux:table.column class="w-12 text-center">#</flux:table.column>
                         <flux:table.column class="w-36">{{ __('ui.state.state') }}</flux:table.column>
-                        <flux:table.column class="w-44">{{ __('Decision') }}</flux:table.column>
+                        <flux:table.column class="w-44">{{ __('ui.table.headers.decision') }}</flux:table.column>
                         <flux:table.column class="w-[24rem]">{{ __('Source') }}</flux:table.column>
                         <flux:table.column class="w-[18rem]">{{ __('Translation key') }}</flux:table.column>
                         <flux:table.column class="w-[18rem]">{{ __('Suggested key') }}</flux:table.column>
@@ -355,7 +355,7 @@
                                             icon="clipboard-check"
                                             wire:click="openSuspiciousKeyReviewModal('{{ $row['source_signature'] }}')"
                                         >
-                                            {{ $reviewDecision !== '' ? __('Review again') : __('Review') }}
+                                            {{ $reviewDecision !== '' ? __('Review again') : __('ui.button.review.review') }}
                                         </flux:button>
                                     @endif
                                 </flux:table.cell>

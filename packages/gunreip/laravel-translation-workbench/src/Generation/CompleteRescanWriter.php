@@ -45,9 +45,13 @@ final class CompleteRescanWriter
             $byId = array_column($old, null, 'id');
             if ($plan['suggestion_initializations'] !== [] && ($actor === null || $actor < 1)) throw new RuntimeException('A user ID is required to record missing SuggestedKey initialization.');
             $reviews = array_filter($plan['files'], fn ($file) => in_array($file['state'], ['review', 'relocation_review'], true));
+            foreach ($reviews as &$review) {
+                unset($review['created'], $review['moved'], $review['confirmed'], $review['removed']);
+            }
+            unset($review);
             $this->q("INSERT INTO translation_workbench_scan_runs VALUES (?,'completed',?::jsonb,now())", [$operation,
                 json_encode(['format_version' => 2, 'mode' => 'generation_rescan', 'configuration' => ScanResultFreshness::configuration(), 'actor' => $actor, 'inventory' => $plan['inventory'], 'reviews' => $reviews,
-                    'relocations' => $plan['relocations'], 'states' => $plan['states']], JSON_THROW_ON_ERROR)]);
+                    'relocations' => $plan['relocations'], 'relocations_applied' => true, 'states' => $plan['states']], JSON_THROW_ON_ERROR)]);
             // Usage decisions have one authoritative copy in the operation result, used by the UI.
             $result = ['format_version' => 2, 'scan' => $operation, 'confirmed' => 0, 'created' => [], 'moved' => [], 'removed' => [], 'review_files' => array_keys($reviews), 'key_assignments' => [], 'usage_decisions' => $plan['usage_decisions']];
             $result['suggested_keys_initialized'] = [];
@@ -64,7 +68,7 @@ final class CompleteRescanWriter
             $this->progress && ($this->progress)('saving', 0, max(1, count($plan['files'])));
             foreach ($plan['files'] as $path => $file) {
                 $this->progress && ($this->progress)('saving', ++$savedFiles, max(1, count($plan['files'])));
-                if (! in_array($file['state'], ['ready', 'missing_confirmed'], true)) {
+                if (! in_array($file['state'], ['ready', 'review', 'missing_confirmed', 'relocation_review'], true)) {
                     continue;
                 }
                 $moves = $file['moved'] ?? [];
@@ -74,7 +78,13 @@ final class CompleteRescanWriter
                     $links += $this->q("SELECT finding_id,key_id FROM translation_workbench_key_findings WHERE finding_id IN ($placeholders) AND valid_to IS NULL", $ids)->fetchAll(PDO::FETCH_KEY_PAIR);
                 }
                 $this->retireFindings($file['removed'] ?? [], 'Absent from completed scan inventory');
-                $this->retireFindings(array_column($moves, 'predecessor'), 'Unique same-file movement');
+                $retirements = [];
+                foreach ($moves as $move) {
+                    $reason = ($move['evidence']['method'] ?? '') === 'formatting_only'
+                        ? 'Source call reformatted at the same position' : 'Unique same-file movement';
+                    $retirements[$reason][] = $move['predecessor'];
+                }
+                foreach ($retirements as $reason => $ids) $this->retireFindings($ids, $reason);
                 $result['removed'] = [...$result['removed'], ...($file['removed'] ?? [])];
                 $confirmed = $file['confirmed'] ?? [];
                 $result['confirmed'] += count($confirmed);
@@ -98,7 +108,9 @@ final class CompleteRescanWriter
                         if (isset($links[$predecessor])) {
                             $this->q('INSERT INTO translation_workbench_key_findings(finding_id,key_id) VALUES (?,?)', [$id, $links[$predecessor]]);
                         }
-                        $result['moved'][] = ['predecessor' => $predecessor, 'successor' => $id];
+                        $pair = ['predecessor' => $predecessor, 'successor' => $id];
+                        if (isset($change['evidence'])) $pair['evidence'] = $change['evidence'];
+                        $result['moved'][] = $pair;
                     } else {
                         $result['created'][] = $id;
                         $assignment = (new RescanCandidateRules)->existingKey($this->db, $row);
@@ -195,7 +207,7 @@ final class CompleteRescanWriter
         }
 
         foreach ($plan['files'] as &$file) {
-            if (($file['state'] ?? '') !== 'ready') {
+            if (empty($file['created'])) {
                 continue;
             }
             foreach ($file['created'] as &$capture) {
@@ -209,7 +221,46 @@ final class CompleteRescanWriter
 
     private function findings(): array
     {
-        return $this->db->query("SELECT f.*,s.path FROM translation_workbench_findings f JOIN translation_workbench_source_files s ON s.id=f.source_file_id WHERE f.status='active' ORDER BY f.id")->fetchAll(PDO::FETCH_ASSOC);
+        // Retired neighbours still describe the file at capture time. Compute the
+        // window before filtering by active status, never across different file hashes.
+        $rows = $this->db->query("WITH captures AS (
+            SELECT f.*, COALESCE(provenance->>'source_sha256', provenance->'capture'->>'source_sha256') capture_hash
+            FROM translation_workbench_findings f
+        ), neighbours AS (
+            SELECT id, capture_hash,
+                lag(id) OVER w previous_id, lag(raw_expression) OVER w previous_expression,
+                lead(id) OVER w next_id, lead(raw_expression) OVER w next_expression
+            FROM captures WHERE capture_hash IS NOT NULL
+            WINDOW w AS (PARTITION BY source_file_id,capture_hash ORDER BY source_line,source_column,id)
+        )
+        SELECT f.*,s.path,COALESCE(f.provenance->'capture'->>'source_window', f.provenance->>'source_window') AS source_window,COALESCE(f.provenance->'capture'->'source_context'->>'context',
+            f.provenance->'source_context'->>'context') AS captured_context,n.previous_id,n.previous_expression,n.next_id,n.next_expression
+        FROM captures f JOIN translation_workbench_source_files s ON s.id=f.source_file_id
+        LEFT JOIN neighbours n ON n.id=f.id WHERE f.status='active' ORDER BY f.id")->fetchAll(PDO::FETCH_ASSOC);
+
+        // Older replacement captures retain the exact post-replacement file in the prepared operation.
+        $missing = [];
+        foreach ($rows as $index => $row) {
+            if (!$row['source_window'] && $row['capture_hash']) {
+                $missing[$row['captured_scan_id']][] = $index;
+            }
+        }
+        if (!$missing) return $rows;
+        $snapshots = $this->db->prepare("SELECT result->>'finish' AS scan,result->>'path' AS path,result->>'after' AS bytes
+            FROM translation_workbench_operations WHERE kind='source_replacement_prepared'
+            AND result->>'finish' IN (SELECT jsonb_array_elements_text(?::jsonb))");
+        $snapshots->execute([json_encode(array_keys($missing), JSON_THROW_ON_ERROR)]);
+        foreach ($snapshots as $snapshot) {
+            $hash = hash('sha256', $snapshot['bytes']);
+            $lines = explode("\n", $snapshot['bytes']);
+            foreach ($missing[$snapshot['scan']] as $index) {
+                $row = $rows[$index];
+                if ($row['capture_hash'] === $hash && $row['path'] === $snapshot['path']) {
+                    $rows[$index]['source_window'] = CompleteRescanPlan::sourceWindow($lines, $row['source_line'], $row['source_column']);
+                }
+            }
+        }
+        return $rows;
     }
 
     private function state(): array

@@ -26,7 +26,7 @@
                 heading="Source usage context"
             >
                 <x-translation-workbench::ui.common.details label-width="14rem">
-                    <x-translation-workbench::ui.common.details.item :label="__('Source file')">
+                    <x-translation-workbench::ui.common.details.item :label="__('translation-workbench.literal.source_file')">
                         <x-translation-workbench::ui.common.path-preview
                             :path="$scanUsageContext['path']"
                             :length="100"

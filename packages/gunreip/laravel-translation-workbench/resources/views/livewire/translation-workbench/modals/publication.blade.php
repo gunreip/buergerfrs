@@ -3,9 +3,7 @@
     name="generation-publication-confirmation"
     wire:model="publicationOpen"
 >
-    <x-translation-workbench::ui.common.modal-loading
-        target="publish, previewClosure, closePublication"
-    />
+    <x-translation-workbench::ui.common.modal-loading target="previewClosure, closePublication" />
     @if ($publication)
         @php
             [$publicationStatusLabel, $publicationStatusColor] = match ($publication['state']) {
@@ -24,7 +22,35 @@
                 $publicationStatusDetails[] = ['label' => __('Error'), 'value' => $publication['error']];
             }
         @endphp
-        <div class="space-y-4">
+        <div
+            class="relative space-y-4"
+            x-data="{
+                publishing: false,
+                async confirmPublication() {
+                    if (this.publishing) return;
+                    this.publishing = true;
+                    const dialog = this.$el.closest('dialog');
+                    if (!dialog.hasAttribute('data-awaiting-publication-result')) {
+                        dialog.dataset.awaitingPublicationResult = '';
+                        dialog.addEventListener('close', () => delete dialog.dataset.awaitingPublicationResult, { once: true });
+                    }
+                    try {
+                        await this.$nextTick();
+                        await this.$wire.publish();
+                    } finally {
+                        this.publishing = false;
+                    }
+                }
+            }"
+        >
+            <x-ui.loading.lazy-indicator
+                role="status"
+                style="display: none"
+                x-show="publishing"
+                :overlay="true"
+                :text="__('translation-workbench.modals.publishing_language_files')"
+                data-workbench-modal-loading
+            />
             <flux:heading
                 class="flex items-center justify-between gap-2"
                 size="xl"
@@ -294,6 +320,7 @@
                                         />
                                         <x-translation-workbench::ui.common.tooltip-content :heading="__('Open language file in VS Code')">
                                             <x-translation-workbench::ui.common.path-preview
+                                                :vsc="false"
                                                 :path="$languageFile"
                                                 :tooltip="false"
                                                 :length="60"
@@ -311,6 +338,7 @@
                                             aria-hidden="true"
                                         />
                                         <x-translation-workbench::ui.common.path-preview
+                                            :vsc="false"
                                             :path="'lang/' . $change['path']"
                                             :length="36"
                                             side="center"
@@ -333,11 +361,19 @@
                                 {{-- Table Body Row Column Before Preperation --}}
                                 <flux:table.cell>
                                     @if ($change['before'] === null)
-                                        <flux:badge
-                                            color="orange"
-                                            icon="message-circle-warning"
-                                            label="{{ __('Entry does not exist') }}"
-                                        />
+                                        <flux:tooltip toggleable>
+                                            <flux:badge
+                                                as="button"
+                                                type="button"
+                                                color="sky"
+                                                icon="plus"
+                                                label="{{ __('New entry') }}"
+                                            />
+                                            <x-translation-workbench::ui.common.tooltip-content
+                                                :heading="__('New entry')"
+                                                :text="__('When this publication was prepared, the language file had no entry for this translation key.')"
+                                            />
+                                        </flux:tooltip>
                                     @elseif ($change['before'] === '')
                                         <span class="text-fuchsia-500">
                                             {{ __('Empty string') }}
@@ -391,34 +427,16 @@
             </flux:callout>
 
             @if (in_array($publication['state'], ['prepared', 'writing', 'interrupted'], true))
-                <flux:callout.text>
-                    {{ __('Confirmation writes the planned language files. Current approval and file hashes are checked again. Source code is not rewritten.') }}
-                </flux:callout.text>
+                @if (!empty($publication['blocker']))
+                    <flux:callout color="amber" icon="exclamation-triangle" :heading="$publication['blocker']['heading']">
+                        <flux:callout.text>{{ __('Review closure below to release the reserved language files.') }}</flux:callout.text>
+                    </flux:callout>
+                @else
+                    <flux:callout.text>
+                        {{ __('Confirmation writes the planned language files. Current approval and file hashes are checked again. Source code is not rewritten.') }}
+                    </flux:callout.text>
+                @endif
                 <div class="flex flex-wrap justify-end gap-3">
-                    @if ((int) $publication['actor'] === (int) auth()->id())
-                        <flux:button.group>
-                            <flux:button
-                                variant="filled"
-                                color="green"
-                                size="sm"
-                                wire:click="publish"
-                            >
-                                <flux:icon.circle-dashed-check class="size-5" />
-                            </flux:button>
-                            <flux:button
-                                variant="filled"
-                                color="green"
-                                size="sm"
-                                wire:click="publish"
-                            >
-                                {{ __('Confirm / resume publication') }}
-                            </flux:button>
-                        </flux:button.group>
-                    @else
-                        <flux:callout.text>
-                            {{ __('The preparing user must confirm or resume this run.') }}
-                        </flux:callout.text>
-                    @endif
                     <flux:button.group>
                         <flux:button
                             variant="filled"
@@ -437,6 +455,32 @@
                             {{ __('Review closure without further writes') }}
                         </flux:button>
                     </flux:button.group>
+                    @if (empty($publication['blocker']) && (int) $publication['actor'] === (int) auth()->id())
+                        <flux:button.group>
+                            <flux:button
+                                variant="filled"
+                                color="green"
+                                size="sm"
+                                x-on:click="confirmPublication()"
+                                x-bind:disabled="publishing"
+                            >
+                                <flux:icon.circle-dashed-check class="size-5" />
+                            </flux:button>
+                            <flux:button
+                                variant="filled"
+                                color="green"
+                                size="sm"
+                                x-on:click="confirmPublication()"
+                                x-bind:disabled="publishing"
+                            >
+                                {{ __('Confirm / resume publication') }}
+                            </flux:button>
+                        </flux:button.group>
+                    @elseif (empty($publication['blocker']))
+                        <flux:callout.text>
+                            {{ __('The preparing user must confirm or resume this run.') }}
+                        </flux:callout.text>
+                    @endif
                 </div>
                 @if ($closure)
                     <flux:callout color="amber">

@@ -23,6 +23,7 @@
                     {{ __('Position') }}
                 </flux:callout.heading>
             </flux:table.column>
+            <flux:table.column>{{ __('Scan position preview') }}</flux:table.column>
             {{-- Table Header Column Captured source value --}}
             <flux:table.column>
                 <flux:callout.heading>
@@ -66,6 +67,11 @@
                             {{ $preserved['source_line'] }}:{{ $preserved['source_column'] }}
                         </flux:callout.text>
                     </flux:table.cell>
+                    <flux:table.cell>
+                        @include('translation-workbench::livewire.translation-workbench.scan.position-status', [
+                            'state' => $preserved['preview_state'] ?? null, 'destination' => $preserved['preview_to'] ?? null, 'reason' => $preserved['preview_reason'] ?? null,
+                        ])
+                    </flux:table.cell>
                     {{-- Table Body Row Column Captured source value --}}
                     <flux:table.cell class="whitespace-normal break-all">
                         <flux:callout.text>
@@ -83,7 +89,7 @@
             @empty
                 {{-- Table Body Row Empty --}}
                 <flux:table.row>
-                    <flux:table.cell colspan="4">
+                    <flux:table.cell colspan="5">
                         <flux:callout.text>
                             {{ __('No existing findings were preserved for this file.') }}
                         </flux:callout.text>

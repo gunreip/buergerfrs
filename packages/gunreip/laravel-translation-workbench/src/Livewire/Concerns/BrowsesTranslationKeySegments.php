@@ -2,6 +2,7 @@
 
 namespace Gunreip\TranslationWorkbench\Livewire\Concerns;
 
+use Gunreip\TranslationWorkbench\Generation\GenerationEditor;
 use Gunreip\TranslationWorkbench\Generation\TranslationKeySegments;
 
 trait BrowsesTranslationKeySegments
@@ -15,24 +16,20 @@ trait BrowsesTranslationKeySegments
         $this->confirmOpen = false;
     }
 
-    /** Offer one segment at a time inside the existing assignment select. */
-    public function assignmentKeyOptions(array $keys): array
+    public function assignmentKeyOptionPrefix(): string
     {
         $search = trim($this->assignmentKeySearch);
         $cursor = $search !== '' ? $search : (str_ends_with($this->assignmentKey, '.') ? $this->assignmentKey : '');
         $dot = strrpos($cursor, '.');
-        $prefix = $dot === false ? '' : substr($cursor, 0, $dot);
-        $options = [];
-        foreach (TranslationKeySegments::configured()->options($keys, $prefix) as $segment) {
-            $name = $prefix === '' ? $segment : $prefix.'.'.$segment;
-            if ($search !== '' && !str_starts_with($name, $search)) {
-                continue;
-            }
-            $complete = collect($keys)->contains(fn ($key) => ($key['namespace'] ?? '') === '' && $key['full_name'] === $name);
-            $options[] = $complete ? $name : $name.'.';
-        }
+        return $dot === false ? '' : substr($cursor, 0, $dot + 1);
+    }
 
-        return $options;
+    /** Offer one segment at a time inside the existing assignment select. */
+    public function assignmentKeyOptions(): array
+    {
+        $search = trim($this->assignmentKeySearch);
+        $children = app(GenerationEditor::class)->assignmentKeyChildren($this->assignmentKeyOptionPrefix());
+        return array_values(array_filter($children, static fn ($value) => str_starts_with($value, $search)));
     }
 
     private function validateAssignedKey(string $key, string $field): void

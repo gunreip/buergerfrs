@@ -78,7 +78,7 @@
             <flux:table.row wire:key="case-{{ $id }}">
                 {{-- Source --}}
                 <flux:table.cell class="max-w-md whitespace-normal break-all">
-                    <x-translation-workbench::ui.common.path-preview
+                    <x-translation-workbench::ui.common.path-preview :search="$search" :case-sensitive="$textSearchOptions['search']['case'] ?? false" :whole-word="$textSearchOptions['search']['word'] ?? false"
                         class="ml-2"
                         :path="$case['source_path']"
                         :line="$case['source_line']"
@@ -89,7 +89,7 @@
                 {{-- Expression --}}
                 <flux:table.cell class="wrap-break-word max-w-md whitespace-normal">
                     <flux:callout.text>
-                        <code>{{ $case['raw_expression'] }}</code>
+                        <code><x-ui.text.highlight :value="$case['raw_expression']" :search="$search" :case-sensitive="$textSearchOptions['search']['case'] ?? false" :whole-word="$textSearchOptions['search']['word'] ?? false" /></code>
                     </flux:callout.text>
                 </flux:table.cell>
                 {{-- Status --}}

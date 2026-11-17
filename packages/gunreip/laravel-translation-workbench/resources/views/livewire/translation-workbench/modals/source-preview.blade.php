@@ -14,9 +14,12 @@
                     size="xl"
                 >
                     <flux:icon.replace-all class="size-8 shrink-0" />
-                    {{ __('Source replacement preview') }} ·
+                    {{ __('Source replacement preview') }}
+                    <flux:icon.dot class="size-8" />
                     @if ($sourcePreview['batch'] ?? false)
-                        {{ __('Key #:key · :count findings', ['key' => $sourcePreview['key_id'], 'count' => count($sourcePreview['items'])]) }}
+                        {{ __('Key #:key', ['key' => $sourcePreview['key_id']]) }}
+                        <flux:icon.dot class="size-8" />
+                        {{ __(':count findings', ['count' => count($sourcePreview['items'])]) }}
                     @else
                         {{ __('Finding') }} #{{ $sourcePreview['finding'] }}
                     @endif
@@ -61,14 +64,14 @@
                     text="{{ __('This preview shows the exact source occurrence that will be replaced. The proposed replacement is based on the published, approved source-language value and the assigned translation key.') }}"
                 >
                     <x-translation-workbench::ui.common.details>
-                        <x-translation-workbench::ui.common.details.item :label="__('Source file')">
+                        <x-translation-workbench::ui.common.details.item :label="__('translation-workbench.literal.source_file')">
                             <x-translation-workbench::ui.common.path-preview
                                 :path="$sourcePreview['path']"
                                 :length="60"
                                 side="center"
                                 :line="$sourcePreview['line']"
                                 :column="$sourcePreview['column']"
-                                :heading="__('Source file')"
+                                :heading="__('translation-workbench.literal.source_file')"
                             />
                         </x-translation-workbench::ui.common.details.item>
 
@@ -108,133 +111,145 @@
                     )
                 @endif
             @endif
+
             <flux:callout
                 color="sky"
                 icon="languages"
-                :heading="__('Translation files')"
             >
-                <flux:callout.text>
-                    {{ __('This source occurrence uses the assigned key for all these languages. Source replacement does not publish language files. Paths marked Expected are not confirmed readable files.') }}
-                </flux:callout.text>
+                <flux:accordion transition>
+                    <flux:accordion.item>
+                        <flux:accordion.heading>
+                            <flux:callout.heading>
+                                {{ __('Translation files') }}
+                            </flux:callout.heading>
+                        </flux:accordion.heading>
+                        <flux:accordion.content>
+                            <flux:callout.text>
+                                {{ __('This source occurrence uses the assigned key for all these languages. Source replacement does not publish language files. Paths marked Expected are not confirmed readable files.') }}
+                            </flux:callout.text>
 
-                {{-- Table Of Translation Files --}}
-                <flux:table container:class="max-h-90 overflow-auto rounded-t-lg">
-                    {{-- Table Header Columns --}}
-                    <flux:table.columns
-                        class="bg-white dark:bg-zinc-800"
-                        sticky
-                    >
-                        {{-- Table Header Column Language --}}
-                        <flux:table.column>
-                            <flux:tooltip>
-                                <flux:callout.heading class="ml-2">
-                                    {{ __('Language') }}
-                                </flux:callout.heading>
-                                <x-translation-workbench::ui.common.tooltip-content
-                                    :heading="__('Language')"
-                                    :text="__(
-                                        'English source language and the active target languages or variants with a saved translation, a publication record or a file entry for this key.',
-                                    )"
-                                />
-                            </flux:tooltip>
-                        </flux:table.column>
-                        {{-- Table Header Column Translation File --}}
-                        <flux:table.column>
-                            <flux:tooltip>
-                                <flux:callout.heading>
-                                    {{ __('Translation file') }}
-                                </flux:callout.heading>
-                                <x-translation-workbench::ui.common.tooltip-content
-                                    :heading="__('Translation file')"
-                                    :text="__(
-                                        'The language file containing this translation key. Expected marks a path that has not been confirmed as a readable file. Source replacement does not write language files.',
-                                    )"
-                                />
-                            </flux:tooltip>
-                        </flux:table.column>
-                        {{-- Table Header Column Status --}}
-                        <flux:table.column>
-                            <flux:tooltip>
-                                <flux:callout.heading>
-                                    {{ __('Status') }}
-                                </flux:callout.heading>
-                                <x-translation-workbench::ui.common.tooltip-content
-                                    :heading="__('Status')"
-                                    :text="__(
-                                        'Compares the current file entry with completed publication records and the saved revision. File presence alone does not mean Published. Hover over a status for its specific explanation.',
-                                    )"
-                                />
-                            </flux:tooltip>
-                        </flux:table.column>
-                    </flux:table.columns>
-                    {{-- Table Rows --}}
-                    <flux:table.rows>
-                        @foreach ($sourcePreview['translation_files'] ?? [] as $file)
-                            {{-- Table Row Columns --}}
-                            <flux:table.row :key="'source-language-file-'.$file['locale']">
-                                {{-- Table Row Column Language --}}
-                                <flux:table.cell>
-                                    <span class="inline-flex items-center gap-2">
-                                        <flux:flag
-                                            class="ml-2"
-                                            circle
-                                            :country="$translationFlagCountries[$file['locale']] ?? null"
-                                        />
-                                        <flux:callout.text>
-                                            {{ $file['locale'] }}
-                                        </flux:callout.text>
-                                    </span>
-                                </flux:table.cell>
-                                {{-- Table Row Column Translation File --}}
-                                <flux:table.cell>
-                                    <x-translation-workbench::ui.common.path-preview
-                                        :path="'lang/' . $file['path']"
-                                        :length="60"
-                                        side="center"
-                                    />
-                                    @if (!$file['actual'])
-                                        <flux:badge
-                                            size="sm"
-                                            color="amber"
-                                        >{{ __('Expected') }}</flux:badge>
-                                    @endif
-                                </flux:table.cell>
-                                {{-- Table Row Column Status --}}
-                                <flux:table.cell>
-                                    <flux:tooltip>
-                                        <flux:button
-                                            size="sm"
-                                            variant="ghost"
-                                        >
-                                            <flux:badge
-                                                size="sm"
-                                                :color="match($file[
-                                                    'state']) {
-                                                    'published' => 'green', 'present' => 'sky', 'key_missing',
-                                                    'unavailable', 'changed' => 'red',
-                                                    default => 'amber'
-                                                }"
-                                            >
-                                                {{ match ($file['state']) {
-                                                    'published' => __('Published'),
-                                                    'published_previous' => __('Earlier revision published'),
-                                                    'present' => __('Present in file'),
-                                                    'changed' => __('Differs from publication'),
-                                                    'key_missing' => __('Key missing'),
-                                                    default => __('Missing or unavailable'),
-                                                } }}
-                                            </flux:badge>
-                                        </flux:button>
-                                        <x-translation-workbench::ui.common.tooltip-content
-                                            :heading="__('Translation file status')"
-                                            :text="__($file['detail'])"
-                                        />
-                                    </flux:tooltip>
-                                </flux:table.cell>
-                            </flux:table.row>
-                        @endforeach
-                    </flux:table.rows>
-                </flux:table>
+                            {{-- Table Of Translation Files --}}
+                            <flux:table container:class="max-h-90 mt-2 overflow-auto rounded-t-lg">
+                                {{-- Table Header Columns --}}
+                                <flux:table.columns
+                                    class="bg-white dark:bg-zinc-800"
+                                    sticky
+                                >
+                                    {{-- Table Header Column Language --}}
+                                    <flux:table.column>
+                                        <flux:tooltip>
+                                            <flux:callout.heading class="ml-2">
+                                                {{ __('Language') }}
+                                            </flux:callout.heading>
+                                            <x-translation-workbench::ui.common.tooltip-content
+                                                :heading="__('Language')"
+                                                :text="__(
+                                                    'English source language and the active target languages or variants with a saved translation, a publication record or a file entry for this key.',
+                                                )"
+                                            />
+                                        </flux:tooltip>
+                                    </flux:table.column>
+                                    {{-- Table Header Column Translation File --}}
+                                    <flux:table.column>
+                                        <flux:tooltip>
+                                            <flux:callout.heading>
+                                                {{ __('Translation file') }}
+                                            </flux:callout.heading>
+                                            <x-translation-workbench::ui.common.tooltip-content
+                                                :heading="__('Translation file')"
+                                                :text="__(
+                                                    'The language file containing this translation key. Expected marks a path that has not been confirmed as a readable file. Source replacement does not write language files.',
+                                                )"
+                                            />
+                                        </flux:tooltip>
+                                    </flux:table.column>
+                                    {{-- Table Header Column Status --}}
+                                    <flux:table.column>
+                                        <flux:tooltip>
+                                            <flux:callout.heading>
+                                                {{ __('Status') }}
+                                            </flux:callout.heading>
+                                            <x-translation-workbench::ui.common.tooltip-content
+                                                :heading="__('Status')"
+                                                :text="__(
+                                                    'Compares the current file entry with completed publication records and the saved revision. File presence alone does not mean Published. Hover over a status for its specific explanation.',
+                                                )"
+                                            />
+                                        </flux:tooltip>
+                                    </flux:table.column>
+                                </flux:table.columns>
+                                {{-- Table Rows --}}
+                                <flux:table.rows>
+                                    @foreach ($sourcePreview['translation_files'] ?? [] as $file)
+                                        {{-- Table Row Columns --}}
+                                        <flux:table.row :key="'source-language-file-'.$file['locale']">
+                                            {{-- Table Row Column Language --}}
+                                            <flux:table.cell>
+                                                <span class="inline-flex items-center gap-2">
+                                                    <flux:flag
+                                                        class="ml-2"
+                                                        circle
+                                                        :country="$translationFlagCountries[$file['locale']] ?? null"
+                                                    />
+                                                    <flux:callout.text>
+                                                        {{ $file['locale'] }}
+                                                    </flux:callout.text>
+                                                </span>
+                                            </flux:table.cell>
+                                            {{-- Table Row Column Translation File --}}
+                                            <flux:table.cell>
+                                                <x-translation-workbench::ui.common.path-preview
+                                                    :path="'lang/' . $file['path']"
+                                                    :length="60"
+                                                    side="center"
+                                                />
+                                                @if (!$file['actual'])
+                                                    <flux:badge
+                                                        size="sm"
+                                                        color="amber"
+                                                    >{{ __('Expected') }}</flux:badge>
+                                                @endif
+                                            </flux:table.cell>
+                                            {{-- Table Row Column Status --}}
+                                            <flux:table.cell>
+                                                <flux:tooltip>
+                                                    <div
+                                                        class="inline-flex"
+                                                        tabindex="0"
+                                                    >
+                                                        <flux:badge
+                                                            size="sm"
+                                                            :color="match($file[
+                                                                'state']) {
+                                                                'published' => 'green', 'present' => 'sky',
+                                                                'key_missing',
+                                                                'unavailable', 'changed' => 'red',
+                                                                default => 'amber'
+                                                            }"
+                                                        >
+                                                            {{ match ($file['state']) {
+                                                                'published' => __('Published'),
+                                                                'published_previous' => __('Earlier revision published'),
+                                                                'present' => __('Present in file'),
+                                                                'changed' => __('Differs from publication'),
+                                                                'key_missing' => __('Key missing'),
+                                                                default => __('Missing or unavailable'),
+                                                            } }}
+                                                        </flux:badge>
+                                                    </div>
+                                                    <x-translation-workbench::ui.common.tooltip-content
+                                                        :heading="__('Translation file status')"
+                                                        :text="__($file['detail'])"
+                                                    />
+                                                </flux:tooltip>
+                                            </flux:table.cell>
+                                        </flux:table.row>
+                                    @endforeach
+                                </flux:table.rows>
+                            </flux:table>
+                        </flux:accordion.content>
+                    </flux:accordion.item>
+                </flux:accordion>
             </flux:callout>
 
             <flux:callout

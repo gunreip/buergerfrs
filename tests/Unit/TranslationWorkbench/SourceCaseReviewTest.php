@@ -91,10 +91,14 @@ it('sorts source cases before pagination while retaining identities and filters'
         ->call('sortBy', 'status')->assertViewHas('rows', $keys(array_map(fn ($n) => 'case-'.$n, range(3, 12))))
         ->call('setPage', 2, 'sourceCasesPage')->assertViewHas('rows', $keys(['case-2', 'case-1']))
         ->call('sortBy', 'status')->assertViewHas('rows', fn ($rows) => array_slice(array_keys($rows->items()), 0, 2) === ['case-1', 'case-2'])
+        ->set('search', 'alpha')->assertViewHas('rows', $keys(['case-12']))
+        ->call('toggleTextSearchOption', 'search', 'case')->assertViewHas('rows', fn ($rows) => $rows->total() === 0)
+        ->set('search', 'Alph')->call('toggleTextSearchOption', 'search', 'word')
+        ->assertViewHas('rows', fn ($rows) => $rows->total() === 0)
         ->set('search', 'Alpha')->assertViewHas('rows', $keys(['case-12']))
         ->call('sortBy', 'source')->assertSet('search', 'Alpha')->assertViewHas('rows', $keys(['case-12']))
         ->call('sortBy', 'invalid')->assertSet('sortColumn', 'source')
-        ->set('search', '')->set('filter', 'open')
+        ->set('search', '')->assertSet('textSearchOptions', [])->set('filter', 'open')
         ->assertViewHas('rows', fn ($rows) => $rows->total() === 10 && ! isset($rows->items()['case-1']) && ! isset($rows->items()['case-2']));
 });
 

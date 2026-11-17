@@ -110,11 +110,14 @@
                 {{-- Column Namespace --}}
                 <flux:table.cell class="whitespace-normal">
                     <x-translation-workbench::ui.common.text-preview
+                        :search="$translationSearch"
+                        :case-sensitive="$textSearchOptions['translationSearch']['case'] ?? false"
+                        :whole-word="$textSearchOptions['translationSearch']['word'] ?? false"
                         :mono="true"
                         :text="($task['namespace'] !== '' ? $task['namespace'].'::' : '').$task['full_name']"
                         :length="80"
                         side="center"
-                        :heading="__('Translation Key')"
+                        :heading="__('translation-workbench.translation.key.translation-key')"
                     />
                 </flux:table.cell>
                 {{-- Column Active Findings --}}
@@ -135,6 +138,7 @@
                                     <flux:button
                                         type="button"
                                         variant="ghost"
+                                        square
                                         size="xs"
                                         :aria-label="__('Show saved revision for :locale', ['locale' => $language['locale']])"
                                     />
@@ -176,6 +180,7 @@
                             <flux:button
                                 size="sm"
                                 variant="outline"
+                                square
                                 wire:click="openWorkflowStatus({{ $task['finding_id'] }})"
                                 :aria-label="__('Workflow status')"
                             >
@@ -192,6 +197,7 @@
                                 <flux:button
                                     size="sm"
                                     variant="outline"
+                                    square
                                     wire:click="open({{ $task['finding_id'] }})"
                                 >
                                     <flux:icon.package-open size="5" />
@@ -201,7 +207,7 @@
                                     variant="outline"
                                     wire:click="open({{ $task['finding_id'] }})"
                                 >
-                                    {{ __('Edit translations') }}
+                                    {{ __('translation-workbench.edits.edit_translations') }}
                                 </flux:button>
                             </flux:button.group>
                             <x-translation-workbench::ui.common.tooltip-content

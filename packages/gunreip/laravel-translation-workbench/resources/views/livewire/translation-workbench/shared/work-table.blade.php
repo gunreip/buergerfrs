@@ -1,6 +1,6 @@
 @php
     $workSteps = [
-        'translations' => __('Edit translations'),
+        'translations' => __('translation-workbench.edits.edit_translations'),
         'review' => __('Review translations'),
         'publication' => __('Publish translations'),
         'source' => __('Check source replacement'),
@@ -19,45 +19,87 @@
     >
         {{-- Table Header Column Key ID --}}
         <flux:table.column>
-            <flux:callout.heading class="ml-2">
-                {{ __('Key ID') }}
-            </flux:callout.heading>
+            <flux:tooltip>
+                <flux:callout.heading class="ml-2">
+                    {{ __('Key ID') }}
+                </flux:callout.heading>
+                <x-translation-workbench::ui.common.tooltip-content
+                    :heading="__('Key ID')"
+                    :text="__('Database ID of the assigned translation key. Findings that share a key have the same Key ID.')"
+                />
+            </flux:tooltip>
         </flux:table.column>
         {{-- Table Header Column Translation Key --}}
         <flux:table.column>
-            <flux:callout.heading>
-                {{ __('Translation key') }}
-            </flux:callout.heading>
+            <flux:tooltip>
+                <flux:callout.heading>
+                    {{ __('Translation key') }}
+                </flux:callout.heading>
+                <x-translation-workbench::ui.common.tooltip-content
+                    :heading="__('Translation key')"
+                    :text="__('Full name of the key being edited, including its namespace when present.')"
+                />
+            </flux:tooltip>
         </flux:table.column>
         {{-- Table Header Column Findings --}}
         <flux:table.column>
-            <flux:callout.heading>
-                {{ __('Findings') }}
-            </flux:callout.heading>
+            <flux:tooltip>
+                <flux:callout.heading>
+                    {{ __('Findings') }}
+                </flux:callout.heading>
+                <x-translation-workbench::ui.common.tooltip-content
+                    :heading="__('Findings')"
+                    :text="__('Shows how many active findings share this key and which finding opens when you resume work.')"
+                />
+            </flux:tooltip>
         </flux:table.column>
         {{-- Table Header Column Languages --}}
         <flux:table.column>
-            <flux:callout.heading>
-                {{ __('Languages') }}
-            </flux:callout.heading>
+            <flux:tooltip>
+                <flux:callout.heading>
+                    {{ __('Languages') }}
+                </flux:callout.heading>
+                <x-translation-workbench::ui.common.tooltip-content
+                    :heading="__('Languages')"
+                    :text="__('Flags identify the languages recorded for this key. Select a flag to see its locale.')"
+                />
+            </flux:tooltip>
         </flux:table.column>
         {{-- Table Header Column Next Step --}}
         <flux:table.column>
-            <flux:callout.heading>
-                {{ __('Next step') }}
-            </flux:callout.heading>
+            <flux:tooltip>
+                <flux:callout.heading>
+                    {{ __('Next step') }}
+                </flux:callout.heading>
+                <x-translation-workbench::ui.common.tooltip-content
+                    :heading="__('Next step')"
+                    :text="__('Shows where to continue for this key. An unfinished publication or source replacement can be resumed here.')"
+                />
+            </flux:tooltip>
         </flux:table.column>
         {{-- Table Header Column Last Manual Edit --}}
         <flux:table.column>
-            <flux:callout.heading>
-                {{ __('Last manual edit') }}
-            </flux:callout.heading>
+            <flux:tooltip>
+                <flux:callout.heading>
+                    {{ __('Last manual edit') }}
+                </flux:callout.heading>
+                <x-translation-workbench::ui.common.tooltip-content
+                    :heading="__('Last manual edit')"
+                    :text="__('When the recorded workflow action took place and which user performed it.')"
+                />
+            </flux:tooltip>
         </flux:table.column>
         {{-- Table Header Column Actions --}}
         <flux:table.column>
-            <flux:callout.heading class="mr-3">
-                {{ __('Actions') }}
-            </flux:callout.heading>
+            <flux:tooltip>
+                <flux:callout.heading class="mr-3">
+                    {{ __('Actions') }}
+                </flux:callout.heading>
+                <x-translation-workbench::ui.common.tooltip-content
+                    :heading="__('Actions')"
+                    :text="__('View the workflow status or resume work at the indicated step.')"
+                />
+            </flux:tooltip>
         </flux:table.column>
     </flux:table.columns>
     {{-- Table Body Rows --}}
@@ -74,6 +116,9 @@
                 {{-- Table Body Column Translation Key --}}
                 <flux:table.cell>
                     <x-translation-workbench::ui.common.text-preview
+                        :search="$tab === 'in-progress' ? $workSearch : ''"
+                        :case-sensitive="$textSearchOptions['workSearch']['case'] ?? false"
+                        :whole-word="$textSearchOptions['workSearch']['word'] ?? false"
                         :text="($work['namespace'] !== '' ? $work['namespace'].'::' : '').$work['full_name']"
                         :heading="__('Translation key')"
                         :length="55"
@@ -94,7 +139,11 @@
                         @endif
                         @if ($work['finding_id'])
                             <flux:callout.text class="text-xs">
-                                {{ __('Continue with finding #:id', ['id' => $work['finding_id']]) }}
+                                @if ($work['finding_count'] > 0)
+                                    {{ __('Continue with finding #:id', ['id' => $work['finding_id']]) }}
+                                @else
+                                    {{ __('Last linked finding #:id', ['id' => $work['finding_id']]) }}
+                                @endif
                             </flux:callout.text>
                         @endif
                     </div>

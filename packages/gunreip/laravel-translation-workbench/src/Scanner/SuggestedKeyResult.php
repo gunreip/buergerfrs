@@ -13,5 +13,6 @@ final class SuggestedKeyResult
         public readonly ?string $group,
         public readonly array $pathSegments = [],
         public readonly ?string $keyName = null,
+        public readonly ?string $copyableLeaf = null,
     ) {}
 }

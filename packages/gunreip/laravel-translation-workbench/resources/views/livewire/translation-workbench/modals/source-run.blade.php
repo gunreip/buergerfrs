@@ -3,7 +3,7 @@
     name="generation-source-run"
     wire:model="sourceRunOpen"
 >
-    <x-translation-workbench::ui.common.modal-loading target="applySource, closeSource, open, openSourceRun" />
+    <x-translation-workbench::ui.common.modal-loading :target="($sourceRun['batch'] ?? false) ? 'closeSource, open, openSourceRun' : 'applySource, closeSource, open, openSourceRun'" />
     @if ($sourceRun['batch'] ?? false)
         @include('translation-workbench::livewire.translation-workbench.shared.source-batch-run')
     @elseif ($sourceRun)
@@ -12,7 +12,7 @@
                 class="flex items-center gap-2"
                 size="xl"
             >
-                <flux:icon.eye class="shrink-0" />
+                <flux:icon.eye class="size-8 shrink-0" />
                 {{ __('Confirm / resume source replacement') }}
             </flux:heading>
 
@@ -22,12 +22,12 @@
                 heading="{{ __('Source') }}"
             >
                 <x-translation-workbench::ui.common.details>
-                    <x-translation-workbench::ui.common.details.item :label="__('Source file')">
+                    <x-translation-workbench::ui.common.details.item :label="__('translation-workbench.literal.source_file')">
                         <x-translation-workbench::ui.common.path-preview
                             :path="$sourceRun['preview']['path']"
                             :length="60"
                             side="center"
-                            :heading="__('Source file')"
+                            :heading="__('translation-workbench.literal.source_file')"
                         />
                     </x-translation-workbench::ui.common.details.item>
                     <x-translation-workbench::ui.common.details.item

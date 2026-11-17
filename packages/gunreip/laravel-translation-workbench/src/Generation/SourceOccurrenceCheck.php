@@ -2,13 +2,17 @@
 
 namespace Gunreip\TranslationWorkbench\Generation;
 
+use Gunreip\TranslationWorkbench\Scanner\TranslationWorkbenchScanner;
+use PhpParser\Error;
+use PhpParser\NodeDumper;
+use PhpParser\ParserFactory;
 use RuntimeException;
 
 /** Read-only position evidence. Text matches are candidates, never identity assignments. */
 final class SourceOccurrenceCheck
 {
     /** Compare all occurrences against one captured read per file, then verify those reads. */
-    public function inspectGroup(array $findings, string $root): array
+    public function inspectGroup(array $findings, string $root, bool $includeChangedCalls = false): array
     {
         $files = [];
         foreach ($findings as $finding) {
@@ -33,6 +37,9 @@ final class SourceOccurrenceCheck
             $check = isset($file['error'])
                 ? ['state' => 'source_unavailable', 'detail' => $file['error'], 'positions' => []]
                 : $this->compare($finding, $file['bytes']);
+            if ($includeChangedCalls && !isset($file['error'])) {
+                $check = $this->includeChangedCalls($finding, $files[$finding['path']], $check);
+            }
             $results[] = ['id' => (int) $finding['id'], 'path' => $finding['path'], ...$check];
         }
         foreach ($files as $relative => $file) {
@@ -59,7 +66,7 @@ final class SourceOccurrenceCheck
         return $results;
     }
 
-    public function inspect(array $finding, string $root): array
+    public function inspect(array $finding, string $root, bool $includeChangedCalls = false): array
     {
         try {
             $path = (new SourceReplacementPreview)->path($root, $finding['path']);
@@ -72,6 +79,10 @@ final class SourceOccurrenceCheck
         }
         $result = $this->compare($finding, $bytes);
         $result['sha256'] = hash('sha256', $bytes);
+        if ($includeChangedCalls) {
+            $file = ['bytes' => $bytes, 'sha256' => $result['sha256']];
+            $result = $this->includeChangedCalls($finding, $file, $result);
+        }
         $lines = explode("\n", $bytes);
         $positions = [['line' => (int) $finding['source_line'], 'column' => (int) $finding['source_column'], 'captured' => true],
             ...array_slice($result['positions'], 0, 5)];
@@ -80,7 +91,7 @@ final class SourceOccurrenceCheck
             $start = max(0, $position['line'] - 3);
             $snippet = [];
             $displayLines = [];
-            $remaining = empty($position['captured']) ? strlen((string) $finding['raw_expression']) : 0;
+            $remaining = empty($position['captured']) ? strlen((string) ($position['expression'] ?? $finding['raw_expression'])) : 0;
             foreach (array_slice($lines, $start, 5, true) as $index => $text) {
                 $snippet[] = ($index + 1).': '.$text;
                 $offset = $index + 1 === $position['line'] ? max(0, $position['column'] - 1) : 0;
@@ -98,6 +109,49 @@ final class SourceOccurrenceCheck
             return ['state' => 'source_changed', 'detail' => 'The source file changed during inspection. Check it again.', 'positions' => []];
         }
         return $result;
+    }
+
+    private function includeChangedCalls(array $finding, array &$file, array $result): array
+    {
+        if ($result['state'] === 'position_confirmed' || !isset($finding['raw_source_code_literal'])) {
+            return $result;
+        }
+
+        $function = trim(strstr($finding['raw_expression'], '(', true) ?: '');
+        $adapter = new CopiedSourceCapture;
+        $changed = [];
+        $file['calls'] ??= app(TranslationWorkbenchScanner::class)->scanSource($finding['path'], $file['bytes']);
+        foreach ($file['calls'] as $item) {
+            if ($item->functionName !== $function || $item->rawExpression === $finding['raw_expression']) {
+                continue;
+            }
+            $capture = $file['captures'][$item->meta['source_offset']] ??= $adapter->capture($item, $file['bytes'], $file['sha256'], []);
+            if ($capture['raw_source_code_literal'] === $finding['raw_source_code_literal']
+                && $capture['raw_literal'] === $finding['raw_literal']
+                && $capture['raw_expression'] !== $finding['raw_expression']) {
+                $before = $this->callStructure($finding['raw_expression']);
+                $reformatted = $before !== null && $before === $this->callStructure($capture['raw_expression']);
+                $changed[] = ['line' => $item->sourceLine, 'column' => $item->sourceColumn, 'expression' => $capture['raw_expression'],
+                    'change' => $reformatted ? 'reformatted' : 'changed'];
+            }
+        }
+        if ($changed) {
+            $result['positions'] = [...$result['positions'], ...$changed];
+            $result['state'] = 'changed_matches';
+            $result['detail'] = 'Candidates use the same translation function and first argument. Compare their positions and calls below.';
+        }
+        return $result;
+    }
+
+    private function callStructure(string $expression): ?string
+    {
+        try {
+            $php = preg_replace('/^@(lang|js)\s*\(/', '__(', $expression);
+            $nodes = (new ParserFactory)->createForHostVersion()->parse('<?php '.$php.';');
+            return (new NodeDumper)->dump($nodes);
+        } catch (Error) {
+            return null;
+        }
     }
 
     public function compare(array $finding, string $bytes): array

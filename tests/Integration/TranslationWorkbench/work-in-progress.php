@@ -35,6 +35,17 @@ try {
     $started = true;
     $run([$bin.'/createdb', '-h', $dir.'/socket', '-U', 'tester', 'editor']);
     $db = new PDO('pgsql:host='.$dir.'/socket;dbname=editor;user=tester', options: [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    foreach ([
+        ['Finding', false, false, ['Finding', 'finding', 'Findings', 'ui.finding_label']],
+        ['Finding', true, false, ['Finding', 'Findings']],
+        ['Finding', false, true, ['Finding', 'finding', 'ui.finding_label']],
+        ['Finding', true, true, ['Finding']],
+    ] as [$needle, $caseSensitive, $wholeWord, $expected]) {
+        [$operator, $pattern] = \Gunreip\TranslationWorkbench\Generation\FindingSearch::condition($needle, $caseSensitive, $wholeWord);
+        $stmt = $db->prepare("SELECT value FROM (VALUES (1,'Finding'),(2,'finding'),(3,'Findings'),(4,'ui.finding_label'),(5,'Findin')) words(position,value) WHERE value {$operator} ? ORDER BY position");
+        $stmt->execute([$pattern]);
+        $check($stmt->fetchAll(PDO::FETCH_COLUMN) === $expected, 'PostgreSQL search options disagree with word and case rules.');
+    }
     (new WorkingGenerationSchema)->install($db, 'editor', 'current_generation_v2', (string) Str::uuid());
     $db->exec('CREATE TABLE public.translation_workbench_findings(id int PRIMARY KEY); INSERT INTO public.translation_workbench_findings VALUES(777)');
     $db->exec('SET search_path TO current_generation_v2,pg_catalog');
@@ -64,8 +75,13 @@ try {
     $check($work->page('de', null, '', 1)->total() === 2, 'All users must include both tasks');
     $row = $work->recent('de', 7)[0];
     $check((int) $row['finding_count'] === 2 && $row['step'] === 'translations', 'Initial saved assignment must be actionable');
-    $check($work->page('de', 7, (string) $two, 1)->total() === 1, 'Find every shared member by finding ID');
+    $check($work->page('de', 7, '', 1, findingId: (string) $two)->total() === 1, 'Find every shared member by finding ID');
     $check($work->page('de', 7, 'fixture.php', 1)->total() === 1, 'Find source path');
+    $check($work->page('de', null, 'fixture.php', 1, findingId: (string) $two, keyId: (string) $key)->total() === 1, 'Combine text, finding ID and key ID');
+    $check($work->page('de', null, '', 1, findingId: (string) $three, keyId: (string) $key)->total() === 0, 'Finding and key ID filters must use AND');
+    $check($work->page('de', null, '', 1, findingId: 'invalid')->total() === 0, 'Invalid finding ID returns no results');
+    $check($work->page('de', null, (string) $two, 1)->total() === 0, 'Text search no longer implicitly matches finding IDs');
+
     $lastEvent = $row['event_id'];
     $event = static function ($type, $details, $actor = 7) use ($q) {
         $operation = (string) Str::uuid();
@@ -80,7 +96,7 @@ try {
     $q('INSERT INTO translation_workbench_key_findings(finding_id,key_id) VALUES(?,?)', [$successor, $key]);
     $row = $work->find($key, 'de');
     $check((int) $row['finding_count'] === 2 && (int) $row['finding_id'] === $two, 'Choose unfinished active member before replaced successor');
-    $check($work->page('de', 7, (string) $one, 1)->total() === 1, 'Old finding ID must still locate shared work after move');
+    $check($work->page('de', 7, '', 1, findingId: (string) $one)->total() === 1, 'Old finding ID must still locate shared work after move');
     $check($row['event_id'] === $lastEvent, 'A move must preserve the last manual edit');
     $draft = $editor->save($two, $key, (int) $q('SELECT id FROM translation_workbench_key_findings WHERE finding_id=? AND valid_to IS NULL', [$two])->fetchColumn(), 'de', 'Beispiel', null, 7, 'Save draft');
     $check($work->recent('de', 7)[0]['event_id'] > $lastEvent, 'Draft event must advance manual order via revision-to-key mapping');
@@ -125,6 +141,36 @@ try {
     $check(!isset($readEvidence()['ui.button.done']), 'Prepared publications are not scanner evidence');
     $publisher->publish($publication, $plan['fingerprint']);
     $check(($readEvidence()['ui.button.done']['value'] ?? null) === 'Done', 'Completed publication supplies verified English scanner evidence');
+    $check($editor->sourceReplacementPage('ui.button.done', 1, findingId: (string) $doneFinding, keyId: (string) $done['key'])->total() === 1, 'Source replacement combines all filters');
+    $check($editor->sourceReplacementPage('', 1, findingId: (string) $three, keyId: (string) $done['key'])->total() === 0, 'Source replacement requires both IDs to match');
+    $check($editor->sourceReplacementPage('', 1, keyId: 'invalid')->total() === 0, 'Invalid key ID returns no source replacements');
+    $check($editor->sourceReplacementPage((string) $doneFinding, 1)->total() === 0, 'Source replacement text search no longer matches IDs');
+
+    $sourceFile = $dir.'/fixture.php';
+    $sourceBytes = "<?php\n\n\n\n__('ui.button.done');\n";
+    file_put_contents($sourceFile, $sourceBytes);
+    $q("UPDATE translation_workbench_scan_runs SET scope_snapshot=?::jsonb WHERE id=?", [json_encode([
+        'mode' => 'generation_rescan', 'inventory' => ['hashes' => ['fixture.php' => hash('sha256', $sourceBytes)]],
+    ]), $scan]);
+    $lists = new GenerationEditor($db, $dir, $dir.'/lang');
+    $listCount = fn (bool $completed, string $target = 'de') => $lists->sourceReplacementPage('', 1,
+        keyId: (string) $done['key'], completed: $completed, target: $target)->total();
+    $findingCount = fn (string $status, string $target) => $lists->page('', (string) $doneFinding, $status, 1, target: $target)->total();
+    $check($findingCount('active', 'de') === 1 && $findingCount('open', 'de') === 0, 'Completed findings stay active but leave Open');
+    $check($findingCount('open', 'fr') === 1, 'Missing target translation keeps a finding open');
+    $check($listCount(true) === 1 && $listCount(false) === 0, 'A completed finding appears only in Completed');
+    $check($listCount(true, 'fr') === 0, 'Missing target translation must keep a finding out of Completed');
+    $requiresScan = fn (string $target) => $lists->sourceReplacementPage('', 1, keyId: (string) $done['key'], target: $target, includeAwaitingScan: true)->items()[0]['needs_scan'];
+    $selection = fn (string $target) => $lists->sourceReplacementPage('', 1, keyId: (string) $done['key'], target: $target);
+    $check($selection('fr')->allAssigned && $selection('fr')->awaitingScan === 0, 'Already confirmed positions do not offer a new scan');
+    $check(!$requiresScan('fr'), 'A missing translation does not invalidate scan confirmation');
+    file_put_contents($sourceFile, $sourceBytes."\n");
+    $check($listCount(false) === 0 && $listCount(true) === 0, 'Awaiting confirmation is separate from both open replacements and completed findings');
+    $check($selection('de')->allAssigned && $selection('de')->awaitingScan === 1, 'Offer a scan when all matching positions are assigned and a confirmation is missing');
+    $check($findingCount('open', 'de') === 1, 'Pending scan confirmation keeps a finding open');
+    $check($requiresScan('de'), 'An already assigned key in a changed file needs scan confirmation');
+    file_put_contents($sourceFile, $sourceBytes);
+
     $englishFile = $dir.'/lang/en/ui.php';
     $englishBytes = file_get_contents($englishFile);
     file_put_contents($englishFile, "<?php return ['button' => ['done' => 'Changed externally']];");
@@ -146,6 +192,7 @@ try {
     $q("INSERT INTO translation_workbench_operations VALUES(?, 'source_replacement_closed', ?, '{}',now())", [$sourceFinish, str_repeat('d', 64)]);
     $check($work->find($done['key'], 'de')['open_source'] === null, 'Finished source plan must stop being offered');
     $editor->save($doneFinding, $done['key'], $done['link'], 'de', 'Erledigt', $drafts['de']['revision'], 7, 'Change the translation');
+    $check($listCount(true) === 0 && $listCount(false) === 1, 'An unpublished revision reopens the finding');
     $check($work->find($done['key'], 'de')['step'] === 'translations', 'A changed published translation must reopen work');
 
     for ($index = 0; $index < 12; $index++) {

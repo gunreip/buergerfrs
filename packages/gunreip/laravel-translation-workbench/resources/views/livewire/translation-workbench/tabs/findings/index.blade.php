@@ -3,7 +3,7 @@
     color="green"
     icon="radar"
     heading="{{ __('Findings') }} · {{ number_format($rows->total()) }}"
-    text="{{ __('Inspect findings by status. Enable Not assigned to focus on findings without a key assignment. Edit translation values under Translations.') }}"
+    text="{{ __('translation-workbench.literal.open_shows_active_findings_that_still_need_work_for_the_active_target_language_enable') }}"
 >
     @include('translation-workbench::livewire.translation-workbench.tabs.findings.filters')
 

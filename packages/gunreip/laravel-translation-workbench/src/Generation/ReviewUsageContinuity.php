@@ -8,7 +8,7 @@ use PDO;
 final class ReviewUsageContinuity
 {
     // Inputs: review_usages (jsonb), review_key (bigint). Missing or additional usages
-    // are not equivalent. Only the original successor link created in the same
+    // are not equivalent unless a completed scan records the removal. Only the original successor link created in the same
     // transaction as retirement is accepted, never a later reassignment.
     public const RESOLVED = <<<'SQL'
         (WITH RECURSIVE usage_walk AS (
@@ -26,10 +26,17 @@ final class ReviewUsageContinuity
             JOIN translation_workbench_findings successor ON successor.predecessor_id=predecessor.id
                 AND successor.id>predecessor.id AND successor.source_file_id=predecessor.source_file_id
             JOIN translation_workbench_operations receipt ON receipt.id=successor.captured_scan_id
-                AND ((receipt.kind='source_replacement_applied'
+                AND (((receipt.kind='source_replacement_applied' OR (
+                        receipt.kind='source_position_decision'
+                        AND successor.raw_expression=predecessor.raw_expression
+                        AND successor.raw_source_code_literal IS NOT DISTINCT FROM predecessor.raw_source_code_literal
+                        AND successor.raw_literal IS NOT DISTINCT FROM predecessor.raw_literal))
                     AND receipt.result->'successors' @> jsonb_build_array(jsonb_build_object('predecessor',predecessor.id,'successor',successor.id)))
                   OR (receipt.kind='complete_rescan'
-                    AND successor.raw_expression=predecessor.raw_expression
+                    AND (successor.raw_expression=predecessor.raw_expression OR (
+                        successor.source_line=predecessor.source_line AND successor.source_column=predecessor.source_column
+                        AND receipt.result->'moved' @> jsonb_build_array(jsonb_build_object('predecessor',predecessor.id,
+                            'successor',successor.id,'evidence',jsonb_build_object('method','formatting_only')))))
                     AND successor.raw_source_code_literal IS NOT DISTINCT FROM predecessor.raw_source_code_literal
                     AND successor.raw_literal IS NOT DISTINCT FROM predecessor.raw_literal
                     AND receipt.result->'moved' @> jsonb_build_array(jsonb_build_object('predecessor',predecessor.id,'successor',successor.id))))
@@ -38,7 +45,15 @@ final class ReviewUsageContinuity
                 AND next_link.id=(SELECT min(first_link.id) FROM translation_workbench_key_findings first_link WHERE first_link.finding_id=successor.id)
             WHERE old_link.valid_to IS NOT NULL
         )
-        SELECT CASE WHEN count(*)=jsonb_array_length(review_usages)
+        SELECT CASE WHEN count(*) > 0 AND count(*) + (
+            SELECT count(*) FROM usage_walk retired
+            JOIN translation_workbench_findings f ON f.id=retired.finding
+            JOIN translation_workbench_key_findings l ON l.id=retired.link
+            WHERE f.status='obsolete' AND f.retired_at=l.valid_to
+                AND f.retired_reason='Absent from completed scan inventory'
+                AND EXISTS (SELECT 1 FROM translation_workbench_operations scan
+                    WHERE scan.kind='complete_rescan' AND scan.result->'removed' @> jsonb_build_array(f.id))
+        )=jsonb_array_length(review_usages)
             THEN COALESCE(jsonb_agg(jsonb_build_object('link',w.link,'finding',w.finding) ORDER BY w.link),'[]'::jsonb)
             ELSE NULL END
         FROM usage_walk w

@@ -170,6 +170,9 @@
                     <x-translation-workbench::ui.common.text-preview
                         :mono="true"
                         :text="$row['path'] . ':' . $row['source_line'] . ':' . $row['source_column']"
+                        :search="$search"
+                        :case-sensitive="$searchCaseSensitive"
+                        :whole-word="$searchWholeWord"
                         :length="50"
                         side="center"
                         :heading="__('Source')"
@@ -222,6 +225,7 @@
                                 :text="[__('Open the source file in VS Code using the configured editor.')]"
                             >
                                 <x-translation-workbench::ui.common.path-preview
+                                    :vsc="false"
                                     :path="$editorUrl"
                                     :tooltip="false"
                                     :length="60"
@@ -255,6 +259,9 @@
                         :mono="true"
                         :heading="__('Captured expression')"
                         :text="$row['raw_expression']"
+                        :search="$search"
+                        :case-sensitive="$searchCaseSensitive"
+                        :whole-word="$searchWholeWord"
                         :length="120"
                         side="center"
                     />
@@ -286,6 +293,9 @@
                             :prefix-key="'#' . $row['key_id']"
                             :heading="__('Translation Key')"
                             :text="$row['full_name']"
+                            :search="$search"
+                        :case-sensitive="$searchCaseSensitive"
+                        :whole-word="$searchWholeWord"
                             :length="80"
                             side="center"
                         />
@@ -361,7 +371,7 @@
                         </div>
                     @else
                         <div class="flex flex-col items-start gap-2">
-                            @if (!in_array($status, ['active', 'active_compact'], true))
+                            @if (!in_array($status, ['open', 'active', 'active_compact'], true))
                                 <flux:badge
                                     size="sm"
                                     color="zinc"
@@ -387,6 +397,10 @@
                                         : null,
                                 ]
                             )
+                            @include('translation-workbench::livewire.translation-workbench.shared.linked-candidates', [
+                                'summary' => $sharedSummaries[$row['id']] ?? [],
+                                'asBadge' => true,
+                            ])
                         </div>
                     @endif
                 </flux:table.cell>

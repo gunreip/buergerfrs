@@ -14,7 +14,7 @@
                         'scanning' => __('Reading source files'),
                         'comparing' => __('Comparing findings'),
                         'preview_complete' => __('Finalizing scan preview'),
-                        'saving' => __('Processing findings for saving'),
+                        'saving' => __('Saving scan results to database'),
                         'final_check' => __('Checking source files before completion'),
                         default => __('Scan progress'),
                     };

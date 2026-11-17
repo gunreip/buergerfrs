@@ -79,11 +79,6 @@
             </flux:accordion.content>
         </flux:accordion.item>
     </flux:accordion>
-
-    <x-ui.loading.lazy-indicator
-:overlay="true" role="status"  target="$refresh" :text="__('Refreshing scan results…')"
-                            />
-
                             {{-- Show Scan Results --}}
                             <flux:accordion class="space-y-4">
                                 <flux:accordion.item>
@@ -232,9 +227,13 @@
                                                         @foreach (['confirmed', 'created', 'moved', 'removed', 'review_files'] as $count)
                                                             {{-- Column Moved  --}}
                                                             <flux:table.cell>
-                                                                <flux:callout.text>
-                                                                    {{ number_format($scan[$count]) }}
-                                                                </flux:callout.text>
+                                                                @if ($count === 'review_files' && $scan[$count] > 0)
+                                                                    <flux:button size="sm" variant="outline" wire:click="openScan('{{ $scan['id'] }}', 'review_files')" :aria-label="__('Open files requiring review')">
+                                                                        {{ number_format($scan[$count]) }}
+                                                                    </flux:button>
+                                                                @else
+                                                                    <flux:callout.text>{{ number_format($scan[$count]) }}</flux:callout.text>
+                                                                @endif
                                                             </flux:table.cell>
                                                         @endforeach
                                                         {{-- Column Archived --}}

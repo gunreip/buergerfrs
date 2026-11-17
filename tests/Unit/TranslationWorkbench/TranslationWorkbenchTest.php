@@ -47,7 +47,14 @@ function translationWorkbenchFixture(): array
     $editor->shouldReceive('scanRequirementSummary')->andReturn(['required' => false, 'findings' => 0, 'files' => 0, 'examples' => []])->byDefault();
     $editor->shouldReceive('scanUsageReasons')->andReturn([])->byDefault();
     $editor->shouldReceive('page')->andReturn(new LengthAwarePaginator([], 0, 25))->byDefault();
+    $editor->shouldReceive('tabCounts')->andReturn([])->byDefault();
     $editor->shouldReceive('totals')->andReturn(['database' => 'fixture', 'active' => 1, 'archived' => 0, 'keys' => 1, 'revisions' => 0]);
+    $editor->shouldReceive('assignmentKeyChildren')->andReturnUsing(static fn ($prefix) => match ($prefix) {
+        '' => array_map(static fn ($root) => $root.'.', config('translation-workbench.allowed_first_translation_key_segments', [])),
+        'ui.' => ['ui.button.'],
+        'ui.button.' => ['ui.button.save'],
+        default => [],
+    })->byDefault();
     $editor->shouldReceive('keys')->andReturn([['key_id' => 8, 'namespace' => '', 'full_name' => 'ui.button.save']]);
     app()->instance(GenerationEditor::class, $editor);
     $row = ['id' => 11, 'path' => 'example.blade.php', 'source_line' => 2, 'source_column' => 3, 'raw_expression' => "__('<script>test</script>')", 'status' => 'active', 'predecessor_id' => null, 'key_id' => 8, 'link_id' => 4, 'full_name' => 'ui.button.save', 'raw_source_code_literal' => 'ui.button.save', 'raw_literal' => null, 'suggested_literal' => 'Save', 'suggested_key' => 'fixture.original.save'];
@@ -55,6 +62,16 @@ function translationWorkbenchFixture(): array
 
     return [$editor, $context];
 }
+
+it('shows the publication issue beside the currently assigned key', function () {
+    [$editor, $context] = translationWorkbenchFixture();
+    config(['translation-workbench.allowed_first_translation_key_segments' => ['ui']]);
+    $context['finding']['full_name'] = 'packages.example.save';
+    $editor->shouldReceive('inspect')->with(11, 'de')->andReturn($context);
+    Livewire::test(TranslationWorkbench::class)->call('open', 11)
+        ->assertSee('First key segment “packages” is not allowed')->assertSee('Allowed translation groups: ui.')
+        ->set('assignmentKey', 'ui.button.save')->assertSee('First key segment “packages” is not allowed');
+});
 
 it('opens the new editor and saves a draft without publishing or conflating evidence and revisions', function () {
     [$editor,$context] = translationWorkbenchFixture();
@@ -69,7 +86,7 @@ it('opens the new editor and saves a draft without publishing or conflating evid
     $user = new User;
     $user->id = 7;
     $this->actingAs($user);
-    Livewire::test(TranslationWorkbench::class)->assertSee('current_generation_v2')
+    Livewire::test(TranslationWorkbench::class)->set('overviewOpen', true)->assertSee('current_generation_v2')
         ->call('open', 11)->assertSet('editorOpen', true)->assertSet('value', '')->assertDontSeeHtml('<script>test</script>')
         ->call('copyPublished')->assertSet('value', '0')->set('reason', 'Explicit draft')->call('saveDraft')
         ->assertHasNoErrors()->assertSet('context.revision.id', 19)
@@ -307,6 +324,7 @@ it('distinguishes source preview states and displays their next steps', function
         [['already_set' => true, 'ready' => false, 'blocker' => 'The selected source occurrence already uses its assigned key.'], 'Assigned key already present', 'No source replacement is needed'],
         [['already_set' => false, 'ready' => true, 'blocker' => null], 'Ready for source replacement', 'Choose a reason'],
         [['ready' => false, 'blocker' => 'Save and approve a revision in the source language before replacing the literal.'], 'Source replacement blocked', 'Save and approve the source-language text'],
+        [['ready' => false, 'blocker' => \Gunreip\TranslationWorkbench\Generation\SourceReplacementPreview::REVIEW_REQUIRED], 'Source replacement blocked', 'Approve the existing source-language revision once for this key'],
         [['ready' => false, 'blocker' => 'Publish the approved source-language revision first. The file does not contain that value.'], 'Source replacement blocked', 'Publish the approved source-language revision'],
         [['ready' => false, 'blocker' => 'Source or language file is missing or unreadable.'], 'Source replacement blocked', 'Check the source-language file'],
     ] as [$previewStatus, $heading, $nextStep]) {
@@ -601,7 +619,7 @@ it('refreshes saved scans and opens considered decisions directly from their cou
         ->andReturn(new LengthAwarePaginator([], 0, 25));
     $editor->shouldReceive('scanPage')->with('saved-scan', 'usage_decisions', 1)
         ->andReturn(new LengthAwarePaginator([], 0, 25));
-    $test = Livewire::test(TranslationWorkbench::class)->assertSee('No saved scans yet.')
+    $test = Livewire::test(TranslationWorkbench::class)->set('overviewOpen', true)->assertSee('No saved scans yet.')
         ->assertSee('php artisan translation-workbench:generation-scan --apply');
     $scans = [['id' => 'saved-scan', 'completed_at' => '2026-10-21 12:00:00',
         'confirmed' => 2, 'created' => 0, 'moved' => 0, 'removed' => 0, 'review_files' => 0, 'usage_decisions' => 1]];
@@ -619,6 +637,61 @@ it('does not open a scan with an invalid result category', function () {
         ->assertHasErrors('scan')->assertSet('scanOpen', false);
 });
 
+
+it('applies finding search options together and resets the findings page', function () {
+    [$editor] = translationWorkbenchFixture();
+    $component = Livewire::test(TranslationWorkbench::class)
+        ->set('search', 'Finding')
+        ->set('paginators.findingsPage', 3)
+        ->call('toggleSearchCaseSensitive')
+        ->assertSet('searchCaseSensitive', true)
+        ->assertSet('paginators.findingsPage', 1)
+        ->call('toggleSearchWholeWord')
+        ->assertSet('searchWholeWord', true)
+        ->call('toggleSearchWholeLiteral')->assertSet('searchWholeLiteral', true)
+        ->assertSet('search', 'Finding');
+    $editor->shouldHaveReceived('page')->withArgs(fn (...$args) => $args[0] === 'Finding' && $args[9] === true && $args[10] === true && $args[12] === true);
+    $component->set('search', 'Other')
+        ->assertSet('searchCaseSensitive', true)
+        ->assertSet('searchWholeWord', true)
+        ->set('search', '')
+        ->assertSet('searchCaseSensitive', false)
+        ->assertSet('searchWholeWord', false)
+        ->assertSet('searchWholeLiteral', false)
+        ->assertSet('paginators.findingsPage', 1);
+});
+
+it('keeps text search options separate and clears them only with their own search', function ($field, $page) {
+    translationWorkbenchFixture();
+    Livewire::test(TranslationWorkbench::class)
+        ->set($field, 'Finding')->call('setPage', 3, $page)
+        ->call('toggleTextSearchOption', $field, 'case')
+        ->call('toggleTextSearchOption', $field, 'word')
+        ->assertSet('paginators.'.$page, 1)
+        ->set($field, 'Other')
+        ->assertSet('textSearchOptions.'.$field, ['case' => true, 'word' => true])
+        ->set('search', '')
+        ->assertSet('textSearchOptions.'.$field, ['case' => true, 'word' => true])
+        ->set($field, '')->assertSet('textSearchOptions', []);
+})->with([
+    ['workSearch', 'workPage'], ['translationSearch', 'translationsPage'],
+    ['reviewSearch', 'reviewPage'], ['publicationSearch', 'publicationPage'],
+    ['publishedSearch', 'publishedPage'], ['sourceReplacementSearch', 'sourceReplacementPage'],
+]);
+
+it('resets independent ID filter pages without clearing text or matching options', function ($field, $page, $search) {
+    translationWorkbenchFixture();
+    Livewire::test(TranslationWorkbench::class)
+        ->set($search, 'button')->call('toggleTextSearchOption', $search, 'case')
+        ->call('setPage', 3, $page)->set($field, '42')
+        ->assertSet('paginators.'.$page, 1)->assertSet($field, '42')
+        ->assertSet($search, 'button')->assertSet('textSearchOptions.'.$search.'.case', true)
+        ->set($field, '')->assertSet($search, 'button');
+})->with([
+    ['workFindingId', 'workPage', 'workSearch'], ['workKeyId', 'workPage', 'workSearch'],
+    ['sourceReplacementFindingId', 'sourceReplacementPage', 'sourceReplacementSearch'],
+    ['sourceReplacementKeyId', 'sourceReplacementPage', 'sourceReplacementSearch'],
+]);
 
 it('toggles finding sorts, preserves filters and resets only the findings page', function () {
     translationWorkbenchFixture();
@@ -736,22 +809,48 @@ it('offers segments in the assignment select without extra navigation or writes'
         ->assertDontSee('Use this translation key')
         ->assertDontSee('This starting key does not meet the assignment rules.')
         ->assertSet('assignmentKey', 'ui.button.save');
-    $keys = [['namespace' => '', 'full_name' => 'ui.button.save']];
-    expect($component->instance()->assignmentKeyOptions($keys))->toBe(['ui.', 'admin.', 'reports.']);
+    expect($component->instance()->assignmentKeyOptions())->toBe(['ui.', 'admin.', 'reports.']);
     $component->set('assignmentKey', 'ui.')->assertSee('Incomplete translation key')->assertDontSee('New translation key');
-    expect($component->instance()->assignmentKeyOptions($keys))->toBe(['ui.button.']);
+    $component->assertSeeHtml('assignment-key-group-ui.')->assertSeeHtml('value="ui.button."');
+    expect($component->html())->toMatch('/>\s*button\.\s*<\//');
+    expect($component->instance()->assignmentKeyOptions())->toBe(['ui.button.']);
     $component->set('assignmentKey', 'ui.button.')->assertSee('Incomplete translation key')->assertDontSee('New translation key');
-    expect($component->instance()->assignmentKeyOptions($keys))->toBe(['ui.button.save']);
+    $component->assertSeeHtml('assignment-key-group-ui.button.')->assertSeeHtml('value="ui.button.save"');
+    expect($component->html())->toMatch('/>\s*save\s*<\//');
+    expect($component->instance()->assignmentKeyOptions())->toBe(['ui.button.save']);
     $component->set('assignmentKeySearch', 'adm');
-    expect($component->instance()->assignmentKeyOptions($keys))->toBe(['admin.']);
+    expect($component->instance()->assignmentKeyOptions())->toBe(['admin.']);
     $component->set('assignmentKeySearch', 'ui.button.sa');
-    expect($component->instance()->assignmentKeyOptions($keys))->toBe(['ui.button.save']);
+    expect($component->instance()->assignmentKeyOptions())->toBe(['ui.button.save']);
     $component->set('assignmentKey', 'ui.button.save')->assertSet('assignmentKeySearch', '')
         ->assertSee('Assigned key')->assertDontSee('Incomplete translation key')
         ->call('openTranslationKey', 'reports.new.Report')
         ->call('createTranslationKey')->assertHasNoErrors()->assertSet('assignmentKey', 'reports.new.Report')
         ->assertSet('context.finding.suggested_key', 'fixture.original.save');
 });
+
+it('appends the suggested leaf to the draft without its collision ordinal', function ($suggested, $literal, $prefix, $expected) {
+    [$editor, $context] = translationWorkbenchFixture();
+    $context['finding']['suggested_key'] = $suggested;
+    $context['finding']['raw_literal'] = $literal;
+    $editor->shouldReceive('inspect')->andReturn($context);
+    $editor->shouldNotReceive('assign');
+    Livewire::test(TranslationWorkbench::class)->call('open', 11)->call('openTranslationKey')
+        ->assertSee('Copy last segment')->set('newTranslationKey', $prefix)->call('appendSuggestedKeySegment')
+        ->assertSet('newTranslationKey', $expected)->assertSet('translationKeyOpen', true);
+})->with([
+    ['fixture.save_2', 'Save', 'ui.button.', 'ui.button.save'],
+    ['fixture.save_12', 'Save', 'ui.button', 'ui.button.save'],
+    ['fixture.step_2', 'Step 2', 'ui.step', 'ui.step.step_2'],
+    ['fixture.save', 'Save', '', ''],
+    ['fixture.save', 'Save', 'ui', 'ui'],
+    ['fixture.save', 'Save', 'ui.', 'ui.'],
+    ['fixture.save', 'Save', 'ui..button', 'ui..button'],
+    ['fixture.save', 'Save', 'ui.table.header', 'ui.table.header.save'],
+    ['fixture.use_run_scan_to_preview_changes_and_then_save_the_checked_scan_results_source_replace_a0989b7a90_2', 'Use Run scan to preview changes and then save the checked scan results. Source replacement remains blocked for affected files until the discrepancy is resolved.', 'ui.help', 'ui.help.use_run_scan_to_preview_changes_and_then_save_the_checked_scan_results_source_replace'],
+    ['fixture.color_a0989b7a90', 'Color a0989b7a90', 'ui.help', 'ui.help.color_a0989b7a90'],
+    ['fixture.step_2_3', 'Step 2', 'ui.button', 'ui.button.step_2'],
+]);
 
 it('stages a new select key without writing and keeps cancelled or invalid proposals out of the assignment', function () {
     [$editor, $context] = translationWorkbenchFixture();
@@ -1134,13 +1233,17 @@ it('groups shared checkboxes without replacing selections from other pages or ch
     $literal = "\n<Save>\nNext line\n";
     $editor->shouldReceive('sharedSummaries')->andReturn([11 => ['status' => 'active', 'key_id' => 8, 'literal' => $literal]]);
     $row = ['path' => 'example.blade.php', 'source_line' => 1, 'source_column' => 1, 'suggested_key' => 'example.save', 'full_name' => 'ui.button.save', 'literal' => $literal];
-    $editor->shouldReceive('sharedFindings')->with(11, 1)->andReturn(new LengthAwarePaginator([
+    $editor->shouldReceive('sharedFindings')->with(11, 1, 25, '', 'asc')->andReturn(new LengthAwarePaginator([
         [...$row, 'id' => 11, 'key_id' => 8],
         [...$row, 'id' => 12, 'key_id' => null],
         [...$row, 'id' => 13, 'key_id' => 9],
         [...$row, 'id' => 14, 'key_id' => 8],
         [...$row, 'id' => 15, 'key_id' => 9, 'literal' => 'Different'],
     ], 5, 25));
+    $editor->shouldReceive('sharedFindings')->with(11, 1, 10, '', 'asc')->andReturn(new LengthAwarePaginator([], 0, 10));
+    foreach (['asc', 'desc'] as $direction) {
+        $editor->shouldReceive('sharedFindings')->with(11, 1, 25, 'source', $direction)->andReturn(new LengthAwarePaginator([], 0, 25));
+    }
     $editor->shouldNotReceive('assignShared');
     $component = Livewire::test(TranslationWorkbench::class)
         ->call('openShared', 11)
@@ -1154,6 +1257,14 @@ it('groups shared checkboxes without replacing selections from other pages or ch
         ->assertSet('sharedConfirmOpen', false)
         ->assertSet('sharedSelection', ['99', '12', '13'])
         ->set('sharedSelection', ['99'])
+        ->assertSet('sharedSelection', ['99']);
+
+    $component->set('sharedPerPage', 10)->assertSet('sharedSelection', ['99'])
+        ->assertSet('paginators.sharedFindingsPage', 1)
+        ->set('sharedPerPage', 25);
+
+    $component->call('sortSharedFindings', 'source')->assertSet('sharedDirection', 'asc')
+        ->call('sortSharedFindings', 'source')->assertSet('sharedDirection', 'desc')
         ->assertSet('sharedSelection', ['99']);
 
     $buttons = function () use ($component): array {
@@ -1268,7 +1379,7 @@ it('shows Shared key instead of Shared candidate once the finding shares its ass
 it('keeps the assignment filter independent from status and resets the findings page', function () {
     translationWorkbenchFixture();
     Livewire::test(TranslationWorkbench::class)
-        ->assertSet('status', 'active')->assertSet('unassignedOnly', false)
+        ->assertSet('status', 'open')->assertSet('unassignedOnly', false)
         ->call('setPage', 3, 'findingsPage')->call('toggleUnassigned')
         ->assertSet('unassignedOnly', true)->assertSet('paginators.findingsPage', 1)
         ->set('status', 'all')->assertSet('unassignedOnly', true)
@@ -1398,6 +1509,17 @@ it('renders an executable create-reason action and opens the workflow reason mod
         ->set('reviewReasonLocale', 'fr')->assertHasErrors('reviewReasonLocale');
 });
 
+it('reports an empty or stale review selection with a danger toast', function () {
+    [$editor] = translationWorkbenchFixture();
+    $message = 'This revision is no longer waiting for review.';
+    $editor->shouldReceive('reviewWorklist')->once()->andThrow(new RuntimeException($message));
+    Livewire::test(TranslationWorkbench::class)
+        ->call('openReviewBatch')->assertHasErrors('selectedReviewRevisions')
+        ->assertDispatched('toast-show', fn ($event, $params) => $params['slots']['text'] === 'Select at least one revision to review.')
+        ->set('selectedReviewRevisions', ['19'])->call('openReviewBatch')->assertSet('reviewBatchOpen', false)
+        ->assertDispatched('toast-show', fn ($event, $params) => $params['dataset']['variant'] === 'danger' && $params['slots']['text'] === $message);
+});
+
 it('marks shared review revisions and keeps batch and individual review controls available', function () {
     view()->share('errors', new \Illuminate\Support\ViewErrorBag);
     $tasks = new LengthAwarePaginator([
@@ -1405,6 +1527,7 @@ it('marks shared review revisions and keeps batch and individual review controls
         ['submission' => 2, 'key_id' => 9, 'namespace' => '', 'full_name' => 'ui.button.cancel', 'locale' => 'en', 'revision' => 20, 'occurred_at' => null, 'actor_id' => 7, 'active_findings_count' => 1],
     ], 2, 25);
     $html = view('translation-workbench::livewire.translation-workbench.tabs.review.table', [
+        'reviewSearch' => '', 'textSearchOptions' => [],
         'reviewTasks' => $tasks, 'reviewSort' => 'key', 'reviewDirection' => 'asc', 'selectedReviewRevisions' => [],
     ])->render();
     expect($html)->toContain('Shared key', '3 active findings', 'ui-checkbox-group', 'openReviewBatch', 'openReviewBatch(19)', 'selectedReviewRevisions');
@@ -1589,27 +1712,55 @@ it('rejects an empty publication selection without opening a preview', function 
         ->assertSet('publicationBatch', []);
 });
 
+it('opens the completed tab with workflow history for each finding', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldReceive('latestWorkingEventId')->andReturn(42);
+    $editor->shouldReceive('sourceReplacementPage')->with('', 1, 25, 'finding', 'asc', false, false, '', '', true, 'de', false)
+        ->andReturn(new LengthAwarePaginator([['id' => 101, 'key_id' => 8, 'full_name' => 'ui.button.save',
+            'path' => 'example.blade.php', 'source_line' => 2, 'source_column' => 3]], 1, 25));
+    $panel = Livewire::test(TranslationWorkbench::class)->set('tab', 'completed')
+        ->assertSee('#101')->assertSee('ui.button.save')->assertSeeHtml('$parent.openWorkflowStatus(101)')
+        ->assertDontSeeHtml('$parent.previewSelectedSource(101)');
+    // A real parent refresh hydrates reactive props on the already mounted child.
+    $dom = \Dom\HTMLDocument::createFromString($panel->effects['html'], LIBXML_NOERROR);
+    $table = $dom->querySelector('[wire\\:name="translation-workbench.source-replacement-table"]');
+    $this->withoutMiddleware()->postJson(Livewire::getUpdateUri(), ['components' => [
+        ['snapshot' => json_encode($panel->snapshot), 'updates' => [], 'calls' => [['method' => '$refresh', 'params' => []]]],
+        ['snapshot' => $table->getAttribute('wire:snapshot'), 'updates' => [], 'calls' => []],
+    ]], ['X-Livewire' => 'true'])->assertOk()->assertJsonPath('components.1.skip', true);
+});
+
 it('shows source replacement inspection with disabled actions and separate findings', function () {
     [$editor] = translationWorkbenchFixture();
     $rows = [];
     foreach ([101 => 'ready', 102 => 'blocked', 103 => 'already_set'] as $id => $state) {
         $rows[] = ['id' => $id, 'key_id' => 8, 'path' => 'example.blade.php', 'source_line' => 2,
             'source_column' => 3, 'full_name' => 'ui.button.save', 'raw_expression' => "__('Save')",
-            'check_state' => $state, 'check_detail' => 'Inspection detail'];
+            'check_state' => $state, 'check_detail' => $state === 'blocked'
+                ? \Gunreip\TranslationWorkbench\Generation\SourceReplacementPreview::REVIEW_REQUIRED : 'Inspection detail'];
     }
     $editor->shouldReceive('latestWorkingEventId')->andReturn(42);
-    $editor->shouldReceive('sourceReplacementPage')->once()->with('', 1, 25, 'finding', 'asc')
+    $editor->shouldReceive('sourceReplacementPage')->once()->with('', 1, 25, 'finding', 'asc', false, false, '', '', false, 'de', false)
         ->andReturn(new LengthAwarePaginator($rows, 3, 25, 1, ['pageName' => 'sourceReplacementPage']));
     $service = Mockery::mock(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class);
     $service->shouldReceive('target')->once()->andReturn(['database' => 'fixture', 'schema' => 'fixture', 'paths' => []]);
     app()->instance(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class, $service);
     $panel = Livewire::test(TranslationWorkbench::class)->set('tab', 'source-replacement')
-        ->assertSee('Ready at check time')->assertSee('Needs attention')
+        ->assertSee('Ready at check time')->assertSee('Needs attention')->assertSee('Approve source-language revision')
         ->assertSee('Assigned key already in source')->assertSee('#101')->assertSee('#102')
         ->assertDontSeeHtml('wire:click="previewSource"')->assertSeeHtml('wire:click="$parent.previewSelectedSource(101)"');
     // The browser bundles reactive children with the parent, unlike a simple test call().
     $dom = \Dom\HTMLDocument::createFromString($panel->effects['html'], LIBXML_NOERROR);
     $table = $dom->querySelector('[wire\\:name="translation-workbench.source-replacement-table"]');
+    $editor->shouldReceive('sourceReplacementGroup')->once()->with(101)->andReturn([
+        'key_id' => 8, 'full_name' => 'ui.button.save', 'finding_ids' => [101, 102, 103],
+    ]);
+    $response = $this->withoutMiddleware()->postJson(Livewire::getUpdateUri(), ['components' => [
+        ['snapshot' => json_encode($panel->snapshot), 'updates' => [], 'calls' => [['method' => 'selectSourceReplacementGroup', 'params' => [101]]]],
+        ['snapshot' => $table->getAttribute('wire:snapshot'), 'updates' => [], 'calls' => []],
+    ]], ['X-Livewire' => 'true']);
+    $response->assertOk()->assertJsonPath('components.1.skip', true);
+    expect($response->json('components.0.effects.html'))->toContain('Preview selected findings (3)');
     $response = $this->withoutMiddleware()->postJson(Livewire::getUpdateUri(), ['components' => [
         ['snapshot' => json_encode($panel->snapshot), 'updates' => [], 'calls' => [['method' => 'openScanWorkflow', 'params' => []]]],
         ['snapshot' => $table->getAttribute('wire:snapshot'), 'updates' => [], 'calls' => []],
@@ -1643,23 +1794,50 @@ it('leaves source replacement selection empty when the finding is no longer elig
 
 it('sorts source replacement findings while retaining search and selection', function ($column) {
     [$editor] = translationWorkbenchFixture();
-    $editor->shouldReceive('sourceReplacementPage')->with('ui.button', 1, 25, 'finding', 'asc')
+    $editor->shouldReceive('sourceReplacementPage')->with('ui.button', 1, 25, 'finding', 'asc', false, false, '', '', false, 'de', false)
         ->andReturn(new LengthAwarePaginator([], 0, 25));
     $first = $column === 'finding' ? 'desc' : 'asc';
     $second = $first === 'asc' ? 'desc' : 'asc';
     foreach ([$first, $second] as $direction) {
-        $editor->shouldReceive('sourceReplacementPage')->with('ui.button', 1, 25, $column, $direction)
+        $editor->shouldReceive('sourceReplacementPage')->with('ui.button', 1, 25, $column, $direction, false, false, '', '', false, 'de', false)
             ->andReturn(new LengthAwarePaginator([], 0, 25));
     }
     $component = Livewire::test(\Gunreip\TranslationWorkbench\Livewire\SourceReplacementTable::class,
-        ['search' => 'ui.button', 'selectedIds' => '11,12']);
+        ['search' => 'ui.button']);
     $component->instance()->setPage(3, 'sourceReplacementPage');
     $component->call('sortBy', $column)->assertSet('sortColumn', $column)->assertSet('sortDirection', $first)
         ->assertSet('paginators.sourceReplacementPage', 1)
-        ->assertSet('search', 'ui.button')->assertSet('selectedIds', '11,12')
+        ->assertSet('search', 'ui.button')
         ->call('sortBy', $column)->assertSet('sortDirection', $second)
         ->call('sortBy', 'invalid')->assertSet('sortColumn', $column)->assertSet('sortDirection', $second);
 })->with(['finding', 'key_id', 'key', 'source', 'expression']);
+
+it('opens the unresolved finding from source issues without selecting the affected key group', function () {
+    [$editor] = translationWorkbenchFixture();
+    $finding = ['id' => 24227, 'key_id' => null, 'full_name' => null, 'path' => 'example.php',
+        'source_line' => 308, 'source_column' => 43, 'raw_expression' => "__('Compare source')"];
+    $editor->shouldReceive('sourceIssues')->andReturn([
+        $finding + ['reason' => 'ambiguous', 'affected' => [24729 => 1555]],
+    ]);
+    $editor->shouldReceive('describeSourceIssueRows')->andReturnUsing(static fn ($rows) =>
+        array_map(static fn ($row) => $row + ['observations' => ['ambiguous' => 2]], $rows));
+    $editor->shouldReceive('sourceReplacementComparison')->once()->with(24227, null)->andReturn([
+        'finding' => $finding, 'decision' => [],
+        'check' => ['state' => 'ambiguous_matches', 'detail' => 'Several matches.', 'positions' => [], 'contexts' => []],
+    ]);
+    Livewire::test(TranslationWorkbench::class)->set('tab', 'source-issues')
+        ->assertSee('Several matching occurrences')
+        ->assertSeeInOrder([__('Finding ID'), '#24729', __('Key ID'), '#1555'])
+        ->set('sourceIssueFilters.finding', '24729')->set('sourceIssueFilters.key', '1555')
+        ->set('sourceIssueSearch', 'compare')->call('toggleTextSearchOption', 'sourceIssueSearch', 'word')
+        ->set('sourceIssueFilters.observation', 'ambiguous')->assertSee('#24729')
+        ->call('toggleTextSearchOption', 'sourceIssueSearch', 'case')->assertSee('No source issues match these filters.')
+        ->set('sourceIssueSearch', '')->assertSee('#24729')
+        ->set('sourceIssueFilters.observation', 'duplicate')->assertSee('No source issues match these filters.')
+        ->set('sourceIssueFilters.observation', '')
+        ->call('openSourceIssue', 24227)->assertSet('sourceComparisonOpen', true)
+        ->assertSet('sourceComparison.finding.id', 24227)->assertSet('sourceReplacementGroup', []);
+});
 
 it('opens a read-only source comparison only for findings in the selected key group', function () {
     [$editor] = translationWorkbenchFixture();
@@ -1669,8 +1847,9 @@ it('opens a read-only source comparison only for findings in the selected key gr
     $editor->shouldReceive('sourceReplacementComparison')->once()->with(609, 1538)->andReturn([
         'finding' => ['id' => 609, 'key_id' => 1538, 'full_name' => 'ui.table.header.reason', 'path' => 'example.php',
             'source_line' => 683, 'source_column' => 130, 'raw_expression' => "__('Reason')"],
+        'decision' => ['occupied' => ['705:130' => [['id' => 710, 'expression' => 'Other', 'captured_at' => '2026-10-10T11:21:00+02:00']]]],
         'check' => ['state' => 'possible_move', 'detail' => 'Possible move.', 'positions' => [['line' => 705, 'column' => 130]],
-            'contexts' => [['line' => 705, 'column' => 130, 'text' => '<script>not executable</script>',
+            'contexts' => [['line' => 683, 'column' => 130, 'captured' => true], ['line' => 705, 'column' => 130, 'text' => '<script>not executable</script>',
                 'lines' => [['number' => 705, 'focus' => true, 'before' => '', 'match' => '<script>not executable</script>', 'after' => '']]]]],
     ]);
     Livewire::test(TranslationWorkbench::class)->call('openSourceComparison', 609)
@@ -1678,8 +1857,48 @@ it('opens a read-only source comparison only for findings in the selected key gr
         ->call('selectSourceReplacementGroup', 609)->call('openSourceComparison', 609)
         ->assertSet('sourceComparisonOpen', true)->assertSee('Proposed handling — not applied')
         ->assertSee('Position comparison')->assertSee('Lines')->assertSee('+22')->assertSee('Columns')->assertSee('+0')
+        ->assertSee('Finding #609 first captured at')->assertSee('Finding #710 first captured at')
+        ->assertSeeHtml('datetime="2026-10-10T11:21:00+02:00"')
+        ->assertDontSee('Refresh comparison to record the observation time')
         ->assertDontSeeHtml('<script>not executable</script>')
         ->call('releaseSourceReplacementGroup')->assertSet('sourceComparisonOpen', false)->assertSet('sourceComparison', []);
+});
+
+it('shows how to resolve occupied positions instead of offering a move with no available target', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldReceive('sourceReplacementGroup')->with(642)->andReturn([
+        'key_id' => 1538, 'full_name' => 'ui.table.header.reason', 'finding_ids' => [642],
+    ]);
+    $positions = [['line' => 113, 'column' => 51], ['line' => 291, 'column' => 36]];
+    $editor->shouldReceive('sourceReplacementComparison')->with(642, 1538)->andReturn([
+        'finding' => ['id' => 642, 'key_id' => 1538, 'full_name' => 'ui.table.header.reason', 'path' => 'example.php',
+            'source_line' => 116, 'source_column' => 51, 'raw_expression' => "__('Reason')"],
+        'check' => ['state' => 'ambiguous_matches', 'detail' => 'Several matches.', 'positions' => $positions, 'contexts' => $positions],
+        'decision' => ['can_move' => true, 'can_remove' => false, 'occupied' => [
+            '113:51' => [['id' => 639, 'expression' => "__('Lang key')"]],
+            '291:36' => [['id' => 21312, 'expression' => "__('Reason')"]],
+        ]],
+    ]);
+    $user = new User;
+    $user->id = 7;
+    $this->actingAs($user);
+    $run = (string) \Illuminate\Support\Str::uuid();
+    session(['workbench.scan_workflow' => $run]);
+    $coordinator = Mockery::mock(\Gunreip\TranslationWorkbench\Generation\ScanRunCoordinator::class);
+    $coordinator->shouldReceive('status')->once()->with($run, 7)->andReturn([
+        'state' => 'preview_ready', 'preview' => ['position_files' => ['example.php'], 'counts' => array_fill_keys(
+            ['confirmed', 'created', 'moved', 'removed', 'review_files', 'outside_scope_files', 'suggested_keys_initialized', 'usage_decisions'], 0)],
+    ]);
+    $positionsById = array_fill_keys(range(600, 642), ['from' => '116:51', 'state' => 'unchanged']);
+    $positionsById[642] = ['from' => '116:51', 'state' => 'unique_move', 'to' => '113:51'];
+    $coordinator->shouldReceive('positionPreview')->with($run, 7, 'example.php')->andReturn($positionsById);
+    app()->instance(\Gunreip\TranslationWorkbench\Generation\ScanRunCoordinator::class, $coordinator);
+    Livewire::test(TranslationWorkbench::class)->call('selectSourceReplacementGroup', 642)->call('openSourceComparison', 642)
+        ->assertSee('Every matching position is occupied')->assertSee('Refresh comparison')
+        ->assertSee('Inspect finding #639')->assertSee('Inspect finding #21312')
+        ->assertDontSee('Choose a decision')->assertDontSee('Choose the matching occurrence')
+        ->call('previewComparisonPositions')->assertHasNoErrors()->assertSet('sourceComparisonOpen', false)
+        ->assertSet('scanPositionPath', 'example.php')->assertSet('scanPositionFinding', 642)->assertSee('Unique move');
 });
 
 it('leaves the source comparison when continuing the source workflow step', function () {
@@ -1733,7 +1952,8 @@ it('requires an explicit confirmed source position decision and releases the gro
     $editor->shouldReceive('sourceReplacementComparison')->with(609, 1538)->andReturn([
         'finding' => ['id' => 609, 'key_id' => 1538, 'full_name' => 'ui.table.header.reason', 'path' => 'example.php',
             'source_line' => 683, 'source_column' => 130, 'raw_expression' => "__('Reason')"],
-        'check' => ['state' => 'possible_move', 'detail' => 'Possible move.', 'positions' => [['line' => 705, 'column' => 130]]],
+        'check' => ['state' => 'possible_move', 'detail' => 'Possible move.', 'positions' => [['line' => 705, 'column' => 130], ['line' => 710, 'column' => 12]],
+            'contexts' => [['line' => 705, 'column' => 130]]],
         'decision' => ['fingerprint' => 'reviewed-fingerprint', 'can_move' => true, 'can_remove' => false],
     ]);
     $editor->shouldReceive('applySourcePositionDecision')->once()
@@ -1745,7 +1965,14 @@ it('requires an explicit confirmed source position decision and releases the gro
         ->call('selectSourceReplacementGroup', 609)->call('openSourceComparison', 609)
         ->assertSee('Reason for source finding decision')->assertSee('Confirmed move')
         ->call('applySourcePositionDecision')->assertHasErrors(['sourcePositionChoice', 'sourcePositionReason', 'sourcePositionConfirmed'])
-        ->set('sourcePositionChoice', 'moved')->set('sourcePositionReason', 'Confirmed the moved call.')
+        ->assertDispatched('toast-show', fn ($event, $params) => $params['dataset']['variant'] === 'danger')
+        ->call('$refresh')->assertSee('Decision not saved')
+        ->assertSeeHtml('selectSourcePosition(705, 130)')
+        ->call('selectSourcePosition', 705, 130)->assertSet('sourcePositionTarget', '705:130')
+        ->assertSet('sourcePositionChoice', 'moved')->assertSet('sourcePositionConfirmed', false)
+        ->assertSee('Selected position')->assertDispatched('toast-show', fn ($event, $params) =>
+            $params['slots']['heading'] === 'Position selected' && str_contains($params['slots']['text'], '705:130'))
+        ->set('sourcePositionReason', 'Confirmed the moved call.')
         ->set('sourcePositionConfirmed', true)->call('applySourcePositionDecision')
         ->assertHasNoErrors()->assertSet('sourceComparisonOpen', false)->assertSet('sourceReplacementGroup', [])
         ->assertDispatched('toast-show', fn ($event, $params) =>
@@ -1820,10 +2047,11 @@ it('previews and prepares the complete selected source group without applying fi
     ]);
     $preview = ['batch' => true, 'key_id' => 8, 'key' => 'ui.button.save', 'finding' => 11, 'finding_ids' => [11, 99], 'source_locale' => 'en',
         'fingerprint' => 'batch-hash', 'ready' => true, 'blocked' => 0, 'items' => [
-            ['finding' => 11, 'path' => 'a.php', 'before' => "__('Save')", 'after' => "__('ui.button.save')", 'already_set' => false, 'ready' => true, 'blocker' => null],
+            ['finding' => 11, 'path' => 'a.php', 'line' => 3, 'column' => 9, 'before' => "__('Save')", 'after' => "__('ui.button.save')", 'already_set' => false, 'ready' => true, 'blocker' => null],
             ['finding' => 99, 'path' => 'b.php', 'before' => "__('Save')", 'after' => "__('ui.button.save')", 'already_set' => false, 'ready' => true, 'blocker' => null],
         ]];
     $writer = app(SourceReplacementWriter::class);
+    $writer->shouldReceive('pendingBatchForKey')->once()->with(8)->andReturn(null);
     $writer->shouldReceive('previewBatch')->once()->with(8, [11, 99])->andReturn($preview);
     $writer->shouldReceive('prepareBatch')->once()->with(8, [11, 99], 'batch-hash', 7, 'Shared reason')->andReturn('batch-run');
     $writer->shouldReceive('inspect')->with('batch-run')->andReturn([
@@ -1833,21 +2061,71 @@ it('previews and prepares the complete selected source group without applying fi
     $writer->shouldNotReceive('apply');
     Livewire::test(TranslationWorkbench::class)->call('previewSelectedSourceGroup')->assertHasErrors('sourcePreview')
         ->call('selectSourceReplacementGroup', 11)->call('previewSelectedSourceGroup')
-        ->assertHasNoErrors()->assertSet('sourcePreviewOpen', true)->assertSee('Key #8 · 2 findings')->assertSee('b.php')
+        ->assertHasNoErrors()->assertSet('sourcePreviewOpen', true)->assertSeeInOrder(['Key #8', '2 findings', 'a.php:3:9'])->assertSee('b.php')
         ->set('sourceReason', 'Shared reason')->call('prepareSource')
         ->assertHasNoErrors()->assertSet('sourcePreviewOpen', false)->assertSet('sourceRunOpen', true)
-        ->assertSee('Confirm selected replacements / resume');
+        ->assertSee('Confirm selected replacements / resume')
+        ->assertDispatched('toast-show', fn ($event, $params) =>
+            $params['slots']['heading'] === 'Selected source replacements prepared');
+});
+
+it('confirms a completed source replacement batch with a scan reminder', function () {
+    translationWorkbenchFixture();
+    $user = new User;
+    $user->id = 7;
+    $this->actingAs($user);
+    $writer = app(SourceReplacementWriter::class);
+    $plan = ['batch' => true, 'actor' => 7, 'run' => 'batch-run', 'reason' => 'Shared reason', 'state' => 'pending',
+        'preview' => ['key_id' => 8, 'items' => [['finding' => 11]]],
+        'files' => [['run' => 'file-run', 'path' => 'a.php', 'state' => 'pending', 'file_state' => 'original', 'impacts' => []]]];
+    $writer->shouldReceive('inspect')->with('batch-run')->andReturn($plan, array_merge($plan, ['state' => 'complete']));
+    $writer->shouldReceive('apply')->once()->with('batch-run', 7)->andReturn(['key' => 8, 'successors' => [['successor' => 12]]]);
+
+    $writer->shouldReceive('acknowledgeBatch')->once()->with('batch-run', 7);
+    Livewire::test(TranslationWorkbench::class)->call('openSourceRun', 'batch-run')->assertSee('Applying selected source replacements…')->call('applySource')
+        ->assertSet('sourceRunOpen', true)->assertSet('sourceRun.state', 'complete')
+        ->assertDispatched('toast-show', fn ($event, $params) =>
+            $params['duration'] === 0 && $params['dataset']['variant'] === 'success' && $params['slots']['heading'] === 'Selected source replacements completed'
+            && str_contains($params['slots']['text'], 'Run a new scan'))
+        ->assertSee('wire:click="acknowledgeSourceBatch"', false)->call('acknowledgeSourceBatch')
+        ->assertSet('sourceRunOpen', false)->assertSet('sourceRun', []);
+});
+
+it('keeps a blocked source replacement batch open and reports the reason', function () {
+    translationWorkbenchFixture();
+    $plan = ['batch' => true, 'actor' => 7, 'run' => 'batch-run', 'reason' => 'Shared reason', 'state' => 'pending',
+        'preview' => ['key_id' => 8, 'items' => []], 'files' => []];
+    $writer = app(SourceReplacementWriter::class);
+    $writer->shouldReceive('inspect')->with('batch-run')->andReturn($plan);
+    $writer->shouldReceive('apply')->once()->andThrow(new RuntimeException('Source file changed.'));
+    Livewire::test(TranslationWorkbench::class)->call('openSourceRun', 'batch-run')->call('applySource')
+        ->assertSet('sourceRunOpen', true)->assertSet('sourceRun.state', 'pending')
+        ->assertDispatched('toast-show', fn ($event, $params) => $params['dataset']['variant'] === 'danger'
+            && $params['slots']['text'] === 'Source file changed.' && $params['duration'] === 0);
 });
 
 it('shows the regular scan workflow for a stale finding elsewhere in the source file', function () {
-    $item = ['finding' => 20486, 'path' => 'example.blade.php', 'before' => "__('Reason')", 'after' => "__('ui.table.reason')", 'ready' => false, 'already_set' => false,
+    $item = ['finding' => 20486, 'path' => 'example.blade.php', 'line' => 22, 'column' => 16, 'before' => "__('Reason')", 'after' => "__('ui.table.reason')", 'ready' => false, 'already_set' => false,
         'blocker' => 'Stored source position is stale', 'scan_required' => ['finding' => 522, 'path' => 'example.blade.php', 'line' => 58, 'column' => 24]];
     $html = view('translation-workbench::livewire.translation-workbench.shared.source-batch-preview', ['sourcePreview' => [
-        'key_id' => 1538, 'key' => 'ui.table.reason', 'items' => [$item, array_replace($item, ['finding' => 20488])], 'ready' => false, 'blocked' => 2,
+        'key_id' => 1538, 'key' => 'ui.table.reason', 'items' => [$item, array_replace($item, ['finding' => 20488, 'line' => 44])], 'ready' => false, 'blocked' => 2,
     ]])->render();
-    expect($html)->toContain('New scan required', '#522', '58:24', 'php artisan translation-workbench:generation-scan --apply')
+    expect($html)->toContain('New scan required', '#522', 'example.blade.php:58:24', 'example.blade.php:22:16', 'example.blade.php:44:16', 'php artisan translation-workbench:generation-scan --apply')
         ->not->toContain('Open prepared operation');
     expect(substr_count($html, 'Finding to check'))->toBe(1);
+});
+
+it('distinguishes a detected move from a confirmed position with a revision blocker', function () {
+    $item = ['finding' => 642, 'path' => 'example.php', 'line' => 116, 'column' => 51, 'before' => "__('Reason')",
+        'after' => '', 'ready' => false, 'already_set' => false, 'blocker' => 'Review the stored position.',
+        'scan_position' => ['from' => '116:51', 'to' => '113:51', 'state' => 'unique_move']];
+    $confirmed = array_replace($item, ['finding' => 21312, 'line' => 291, 'column' => 36,
+        'scan_position' => ['from' => '291:36', 'to' => '291:36', 'state' => 'unchanged'],
+        'blocker' => 'Save and approve a revision in the source language before replacing the literal.']);
+    $html = view('translation-workbench::livewire.translation-workbench.shared.source-batch-preview', ['sourcePreview' => [
+        'key_id' => 1538, 'key' => 'ui.table.header.reason', 'items' => [$item, $confirmed], 'ready' => false, 'blocked' => 2,
+    ]])->render();
+    expect($html)->toContain('Move detected', '113:51', 'openSourceComparison(642)', 'Scan confirmed #21312 at 291:36', $confirmed['blocker']);
 });
 
 it('shows scan requirements in the overview before opening a source preview', function () {
@@ -1875,7 +2153,7 @@ it('opens the scan workflow and confirms only a completed server preview', funct
     app()->instance(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class, $service);
     $coordinator = Mockery::mock(\Gunreip\TranslationWorkbench\Generation\ScanRunCoordinator::class);
     $id = (string) \Illuminate\Support\Str::uuid();
-    $coordinator->shouldReceive('start')->once()->with(7)->andReturn($id);
+    $coordinator->shouldReceive('start')->once()->with(7, false)->andReturn($id);
     $coordinator->shouldReceive('confirm')->once()->with($id, 7);
     $counts = array_fill_keys(['confirmed', 'created', 'moved', 'removed', 'review_files', 'outside_scope_files', 'suggested_keys_initialized', 'usage_decisions'], 0);
     $coordinator->shouldReceive('status')->with($id, 7)->andReturn(
@@ -1885,8 +2163,27 @@ it('opens the scan workflow and confirms only a completed server preview', funct
     app()->instance(\Gunreip\TranslationWorkbench\Generation\ScanRunCoordinator::class, $coordinator);
     Livewire::test(TranslationWorkbench::class)->call('openScanWorkflow')->assertHasNoErrors()
         ->assertSee('Scan scope')->assertDontSeeHtml('wire:click="confirmScan"')
-        ->call('startScanPreview')->assertHasNoErrors()->assertSee('Scan and save results')
+        ->call('startScanPreview')->assertHasNoErrors()->assertSee('Save scan results to database')
         ->call('confirmScan')->assertHasNoErrors()->assertSee('Checking and saving scan results');
+});
+
+it('starts a saved scan directly from the idle scan modal', function () {
+    translationWorkbenchFixture();
+    $user = new User;
+    $user->id = 7;
+    $this->actingAs($user);
+    $target = ['database' => 'fixture', 'schema' => 'workbench', 'paths' => ['resources/views']];
+    $service = Mockery::mock(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class);
+    $service->shouldReceive('target')->andReturn($target);
+    app()->instance(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class, $service);
+    $coordinator = Mockery::mock(\Gunreip\TranslationWorkbench\Generation\ScanRunCoordinator::class);
+    $id = (string) \Illuminate\Support\Str::uuid();
+    $coordinator->shouldReceive('start')->once()->with(7, true)->andReturn($id);
+    $coordinator->shouldReceive('status')->with($id, 7)->andReturn(['state' => 'queued_apply', 'target' => $target]);
+    app()->instance(\Gunreip\TranslationWorkbench\Generation\ScanRunCoordinator::class, $coordinator);
+    Livewire::test(TranslationWorkbench::class)->call('openScanWorkflow')
+        ->assertSeeHtml('wire:click="startScanAndSave"')->call('startScanAndSave')->assertHasNoErrors()
+        ->assertSet('scanWorkflow.state', 'queued_apply')->assertDontSeeHtml('wire:click="startScanAndSave"');
 });
 
 it('polls scan progress independently until the workbench needs the phase result', function () {
@@ -1918,7 +2215,24 @@ it('opens unchanged recent scan results without starting a scan', function () {
     $freshness->shouldReceive('inspect')->once()->andReturn(['reusable' => true, 'run' => 'recent-run', 'expires' => time() + 60]);
     app()->instance(\Gunreip\TranslationWorkbench\Generation\ScanResultFreshness::class, $freshness);
     Livewire::test(TranslationWorkbench::class)->call('openCurrentScan')->assertHasNoErrors()
-        ->assertSet('selectedScan', 'recent-run')->assertSet('scanOpen', true)->assertSet('scanWorkflowOpen', false)->assertSee('Open last scan');
+        ->assertSet('selectedScan', 'recent-run')->assertSet('scanOpen', true)->assertSet('scanWorkflowOpen', false)->assertSee(__('translation-workbench.buttons.open_last_scan'));
+});
+
+it('opens a new scan when finding positions need checking despite a reusable file inventory', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldReceive('scanRequirementSummary')->andReturn(['required' => true, 'examples' => []]);
+    $freshness = Mockery::mock(\Gunreip\TranslationWorkbench\Generation\ScanResultFreshness::class);
+    $freshness->shouldReceive('inspect')->andReturn(['reusable' => true, 'run' => 'recent-run', 'expires' => time() + 60]);
+    app()->instance(\Gunreip\TranslationWorkbench\Generation\ScanResultFreshness::class, $freshness);
+    $service = Mockery::mock(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class);
+    $service->shouldReceive('target')->once()->andReturn(['database' => 'fixture', 'schema' => 'fixture', 'paths' => []]);
+    app()->instance(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class, $service);
+
+    Livewire::test(TranslationWorkbench::class)->call('refreshScanFreshness')
+        ->assertSee('New scan required')->assertSee(__('translation-workbench.buttons.run_new_scan'))
+        ->assertDontSee(__('translation-workbench.buttons.open_last_scan'))
+        ->call('openCurrentScan')->assertHasNoErrors()->assertSet('scanOpen', false)
+        ->assertSet('scanWorkflowOpen', true)->assertSet('scanWorkflow.state', 'idle');
 });
 
 it('rechecks scan freshness on click instead of trusting the previous button state', function () {
@@ -1933,9 +2247,9 @@ it('rechecks scan freshness on click instead of trusting the previous button sta
     $service = Mockery::mock(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class);
     $service->shouldReceive('target')->once()->andReturn(['database' => 'fixture', 'schema' => 'fixture', 'paths' => []]);
     app()->instance(\Gunreip\TranslationWorkbench\Generation\WorkingScanService::class, $service);
-    Livewire::test(TranslationWorkbench::class)->call('refreshScanFreshness')->assertSee('Open last scan')
+    Livewire::test(TranslationWorkbench::class)->call('refreshScanFreshness')->assertSee(__('translation-workbench.buttons.open_last_scan'))
         ->call('openCurrentScan')->assertHasNoErrors()->assertSet('scanOpen', false)->assertSet('scanWorkflowOpen', true)
-        ->assertSee('Run new scan')->assertSee('Source files changed.');
+        ->assertSee(__('translation-workbench.buttons.run_new_scan'))->assertSee('Source files changed.');
 });
 
 it('lists confirmed scan findings and displays counts for every result category', function () {
@@ -2063,6 +2377,14 @@ it('watches only existing Livewire properties when initializing the finding edit
     }
 });
 
+it('skips hidden overview and findings queries when opening the translations tab', function () {
+    [$editor] = translationWorkbenchFixture();
+    $editor->shouldNotReceive('recentWork', 'totals', 'recentScans', 'page', 'workflowStates', 'sharedSummaries');
+    $editor->shouldReceive('translationTasks')->andReturn(new LengthAwarePaginator([], 0, 25));
+    Livewire::withQueryParams(['tab' => 'translations'])->test(TranslationWorkbench::class)
+        ->assertSet('tab', 'translations')->assertDontSee('Recently edited');
+});
+
 it('lists manually started shared work and resets its filters independently', function () {
     [$editor] = translationWorkbenchFixture();
     $user = new User;
@@ -2075,10 +2397,10 @@ it('lists manually started shared work and resets its filters independently', fu
     $editor->shouldReceive('workTasks')->with('de', 7, '', 1, 25)
         ->andReturn(new LengthAwarePaginator([$row], 1, 25));
     $component = Livewire::test(TranslationWorkbench::class)->set('tab', 'in-progress')
-        ->assertSee('In progress')->assertSee('Recently edited')->assertSee('Shared key')
+        ->assertSee('In progress')->set('overviewOpen', true)->assertSee('Recently edited')->assertSee('Shared key')
         ->assertSee('22 active')->assertSee('Continue with finding #505')
         ->assertSeeHtml('wire:click="resumeWork(8)"');
-    $editor->shouldReceive('workTasks')->with('de', null, 'old/path.php', 1, 25)
+    $editor->shouldReceive('workTasks')->with('de', null, 'old/path.php', 1, 25, false, false, '', '')
         ->andReturn(new LengthAwarePaginator([], 0, 25));
     $component->set('paginators.workPage', 3)->set('workSearch', 'old/path.php')
         ->assertSet('paginators.workPage', 1)->set('workOnlyMine', false)
@@ -2114,4 +2436,24 @@ it('resumes an open publication without preparing a second run', function () {
     $publisher->shouldNotReceive('prepare');
     Livewire::test(TranslationWorkbench::class)->call('resumeWork', 8)
         ->assertHasNoErrors()->assertSet('publicationOpen', true)->assertSet('publication.run', $plan['run']);
+});
+
+it('offers the current work item finding in the invalid publication key toast', function () {
+    [$editor, $context] = translationWorkbenchFixture();
+    $publisher = app(GenerationPublisher::class);
+    $run = (string) Illuminate\Support\Str::uuid();
+    $editor->shouldReceive('workItem')->with(8, 'de')->andReturn([
+        'finding_id' => 11, 'step' => 'publication', 'open_publication' => $run,
+    ]);
+    $publisher->shouldReceive('inspect')->with($run)->andThrow(
+        new Gunreip\TranslationWorkbench\Generation\InvalidPublicationKey('Invalid translation key format', 'Update the key assignment.', 8)
+    );
+    $editor->shouldReceive('inspect')->with(11, 'de')->andReturn($context);
+    Livewire::test(TranslationWorkbench::class)->call('resumeWork', 8)
+        ->assertDispatched('toast-show', fn ($event, $params) =>
+            $params['action']['label'] === 'Edit finding #11'
+            && $params['action']['event'] === 'workbench-edit-key-finding'
+            && $params['action']['params']['finding'] === 11)
+        ->call('editKeyFinding', 11)->assertSet('editorOpen', true)->assertSet('selected', 11)
+        ->assertDispatched('workflow-focus', target: 'workbench-key-assignment');
 });

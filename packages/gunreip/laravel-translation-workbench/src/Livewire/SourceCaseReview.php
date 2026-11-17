@@ -13,6 +13,13 @@ use Gunreip\TranslationWorkbench\Support\WorkbenchTestEnvironment;
 class SourceCaseReview extends Component
 {
     use WithPagination;
+    use Concerns\HasTextSearchOptions;
+
+    protected function textSearchPages(): array
+    {
+        return ['search' => 'sourceCasesPage'];
+    }
+
     use Concerns\HasWorkflowReasons;
 
     #[Locked]
@@ -32,10 +39,14 @@ class SourceCaseReview extends Component
     #[Locked]
     public string $testToken = '';
 
-    public function mount(string $testToken = ''): void
+    #[Locked]
+    public bool $workbenchPageLoading = false;
+
+    public function mount(?string $testToken = null): void
     {
-        $this->testToken = $testToken;
-        app(WorkbenchTestEnvironment::class)->activate($testToken);
+        $environment = app(WorkbenchTestEnvironment::class);
+        $this->testToken = $testToken ?? $environment->currentToken();
+        $environment->activate($this->testToken);
     }
 
     public function hydrate(): void
@@ -110,6 +121,7 @@ class SourceCaseReview extends Component
 
     public function updatedSearch(): void
     {
+        $this->resetEmptyTextSearch('search');
         $this->resetPage('sourceCasesPage');
     }
 
@@ -152,6 +164,7 @@ class SourceCaseReview extends Component
             return;
         }
         $this->modalOpen = false;
+        $this->dispatch('workbench-source-usage-saved');
         $this->notice = __('Decision saved. No translation or source file was changed.');
     }
 
@@ -169,7 +182,7 @@ class SourceCaseReview extends Component
         }
         $all = collect($snapshot['cases'] ?? []);
         $rows = $all->filter(fn ($case, $id) => ($this->filter !== 'open' || ! isset($decisions[$id]))
-            && str_contains(mb_strtolower($case['source_path'].' '.$case['raw_expression']), mb_strtolower(trim($this->search))));
+            && (trim($this->search) === '' || preg_match(\App\View\Components\Ui\Text\Highlight::pattern(trim($this->search), $this->textSearchOptions['search']['case'] ?? false, $this->textSearchOptions['search']['word'] ?? false), $case['source_path'].' '.$case['raw_expression']) === 1));
         // Sort the full filtered collection before pagination; retain capture IDs as keys.
         $sortKeys = [];
         foreach ($rows as $id => $case) {

@@ -1,14 +1,7 @@
 <flux:error name="testcase" />
-
-<x-ui.loading.lazy-indicator
-    class="absolute inset-0 z-50"
-    role="status"
-    box-class="h-full w-full rounded-lg bg-white/75 dark:bg-zinc-900/75"
-    target="toggleTestcase"
-    :text="__('Switching workbench dataset…')"
-/>
 @if ($testToken !== '')
     <flux:callout
+        data-workbench-test-environment
         class="space-y-4"
         color="amber"
         icon="beaker"

@@ -15,6 +15,9 @@
     'heading' => null,
     'prefixKey' => null,
     'mono' => false,
+    'search' => '',
+    'caseSensitive' => false,
+    'wholeWord' => false,
 ])
 
 @php
@@ -30,16 +33,37 @@
     $textClasses = $mono ? 'font-mono break-all hyphens-none' : 'break-normal wrap-break-word hyphens-auto';
     $fullText = (string) $text;
     $preview = trim(preg_replace('/\s+/u', ' ', $fullText) ?? $fullText);
+    $search = trim((string) $search);
+    $matchPosition = false;
+    if ($search !== '' && preg_match(\App\View\Components\Ui\Text\Highlight::pattern($search, (bool) $caseSensitive, (bool) $wholeWord), $preview, $match, PREG_OFFSET_CAPTURE)) {
+        $matchPosition = mb_strlen(substr($preview, 0, $match[0][1]));
+    }
     $saving = mb_strlen($preview) - ($characterCount + mb_strlen('...'));
     $isShortened = $saving > 0 && $saving >= $minimumSaving;
     if ($isShortened) {
-        $preview = match ($side) {
-            'left' => mb_substr($preview, 0, $characterCount) . '...',
-            'right' => '...' . mb_substr($preview, -$characterCount),
-            'center' => mb_substr($preview, 0, (int) ceil($characterCount / 2)) .
-                '...' .
-                mb_substr($preview, -(int) floor($characterCount / 2)),
-        };
+        if ($matchPosition !== false) {
+            $windowLength = max($characterCount, mb_strlen($search));
+            $start = max(0, min(
+                $matchPosition - (int) floor(($windowLength - mb_strlen($search)) / 2),
+                mb_strlen($preview) - $windowLength,
+            ));
+            $end = $start + $windowLength;
+            $excerpt = ($start > 0 ? '...' : '') . mb_substr($preview, $start, $windowLength)
+                . ($end < mb_strlen($preview) ? '...' : '');
+            $saving = mb_strlen($preview) - mb_strlen($excerpt);
+            $isShortened = $saving > 0 && $saving >= $minimumSaving;
+            if ($isShortened) {
+                $preview = $excerpt;
+            }
+        } else {
+            $preview = match ($side) {
+                'left' => mb_substr($preview, 0, $characterCount) . '...',
+                'right' => '...' . mb_substr($preview, -$characterCount),
+                'center' => mb_substr($preview, 0, (int) ceil($characterCount / 2)) .
+                    '...' .
+                    mb_substr($preview, -(int) floor($characterCount / 2)),
+            };
+        }
     }
 @endphp
 
@@ -63,7 +87,7 @@
             >
                 <div @class([$textClasses, 'min-w-0 whitespace-normal'])>
                     <flux:callout.text>
-                        {{ $preview }}
+                        <x-ui.text.highlight :value="$preview" :search="$search" :case-sensitive="$caseSensitive" :whole-word="$wholeWord" />
                     </flux:callout.text>
                 </div>
             </flux:button>
@@ -71,14 +95,12 @@
                 class="max-h-80 overflow-auto"
                 :heading="$heading ?? __('Full text')"
             >
-                <span @class([$textClasses, 'whitespace-normal'])>
-                    {!! nl2br(e($fullText)) !!}
-                </span>
+                <span @class([$textClasses, 'whitespace-pre-line'])><x-ui.text.highlight :value="$fullText" :search="$search" :case-sensitive="$caseSensitive" :whole-word="$wholeWord" /></span>
             </x-translation-workbench::ui.common.tooltip-content>
         </flux:tooltip>
     @else
         <flux:callout.text>
-            <span @class([$textClasses, 'min-w-0 whitespace-normal'])>{{ $preview }}</span>
+            <span @class([$textClasses, 'min-w-0 whitespace-normal'])><x-ui.text.highlight :value="$preview" :search="$search" :case-sensitive="$caseSensitive" :whole-word="$wholeWord" /></span>
         </flux:callout.text>
     @endif
 </div>

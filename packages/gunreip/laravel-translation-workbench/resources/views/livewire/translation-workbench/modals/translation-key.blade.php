@@ -9,6 +9,8 @@
         $proposedKeyValid =
             mb_strlen($proposedKey) <= 255 &&
             \Gunreip\TranslationWorkbench\Generation\TranslationKeySegments::configured()->allows($proposedKey);
+        $canCopyLastSegment = filled($context['finding']['suggested_key'] ?? null)
+            && \Gunreip\TranslationWorkbench\Generation\TranslationKeyInput::canAppendSegment($proposedKey);
     @endphp
     <form
         class="space-y-4"
@@ -49,9 +51,33 @@
 
         <flux:callout
             icon="key"
-            heading="{{ __('Suggested translation key') }}"
             color="rose"
         >
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <flux:callout.heading>{{ __('Suggested translation key') }}</flux:callout.heading>
+                <flux:button.group>
+                    <flux:button
+                        type="button"
+                        size="sm"
+                        {{-- icon="clipboard-document" --}}
+                        wire:click="appendSuggestedKeySegment"
+                        wire:loading.attr="disabled"
+                        :disabled="!$canCopyLastSegment"
+                    >
+                        <flux:icon.copy class="size-5" />
+                    </flux:button>
+                    <flux:button
+                        type="button"
+                        size="sm"
+                        {{-- icon="clipboard-document" --}}
+                        wire:click="appendSuggestedKeySegment"
+                        wire:loading.attr="disabled"
+                        :disabled="!$canCopyLastSegment"
+                    >
+                        {{ __('Copy last segment') }}
+                    </flux:button>
+                </flux:button.group>
+            </div>
             <flux:input
                 readonly
                 copyable

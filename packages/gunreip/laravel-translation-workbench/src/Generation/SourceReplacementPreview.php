@@ -10,6 +10,16 @@ use RuntimeException;
 /** Exact, read-only replacement plan. No broad literal matching or source evaluation. */
 final class SourceReplacementPreview
 {
+    public const POSITION_CHANGED = 'Source position changed. Run a fresh scan before continuing.';
+
+    public const OCCURRENCE_CHANGED = 'Source occurrence changed or moved. Run a fresh scan before continuing.';
+
+    public const REVIEW_REQUIRED = 'The saved source-language revision needs approval for the current linked findings. Open Edit finding and choose Review and approve languages.';
+
+    public const REVISION_REQUIRED = 'Save and approve a revision in the source language before replacing the literal.';
+
+    public const PUBLICATION_REQUIRED = 'Publish the approved source-language revision first. The file does not contain that value.';
+
     public function inspect(array $context, string $sourceLocale, string $root, string $languageRoot): array
     {
         $finding = $context['finding'];
@@ -23,18 +33,21 @@ final class SourceReplacementPreview
         $path = $this->path($root, $finding['path']);
         $bytes = file_get_contents($path);
         if ($bytes === false) {
-            throw new RuntimeException('Source file cannot be read.');
+            throw new SourceLocationUnavailable('Source file cannot be read.');
+        }
+        if (trim($bytes) === '') {
+            throw new SourceLocationUnavailable('The source file is empty. The captured position no longer exists in this file.');
         }
         $lines = explode("\n", $bytes);
         $line = (int) $finding['source_line'];
         $column = (int) $finding['source_column'];
         if ($line < 1 || $column < 1 || ! isset($lines[$line - 1]) || $column > strlen($lines[$line - 1]) + 1) {
-            throw new RuntimeException('Source position changed. Run a fresh scan before continuing.');
+            throw new SourceLocationUnavailable(self::POSITION_CHANGED);
         }
         $offset = array_sum(array_map('strlen', array_slice($lines, 0, $line - 1))) + $line - 1 + $column - 1;
         $before = $finding['raw_expression'];
         if ($before === '' || substr($bytes, $offset, strlen($before)) !== $before) {
-            throw new RuntimeException('Source occurrence changed or moved. Run a fresh scan before continuing.');
+            throw new RuntimeException(self::OCCURRENCE_CHANGED);
         }
         $sourceContext = (new CopiedSourceContext)->check($finding['path'], $bytes, $offset);
         if ($sourceContext['state'] !== 'confirmed_call') {
@@ -67,7 +80,9 @@ final class SourceReplacementPreview
         if ($already) {
             $result['blocker'] = 'The selected source occurrence already uses its assigned key.';
         } elseif (! ($context['review']['approved'] ?? false) || ($context['review']['context']['locale'] ?? null) !== $sourceLocale) {
-            $result['blocker'] = 'Save and approve a revision in the source language before replacing the literal.';
+            $result['blocker'] = !empty($context['revision']) && ($context['review']['context']['locale'] ?? null) === $sourceLocale
+                ? self::REVIEW_REQUIRED
+                : self::REVISION_REQUIRED;
         } else {
             if (! preg_match('/^[A-Za-z0-9_-]+$/D', $sourceLocale)) {
                 throw new RuntimeException('Invalid source locale.');
@@ -88,7 +103,7 @@ final class SourceReplacementPreview
                 $result['language_sha256'] = hash('sha256', $languageBytes);
                 $result['published_value'] = is_string($value) ? $value : null;
                 if (! is_string($value) || $value !== $context['revision']['value']) {
-                    $result['blocker'] = 'Publish the approved source-language revision first. The file does not contain that value.';
+                    $result['blocker'] = self::PUBLICATION_REQUIRED;
                 } else {
                     $result['ready'] = true;
                 }
@@ -112,17 +127,17 @@ final class SourceReplacementPreview
     {
         if ($relative === '' || str_contains($relative, "\0") || str_starts_with($relative, '/') || str_contains($relative, '\\')
             || array_intersect(explode('/', $relative), ['', '.', '..']) || ! is_dir($root) || is_link($root)) {
-            throw new RuntimeException('Unsafe source or language path.');
+            throw new SourceLocationUnavailable('Unsafe source or language path.');
         }
         $path = realpath($root);
         foreach (explode('/', $relative) as $part) {
             $path .= '/'.$part;
             if (is_link($path)) {
-                throw new RuntimeException('Symlink paths are not supported for source replacement.');
+                throw new SourceLocationUnavailable('Symlink paths are not supported for source replacement.');
             }
         }
         if (! is_file($path) || ! is_readable($path)) {
-            throw new RuntimeException('Source or language file is missing or unreadable.');
+            throw new SourceLocationUnavailable('Source or language file is missing or unreadable.');
         }
 
         return $path;

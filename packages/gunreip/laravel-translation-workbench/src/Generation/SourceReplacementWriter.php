@@ -90,15 +90,15 @@ class SourceReplacementWriter
         });
     }
 
-    private function activeIds(int $key): array
+    private function remainingIds(int $key): array
     {
-        return array_map('intval', $this->q("SELECT f.id FROM translation_workbench_findings f JOIN translation_workbench_key_findings l ON l.finding_id=f.id AND l.valid_to IS NULL WHERE f.status='active' AND l.key_id=? ORDER BY f.id", [$key])->fetchAll(PDO::FETCH_COLUMN));
+        return (new GenerationEditor($this->db, $this->root, $this->languageRoot))->remainingSourceGroupIds($key);
     }
 
     private function batchDraft(int $key, array $ids): array
     {
         sort($ids);
-        if ($ids === [] || $ids !== $this->activeIds($key)) throw new RuntimeException('The selected key group changed. Release the selection and select it again.');
+        if ($ids === [] || $ids !== $this->remainingIds($key)) throw new RuntimeException('The selected key group changed. Release the selection and select it again.');
         $editor = new GenerationEditor($this->db, $this->root, $this->languageRoot);
         $items = $groups = $plans = [];
         $keyName = '';
@@ -111,7 +111,10 @@ class SourceReplacementWriter
                 $items[$id] = $preview;
                 if ($preview['ready']) $groups[$preview['path']][] = ['preview' => $preview, 'review' => $context['review']];
             } catch (RuntimeException $error) {
-                $items[$id] = ['finding' => $id, 'path' => $context['finding']['path'] ?? '', 'before' => $context['finding']['raw_expression'] ?? '', 'after' => '',
+                $items[$id] = ['finding' => $id, 'path' => $context['finding']['path'] ?? '',
+                    'line' => $context['finding']['source_line'] ?? null, 'column' => $context['finding']['source_column'] ?? null,
+                    'before' => $context['finding']['raw_expression'] ?? '', 'after' => '',
+                    'source_link_available' => ! ($error instanceof SourceLocationUnavailable),
                     'ready' => false, 'already_set' => false, 'blocker' => $error->getMessage()];
             }
             unset($context);
@@ -149,9 +152,89 @@ class SourceReplacementWriter
             'ready' => $blocked === 0 && $plans !== [], 'blocked' => $blocked];
     }
 
+    public function pendingBatchForKey(int $key): ?string
+    {
+        $id = $this->q("SELECT batch.id FROM translation_workbench_operations batch
+            WHERE batch.kind='source_replacement_batch_prepared' AND batch.result->'preview'->>'key_id'=?
+                AND EXISTS (SELECT 1 FROM jsonb_array_elements(batch.result->'files') file
+                    JOIN translation_workbench_operations child ON child.id=(file->>'run')::uuid
+                    WHERE NOT EXISTS (SELECT 1 FROM translation_workbench_operations done WHERE done.id=(child.result->>'finish')::uuid))
+            ORDER BY batch.completed_at DESC LIMIT 1", [(string) $key])->fetchColumn();
+
+        return $id === false ? null : $id;
+    }
+
     public function previewBatch(int $key, array $ids): array
     {
-        return $this->batchPreview($this->batchDraft($key, $ids));
+        $preview = $this->batchPreview($this->batchDraft($key, $ids));
+        $observations = $this->currentScanObservations($preview['items']);
+        foreach ($preview['items'] as &$item) {
+            $id = $item['finding'];
+            if (isset($observations[$id]) && $observations[$id]['from'] === ($item['line'] ?? '').':'.($item['column'] ?? '')) {
+                $item['scan_position'] = $observations[$id];
+                if (in_array($item['blocker'], [
+                    SourceReplacementPreview::POSITION_CHANGED, SourceReplacementPreview::OCCURRENCE_CHANGED,
+                ], true)) {
+                    $item['blocker'] = 'Review the stored position against the saved scan before replacing this call.';
+                }
+            }
+            $dependency = $item['scan_required'] ?? null;
+            if ($dependency && ($observations[$dependency['finding']]['from'] ?? '') === $dependency['line'].':'.$dependency['column']) {
+                $observation = $observations[$dependency['finding']];
+                $reason = match ($observation['reason'] ?? '') {
+                    'no_match' => __('The scan could not match the stored expression to an unassigned occurrence. Check whether the call was reformatted, changed or removed.'),
+                    'ambiguous' => __('Several occurrences match. Compare the surrounding code to identify the original call.'),
+                    'occupied_destination' => __('The proposed destination is occupied by another unresolved finding.'),
+                    'source_usage' => __('The scan flagged the source usage at this position for review.'),
+                    default => __('The current file does not match the stored call at this position.'),
+                };
+                $item['blocker'] = __('File replacement is blocked by finding #:id at :position.', [
+                    'id' => $dependency['finding'], 'position' => $observation['from'],
+                ]).' '.$reason;
+                $item['blocking_finding'] = $dependency + ['expression' => $observation['expression'], 'to' => $observation['to'] ?? null];
+                unset($item['scan_required']);
+            }
+        }
+        unset($item);
+
+        return $preview;
+    }
+
+    /** Only use positional evidence from the latest saved scan when its source bytes still match. */
+    private function currentScanObservations(array $items): array
+    {
+        $requested = [];
+        foreach ($items as $item) {
+            $requested[] = ['id' => $item['finding'], 'path' => $item['path']];
+            if (isset($item['scan_required'])) {
+                $requested[] = ['id' => $item['scan_required']['finding'], 'path' => $item['scan_required']['path']];
+            }
+        }
+        $rows = $this->q("WITH latest AS (
+            SELECT id FROM translation_workbench_operations WHERE kind='complete_rescan' ORDER BY completed_at DESC,id DESC LIMIT 1
+        ) SELECT DISTINCT r.id,r.path,f.raw_expression,s.scope_snapshot->'inventory'->'hashes'->>r.path AS hash,
+            s.scope_snapshot->'reviews'->r.path->'position_preview'->r.id::text AS observation
+            FROM latest JOIN translation_workbench_scan_runs s USING (id)
+            CROSS JOIN jsonb_to_recordset(?::jsonb) AS r(id bigint,path text)
+            JOIN translation_workbench_findings f ON f.id=r.id
+            WHERE s.scope_snapshot->'reviews'->r.path->'position_preview'->r.id::text IS NOT NULL",
+            [json_encode($requested, JSON_THROW_ON_ERROR)]);
+        $observations = $hashes = [];
+        foreach ($rows as $row) {
+            $path = $row['path'];
+            if (!array_key_exists($path, $hashes)) {
+                try {
+                    $hashes[$path] = hash_file('sha256', (new SourceReplacementPreview)->path($this->root, $path));
+                } catch (RuntimeException) {
+                    $hashes[$path] = false;
+                }
+            }
+            if ($hashes[$path] && $hashes[$path] === $row['hash']) {
+                $observations[$row['id']] = json_decode($row['observation'], true, flags: JSON_THROW_ON_ERROR) + ['expression' => $row['raw_expression']];
+            }
+        }
+
+        return $observations;
     }
 
     private function batchPreview(array $draft): array
@@ -181,7 +264,7 @@ class SourceReplacementWriter
         $this->lockedFiles(array_keys($draft['plans']), fn () => (new BaselineOperation($this->db))->run($run, 'source_replacement_batch_prepared',
             [$expected, $actor, $reason], function () use ($draft, $preview, $run, $actor, $reason) {
                 $this->databaseLock();
-                if ($draft['finding_ids'] !== $this->activeIds($draft['key_id'])) throw new RuntimeException('The selected findings changed.');
+                if ($draft['finding_ids'] !== $this->remainingIds($draft['key_id'])) throw new RuntimeException('The selected findings changed.');
                 $files = [];
                 foreach ($draft['plans'] as $path => $plan) {
                     if ($pending = $this->q("SELECT id FROM translation_workbench_operations o WHERE kind='source_replacement_prepared' AND result->>'path'=?
@@ -249,6 +332,29 @@ class SourceReplacementWriter
             : (count(array_filter($states, fn ($s) => in_array($s, ['closed', 'complete'], true))) === count($files) ? 'closed' : 'pending');
         return ['batch' => true, 'run' => $plan['run'], 'actor' => $plan['actor'], 'reason' => $plan['reason'], 'preview' => $plan['preview'],
             'files' => $files, 'state' => $state, 'file_state' => 'per_file', 'result' => ['successors' => $successors]];
+    }
+
+    public function acknowledgeBatch(string $run, int $actor): void
+    {
+        $plan = $this->batchPlan($run);
+        if (!$plan || $actor < 1 || $actor !== $plan['actor']) {
+            throw new RuntimeException('Only the preparing user may confirm the batch result.');
+        }
+
+        // Completion receipts are immutable. Record one acknowledgement on the batch operation itself.
+        $files = array_column($plan['files'], 'run');
+        $completed = $this->q("SELECT count(*) FROM jsonb_array_elements_text(?::jsonb) files(run)
+            JOIN translation_workbench_operations prepared ON prepared.id=files.run::uuid
+            JOIN translation_workbench_operations applied ON applied.id=(prepared.result->>'finish')::uuid
+            WHERE applied.kind='source_replacement_applied'", [json_encode($files, JSON_THROW_ON_ERROR)])->fetchColumn();
+        if (!$files || (int) $completed !== count($files)) {
+            throw new RuntimeException('All selected source replacements must be completed before confirming the result.');
+        }
+        $this->q("INSERT INTO translation_workbench_events(operation_id,event_type,actor_id,reason,details)
+            VALUES (?, 'source_replacement_batch_acknowledged', ?, 'Completed source replacements acknowledged', ?::jsonb)
+            ON CONFLICT (operation_id,event_index) DO NOTHING", [
+                $run, $actor, json_encode(['key' => $plan['preview']['key_id']], JSON_THROW_ON_ERROR),
+            ]);
     }
 
     private function applyBatch(array $plan, int $actor, ?callable $fault): array

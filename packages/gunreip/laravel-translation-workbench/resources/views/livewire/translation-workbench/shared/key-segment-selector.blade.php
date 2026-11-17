@@ -1,5 +1,6 @@
 @php
-    $segmentOptions = $this->assignmentKeyOptions($keys);
+    $optionPrefix = $this->assignmentKeyOptionPrefix();
+    $segmentOptions = array_diff($this->assignmentKeyOptions(), [$assignmentKey]);
 @endphp
 
 <flux:input.group class="min-w-0">
@@ -71,10 +72,16 @@
         >
             {{ __('Create a translation key') }}
         </flux:select.option.create>
-        @foreach ($segmentOptions as $segment)
-            @if ($segment !== $assignmentKey)
-                <flux:select.option :value="$segment">{{ $segment }}</flux:select.option>
-            @endif
-        @endforeach
+        @if ($optionPrefix === '')
+            @foreach ($segmentOptions as $value)
+                <flux:select.option :value="$value">{{ $value }}</flux:select.option>
+            @endforeach
+        @elseif ($segmentOptions)
+            <flux:select.group :label="$optionPrefix" wire:key="assignment-key-group-{{ $optionPrefix }}">
+                @foreach ($segmentOptions as $value)
+                    <flux:select.option :value="$value">{{ substr($value, strlen($optionPrefix)) }}</flux:select.option>
+                @endforeach
+            </flux:select.group>
+        @endif
     </flux:select>
 </flux:input.group>

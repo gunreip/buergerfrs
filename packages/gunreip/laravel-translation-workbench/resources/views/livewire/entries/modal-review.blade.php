@@ -115,7 +115,7 @@
                         {{-- Button Open Translation Edit --}}
                         <x-ui.tooltip.simple
                             :title="$reviewFindingCanOpenTranslationEdit
-                                ? __('Edit translations')
+                                ? __('translation-workbench.edits.edit_translations')
                                 : __('Edit translations unavailable')"
                             :text="$reviewFindingCanOpenTranslationEdit
                                 ? __('Open the translation editor for this reviewed finding.')
@@ -137,10 +137,10 @@
                                 color="{{ $reviewFindingCanOpenTranslationEdit ? 'green' : 'zinc' }}"
                                 icon="square-pen"
                                 :disabled="!$reviewFindingCanOpenTranslationEdit"
-                                :aria-label="__('Edit translations')"
+                                :aria-label="__('translation-workbench.edits.edit_translations')"
                                 wire:click="openEditModal({{ $reviewFinding->id }})"
                             >
-                                {{ __('Edit translations') }}
+                                {{ __('translation-workbench.edits.edit_translations') }}
                             </flux:button>
                         </x-ui.tooltip.simple>
                     </div>

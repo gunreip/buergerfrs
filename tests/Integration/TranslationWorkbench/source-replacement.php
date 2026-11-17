@@ -90,6 +90,21 @@ try {
     $scanner = $app->make(TranslationWorkbenchScanner::class);
     mkdir($dir.'/lang/en', 0700, true);
     file_put_contents($dir.'/lang/en/ui.php', "<?php return ['button' => ['save' => 'Save']];");
+    $planner = new \Gunreip\TranslationWorkbench\Generation\SourceReplacementFilePlan;
+    $bytes = "<?php\n__('Changed');\n__('Save');\n";
+    $rows = [
+        ['id' => 10, 'source_line' => 2, 'source_column' => 1, 'raw_expression' => "__('Old')"],
+        ['id' => 11, 'source_line' => 3, 'source_column' => 1, 'raw_expression' => "__('Save')", 'key_id' => 9],
+    ];
+    $edits = [['finding' => 11, 'key' => 'ui.button.save', 'published_value' => 'Save', 'language_path' => 'en/ui.php',
+        'language_sha256' => '', 'source_locale' => 'en', 'edit' => ['offset' => strpos($bytes, "'Save'"), 'length' => 6, 'replacement' => "'ui.button.save'"]]];
+    $plan = $planner->build('example.php', $bytes, $rows, $edits, $scanner);
+    $check(array_column($plan['transitions'], 'predecessor') === [11]
+        && $plan['after'] === str_replace("'Save'", "'ui.button.save'", $bytes), 'An unrelated stale call before the edit must not block or enter the receipt');
+    $reject(fn () => $planner->build('example.php', str_replace("('Save');", "('Save'); __('Old');", $bytes), $rows, $edits, $scanner), 'stale for finding #10');
+    $rows[0]['source_line'] = 3;
+    $reject(fn () => $planner->build('example.php', $bytes, $rows, $edits, $scanner), 'stale for finding #10');
+
     $scan = (string) Str::uuid();
     $q("INSERT INTO translation_workbench_scan_runs VALUES(?,'completed','{}',now())", [$scan]);
     $editor = new GenerationEditor($db);
@@ -113,6 +128,10 @@ try {
     };
     $preview = fn ($id) => (new SourceReplacementPreview)->inspect($editor->inspect($id, 'en'), 'en', $dir, $dir.'/lang');
     [$id, $file, $original] = $make('one.php');
+    $exact = fn (string $search, bool $case = false) => $editor->page($search, (string) $id, 'active', 1,
+        caseSensitive: $case, wholeLiteral: true)->total();
+    $check($exact('Save') === 1 && $exact('save') === 1 && $exact('save', true) === 0, 'Whole literal case matching');
+    $check($exact('Sav') === 0 && $exact('one.php') === 0 && $exact('ui.button.save') === 0, 'Whole literal must exclude partial, path and assignment matches');
     $raw = $editor->inspect($id, 'en')['finding'];
     $run = $writer->prepare($id, 'en', $preview($id)['fingerprint'], 7, 'Replace this source call');
     $check(file_get_contents($dir.'/one.php') === $original, 'Preparation wrote source');
@@ -347,8 +366,9 @@ try {
     file_put_contents($dir.'/lines.php', $beforeReview.'__($runtimeValue);');
     $preservedResult = $rescan->apply((string) Str::uuid(), $rescan->prepare(['lines.php'], $languageEvidence), actor: 7);
     $preservedPage = $editor->preservedFindingsPage($preservedResult['scan'], 'lines.php', 999);
-    $check($preservedPage->total() === 3 && $preservedPage->currentPage() === 1, 'Preserved findings page does not match the scan snapshot');
-    $check(count(array_filter($preservedPage->items(), fn ($finding) => $finding['full_name'] === 'ui.multiline.save')) === 1, 'Preserved findings lost their current key assignment');
+    $check($preservedPage->total() === 0 && $preservedResult['confirmed'] === 3, 'Unrelated dynamic usage blocked exact confirmations');
+    $confirmedPage = $editor->scanPage($preservedResult['scan'], 'confirmed', 1);
+    $check($confirmedPage->total() === 3, 'Confirmed findings were not linked to the mixed-review scan');
     $reject(fn () => $editor->preservedFindingsPage($preservedResult['scan'], 'other.php', 1), 'not part of the selected scan review');
     $reject(fn () => $editor->preservedFindingsPage('invalid', 'lines.php', 1), 'Invalid scan');
     $emptyPreserved = $editor->preservedFindingsPage($reviewResult['scan'], 'review.php', 1);
@@ -482,6 +502,61 @@ try {
     $check((int) $q('SELECT count(*) FROM translation_workbench_findings WHERE predecessor_id=?', [$moveId])->fetchColumn() === 1, 'Retry created duplicate successor');
     $check(file_get_contents($dir.'/decision-move.php') === "\n\n".$moveBytes, 'Decision rewrote source');
 
+    [$changedId] = $make('decision-changed.php', expression: "__('Save', ['command' => \$command])");
+    $changedCall = "__('Save', ['command' => \$command ?? ''])";
+    file_put_contents($dir.'/decision-changed.php', "<?php\n\n".$changedCall.";\n");
+    $issueEditor = new GenerationEditor($db, $dir);
+    $issueRows = $issueEditor->describeSourceIssueRows([['id' => $changedId], ['id' => $successor['id']]]);
+    $check(array_column($issueRows, 'observations') === [['changed' => 1, 'moved' => 1], []], 'Issue list must distinguish amended calls from confirmed positions');
+    [$formatId, $formatFile] = $make('decision-reformatted.php');
+    file_put_contents($dir.'/decision-reformatted.php', "<?php\n\n__(\n  'Save',\n);\n");
+    $q("INSERT INTO translation_workbench_findings(source_file_id,captured_scan_id,source_line,source_column,raw_expression,provenance)
+        VALUES(?,?,3,1,?,'{}')", [$formatFile, $scan, "__(\n  'Save',\n)"]);
+    $formatRow = $issueEditor->describeSourceIssueRows([['id' => $formatId]])[0];
+    $check($formatRow['observations'] === ['reformatted' => 1, 'moved' => 1, 'occupied' => 1], 'Formatting, position and occupancy must remain separate observations');
+    $plan = $decisions->prepare($changedId, $moveKey);
+    $check($plan['evidence']['positions'] === [['line' => 3, 'column' => 1, 'expression' => $changedCall, 'change' => 'changed']], 'Missing amended call evidence');
+    $result = $decisions->apply((string) Str::uuid(), $changedId, $moveKey, $plan['fingerprint'], 'moved', 7, 'Confirmed added fallback', '3:1');
+    $updated = $editor->inspect($result['successors'][0]['successor'], 'en')['finding'];
+    $check($updated['raw_expression'] === $changedCall && (int) $updated['key_id'] === $moveKey, 'Changed call or assignment lost');
+    $repeat = $rescan->apply((string) Str::uuid(), $rescan->prepare(['decision-changed.php'], []), actor: 7);
+    $check($repeat['created'] === [] && $repeat['confirmed'] === 1, 'Unchanged rescan did not confirm the successor');
+
+    [$ambiguousId] = $make('decision-ambiguous.php');
+    file_put_contents($dir.'/decision-ambiguous.php', "<?php\n\n__('Save');\n__('Save');\n");
+    $plan = $decisions->prepare($ambiguousId, $moveKey);
+    $check($plan['can_move'], 'Ambiguous movement must allow an explicit choice');
+    $applyMatch = fn ($target) => $decisions->apply((string) Str::uuid(), $ambiguousId, $moveKey,
+        $plan['fingerprint'], 'moved', 7, 'Checked the surrounding code', $target);
+    $reject(fn () => $applyMatch(''), 'Select one matching');
+    $reject(fn () => $applyMatch('5:1'), 'Select one matching');
+    $occupant = (int) $q("INSERT INTO translation_workbench_findings(source_file_id,captured_scan_id,source_line,source_column,raw_expression,provenance)
+        SELECT source_file_id,captured_scan_id,3,1,'old expression','{}' FROM translation_workbench_findings WHERE id=? RETURNING id", [$ambiguousId])->fetchColumn();
+    $occupied = $decisions->prepare($ambiguousId, $moveKey)['occupied'];
+    $capturedAt = $q('SELECT created_at FROM translation_workbench_scan_runs WHERE id=?', [$scan])->fetchColumn();
+    $check($occupied === ['3:1' => [['id' => $occupant, 'expression' => 'old expression', 'key_id' => null, 'captured_at' => $capturedAt]]], 'Preview must identify unassigned blocking finding');
+    $reject(fn () => $applyMatch('3:1'), "occupied by finding #$occupant");
+    $result = $applyMatch('4:1');
+    $successor = $editor->inspect($result['successors'][0]['successor'], 'en')['finding'];
+    $check((int) $successor['source_line'] === 4 && (int) $successor['key_id'] === $moveKey, 'Selected second occurrence was not retained');
+
+    $check($editor->inspect($successor['id'], 'en')['review']['approved'], 'Explicitly confirmed move invalidated the shared revision approval');
+
+    [$duplicateId, $duplicateFile, $duplicateBytes] = $make('decision-duplicate.php');
+    file_put_contents($dir.'/decision-duplicate.php', "\n".$duplicateBytes);
+    $existingId = (int) $q("INSERT INTO translation_workbench_findings(source_file_id,captured_scan_id,source_line,source_column,raw_expression,provenance)
+        VALUES(?,?,3,1,?,'{}') RETURNING id", [$duplicateFile, $scan, "__('Save')"])->fetchColumn();
+    $check($decisions->prepare($duplicateId, $moveKey)['retained'] === null, 'Archival would lose an active assignment');
+    $check($issueEditor->describeSourceIssueRows([['id' => $duplicateId]])[0]['retained'] === null, 'Key conflict must suppress the duplicate badge');
+    $q('UPDATE translation_workbench_key_findings SET valid_to=now() WHERE finding_id=? AND valid_to IS NULL', [$duplicateId]);
+    $check($issueEditor->describeSourceIssueRows([['id' => $duplicateId]])[0]['retained'] === $existingId, 'Duplicate badge must reference the retained finding');
+    $plan = $decisions->prepare($duplicateId, null);
+    $check($plan['retained'] === $existingId, 'Occupied exact match should allow keeping the active capture');
+    $op = (string) Str::uuid();
+    $result = $decisions->apply($op, $duplicateId, null, $plan['fingerprint'], 'duplicate', 7, 'Verified both captures');
+    $check($result['retained'] === $existingId && $result['archived'] === [$duplicateId], 'Duplicate archive receipt lost the finding references');
+    $check($q("SELECT id FROM translation_workbench_findings WHERE source_file_id=? AND status='active'", [$duplicateFile])->fetchAll(PDO::FETCH_COLUMN) == [$existingId], 'Expected only the retained finding to stay active');
+
     [$removedId] = $make('decision-removed.php');
     unlink($dir.'/decision-removed.php');
     $plan = $decisions->prepare($removedId, $moveKey);
@@ -528,9 +603,11 @@ try {
     $editor->save($batchIds[0], $batchKey, $ctx['finding']['link_id'], 'en', 'Save', null, 7, 'Batch English draft');
     $ctx = $editor->inspect($batchIds[0], 'en');
     $editor->review($ctx['revision']['id'], $ctx['review']['fingerprint'], true, 7, 'Review batch');
+    $noopId = array_pop($batchIds);
+    $check($editor->remainingSourceGroupIds($batchKey) === $batchIds, 'Already assigned occurrences must be excluded from the selection');
     $batchPreview = $writer->previewBatch($batchKey, $batchIds);
-    $check($batchPreview['ready'] && count($batchPreview['items']) === 4, 'Batch preview lost selected findings');
-    $check(count(array_filter($batchPreview['items'], fn ($item) => $item['already_set'])) === 1, 'No-op not identified');
+    $check($batchPreview['ready'] && count($batchPreview['items']) === 3, 'Batch preview lost selected findings');
+    $check(count(array_filter($batchPreview['items'], fn ($item) => $item['already_set'])) === 0, 'No-op was selectable');
     $reject(fn () => $writer->previewBatch($batchKey, [$batchIds[0]]), 'key group changed');
     file_put_contents($dir.'/bulk-b.php', "\n".$batchOriginals['bulk-b.php']);
     $reject(fn () => $writer->prepareBatch($batchKey, $batchIds, $batchPreview['fingerprint'], 7, 'Batch reason'), 'changed or is blocked');
@@ -538,22 +615,32 @@ try {
     $batchRun = $writer->prepareBatch($batchKey, $batchIds, $batchPreview['fingerprint'], 7, 'Batch reason');
     $check(count($writer->inspect($batchRun)['files']) === 2, 'Must prepare one operation per changed file');
     $check(file_get_contents($dir.'/bulk-a.php') === $batchOriginals['bulk-a.php'], 'Batch preparation wrote source');
+    $check($writer->pendingBatchForKey($batchKey) === $batchRun, 'Reopening the group must resume its prepared batch');
     $blockedBatch = $writer->previewBatch($batchKey, $batchIds);
     $check(!$blockedBatch['ready'] && $blockedBatch['blocked'] === 3, 'Open per-file plans not blocking whole group');
     $reject(fn () => $writer->apply($batchRun, 8), 'preparing user');
     $reject(fn () => $writer->apply($batchRun, 7, function ($stage) {
         if ($stage === 'after_file') throw new RuntimeException('Stop between files');
     }), 'Stop between files');
+    $check($writer->pendingBatchForKey($batchKey) === $batchRun, 'Partially completed batch must remain resumable');
     $partial = $writer->inspect($batchRun);
     $check($partial['files'][0]['state'] === 'complete' && $partial['files'][1]['state'] === 'pending', 'Partial completion not visible');
     $check(file_get_contents($dir.'/bulk-a.php') === "<?php\n__('ui.bulk.save'); __('ui.bulk.save'); __('Save');\n", 'Combined same-line edits incorrect');
     $independentSuccessor = $q('SELECT id FROM translation_workbench_findings WHERE predecessor_id=?', [$independent])->fetchColumn();
     $check((int) $editor->inspect($independentSuccessor, 'en')['finding']['key_id'] === $moveKey, 'Shifted independent finding lost its own key');
+    $reject(fn () => $writer->acknowledgeBatch($batchRun, 7), 'must be completed');
     $resumed = $writer->apply($batchRun, 7);
+    $check($writer->pendingBatchForKey($batchKey) === null, 'Completed batch must no longer be offered for resume');
     $check($writer->inspect($batchRun)['state'] === 'complete', 'Batch did not complete on resume');
     $check(file_get_contents($dir.'/bulk-b.php') === "<?php\n__('ui.bulk.save');\n", 'Second file not replaced');
     $check($writer->apply($batchRun, 7) == $resumed, 'Completed batch retry changed receipts');
-    $check($q('SELECT status FROM translation_workbench_findings WHERE id=?', [$batchIds[3]])->fetchColumn() === 'active', 'Unchanged call must remain active');
+    $reject(fn () => $writer->acknowledgeBatch($batchRun, 8), 'preparing user');
+    $writer->acknowledgeBatch($batchRun, 7);
+    $writer->acknowledgeBatch($batchRun, 7);
+    $ack = $db->prepare("SELECT actor_id FROM translation_workbench_events WHERE operation_id=? AND event_type='source_replacement_batch_acknowledged'");
+    $ack->execute([$batchRun]);
+    $check(array_map('intval', $ack->fetchAll(PDO::FETCH_COLUMN)) === [7], 'Record the batch acknowledgement only once');
+    $check($q('SELECT status FROM translation_workbench_findings WHERE id=?', [$noopId])->fetchColumn() === 'active', 'Unchanged call must remain active');
 
 
     // A receipted successor must preserve approval in both PHP and SQL worklists.

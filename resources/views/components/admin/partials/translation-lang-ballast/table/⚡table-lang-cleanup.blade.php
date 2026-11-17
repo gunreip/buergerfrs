@@ -39,7 +39,7 @@
             class="w-px whitespace-nowrap"
             align="center"
         >
-            {{ __('Decision') }}
+            {{ __('ui.table.headers.decision') }}
         </flux:table.column>
 
         {{-- Table Header  --}}
@@ -59,7 +59,7 @@
 
         {{-- Table Header  --}}
         <flux:table.column>
-            {{ __('admin.translation_list.modal_history.reason') }}
+            {{ __('ui.table.header.reason') }}
         </flux:table.column>
 
         {{-- Table Header  --}}

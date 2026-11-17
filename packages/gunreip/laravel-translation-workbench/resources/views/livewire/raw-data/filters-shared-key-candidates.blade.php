@@ -44,7 +44,7 @@
     ])
 </flux:field>
 
-<flux:separator text="{{ __('Translation Key Filters') }}" />
+<flux:separator text="{{ __('translation-workbench.translation.key.translation-key-filters') }}" />
 
 <flux:field class="mb-4 mt-2 grid gap-3 md:grid-cols-7">
     @include(

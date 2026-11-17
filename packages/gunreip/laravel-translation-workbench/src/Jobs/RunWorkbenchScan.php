@@ -47,10 +47,15 @@ class RunWorkbenchScan implements ShouldQueue
                 };
                 Cache::forget($key.':progress');
                 if ($this->apply) {
-                    $result = $service->apply($coordinator->previewForWorker($this->run, $record), $record['actor'], $progress);
+                    $result = !empty($record['direct_save'])
+                        ? $service->scanAndSave($record['target'], $record['actor'], $progress)
+                        : $service->apply($coordinator->previewForWorker($this->run, $record), $record['actor'], $progress);
                     $record['state'] = $result['state'];
                     if (isset($result['preview'])) $record['preview'] = $result['preview'];
-                    if (isset($result['result'])) $record['result'] = $result['result'];
+                    if (isset($result['result'])) {
+                        $record['result'] = $result['result'];
+                        $record['counts'] = $result['counts'];
+                    }
                 } else {
                     $record['preview'] = $service->preview($progress);
                     $record['state'] = 'preview_ready';

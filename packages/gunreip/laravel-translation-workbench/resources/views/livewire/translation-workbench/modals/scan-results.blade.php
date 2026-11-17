@@ -3,7 +3,6 @@
     name="workbench-scan-results"
     wire:key="workbench-scan-results"
     wire:model="scanOpen"
-    {{-- :closable="true" --}}
 >
     <x-translation-workbench::ui.common.modal-loading
         target="scanCategory, scanSearch, scanPerPage, gotoPage, nextPage, previousPage, setPage, openScanCaptures, openPreservedFindings, closePreservedFindings, openScanUsage, openConsideredScanUsage, open, openWorkflowStatus"
@@ -15,7 +14,7 @@
                     class="flex items-center gap-2"
                     size="xl"
                 >
-                    <flux:icon.radar class="size-5 shrink-0" />
+                    <flux:icon.radar class="size-6 shrink-0 items-center" />
                     {{ $captureRows ? __('Captured source occurrences') : ($preservedRows ? __('Preserved findings') : ($scanCategory === 'missing_immutable' ? __('Missing immutable information') : __('Scan results'))) }}
                 </flux:heading>
                 @if ($captureRows)
@@ -69,7 +68,7 @@
                         :item="$selectedScan ?? '—'"
                     />
                     @if ($preservedRows || $captureRows)
-                        <x-translation-workbench::ui.common.details.item :label="__('Source file')">
+                        <x-translation-workbench::ui.common.details.item :label="__('translation-workbench.literal.source_file')">
                             <x-translation-workbench::ui.common.path-preview
                                 :path="$scanReviewPath"
                                 :length="100"
@@ -77,19 +76,15 @@
                             />
                         </x-translation-workbench::ui.common.details.item>
                     @endif
+                    @if ($fileHash = $captureRows?->first()['source_sha256'] ?? null)
+                        <x-translation-workbench::ui.common.details.item
+                            class="break-all tabular-nums"
+                            :label="__('translation-workbench.modals.source.source-evidence')"
+                            :item="$fileHash"
+                        />
+                    @endif
                 </x-translation-workbench::ui.common.details>
-                @if ($fileHash = $captureRows?->first()['source_sha256'] ?? null)
-                    <flux:accordion>
-                        <flux:accordion.item>
-                            <flux:accordion.heading>
-                                {{ __('Source evidence') }}
-                            </flux:accordion.heading>
-                            <flux:accordion.content>
-                                <flux:callout.text class="break-all">SHA-256: {{ $fileHash }}</flux:callout.text>
-                            </flux:accordion.content>
-                        </flux:accordion.item>
-                    </flux:accordion>
-                @endif
+
                 @if ($captureRows)
                     <div class="mt-4 space-y-4">
 

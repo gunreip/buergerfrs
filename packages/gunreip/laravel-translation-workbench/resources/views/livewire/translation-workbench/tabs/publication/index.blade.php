@@ -16,7 +16,6 @@
 
     <flux:error name="selectedPublicationRevisions" />
 
-    <flux:error name="publicationTask" />
 
     @include('translation-workbench::livewire.translation-workbench.tabs.publication.table')
 </flux:callout>

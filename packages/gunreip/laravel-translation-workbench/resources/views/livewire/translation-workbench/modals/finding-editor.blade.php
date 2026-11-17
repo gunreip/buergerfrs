@@ -99,16 +99,27 @@
                             <x-translation-workbench::ui.common.details>
                                 <x-translation-workbench::ui.common.details.item
                                     class="break-all"
-                                    :label="__('Source file')"
+                                    :label="__('translation-workbench.literal.source_file')"
                                 >
                                     <x-translation-workbench::ui.common.path-preview
                                         :path="$finding['path']"
+                                        :vsc="$finding['status'] === 'active'"
                                         :length="60"
                                         side="center"
                                         :line="$finding['source_line']"
                                         :column="$finding['source_column']"
-                                        :heading="__('Source file')"
+                                        :heading="__('translation-workbench.literal.source_file')"
                                     />
+                                </x-translation-workbench::ui.common.details.item>
+                                <x-translation-workbench::ui.common.details.item :label="__('Usage')">
+                                    @if (!empty($context['uiUsage']))
+                                        <flux:callout.text>{{ __($context['uiUsage']) }}</flux:callout.text>
+                                    @else
+                                        <flux:badge
+                                            size="sm"
+                                            color="zinc"
+                                        >{{ __('Undetermined') }}</flux:badge>
+                                    @endif
                                 </x-translation-workbench::ui.common.details.item>
                                 <x-translation-workbench::ui.common.details.item :label="__('Captured source expression')">
                                     <x-translation-workbench::ui.common.text-preview
@@ -254,13 +265,40 @@
                             />
                             <x-translation-workbench::ui.common.details.item :label="__('Current key')">
                                 @if ($finding['key_id'])
-                                    <x-translation-workbench::ui.common.text-preview
-                                        :mono="true"
-                                        :text="$finding['full_name']"
-                                        :length="80"
-                                        side="center"
-                                        :heading="__('Current key')"
-                                    />
+                                    @php
+                                        $keyIssue = \Gunreip\TranslationWorkbench\Generation\TranslationKeySegments::configured()->publicationIssue(
+                                            $finding['full_name'],
+                                        );
+                                    @endphp
+                                    <div class="flex min-w-0 flex-wrap items-center gap-2">
+                                        <x-translation-workbench::ui.common.text-preview
+                                            :mono="true"
+                                            :text="$finding['full_name']"
+                                            :length="80"
+                                            side="center"
+                                            :heading="__('Current key')"
+                                        />
+                                        @if ($keyIssue)
+                                            <flux:tooltip>
+                                                <span
+                                                    class="inline-flex"
+                                                    tabindex="0"
+                                                >
+                                                    <flux:badge
+                                                        color="red"
+                                                        size="sm"
+                                                        icon="exclamation-triangle"
+                                                    >
+                                                        {{ $keyIssue['heading'] }}
+                                                    </flux:badge>
+                                                </span>
+                                                <x-translation-workbench::ui.common.tooltip-content
+                                                    :heading="__('Publication blocked')"
+                                                    :text="$keyIssue['hint']"
+                                                />
+                                            </flux:tooltip>
+                                        @endif
+                                    </div>
                                 @else
                                     <flux:callout.text>
                                         {{ __('Not assigned') }}
@@ -268,7 +306,17 @@
                                 @endif
                             </x-translation-workbench::ui.common.details.item>
                         </x-translation-workbench::ui.common.details>
-                        {{-- Assignment action --}}
+
+                        @include(
+                            'translation-workbench::livewire.translation-workbench.shared.linked-candidates',
+                            [
+                                'summary' => $sharedSummaries[$selected] ?? [],
+                                'candidateFinding' => $selected,
+                                'asBadge' => false,
+                            ]
+                        )
+
+                        {{-- Translation key assignment --}}
                         @if ($finding['status'] === 'active')
                             <div class="space-y-3">
                                 <flux:field class="mt-3">
@@ -483,22 +531,28 @@
                             <flux:callout color="green">
                                 <flux:field>
                                     <div class="flex flex-wrap items-center justify-between gap-2">
-                                        <flux:tooltip>
-                                            <flux:label>
-                                                <flux:callout.text class="inline-flex items-center gap-2">
-                                                    <flux:flag
-                                                        :country="$translationFlagCountries['en']"
-                                                        size="xs"
-                                                        circle
-                                                    />
-                                                    {{ __('Source language') }} · en
-                                                </flux:callout.text>
-                                            </flux:label>
-                                            <x-translation-workbench::ui.common.tooltip-content
-                                                :heading="__('Source language')"
-                                                :text="__('The language of the original source text.')"
-                                            />
-                                        </flux:tooltip>
+                                        <div class="flex min-w-0 flex-wrap items-center gap-2">
+                                            <flux:tooltip>
+                                                <flux:label>
+                                                    <flux:callout.text class="inline-flex items-center gap-2">
+                                                        <flux:flag
+                                                            :country="$translationFlagCountries['en']"
+                                                            size="xs"
+                                                            circle
+                                                        />
+                                                        {{ __('Source language') }} · en
+                                                    </flux:callout.text>
+                                                </flux:label>
+                                                <x-translation-workbench::ui.common.tooltip-content
+                                                    :heading="__('Source language')"
+                                                    :text="__('The language of the original source text.')"
+                                                />
+                                            </flux:tooltip>
+                                            @include(
+                                                'translation-workbench::livewire.translation-workbench.shared.translation-placeholders',
+                                                ['field' => 'sourceLanguageValue']
+                                            )
+                                        </div>
                                         <div class="flex items-center gap-2">
                                             @if (($context['sourceText'] ?? ($finding['raw_literal'] ?? ($finding['suggested_literal'] ?? null))) !== null)
                                                 <flux:tooltip
@@ -547,25 +601,31 @@
                                 </flux:field>
 
                                 <flux:field>
-                                    <div class="flex items-center justify-between gap-3">
-                                        <flux:tooltip>
-                                            <flux:label>
-                                                <flux:callout.text class="inline-flex items-center gap-2">
-                                                    <flux:flag
-                                                        :country="$translationFlagCountries[$locale] ?? null"
-                                                        size="xs"
-                                                        circle
-                                                    />
-                                                    {{ __('Active target language') }} · {{ $locale }}
-                                                </flux:callout.text>
-                                            </flux:label>
-                                            <x-translation-workbench::ui.common.tooltip-content
-                                                :heading="__('Active target language')"
-                                                :text="__(
-                                                    'Translation targets follow the active language in Settings and its enabled sublanguages.',
-                                                )"
-                                            />
-                                        </flux:tooltip>
+                                    <div class="flex flex-wrap items-center justify-between gap-3">
+                                        <div class="flex min-w-0 flex-wrap items-center gap-2">
+                                            <flux:tooltip>
+                                                <flux:label>
+                                                    <flux:callout.text class="inline-flex items-center gap-2">
+                                                        <flux:flag
+                                                            :country="$translationFlagCountries[$locale] ?? null"
+                                                            size="xs"
+                                                            circle
+                                                        />
+                                                        {{ __('Active target language') }} · {{ $locale }}
+                                                    </flux:callout.text>
+                                                </flux:label>
+                                                <x-translation-workbench::ui.common.tooltip-content
+                                                    :heading="__('Active target language')"
+                                                    :text="__(
+                                                        'Translation targets follow the active language in Settings and its enabled sublanguages.',
+                                                    )"
+                                                />
+                                            </flux:tooltip>
+                                            @include(
+                                                'translation-workbench::livewire.translation-workbench.shared.translation-placeholders',
+                                                ['field' => 'value']
+                                            )
+                                        </div>
                                         <div
                                             class="flex items-center gap-2"
                                             x-data
@@ -792,18 +852,24 @@
                                                 class="flex flex-wrap items-center justify-between gap-2"
                                                 x-data
                                             >
-                                                <flux:label>
-                                                    <span class="inline-flex items-center gap-2">
-                                                        <flux:flag
-                                                            :country="$translationFlagCountries[$code] ?? null"
-                                                            size="xs"
-                                                            circle
-                                                        />
-                                                        <flux:callout.heading>
-                                                            {{ __('Language variant') }} · {{ $code }}
-                                                        </flux:callout.heading>
-                                                    </span>
-                                                </flux:label>
+                                                <div class="flex min-w-0 flex-wrap items-center gap-2">
+                                                    <flux:label>
+                                                        <span class="inline-flex items-center gap-2">
+                                                            <flux:flag
+                                                                :country="$translationFlagCountries[$code] ?? null"
+                                                                size="xs"
+                                                                circle
+                                                            />
+                                                            <flux:callout.heading>
+                                                                {{ __('Language variant') }} · {{ $code }}
+                                                            </flux:callout.heading>
+                                                        </span>
+                                                    </flux:label>
+                                                    @include(
+                                                        'translation-workbench::livewire.translation-workbench.shared.translation-placeholders',
+                                                        ['field' => 'subLanguageValues.' . $code]
+                                                    )
+                                                </div>
                                                 <div class="flex items-center gap-2">
                                                     <span
                                                         x-cloak

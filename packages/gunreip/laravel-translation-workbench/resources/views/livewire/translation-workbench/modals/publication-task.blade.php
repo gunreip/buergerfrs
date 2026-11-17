@@ -137,12 +137,12 @@
             @include('translation-workbench::livewire.translation-workbench.shared.reason-select', [
                 'reasonField' => 'publicationReason',
                 'reasonLabel' => __('Reason for publication'),
+                'reasonToast' => true,
                 'reasonInputLocale' => $publicationReasonLocale,
                 'reasonLocaleField' => 'publicationReasonLocale',
                 'reasonSearchId' => 'publication-task-reason-' . $this->getId(),
             ])
 
-            <flux:error name="publicationTask" />
 
             <div class="flex justify-end gap-3">
                 <flux:button.group>

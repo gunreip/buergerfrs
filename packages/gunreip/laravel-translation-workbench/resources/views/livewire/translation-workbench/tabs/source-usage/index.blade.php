@@ -1,4 +1,5 @@
 <livewire:translation-workbench.source-case-review
+    :workbench-page-loading="true"
     :test-token="$testToken"
     :key="'source-usage-' . $testToken"
 />

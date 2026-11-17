@@ -59,7 +59,7 @@ trait HasWorkflowReasons
             'source' => [__('Replace the captured literal with its approved translation key.')],
             'source_position' => [__('Confirmed the same occurrence at its new position.'), __('Confirmed that the occurrence was removed, not moved or renamed.')],
             'closure', 'source_closure' => [__('Cancel this operation without writing files.'), __('The prepared operation is no longer required.')],
-            'usage' => [__('Value comes from the database and is displayed unchanged.'), __('Runtime value contains text that requires translation.')],
+            'usage' => [__('Value comes from the database and is displayed unchanged.'), __('translation-workbench.literal.runtime_value_contains_text_that_requires_translation')],
             default => [],
         };
         $options = [...$defaults, ...$this->savedWorkflowReasons($field, $kind),

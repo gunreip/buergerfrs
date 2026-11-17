@@ -36,7 +36,7 @@
                         size="sm"
                         color="{{ $cleanupDecision === 'obsolete' ? 'amber' : ($cleanupDecision === 'keep' ? 'green' : 'zinc') }}"
                     >
-                        {{ __('Decision') }}: {{ str($cleanupDecision)->replace('_', ' ')->headline() }}
+                        {{ __('ui.table.headers.decision') }}: {{ str($cleanupDecision)->replace('_', ' ')->headline() }}
                     </flux:badge>
                     <flux:badge size="sm">I#{{ $inventory->id }}</flux:badge>
                     @if ($cleanupReview['key'] ?? null)

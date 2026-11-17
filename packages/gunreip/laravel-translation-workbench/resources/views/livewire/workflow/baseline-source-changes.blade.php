@@ -36,7 +36,7 @@
                                     <div class="max-h-64 overflow-auto">
                                         <flux:table>
                                             <flux:table.columns>
-                                                <flux:table.column>{{ __('Source file') }}</flux:table.column>
+                                                <flux:table.column>{{ __('translation-workbench.literal.source_file') }}</flux:table.column>
                                                 <flux:table.column>{{ __('Status') }}</flux:table.column>
                                                 <flux:table.column>{{ __('Inspect') }}</flux:table.column>
                                             </flux:table.columns>
@@ -68,7 +68,7 @@
                                 @endif
                             </flux:callout>
                         @endif
-                        <flux:select variant="listbox" searchable wire:model.live="baselineSourceFile" :label="__('Source file')" :placeholder="__('Select a source file')">
+                        <flux:select variant="listbox" searchable wire:model.live="baselineSourceFile" :label="__('translation-workbench.literal.source_file')" :placeholder="__('Select a source file')">
                             @foreach ($sourceSnapshot['files'] as $sourceFile)
                                 <flux:select.option :value="$sourceFile['path']">{{ $sourceFile['path'] }} ({{ count($sourceFile['edits']) }})</flux:select.option>
                             @endforeach

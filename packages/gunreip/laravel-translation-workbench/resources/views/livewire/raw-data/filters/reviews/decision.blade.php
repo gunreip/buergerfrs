@@ -2,7 +2,7 @@
 
 <flux:field class="{{ $fieldClass ?? '' }}">
     <flux:label>
-        {{ __('Decision') }}
+        {{ __('ui.table.headers.decision') }}
     </flux:label>
     <flux:input.group>
         <flux:input.group.prefix>

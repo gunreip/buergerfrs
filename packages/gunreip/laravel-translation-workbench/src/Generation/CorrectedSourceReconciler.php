@@ -40,10 +40,14 @@ final class CorrectedSourceReconciler
 
                     continue;
                 }
+                $amended = isset($transition['changed_expression']) && $transition['changed_expression'] === $row['raw_expression']
+                    && $old && $old['raw_source_code_literal'] !== null
+                    && strstr($old['raw_expression'], '(', true) === strstr($row['raw_expression'], '(', true)
+                    && $old['raw_expression'] !== $row['raw_expression'];
                 $contentValid = $old && ($transitionMovement
-                    ? $old['raw_expression'] === $row['raw_expression'] && $old['raw_source_code_literal'] === $row['raw_source_code_literal']
+                    ? ($amended || $old['raw_expression'] === $row['raw_expression']) && $old['raw_source_code_literal'] === $row['raw_source_code_literal']
                         && $old['raw_literal'] === $row['raw_literal']
-                        && ((int) $old['source_line'] !== $row['source_line'] || (int) $old['source_column'] !== $row['source_column'])
+                        && ($amended || (int) $old['source_line'] !== $row['source_line'] || (int) $old['source_column'] !== $row['source_column'])
                     : $transitionKey !== null && $row['found_translation_key'] === $name && $row['raw_source_code_literal'] === $name
                         && $row['raw_literal'] === null && $old['raw_expression'] !== $row['raw_expression']);
                 if (isset($verified[$id]) || ! $old || $old['status'] !== 'active' || ($link === false ? null : (int) $link) !== $transitionKey

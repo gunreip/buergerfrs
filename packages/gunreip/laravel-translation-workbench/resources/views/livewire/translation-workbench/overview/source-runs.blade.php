@@ -83,7 +83,7 @@
                                                 :path="$run['path']"
                                                 :length="70"
                                                 side="center"
-                                                :heading="__('Source file')"
+                                                :heading="__('translation-workbench.literal.source_file')"
                                             />
                                         @endif
                                     </flux:table.cell>

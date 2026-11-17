@@ -69,7 +69,7 @@
 
             @if ($historyEvent->reason)
                 <div class="mt-3 text-sm">
-                    <span class="font-semibold">{{ __('admin.translation_list.modal_history.reason') }}:</span>
+                    <span class="font-semibold">{{ __('ui.table.header.reason') }}:</span>
                     <span class="ml-2">{{ $historyEvent->reason }}</span>
                 </div>
             @endif

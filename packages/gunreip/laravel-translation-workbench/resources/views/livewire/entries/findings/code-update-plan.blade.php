@@ -55,9 +55,7 @@
             ),
         ],
         'already_current' => [
-            'title' => __(
-                'packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.already_current',
-            ),
+            'title' => __('translation-workbench.translation.findings.code-update-plan.alredy-current'),
             'color' => 'sky',
             'icon' => 'check-check',
             'text' => __('The current code already uses the reviewed translation key.'),
@@ -633,7 +631,7 @@
                             <flux:select.option value="stale_source">{{ __('ui.source.stale-source') }}
                             </flux:select.option>
                             <flux:select.option value="already_current">
-                                {{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.already_current') }}
+                                {{ __('translation-workbench.translation.findings.code-update-plan.alredy-current') }}
                             </flux:select.option>
                             <flux:select.option value="unsupported_expression">{{ __('Unsupported expression') }}
                             </flux:select.option>
@@ -706,7 +704,7 @@
                                         {{ __('packages.gunreip.laravel_translation_workbench.resources.views.livewire.entries.findings.code_update_plan.current_expression') }}
                                     </flux:table.column>
                                     <flux:table.column class="">
-                                        {{ $state === 'safe_update' || $state === 'already_current' ? __('Planned expression') : __('Reason') }}
+                                        {{ $state === 'safe_update' || $state === 'already_current' ? __('Planned expression') : __('ui.table.header.reason') }}
                                     </flux:table.column>
                                     <flux:table.column
                                         class="w-20"

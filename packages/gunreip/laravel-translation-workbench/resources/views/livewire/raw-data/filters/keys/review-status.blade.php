@@ -1,7 +1,7 @@
 {{-- packages/gunreip/laravel-translation-workbench/resources/views/livewire/raw-data/filters/keys/review-status.blade.php --}}
 
 <flux:field class="{{ $fieldClass ?? '' }}">
-    <flux:label>{{ __('Review') }}</flux:label>
+    <flux:label>{{ __('ui.button.review.review') }}</flux:label>
     <flux:input.group>
         <flux:input.group.prefix>
             <flux:icon.activity />

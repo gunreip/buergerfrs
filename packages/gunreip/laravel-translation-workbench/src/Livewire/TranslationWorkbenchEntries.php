@@ -2892,7 +2892,7 @@ class TranslationWorkbenchEntries extends Component
         }
 
         if ($category === 'review' || str_contains($eventType, 'review')) {
-            return ['label' => __('Review'), 'icon' => 'badge-check'];
+            return ['label' => __('ui.button.review.review'), 'icon' => 'badge-check'];
         }
 
         return ['label' => __('System'), 'icon' => 'activity'];

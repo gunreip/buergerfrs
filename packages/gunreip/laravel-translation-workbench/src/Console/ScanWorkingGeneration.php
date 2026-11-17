@@ -23,7 +23,7 @@ class ScanWorkingGeneration extends Command
             $result = $service->apply($preview, $actor);
             if ($result['state'] !== 'complete') throw new \RuntimeException('Source or database changed during scanning. Review a fresh preview before applying.');
             $this->info('Saved scan: '.$result['result']['scan']);
-            $this->info('Open Translation Workbench → Scan results to inspect this scan. Files requiring review were preserved.');
+            $this->info('Open Translation Workbench → Scan results to inspect this scan. Unresolved findings remain available for review.');
             return self::SUCCESS;
         } catch (Throwable $error) { report($error); $this->components->error($error->getMessage()); return self::FAILURE; }
     }

@@ -55,7 +55,7 @@
             :direction="$sortDirection"
             wire:click="sortBy('decisions')"
         >
-            {{ __('Decision') }}
+            {{ __('ui.table.headers.decision') }}
         </flux:table.column>
 
         {{-- Table-Header Locales --}}

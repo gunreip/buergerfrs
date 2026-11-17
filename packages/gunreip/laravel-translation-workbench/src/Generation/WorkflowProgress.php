@@ -68,12 +68,22 @@ final class WorkflowProgress
                 $step['color'] = 'red';
             }
             if ($finding['status'] !== 'active' && !$step['done']) {
-                $step['status'] = 'incomplete';
+                $step['status'] = 'disabled';
                 $step['color'] = 'zinc';
                 $step['icon'] = 'minus';
+                $step['languages'] = [];
+                unset($step['description'], $step['hint'], $step['action'], $step['scan_action']);
             }
         }
         unset($step);
+        if ($finding['status'] !== 'active') {
+            $steps[] = [
+                'id' => 'archived', 'label' => __('Archived'), 'done' => true, 'status' => 'complete',
+                'color' => 'amber', 'icon' => 'archive', 'languages' => [],
+                'summary' => __('translation-workbench.badge.workflow_closed'),
+                'description' => $finding['retired_reason'] ?? __('translation-workbench.literal.this_source_occurrence_is_no_longer_active'),
+            ];
+        }
         return $steps;
     }
 }

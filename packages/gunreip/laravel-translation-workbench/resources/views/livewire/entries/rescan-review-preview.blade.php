@@ -29,7 +29,7 @@
                     />
                     <flux:table container:class="mt-3 overflow-auto">
                         <flux:table.columns>
-                            <flux:table.column>{{ __('Source file') }}</flux:table.column>
+                            <flux:table.column>{{ __('translation-workbench.literal.source_file') }}</flux:table.column>
                             <flux:table.column>{{ __('Questions') }}</flux:table.column>
                             <flux:table.column>{{ __('Preserved findings') }}</flux:table.column>
                             <flux:table.column>{{ __('Details') }}</flux:table.column>

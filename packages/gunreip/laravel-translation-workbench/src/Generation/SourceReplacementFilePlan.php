@@ -32,6 +32,9 @@ final class SourceReplacementFilePlan
             $offset = array_sum(array_map('strlen', array_slice($lines, 0, $line - 1))) + $line - 1 + $column - 1;
             if ($line < 1 || $column < 1 || ! isset($lines[$line - 1]) || $column > strlen($lines[$line - 1]) + 1
                 || $row['raw_expression'] === '' || substr($before, $offset, strlen($row['raw_expression'])) !== $row['raw_expression']) {
+                if (!isset($selected[$id]) && $this->outsideEditedLines($before, $after, $line, $row['raw_expression'], $edits)) {
+                    continue;
+                }
                 throw new SourceScanRequired($id, $path, $line, $column);
             }
             $preview = $selected[$id] ?? null;
@@ -65,4 +68,30 @@ final class SourceReplacementFilePlan
         usort($transitions, fn ($a, $b) => [$a['movement'], $a['predecessor']] <=> [$b['movement'], $b['predecessor']]);
         return ['after' => $after, 'transitions' => $transitions];
     }
+    /** For single-line edits, coordinates outside the edited lines are invariant. */
+    private function outsideEditedLines(string $before, string $after, int $storedLine, string $expression, array $edits): bool
+    {
+        if ($expression === '' || $storedLine < 1) return false;
+        $editedLines = [];
+        foreach ($edits as $edit) {
+            if (str_contains($edit['replacement'], "\n") || str_contains(substr($before, $edit['offset'], $edit['length']), "\n")) return false;
+            $editedLines[] = 1 + substr_count(substr($before, 0, $edit['offset']), "\n");
+        }
+        $starts = [$storedLine];
+        foreach ([$before, $after] as $bytes) {
+            $offset = 0;
+            while (($match = strpos($bytes, $expression, $offset)) !== false) {
+                $starts[] = 1 + substr_count(substr($bytes, 0, $match), "\n");
+                $offset = $match + 1;
+            }
+        }
+        $span = substr_count($expression, "\n");
+        foreach ($starts as $start) {
+            foreach ($editedLines as $edited) {
+                if ($start <= $edited && $edited <= $start + $span) return false;
+            }
+        }
+        return true;
+    }
+
 }

@@ -468,7 +468,7 @@
                                         {{-- Review --}}
                                         <flux:table.column>
                                             <flux:callout.heading>
-                                                {{ __('Review') }}
+                                                {{ __('ui.button.review.review') }}
                                             </flux:callout.heading>
                                         </flux:table.column>
                                     </flux:table.columns>

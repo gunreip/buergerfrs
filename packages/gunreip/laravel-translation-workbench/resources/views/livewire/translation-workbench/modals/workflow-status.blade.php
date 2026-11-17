@@ -56,7 +56,7 @@
                             :column="$workflowStatus['finding']['source_column']"
                             :length="60"
                             side="center"
-                            :heading="__('Source file')"
+                            :heading="__('translation-workbench.literal.source_file')"
                         />
                     </x-translation-workbench::ui.common.details.item>
 
@@ -85,7 +85,7 @@
                     icon="archive"
                 >
                     <flux:callout.text>
-                        {{ __('This source occurrence is no longer active.') }}
+                        {{ __('translation-workbench.literal.this_source_occurrence_is_no_longer_active') }}
                     </flux:callout.text>
                     @if ($workflowStatus['successor'])
                         <flux:button

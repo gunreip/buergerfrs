@@ -1,10 +1,10 @@
 <flux:modal
-    class="w-full max-w-4xl"
+    class="w-full max-w-5xl"
     name="workbench-run-scan"
     wire:model.live.self="scanWorkflowOpen"
 >
     <x-translation-workbench::ui.common.modal-loading
-        target="refreshScanStorage, showWorkflowScanResult, startScanPreview, confirmScan"
+        target="refreshScanStorage, showWorkflowScanResult, startScanPreview, startScanAndSave, confirmScan"
     />
     @if ($scanWorkflowOpen)
         <div class="space-y-4">
@@ -15,19 +15,20 @@
                 <flux:icon.arrow-path />
                 {{ __('Run scan') }}
             </flux:heading>
-            @if (($scanFreshness['reason'] ?? '') !== '' && !($scanFreshness['reusable'] ?? false))
-                <flux:text>{{ $scanFreshness['reason'] }}</flux:text>
+            @if (($scanAction['reason'] ?? '') !== '' && !($scanAction['reusable'] ?? false))
+                <flux:text>{{ $scanAction['reason'] }}</flux:text>
             @endif
 
             <flux:callout
                 color="sky"
                 icon="arrow-path"
-                :heading="__('Scan scope')"
             >
                 <flux:accordion transition>
                     <flux:accordion.item>
                         <flux:accordion.heading>
-                            {{ __('Scan scope') }}
+                            <flux:callout.heading>
+                                {{ __('Scan scope') }}
+                            </flux:callout.heading>
                         </flux:accordion.heading>
                         <flux:accordion.content>
                             <flux:callout.text>
@@ -60,12 +61,13 @@
             <flux:callout
                 color="purple"
                 icon="archive-box"
-                heading="{{ __('Scan storage') }}"
             >
                 <flux:accordion transition>
                     <flux:accordion.item>
                         <flux:accordion.heading>
-                            {{ __('Scan storage') }}
+                            <flux:callout.heading>
+                                {{ __('Scan storage') }}
+                            </flux:callout.heading>
                         </flux:accordion.heading>
                         <flux:accordion.content>
                             <flux:callout.text class="mt-3">
@@ -120,6 +122,7 @@
                                     <flux:button
                                         size="sm"
                                         variant="filled"
+                                        square
                                         color="purple"
                                         wire:click="refreshScanStorage"
                                         wire:loading.attr="disabled"
@@ -148,14 +151,19 @@
 
             @php
                 $scanState = $scanWorkflow['state'] ?? 'idle';
+                $counts = $scanWorkflow['counts'] ?? $scanWorkflow['preview']['counts'] ?? null;
+                $saveAction = in_array($scanState, ['preview_ready', 'changed'], true) ? 'confirmScan' : 'startScanAndSave';
                 $scanRunning = in_array($scanState, ['queued_preview', 'scanning', 'queued_apply', 'applying'], true);
             @endphp
 
             @if ($scanRunning)
                 <livewire:translation-workbench.scan-progress
                     :scan-workflow-id="$scanWorkflowId"
-                    :scan-workflow="['state' => $scanState, 'progress' => ['steps' => $scanWorkflow['progress']['steps'] ?? []]]"
-                    :key="'scan-progress-'.$scanWorkflowId"
+                    :scan-workflow="[
+                        'state' => $scanState,
+                        'progress' => ['steps' => $scanWorkflow['progress']['steps'] ?? []],
+                    ]"
+                    :key="'scan-progress-' . $scanWorkflowId"
                     @scan-phase-ended="pollScanWorkflow"
                 />
             @elseif (!empty($scanWorkflow['progress']['steps']))
@@ -168,7 +176,7 @@
                     :text="__('Source files or stored findings changed after the previous preview. Nothing was saved. Review the refreshed counts and confirm again.')"
                 />
             @endif
-            @if (isset($scanWorkflow['preview']['counts']))
+            @if ($counts !== null)
                 <flux:callout
                     :heading="__('Scan result summary')"
                     icon="radar"
@@ -185,7 +193,7 @@
                                         class="tabular-nums"
                                         :label="$label"
                                     >
-                                        <x-ui.number :value="$scanWorkflow['preview']['counts'][$count]" />
+                                        <x-ui.number :value="$counts[$count]" />
                                     </x-translation-workbench::ui.common.details.item>
                                 @endforeach
                             </x-translation-workbench::ui.common.details>
@@ -196,19 +204,139 @@
                     </flux:callout.text>
                 </flux:callout>
             @endif
+            @if (
+                $scanPositionFinding &&
+                    in_array($scanState, ['preview_ready', 'changed'], true) &&
+                    !in_array($scanPositionPath, $scanWorkflow['preview']['position_files'] ?? [], true))
+                <flux:callout
+                    color="amber"
+                    :text="__('This preview lists no positions requiring review for :path (finding #:id).', ['path' =>
+                        $scanPositionPath, 'id' => $scanPositionFinding
+                    ])"
+                />
+            @endif
+            @if (in_array($scanState, ['preview_ready', 'changed'], true) && !empty($scanWorkflow['preview']['position_files']))
+                <flux:callout
+                    class="[&>.flex-1]:min-w-0"
+                    icon="file-search-corner"
+                    color="amber"
+                    :heading="__('Position preview for files requiring review')"
+                >
+                    <flux:callout.text>
+                        {{ __('Saving the scan applies unique moves when their destinations are available. Ambiguous findings and moves that depend on them remain open for review.') }}
+                    </flux:callout.text>
+                    <flux:field class="mx-3 w-full min-w-0">
+                        <flux:label>
+                            <flux:callout.heading>
+                                {{ __('translation-workbench.literal.source_file') }}
+                            </flux:callout.heading>
+                        </flux:label>
+                        <flux:input.group>
+                            <flux:input.group.prefix>
+                                <flux:icon.file-search-corner class="size-5" />
+                            </flux:input.group.prefix>
+                            <flux:select
+                                class="truncate"
+                                variant="listbox"
+                                searchable
+                                wire:model.live="scanPositionPath"
+                                :placeholder="__('Choose a file')"
+                            >
+                                @foreach ($scanWorkflow['preview']['position_files'] as $path)
+                                    <flux:select.option
+                                        :value="$path"
+                                        icon="file"
+                                    >
+                                        {{ $path }}
+                                    </flux:select.option>
+                                @endforeach
+                            </flux:select>
+                        </flux:input.group>
+                    </flux:field>
+
+                    @if ($scanPositionRows ?? null)
+                        <flux:table container:class="max-h-60 overflow-auto rounded-t-lg">
+                            <flux:table.columns
+                                class="bg-white dark:bg-zinc-800"
+                                sticky
+                            >
+                                <flux:table.column>
+                                    <flux:callout.heading class="ml-2">
+                                        {{ __('Finding ID') }}
+                                    </flux:callout.heading>
+                                </flux:table.column>
+                                <flux:table.column>
+                                    <flux:callout.heading>
+                                        {{ __('Captured position') }}
+                                    </flux:callout.heading>
+                                </flux:table.column>
+                                <flux:table.column>
+                                    <flux:callout.heading>
+                                        {{ __('Scan position preview') }}
+                                    </flux:callout.heading>
+                                </flux:table.column>
+                            </flux:table.columns>
+                            <flux:table.rows>
+                                @foreach ($scanPositionRows as $id => $observation)
+                                    <flux:table.row :key="'scan-position-'.$id">
+                                        <flux:table.cell>
+                                            @if ((int) $id === $scanPositionFinding)
+                                                <flux:badge
+                                                    class="ml-2"
+                                                    size="sm"
+                                                    color="sky"
+                                                >
+                                                    #{{ $id }}
+                                                </flux:badge>
+                                            @else
+                                                <flux:callout.text class="ml-2 tabular-nums">
+                                                    #{{ $id }}
+                                                </flux:callout.text>
+                                            @endif
+                                        </flux:table.cell>
+                                        <flux:table.cell>
+                                            <flux:callout.text>
+                                                {{ $observation['from'] }}
+                                            </flux:callout.text>
+                                        </flux:table.cell>
+                                        <flux:table.cell>
+                                            <flux:callout.text>
+                                                @include(
+                                                    'translation-workbench::livewire.translation-workbench.scan.position-status',
+                                                    [
+                                                        'state' => $observation['state'],
+                                                        'destination' => $observation['to'] ?? null,
+                                                        'reason' => $observation['reason'] ?? null,
+                                                    ]
+                                                )
+                                            </flux:callout.text>
+                                        </flux:table.cell>
+                                    </flux:table.row>
+                                @endforeach
+                            </flux:table.rows>
+                        </flux:table>
+
+                        <flux:pagination :paginator="$scanPositionRows" />
+
+                    @endif
+                </flux:callout>
+            @endif
+
             @if ($scanState === 'complete')
                 <flux:callout
+                    inline
                     class="justify-stretch hyphens-auto"
                     color="green"
                     icon="database-plus"
                     :heading="__('Scan saved')"
                     :text="__('The overview and scan results have been refreshed. Review unresolved cases in Scan results before continuing source replacement.')"
                 >
-                    <div class="flex flex-col items-end gap-2">
+                    <x-slot:actions class="@md:self-center">
                         <flux:button.group>
                             <flux:button
                                 size="sm"
                                 variant="filled"
+                                square
                                 color="emerald"
                                 wire:click="showWorkflowScanResult"
                             >
@@ -223,7 +351,7 @@
                                 {{ __('Show scan results') }}
                             </flux:button>
                         </flux:button.group>
-                    </div>
+                    </x-slot:actions>
                 </flux:callout>
             @elseif ($scanState === 'failed')
                 <flux:callout
@@ -236,11 +364,12 @@
 
             <flux:error name="scanWorkflow" />
 
-            @if (!in_array($scanState, ['queued_preview', 'scanning', 'queued_apply', 'applying'], true) && $testToken === '')
+            @if (!in_array($scanState, ['queued_preview', 'scanning', 'queued_apply', 'applying', 'complete'], true) && $testToken === '')
                 <div class="flex justify-end gap-2">
                     <flux:button.group>
                         <flux:button
                             variant="filled"
+                            square
                             color="amber"
                             size="sm"
                             wire:click="startScanPreview"
@@ -258,28 +387,27 @@
                             {{ __('Preview scan') }}
                         </flux:button>
                     </flux:button.group>
-                    @if (in_array($scanState, ['preview_ready', 'changed'], true))
-                        <flux:button.group>
-                            <flux:button
-                                variant="filled"
-                                color="green"
-                                size="sm"
-                                wire:click="confirmScan"
-                                wire:loading.attr="disabled"
-                            >
-                                <flux:icon.database-plus size="5" />
-                            </flux:button>
-                            <flux:button
-                                variant="filled"
-                                color="green"
-                                size="sm"
-                                wire:click="confirmScan"
-                                wire:loading.attr="disabled"
-                            >
-                                {{ __('Scan and save results') }}
-                            </flux:button>
-                        </flux:button.group>
-                    @endif
+                    <flux:button.group>
+                        <flux:button
+                            variant="filled"
+                            square
+                            color="green"
+                            size="sm"
+                            wire:click="{{ $saveAction }}"
+                            wire:loading.attr="disabled"
+                        >
+                            <flux:icon.database-plus size="5" />
+                        </flux:button>
+                        <flux:button
+                            variant="filled"
+                            color="green"
+                            size="sm"
+                            wire:click="{{ $saveAction }}"
+                            wire:loading.attr="disabled"
+                        >
+                            {{ __('Save scan results to database') }}
+                        </flux:button>
+                    </flux:button.group>
                 </div>
             @endif
         </div>

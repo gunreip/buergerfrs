@@ -80,7 +80,7 @@
                 >
                     <div class="flex items-start justify-between gap-3">
                         <flux:callout.heading>
-                            {{ __('Decision') }}
+                            {{ __('ui.table.headers.decision') }}
                         </flux:callout.heading>
 
                         @if (!$hasTargetTranslationKeyOptions)
@@ -473,7 +473,7 @@
 
                     <x-ui.button.save
                         variant="primary"
-                        :label="__('Save decision')"
+                        :label="__('ui.button.save.save_decision')"
                         :disabled="!$this->canSaveUsageAuditDecision()"
                         wire:click="saveUsageAuditDecision"
                         wire:loading.attr="disabled"

@@ -1,3 +1,7 @@
+@php
+    $selectedRevisionIds = array_fill_keys($selectedPublicationRevisions, true);
+    $selectedCount = count($selectedRevisionIds);
+@endphp
 <flux:checkbox.group>
     {{-- Table Publications --}}
     <flux:table container:class="max-h-[100vh] overflow-x-auto rounded-t-lg">
@@ -42,14 +46,18 @@
                     />
                 </flux:tooltip>
             </flux:table.column>
-            <flux:table.column>
+            {{-- Table Header Column Check All --}}
+            <flux:table.column
+                class="w-px"
+                align="center"
+            >
                 <flux:checkbox.all
                     :aria-label="__('Select all visible publication revisions')"
                     :tooltip="__('Select or clear the revisions on this page.')"
                 />
             </flux:table.column>
             {{-- Column Actions --}}
-            <flux:table.column class="max-w-0">
+            <flux:table.column class="w-px whitespace-nowrap">
                 <flux:tooltip>
                     <flux:callout.heading>
                         {{ __('Actions') }}
@@ -61,24 +69,27 @@
                         )"
                     />
                 </flux:tooltip>
-                <flux:button.group class="ml-2">
+                <flux:button.group class="ml-2 mr-3">
                     <flux:button
-                        variant="outline"
+                        variant="filled"
+                        square
                         size="xs"
                         wire:click="openPublicationTask"
-                        :disabled="count($selectedPublicationRevisions) === 0"
+                        :color="$selectedCount > 0 ? 'green' : null"
+                        :disabled="$selectedCount === 0"
                         wire:loading.attr="disabled"
                     >
                         <flux:icon.eye class="size-5" />
                     </flux:button>
                     <flux:button
-                        variant="outline"
+                        variant="filled"
                         size="xs"
                         wire:click="openPublicationTask"
-                        :disabled="count($selectedPublicationRevisions) === 0"
+                        :color="$selectedCount > 0 ? 'green' : null"
+                        :disabled="$selectedCount === 0"
                         wire:loading.attr="disabled"
                     >
-                        {{ __('Prepare selected revisions (:count)', ['count' => count($selectedPublicationRevisions)]) }}
+                        {{ __('Prepare selected revisions (:count)', ['count' => $selectedCount]) }}
                     </flux:button>
                 </flux:button.group>
             </flux:table.column>
@@ -86,13 +97,22 @@
         {{-- Table Rows --}}
         <flux:table.rows>
             @forelse ($publicationTasks as $task)
+                @php
+                    $isSelected = isset($selectedRevisionIds[$task['revision']]);
+                    $canPrepareIndividually = $selectedCount <= 1 || !$isSelected;
+                @endphp
                 {{-- Table Row --}}
                 <flux:table.row :key="'publication-task-'.$task['revision']">
                     {{-- Column Key --}}
                     <flux:table.cell class="whitespace-normal tabular-nums">
                         <flux:callout.text>
                             <code>#{{ $task['key_id'] }} ·
-                                {{ $task['namespace'] !== '' ? $task['namespace'] . '::' : '' }}{{ $task['full_name'] }}</code>
+                                <x-ui.text.highlight
+                                    :value="($task['namespace'] !== '' ? $task['namespace'].'::' : '').$task['full_name']"
+                                    :search="$publicationSearch"
+                                    :case-sensitive="$textSearchOptions['publicationSearch']['case'] ?? false"
+                                    :whole-word="$textSearchOptions['publicationSearch']['word'] ?? false"
+                                /></code>
                         </flux:callout.text>
                     </flux:table.cell>
                     {{-- Column Language --}}
@@ -107,7 +127,8 @@
                             {{ $task['locale'] }} · #{{ $task['revision'] }}
                         </flux:callout.text>
                     </flux:table.cell>
-                    <flux:table.cell>
+                    {{-- Table Body column Check All --}}
+                    <flux:table.cell align="center">
                         <flux:checkbox
                             wire:model.live="selectedPublicationRevisions"
                             :value="(string) $task['revision']"
@@ -122,6 +143,7 @@
                                 <flux:button
                                     size="sm"
                                     variant="outline"
+                                    square
                                     wire:click="openKeyWorkflowStatus({{ $task['key_id'] }})"
                                     :aria-label="__('Workflow status')"
                                 >
@@ -137,30 +159,26 @@
                                 <flux:button.group>
                                     <flux:button
                                         size="sm"
-                                        variant="outline"
+                                        variant="filled"
+                                        square
                                         wire:click="openPublicationTask({{ $task['revision'] }})"
-                                        :disabled="count($selectedPublicationRevisions) > 1 && in_array((string) $task['revision'],
-                                            array_map('strval', $selectedPublicationRevisions), true)"
+                                        :color="$isSelected && $canPrepareIndividually ? 'green' : null"
+                                        :disabled="!$canPrepareIndividually"
                                     >
                                         <flux:icon.eye size="5" />
                                     </flux:button>
                                     <flux:button
                                         size="sm"
-                                        variant="outline"
+                                        variant="filled"
                                         wire:click="openPublicationTask({{ $task['revision'] }})"
-                                        :disabled="count($selectedPublicationRevisions) > 1 && in_array((string) $task['revision'],
-                                            array_map('strval', $selectedPublicationRevisions), true)"
+                                        :color="$isSelected && $canPrepareIndividually ? 'green' : null"
+                                        :disabled="!$canPrepareIndividually"
                                     >
                                         {{ __('Prepare publication') }}
                                     </flux:button>
                                     <x-translation-workbench::ui.common.tooltip-content
                                         :heading="__('Prepare publication')"
-                                        :text="count($selectedPublicationRevisions) > 1 &&
-                                        in_array(
-                                            (string) $task['revision'],
-                                            array_map('strval', $selectedPublicationRevisions),
-                                            true,
-                                        )
+                                        :text="!$canPrepareIndividually
                                             ? __(
                                                 'Multiple revisions are selected. Use Prepare selected revisions to continue with the selection together.',
                                             )
@@ -178,7 +196,7 @@
                 <flux:table.row>
                     {{-- Column Empty --}}
                     <flux:table.cell colspan="4">
-                        <flux:callout.text>
+                        <flux:callout.text class="ml-2">
                             {{ __('No approved revisions waiting for publication.') }}
                         </flux:callout.text>
                     </flux:table.cell>

@@ -73,13 +73,16 @@ class WorkbenchTestEnvironment
     {
         $manifest = session(self::SESSION);
         if ($token === '') {
-            abort_if($manifest !== null, 409, 'The workbench mode changed. Reload this page.');
+            if ($manifest !== null) {
+                throw new WorkbenchModeChanged;
+            }
 
             return;
         }
         app(TranslationWorkbenchEditorAccess::class)->authorize();
-        abort_unless(is_array($manifest) && hash_equals($manifest['token'], $token)
-            && $manifest['owner'] === (int) auth()->id(), 409, 'This UI test run has expired. Reload the workbench.');
+        if (!is_array($manifest) || !hash_equals($manifest['token'], $token) || $manifest['owner'] !== (int) auth()->id()) {
+            throw new WorkbenchModeChanged;
+        }
         $this->validate($manifest);
         $db = $this->connect($manifest);
         $generation = $db->query('SELECT generation FROM current_generation_v2.workbench_generation')->fetchColumn();

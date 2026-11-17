@@ -1,5 +1,5 @@
 <flux:callout
-    class="my-4"
+    class="mb-2 mt-4"
     icon="gavel"
     color="amber"
 >
@@ -36,6 +36,7 @@
                 searchable
                 clearable
                 wire:model="{{ $reasonField }}"
+                :invalid="$errors->has($reasonField)"
                 x-data="{ reasonSearch: '' }"
                 :placeholder="__('Choose a reason')"
             >
@@ -65,7 +66,22 @@
             {{ $reasonHint ?? __('This decision is recorded with your user and reason. It does not write language files or source code.') }}
         </flux:callout.text>
 
-        <flux:error :name="$reasonField" />
+        @if ($reasonField === 'sourcePositionReason')
+            <flux:field variant="inline">
+                <flux:checkbox wire:model.live="sourcePositionConfirmed" />
+                <flux:label>
+                    <flux:callout.text>
+                        {{ __('I checked the context. This is the same occurrence at a new position, or a confirmed removal rather than a move, rename or temporary access problem.') }}
+                    </flux:callout.text>
+                </flux:label>
+
+                <flux:error name="sourcePositionConfirmed" />
+            </flux:field>
+        @endif
+
+        @unless ($reasonToast ?? false)
+            <flux:error :name="$reasonField" />
+        @endunless
 
     </flux:field>
 </flux:callout>

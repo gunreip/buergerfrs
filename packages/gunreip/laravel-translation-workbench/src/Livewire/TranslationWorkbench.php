@@ -6,6 +6,7 @@ use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchEditorAccess;
 use Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchEditorLocales;
 use Gunreip\TranslationWorkbench\Generation\GenerationEditor;
 use Gunreip\TranslationWorkbench\Generation\GenerationPublisher;
+use Gunreip\TranslationWorkbench\Generation\InvalidPublicationKey;
 use Gunreip\TranslationWorkbench\Generation\PublicationFileReserved;
 use Gunreip\TranslationWorkbench\Generation\SourceReplacementWriter;
 use Gunreip\TranslationWorkbench\Support\RuntimeOptionPreview;
@@ -19,6 +20,97 @@ use Gunreip\TranslationWorkbench\Support\WorkbenchTestEnvironment;
 
 class TranslationWorkbench extends Component
 {
+    use Concerns\HasTextSearchOptions;
+
+    public function updatedSourceReplacementSearch(): void
+    {
+        $this->resetEmptyTextSearch('sourceReplacementSearch');
+        $this->resetPage('sourceReplacementPage');
+    }
+
+    public string $workFindingId = '';
+
+    public function updatedWorkFindingId(): void
+    {
+        $this->resetPage('workPage');
+    }
+
+    public string $workKeyId = '';
+
+    public function updatedWorkKeyId(): void
+    {
+        $this->resetPage('workPage');
+    }
+
+    public string $sourceReplacementFindingId = '';
+
+    public function updatedSourceReplacementFindingId(): void
+    {
+        $this->resetPage('sourceReplacementPage');
+    }
+
+    public string $sourceReplacementKeyId = '';
+
+    public function updatedSourceReplacementKeyId(): void
+    {
+        $this->resetPage('sourceReplacementPage');
+    }
+
+    public string $sourceIssueSearch = '';
+    public array $sourceIssueFilters = ['finding' => '', 'key' => '', 'observation' => '', 'perPage' => 25];
+
+    public function updatedSourceIssueFilters(): void
+    {
+        $this->resetPage('sourceIssuesPage');
+    }
+
+    public function updatedSourceIssueSearch(): void
+    {
+        $this->resetEmptyTextSearch('sourceIssueSearch');
+        $this->resetPage('sourceIssuesPage');
+    }
+
+    private function sourceIssuePage(GenerationEditor $repository, array $cases): \Illuminate\Pagination\LengthAwarePaginator
+    {
+        $finding = trim($this->sourceIssueFilters['finding']);
+        $key = trim($this->sourceIssueFilters['key']);
+        $search = trim($this->sourceIssueSearch);
+        $options = $this->textSearchOptions['sourceIssueSearch'] ?? [];
+        $literal = preg_quote($search, '~');
+        $pattern = !empty($options['word']) ? '(?<![\pL\pN])'.$literal.'(?![\pL\pN])' : $literal;
+        $pattern = '~'.$pattern.'~u'.(empty($options['case']) ? 'i' : '');
+        $cases = array_values(array_filter($cases, static function ($case) use ($finding, $key, $search, $pattern) {
+            $affected = $case['affected'] ?? [];
+            if ($finding !== '' && $finding !== (string) $case['id'] && !isset($affected[$finding])) return false;
+            if ($key !== '' && !in_array($key, array_map('strval', $affected), true)) return false;
+            return $search === '' || preg_match($pattern, $case['path']) || preg_match($pattern, $case['raw_expression'] ?? '');
+        }));
+        $observation = $this->sourceIssueFilters['observation'];
+        if ($observation !== '' && $cases) {
+            $cases = array_values(array_filter($repository->describeSourceIssueRows($cases), static fn ($case) =>
+                $observation === 'duplicate' ? !empty($case['retained']) : !empty($case['observations'][$observation])));
+        }
+        $size = (int) $this->sourceIssueFilters['perPage'];
+        $size = in_array($size, [10, 25, 50, 100], true) ? $size : 25;
+        $page = max(1, min((int) $this->getPage('sourceIssuesPage'), (int) ceil(count($cases) / $size)));
+        $rows = array_slice($cases, ($page - 1) * $size, $size);
+        if ($observation === '' && $rows) $rows = $repository->describeSourceIssueRows($rows);
+        return new \Illuminate\Pagination\LengthAwarePaginator($rows, count($cases), $size, $page, ['pageName' => 'sourceIssuesPage']);
+    }
+
+    protected function textSearchPages(): array
+    {
+        return [
+            'workSearch' => 'workPage',
+            'translationSearch' => 'translationsPage',
+            'reviewSearch' => 'reviewPage',
+            'publicationSearch' => 'publicationPage',
+            'publishedSearch' => 'publishedPage',
+            'sourceReplacementSearch' => 'sourceReplacementPage',
+            'sourceIssueSearch' => 'sourceIssuesPage',
+        ];
+    }
+
     use WithPagination;
     use Concerns\HasWorkflowReasons;
     use Concerns\SelectsWorkflowLanguages;
@@ -84,12 +176,15 @@ class TranslationWorkbench extends Component
     #[Url]
     public string $tab = 'findings';
 
+    public bool $overviewOpen = false;
+
     public string $workSearch = '';
     public int $workPerPage = 25;
     public bool $workOnlyMine = true;
 
     public function updatedWorkSearch(): void
     {
+        $this->resetEmptyTextSearch('workSearch');
         $this->resetPage('workPage');
     }
 
@@ -115,7 +210,7 @@ class TranslationWorkbench extends Component
                 throw new \RuntimeException(__('No finding is available for this work item.'));
             }
             if (!empty($task['open_publication'])) {
-                $this->openPublication($task['open_publication']);
+                $this->inspectPublicationRun($task['open_publication'], $key, (int) $task['finding_id']);
                 return;
             }
             if (!empty($task['open_source'])) {
@@ -177,6 +272,11 @@ class TranslationWorkbench extends Component
 
     public string $search = '';
 
+    public bool $searchCaseSensitive = false;
+
+    public bool $searchWholeWord = false;
+    public bool $searchWholeLiteral = false;
+
     public string $translationKeyId = '';
 
     public function updatedTranslationKeyId(): void
@@ -206,6 +306,7 @@ class TranslationWorkbench extends Component
 
     public function updatedTranslationSearch(): void
     {
+        $this->resetEmptyTextSearch('translationSearch');
         $this->resetPage('translationsPage');
     }
 
@@ -219,7 +320,7 @@ class TranslationWorkbench extends Component
 
     public string $findingId = '';
 
-    public string $status = 'active';
+    public string $status = 'open';
 
     public bool $includeArchived = false;
 
@@ -354,6 +455,29 @@ class TranslationWorkbench extends Component
 
     public function updatedSearch(): void
     {
+        if (trim($this->search) === '') {
+            $this->searchCaseSensitive = false;
+            $this->searchWholeWord = false;
+            $this->searchWholeLiteral = false;
+        }
+        $this->resetPage('findingsPage');
+    }
+
+    public function toggleSearchCaseSensitive(): void
+    {
+        $this->searchCaseSensitive = ! $this->searchCaseSensitive;
+        $this->resetPage('findingsPage');
+    }
+
+    public function toggleSearchWholeWord(): void
+    {
+        $this->searchWholeWord = ! $this->searchWholeWord;
+        $this->resetPage('findingsPage');
+    }
+
+    public function toggleSearchWholeLiteral(): void
+    {
+        $this->searchWholeLiteral = ! $this->searchWholeLiteral;
         $this->resetPage('findingsPage');
     }
 
@@ -364,6 +488,7 @@ class TranslationWorkbench extends Component
 
     public function updatedStatus(): void
     {
+        if ($this->status === '') $this->status = 'open';
         $this->resetPage('findingsPage');
     }
 
@@ -417,6 +542,30 @@ class TranslationWorkbench extends Component
     public array $sharedReference = [];
 
     public array $sharedSelection = [];
+
+    public int $sharedPerPage = 25;
+
+    public string $sharedSort = '';
+
+    public string $sharedDirection = 'asc';
+
+    public function sortSharedFindings(string $column): void
+    {
+        if (! in_array($column, ['finding', 'literal', 'source', 'suggested_key', 'translation_key'], true)) {
+            return;
+        }
+        $this->sharedDirection = $this->sharedSort === $column && $this->sharedDirection === 'asc' ? 'desc' : 'asc';
+        $this->sharedSort = $column;
+        $this->resetPage('sharedFindingsPage');
+    }
+
+    public function updatedSharedPerPage(): void
+    {
+        if (! in_array($this->sharedPerPage, [10, 25, 50, 100], true)) {
+            $this->sharedPerPage = 25;
+        }
+        $this->resetPage('sharedFindingsPage');
+    }
 
     public string $sharedReason = '';
 
@@ -578,6 +727,9 @@ class TranslationWorkbench extends Component
         $this->context = app(GenerationEditor::class)->inspect($this->selected, $this->locale);
         $this->loadedLocale = $this->locale;
         $finding = $this->context['finding'];
+        $this->context['uiUsage'] = \Gunreip\TranslationWorkbench\Support\FindingUsage::forFinding(
+            $finding, app(WorkbenchTestEnvironment::class)->root()
+        );
         $this->assignmentKeySearch = '';
         $this->sourceLanguageValue = (string) ($this->context['sourceText'] ?? $finding['raw_literal'] ?? $finding['suggested_literal'] ?? '');
         $this->assignmentKey = $finding['key_id']
@@ -743,6 +895,36 @@ class TranslationWorkbench extends Component
         $this->translationKeyOpen = true;
     }
 
+    public function appendSuggestedKeySegment(): void
+    {
+        $finding = $this->context['finding'] ?? [];
+        if (!$this->translationKeyOpen || ($finding['status'] ?? null) !== 'active'
+            || !\Gunreip\TranslationWorkbench\Generation\TranslationKeyInput::canAppendSegment($this->newTranslationKey)) return;
+
+        $segment = Str::afterLast(trim($finding['suggested_key'] ?? ''), '.');
+        if ($segment === '') return;
+
+        if (preg_match('/_(?:[0-9a-f]{10}|[0-9a-f]{12}|[2-9]|[1-9][0-9]+)$/D', $segment)) {
+            $factory = new \Gunreip\TranslationWorkbench\Scanner\SuggestedKeyFactory;
+            $path = $finding['path'];
+            $base = match (true) {
+                isset($finding['raw_literal']) => $factory->forLiteral($finding['raw_literal'], $path),
+                isset($finding['raw_source_code_literal']) => $factory->forExistingKeyAtSource($finding['raw_source_code_literal'], $path),
+                default => $factory->forDynamicExpressionAtSource($finding['raw_expression'] ?? '', $path),
+            };
+            $baseLeaf = Str::afterLast($base->key, '.');
+            if ($segment !== $baseLeaf) {
+                $segment = preg_replace('/_(?:[2-9]|[1-9][0-9]+)$/D', '', $segment);
+            }
+            if ($segment === $baseLeaf) {
+                $segment = $base->copyableLeaf;
+            }
+        }
+        $prefix = rtrim(trim($this->newTranslationKey), '.');
+        $this->newTranslationKey = $prefix.'.'.$segment;
+        $this->resetValidation('newTranslationKey');
+    }
+
     public function createTranslationKey(): void
     {
         abort_unless(($this->context['finding']['status'] ?? null) === 'active', 403);
@@ -903,6 +1085,7 @@ class TranslationWorkbench extends Component
 
     public function updatedReviewSearch(): void
     {
+        $this->resetEmptyTextSearch('reviewSearch');
         $this->resetPage('reviewPage');
     }
 
@@ -978,6 +1161,7 @@ class TranslationWorkbench extends Component
 
     public function openWorkflowStatus(int $finding): void
     {
+        $this->sourceComparisonOpen = false;
         $this->workflowStatusOpen = true;
         $this->workflowStatus = [];
         $this->resetValidation('workflowStatus');
@@ -1074,19 +1258,25 @@ class TranslationWorkbench extends Component
         $this->reviewBatchReason = '';
         $this->reviewBatchReasonLocale = $this->reasonTargetLocale();
         $this->reviewBatchOpen = false;
-        if ($revision === null) {
-            $this->validate(['selectedReviewRevisions' => 'required|array|min:1', 'selectedReviewRevisions.*' => 'required|integer|min:1']);
-        }
-        $revisions = $revision === null ? array_unique($this->selectedReviewRevisions) : [$revision];
         try {
+            if ($revision === null) {
+                $this->validate(['selectedReviewRevisions' => 'required|array|min:1', 'selectedReviewRevisions.*' => 'required|integer|min:1'], [
+                    'selectedReviewRevisions.required' => __('Select at least one revision to review.'),
+                ]);
+            }
+            $revisions = $revision === null ? array_unique($this->selectedReviewRevisions) : [$revision];
             $tasks = [];
             foreach ($revisions as $revision) {
                 $tasks[] = app(GenerationEditor::class)->reviewWorklist()->inspect((int) $revision);
             }
             $this->reviewBatch = $tasks;
             $this->reviewBatchOpen = true;
+        } catch (\Illuminate\Validation\ValidationException $error) {
+            \Flux\Flux::toast(heading: __('Check the review selection'), text: $error->validator->errors()->first(), variant: 'danger', duration: 8000);
+            throw $error;
         } catch (\RuntimeException $error) {
             $this->addError('reviewBatch', $error->getMessage());
+            \Flux\Flux::toast(heading: __('Review could not be opened'), text: $error->getMessage(), variant: 'danger', duration: 8000);
         }
     }
 
@@ -1207,6 +1397,7 @@ class TranslationWorkbench extends Component
 
     public function updatedPublishedSearch(): void
     {
+        $this->resetEmptyTextSearch('publishedSearch');
         $this->resetPage('publishedPage');
     }
 
@@ -1273,33 +1464,82 @@ class TranslationWorkbench extends Component
         }
     }
 
+    #[Locked]
+    public string $sourcePositionFailure = '';
+
+    public string $sourcePositionTarget = '';
     public string $sourcePositionChoice = '';
     public string $sourcePositionReason = '';
     public bool $sourcePositionConfirmed = false;
     #[Locked]
     public string $sourcePositionOperation = '';
 
+    public function selectSourcePosition(int $line, int $column): void
+    {
+        $coordinate = $line.':'.$column;
+        $decision = $this->sourceComparison['decision'] ?? [];
+        $positions = $this->sourceComparison['check']['positions'] ?? [];
+        if (!$this->sourceComparisonOpen || empty($decision['can_move']) || isset($decision['occupied'][$coordinate])
+            || !collect($positions)->contains(fn ($position) => $position['line'].':'.$position['column'] === $coordinate)) {
+            $this->reportSourcePositionFailure(__('This position is unavailable. Reopen the source comparison.'));
+            return;
+        }
+        $this->sourcePositionChoice = 'moved';
+        $this->sourcePositionTarget = $coordinate;
+        $this->sourcePositionConfirmed = false;
+        $this->sourcePositionFailure = '';
+        $this->resetValidation(['sourcePositionChoice', 'sourcePositionTarget']);
+        $this->successToast(__('Position selected'), __('Finding #:finding · :position. Review the selection and choose Apply decision to save it.', [
+            'finding' => $this->sourceComparison['finding']['id'], 'position' => $coordinate,
+        ]));
+    }
+
     public function applySourcePositionDecision(): void
     {
-        $this->validate(['sourcePositionChoice' => 'required|in:moved,removed',
-            'sourcePositionReason' => 'required|string|min:3|max:2000', 'sourcePositionConfirmed' => 'accepted']);
         $finding = (int) ($this->sourceComparison['finding']['id'] ?? 0);
-        if (! $this->sourceComparisonOpen || ! in_array($finding, $this->sourceReplacementGroup['finding_ids'] ?? [], true)
+        if (! $this->sourceComparisonOpen || (!($this->sourceComparison['from_issue'] ?? false) && ! in_array($finding, $this->sourceReplacementGroup['finding_ids'] ?? [], true))
             || $this->sourcePositionOperation === '' || empty($this->sourceComparison['decision']['fingerprint'])) {
-            $this->addError('sourcePositionDecision', __('Reopen the source comparison before applying a decision.'));
+            $this->reportSourcePositionFailure(__('Reopen the source comparison before applying a decision.'));
             return;
         }
         try {
+            $this->validate(['sourcePositionChoice' => 'required|in:moved,removed,duplicate',
+                'sourcePositionReason' => 'required|string|min:3|max:2000', 'sourcePositionConfirmed' => 'accepted']);
             $result = app(GenerationEditor::class)->applySourcePositionDecision($this->sourcePositionOperation,
-                $finding, (int) $this->sourceReplacementGroup['key_id'], $this->sourceComparison['decision']['fingerprint'],
-                $this->sourcePositionChoice, (int) auth()->id(), $this->sourcePositionReason);
+                $finding, ($this->sourceComparison['from_issue'] ?? false) ? $this->sourceComparison['finding']['key_id'] : $this->sourceReplacementGroup['key_id'], $this->sourceComparison['decision']['fingerprint'],
+                $this->sourcePositionChoice, (int) auth()->id(), $this->sourcePositionReason, $this->sourcePositionTarget);
             $this->releaseSourceReplacementGroup();
-            $this->successToast(__('Source position decision saved'), isset($result['successors'][0])
+            $message = isset($result['successors'][0])
                 ? __('Finding #:old archived; successor #:new created with the same suggested key and translation key assignment.',
                     ['old' => $finding, 'new' => $result['successors'][0]['successor']])
-                : __('Finding #:id archived as removed. The translation key and translations were retained.', ['id' => $finding]));
+                : (isset($result['retained'])
+                    ? __('translation-workbench.literal.finding_old_archived_as_a_duplicate_finding_active_remains_active', ['old' => $finding, 'active' => $result['retained']])
+                    : __('Finding #:id archived as removed. The translation key and translations were retained.', ['id' => $finding]));
+            $this->successToast(__('Source position decision saved'), $message);
+        } catch (\Illuminate\Validation\ValidationException $error) {
+            $this->reportSourcePositionFailure($error->validator->errors()->first());
+            throw $error;
         } catch (\RuntimeException $error) {
-            $this->addError('sourcePositionDecision', $error->getMessage());
+            $this->reportSourcePositionFailure($error->getMessage());
+        }
+    }
+
+    private function reportSourcePositionFailure(string $message, ?string $heading = null): void
+    {
+        $this->sourcePositionFailure = $message;
+        $this->dispatch('toast-show', slots: ['heading' => $heading ?? __('Decision not saved'), 'text' => $message],
+            dataset: ['variant' => 'danger']);
+    }
+
+    public function inspectSourcePositionOccupant(int $finding): void
+    {
+        if (!$this->sourceComparisonOpen) return;
+        foreach ($this->sourceComparison['decision']['occupied'] ?? [] as $occupants) {
+            if (in_array($finding, array_column($occupants, 'id'), true)) {
+                $this->open($finding);
+                $this->sourceComparisonOpen = false;
+                return;
+            }
         }
     }
 
@@ -1310,7 +1550,29 @@ class TranslationWorkbench extends Component
 
     public function openSourceComparison(int $finding): void
     {
+        if (!in_array($finding, $this->sourceReplacementGroup['finding_ids'] ?? [], true)) {
+            $this->addError('sourceReplacementGroup', __('Select this translation key before inspecting its findings.'));
+            return;
+        }
+        $this->showSourceComparison($finding, $this->sourceReplacementGroup['key_id']);
+    }
+
+    public function openSourceIssue(int $finding): void
+    {
+        $cases = app(GenerationEditor::class)->sourceIssues($this->testToken);
+        $previewCauses = array_column(array_column($this->sourcePreview['items'] ?? [], 'blocking_finding'), 'finding');
+        if (!in_array($finding, array_column($cases, 'id')) && !in_array($finding, $previewCauses)) {
+            $this->reportSourcePositionFailure(__('This finding no longer has an open source issue.'), __('Source comparison'));
+            return;
+        }
+        $this->showSourceComparison($finding, null);
+    }
+
+    private function showSourceComparison(int $finding, ?int $key): void
+    {
         $this->resetValidation(['sourcePositionChoice', 'sourcePositionReason', 'sourcePositionConfirmed', 'sourcePositionDecision']);
+        $this->sourcePositionFailure = '';
+        $this->sourcePositionTarget = '';
         $this->sourcePositionChoice = '';
         $this->sourcePositionReason = '';
         $this->sourcePositionConfirmed = false;
@@ -1318,15 +1580,13 @@ class TranslationWorkbench extends Component
         $this->resetValidation('sourceReplacementGroup');
         $this->sourceComparisonOpen = false;
         $this->sourceComparison = [];
-        if (! in_array($finding, $this->sourceReplacementGroup['finding_ids'] ?? [], true)) {
-            $this->addError('sourceReplacementGroup', __('Select this translation key before inspecting its findings.'));
-            return;
-        }
         try {
-            $this->sourceComparison = app(GenerationEditor::class)->sourceReplacementComparison($finding, $this->sourceReplacementGroup['key_id']);
+            $this->sourceComparison = app(GenerationEditor::class)->sourceReplacementComparison($finding, $key);
+            $this->sourceComparison['from_issue'] = $key === null;
             $this->sourceComparisonOpen = true;
+            $this->sourcePreviewOpen = false;
         } catch (\RuntimeException $error) {
-            $this->addError('sourceReplacementGroup', $error->getMessage());
+            $this->reportSourcePositionFailure($error->getMessage(), __('Source comparison'));
         }
     }
 
@@ -1380,6 +1640,7 @@ class TranslationWorkbench extends Component
 
     public function updatedPublicationSearch(): void
     {
+        $this->resetEmptyTextSearch('publicationSearch');
         $this->resetPage('publicationPage');
     }
 
@@ -1411,13 +1672,19 @@ class TranslationWorkbench extends Component
             $this->publicationTask = $tasks[0];
             $this->publicationTaskOpen = true;
         } catch (\RuntimeException $error) {
-            $this->addError('publicationTask', $error->getMessage());
+            $this->publicationPreparationError($error, $revision === null ? $this->selectedPublicationRevisions : [$revision]);
         }
     }
 
     public function preparePublicationTask(): void
     {
-        $this->validate(['publicationReason' => 'required|string|min:3|max:2000']);
+        try {
+            $this->validate(['publicationReason' => 'required|string|min:3|max:2000']);
+        } catch (\Illuminate\Validation\ValidationException $error) {
+            \Flux\Flux::toast(heading: __('Check the reason for publication'),
+                text: $error->validator->errors()->first('publicationReason'), variant: 'danger', duration: 8000);
+            throw $error;
+        }
         if (! $this->publicationTaskOpen || $this->publicationTask === []) {
             return;
         }
@@ -1436,7 +1703,7 @@ class TranslationWorkbench extends Component
         } catch (PublicationFileReserved $error) {
             $this->notifyPublicationReservation($error);
         } catch (\RuntimeException $error) {
-            $this->addError('publicationTask', $error->getMessage());
+            $this->publicationPreparationError($error, array_column(array_column($this->publicationBatch ?: [$this->publicationTask], 'context'), 'revision_id'));
         }
     }
 
@@ -1462,8 +1729,51 @@ class TranslationWorkbench extends Component
         } catch (PublicationFileReserved $error) {
             $this->notifyPublicationReservation($error);
         } catch (\RuntimeException $error) {
-            $this->addError('publication', $error->getMessage());
+            $this->publicationPreparationError($error, array_keys($revisions ?? []));
         }
+    }
+
+    private function publicationPreparationError(\RuntimeException $error, array $revisions): void
+    {
+        \Illuminate\Support\Facades\Log::warning('Workbench publication preparation failed', [
+            'actor_id' => auth()->id(),
+            'revision_ids' => $revisions,
+            'test_mode' => $this->testToken !== '',
+            'error' => $error->getMessage(),
+        ]);
+        if ($error instanceof InvalidPublicationKey) {
+            $this->notifyInvalidPublicationKey($error, $this->editorOpen ? (int) ($this->context['finding']['key_id'] ?? 0) : null, $this->selected);
+            return;
+        }
+        \Flux\Flux::toast(heading: __('Publication preview could not be prepared'), text: $error->getMessage(), variant: 'danger', duration: 0);
+    }
+
+    private function notifyInvalidPublicationKey(InvalidPublicationKey $error, ?int $originKey, ?int $originFinding): void
+    {
+        $finding = $originFinding;
+        if (!$finding || $originKey !== $error->keyId) {
+            try {
+                $finding = app(GenerationEditor::class)->workflowFindingForKey($error->keyId);
+            } catch (\RuntimeException $unavailable) {
+                \Flux\Flux::toast(heading: $error->heading, text: $error->detail.' '.$unavailable->getMessage(), variant: 'danger', duration: 0);
+                return;
+            }
+        }
+        $this->dispatch('toast-show', slots: ['heading' => $error->heading, 'text' => $error->detail],
+            dataset: ['variant' => 'danger'], duration: 0, action: [
+                'label' => __('Edit finding #:id', ['id' => $finding]),
+                'event' => 'workbench-edit-key-finding',
+                'params' => ['component' => $this->getId(), 'finding' => $finding],
+            ]);
+    }
+
+    public function editKeyFinding(int $finding): void
+    {
+        if (!$this->editorOpen || $this->selected !== $finding) {
+            $this->open($finding);
+        }
+        $this->publicationOpen = $this->publicationTaskOpen = $this->publicationSelectionOpen = $this->workflowStatusOpen = false;
+        $this->dispatch('workflow-focus', target: 'workbench-key-assignment');
     }
 
     private function notifyPublicationReservation(PublicationFileReserved $error): void
@@ -1486,6 +1796,11 @@ class TranslationWorkbench extends Component
 
     public function openPublication(string $run): void
     {
+        $this->inspectPublicationRun($run);
+    }
+
+    private function inspectPublicationRun(string $run, ?int $originKey = null, ?int $originFinding = null): void
+    {
         $this->resetValidation('publication');
         try {
             $this->publication = app(GenerationPublisher::class)->inspect($run);
@@ -1494,6 +1809,8 @@ class TranslationWorkbench extends Component
             $this->closure = [];
             $this->closureReason = '';
             $this->publicationOpen = true;
+        } catch (InvalidPublicationKey $error) {
+            $this->notifyInvalidPublicationKey($error, $originKey, $originFinding);
         } catch (\RuntimeException $error) {
             $this->publicationActionError($error->getMessage(), __('Publication could not be opened'));
         }
@@ -1513,11 +1830,13 @@ class TranslationWorkbench extends Component
             if ($this->editorOpen) {
                 $this->reload();
             }
-            $this->successToast(__('Publication completed'),
-                __('Run: :run. Language files written and file hashes verified.', ['run' => $run]));
+            \Flux\Flux::toast(heading: __('Publication completed'),
+                text: __('Run: :run. Language files written and file hashes verified.', ['run' => $run]),
+                variant: 'success', duration: 0);
         } catch (\RuntimeException $error) {
             $this->publication = app(GenerationPublisher::class)->inspect($run);
-            $this->publicationActionError($error->getMessage(), __('Publication failed'));
+            $this->publicationActionError($error instanceof InvalidPublicationKey ? $error->detail : $error->getMessage(),
+                $error instanceof InvalidPublicationKey ? $error->heading : __('Publication failed'));
         }
     }
 
@@ -1573,7 +1892,14 @@ class TranslationWorkbench extends Component
             return;
         }
         try {
-            $this->sourcePreview = app(SourceReplacementWriter::class)->previewBatch(
+            $writer = app(SourceReplacementWriter::class);
+            $pending = $writer->pendingBatchForKey($this->sourceReplacementGroup['key_id']);
+            if ($pending !== null) {
+                $this->editorOpen = $this->sourceComparisonOpen = false;
+                $this->openSourceRun($pending);
+                return;
+            }
+            $this->sourcePreview = $writer->previewBatch(
                 $this->sourceReplacementGroup['key_id'], $this->sourceReplacementGroup['finding_ids']);
             $languages = app(TranslationWorkbenchEditorLocales::class)->resolve();
             $this->sourcePreview['translation_files'] = app(GenerationEditor::class)->translationFiles(
@@ -1650,6 +1976,10 @@ class TranslationWorkbench extends Component
                     $this->sourcePreview['fingerprint'], (int) auth()->id(), $this->sourceReason);
             $this->sourcePreviewOpen = false;
             $this->openSourceRun($run);
+            if ($this->sourceRunOpen && ($this->sourceRun['batch'] ?? false)) {
+                $this->successToast(__('Selected source replacements prepared'),
+                    __('Review the file operations and confirm to write the changes.'));
+            }
         } catch (\RuntimeException $error) {
             if ($error instanceof \Gunreip\TranslationWorkbench\Generation\SourceScanRequired) {
                 $this->sourcePreview['ready'] = false;
@@ -1679,32 +2009,66 @@ class TranslationWorkbench extends Component
         if (! $this->sourceRunOpen || ! $this->sourceRun) {
             return;
         }
+        $run = $this->sourceRun['run'];
+        $batch = $this->sourceRun['batch'] ?? false;
+        $writer = app(SourceReplacementWriter::class);
+        $this->resetValidation('sourceRun');
         try {
-            $result = app(SourceReplacementWriter::class)->apply($this->sourceRun['run'], (int) auth()->id());
-            $this->openSourceRun($this->sourceRun['run']);
+            $result = $writer->apply($run, (int) auth()->id());
+            if ($batch) {
+                \Flux\Flux::toast(heading: __('Selected source replacements completed'),
+                    text: __('Key #:key · Files: :files. Run a new scan to confirm the updated source positions.', [
+                        'key' => $result['key'], 'files' => count($this->sourceRun['files']),
+                    ]), variant: 'success', duration: 0);
+            } else {
+                $this->successToast(__('Source replacement completed'),
+                    __('Run: :run · Successor finding IDs: :ids', [
+                        'run' => $this->sourceRun['run'],
+                        'ids' => '#' . implode(', #', array_column($result['successors'], 'successor')),
+                    ]));
+            }
+            $this->sourceRun = $writer->inspect($run);
+            $this->sourceCloseReason = '';
             if ($this->editorOpen) {
                 $this->open((int) $result['successors'][0]['successor']);
             }
             if ($this->sourceReplacementGroup !== []) {
                 $this->sourceGroupCheck = [];
                 try {
-                    $this->sourceReplacementGroup = app(GenerationEditor::class)->sourceReplacementGroup((int) $result['successors'][0]['successor']);
+                    $remaining = app(GenerationEditor::class)->remainingSourceGroupIds((int) $this->sourceReplacementGroup['key_id']);
+                    $this->sourceReplacementGroup = $remaining
+                        ? array_replace($this->sourceReplacementGroup, ['finding_ids' => $remaining]) : [];
                 } catch (\RuntimeException) {
                     $this->sourceReplacementGroup = [];
                 }
             }
-            $this->successToast(__('Source replacement completed'),
-                __('Run: :run · Successor finding IDs: :ids', [
-                    'run' => $this->sourceRun['run'],
-                    'ids' => '#' . implode(', #', array_column($result['successors'], 'successor')),
-                ]));
         } catch (\RuntimeException $error) {
             try {
-                $this->sourceRun = app(SourceReplacementWriter::class)->inspect($this->sourceRun['run']);
+                $this->sourceRun = $writer->inspect($run);
             } catch (\RuntimeException) {
                 // Keep the original error visible if the file has disappeared.
             }
-            $this->addError('sourceRun', $error->getMessage());
+            if ($batch) {
+                \Flux\Flux::toast(heading: __('Check source replacement status'), text: $error->getMessage(),
+                    variant: 'danger', duration: 0);
+            } else {
+                $this->addError('sourceRun', $error->getMessage());
+            }
+        }
+    }
+
+    public function acknowledgeSourceBatch(): void
+    {
+        if (!$this->sourceRunOpen || !($this->sourceRun['batch'] ?? false) || $this->sourceRun['state'] !== 'complete') {
+            return;
+        }
+
+        try {
+            app(SourceReplacementWriter::class)->acknowledgeBatch($this->sourceRun['run'], (int) auth()->id());
+            $this->sourceRunOpen = false;
+            $this->sourceRun = [];
+        } catch (\RuntimeException $error) {
+            \Flux\Flux::toast(heading: __('Could not confirm the batch result'), text: $error->getMessage(), variant: 'danger');
         }
     }
 
@@ -1811,7 +2175,7 @@ class TranslationWorkbench extends Component
             ? [__('Value comes from the database and is displayed unchanged.'),
                 __('User-entered content is displayed unchanged.'),
                 __('Runtime value is a technical identifier and does not require translation.')]
-            : [__('Runtime value contains text that requires translation.'),
+            : [__('translation-workbench.literal.runtime_value_contains_text_that_requires_translation'),
                 __('Dynamic translation key needs an explicit assignment.'),
                 __('Source usage requires further review before translation.')];
         foreach ([...$defaults, ...app(GenerationEditor::class)->scanUsageReasons($this->scanUsageChoice)] as $reason) {
@@ -1937,14 +2301,29 @@ class TranslationWorkbench extends Component
         }
     }
 
+    private function scanAction(array $requirement): array
+    {
+        if ($requirement['required']) {
+            return ['reusable' => false, 'reason' => __('translation-workbench.literal.stored_finding_positions_need_to_be_checked_by_a_new_scan')];
+        }
+        return $this->scanFreshness;
+    }
+
     public function openCurrentScan(): void
     {
         $this->refreshScanFreshness();
-        if ($this->scanFreshness['reusable'] ?? false) {
-            $this->openScan($this->scanFreshness['run']);
+        $action = $this->scanAction(app(GenerationEditor::class)->scanRequirementSummary());
+        if ($action['reusable'] ?? false) {
+            $this->openScan($action['run']);
             return;
         }
+        $this->openNewSourceScan();
+    }
+
+    public function openNewSourceScan(): void
+    {
         $this->openScanWorkflow();
+        if ($this->testToken !== '') return;
         // Keep running work or a prepared preview; do not reopen an obsolete completed result.
         if (($this->scanWorkflow['state'] ?? '') === 'complete') {
             $this->scanWorkflowId = '';
@@ -1969,14 +2348,53 @@ class TranslationWorkbench extends Component
         } catch (\Throwable $error) { $this->addError('scanWorkflow', $error->getMessage()); }
     }
 
+    public string $scanPositionPath = '';
+
+    #[Locked]
+    public ?int $scanPositionFinding = null;
+
+    public function previewComparisonPositions(): void
+    {
+        if (!$this->sourceComparisonOpen || empty($this->sourceComparison['finding']) || $this->testToken !== '') return;
+
+        $finding = $this->sourceComparison['finding'];
+        $this->openScanWorkflow();
+        $this->sourceComparisonOpen = false;
+        if (!in_array($this->scanWorkflow['state'] ?? '', ['queued_preview', 'scanning', 'preview_ready', 'queued_apply', 'applying'], true)) {
+            $this->startScanPreview();
+        }
+        $this->scanPositionPath = $finding['path'];
+        $this->scanPositionFinding = (int) $finding['id'];
+        $this->resetPage('scanPositionPage');
+    }
+
+    public function updatedScanPositionPath(): void
+    {
+        $this->scanPositionFinding = null;
+        $this->resetPage('scanPositionPage');
+    }
+
     public function startScanPreview(): void
+    {
+        $this->startScan(false);
+    }
+
+    public function startScanAndSave(): void
+    {
+        $this->startScan(true);
+    }
+
+    private function startScan(bool $save): void
     {
         app(\Gunreip\TranslationWorkbench\Foundation\TranslationWorkbenchEditorAccess::class)->authorize();
         if (!$this->scanWorkflowOpen || $this->testToken !== '') return;
         if (in_array($this->scanWorkflow['state'] ?? '', ['queued_preview', 'scanning', 'queued_apply', 'applying'], true)) return;
         try {
             $this->resetValidation('scanWorkflow');
-            $this->scanWorkflowId = app(\Gunreip\TranslationWorkbench\Generation\ScanRunCoordinator::class)->start((int) auth()->id());
+            $this->scanPositionPath = '';
+            $this->scanPositionFinding = null;
+            $this->resetPage('scanPositionPage');
+            $this->scanWorkflowId = app(\Gunreip\TranslationWorkbench\Generation\ScanRunCoordinator::class)->start((int) auth()->id(), $save);
             session(['workbench.scan_workflow' => $this->scanWorkflowId]);
             $this->pollScanWorkflow();
         } catch (\Throwable $error) { $this->addError('scanWorkflow', $error->getMessage()); }
@@ -2031,10 +2449,10 @@ class TranslationWorkbench extends Component
         $repository = app(GenerationEditor::class);
 
         $workTarget = $this->reasonTargetLocale();
-        $recentWork = $repository->recentWork($workTarget, (int) auth()->id());
+        $recentWork = $this->overviewOpen ? $repository->recentWork($workTarget, (int) auth()->id()) : [];
         $workTasks = $this->tab === 'in-progress'
             ? $repository->workTasks($workTarget, $this->workOnlyMine ? (int) auth()->id() : null,
-                $this->workSearch, (int) $this->getPage('workPage'), $this->workPerPage)
+                $this->workSearch, (int) $this->getPage('workPage'), $this->workPerPage, caseSensitive: $this->textSearchOptions['workSearch']['case'] ?? false, wholeWord: $this->textSearchOptions['workSearch']['word'] ?? false, findingId: $this->workFindingId, keyId: $this->workKeyId)
             : null;
         $workActors = [];
         $workLocales = [];
@@ -2050,13 +2468,13 @@ class TranslationWorkbench extends Component
             $workActors[(int) auth()->id()] = app(\Gunreip\TranslationWorkbench\Support\WorkbenchUserSummary::class)->find((int) auth()->id());
         }
 
-        $sharedRows = $this->sharedOpen ? $repository->sharedFindings($this->sharedFinding, (int) $this->getPage('sharedFindingsPage')) : null;
+        $sharedRows = $this->sharedOpen ? $repository->sharedFindings($this->sharedFinding, (int) $this->getPage('sharedFindingsPage'), $this->sharedPerPage, $this->sharedSort, $this->sharedDirection) : null;
 
-        $rows = $repository->page($this->search, $this->findingId, $this->status, (int) $this->getPage('findingsPage'), $this->findingsSort, $this->findingsDirection, $this->perPage, $this->unassignedOnly, $this->includeArchived);
-        $translationTasks = $this->tab === 'translations' ? $repository->translationTasks($this->translationSearch, (int) $this->getPage('translationsPage'), $this->translationPerPage, $this->translationSort, $this->translationDirection, $this->translationKeyId) : null;
-        $publishedTasks = $this->tab === 'published' ? $repository->publishedWorklist()->page($this->publishedSearch, (int) $this->getPage('publishedPage'), $this->publishedPerPage, $this->publishedKeyId, $this->publishedLanguage, $this->publishedSort, $this->publishedDirection) : null;
+        $rows = $this->tab === 'findings' ? $repository->page($this->search, $this->findingId, $this->status, (int) $this->getPage('findingsPage'), $this->findingsSort, $this->findingsDirection, $this->perPage, $this->unassignedOnly, $this->includeArchived, $this->searchCaseSensitive, $this->searchWholeWord, $workTarget, $this->searchWholeLiteral) : null;
+        $translationTasks = $this->tab === 'translations' ? $repository->translationTasks($this->translationSearch, (int) $this->getPage('translationsPage'), $this->translationPerPage, $this->translationSort, $this->translationDirection, $this->translationKeyId, caseSensitive: $this->textSearchOptions['translationSearch']['case'] ?? false, wholeWord: $this->textSearchOptions['translationSearch']['word'] ?? false) : null;
+        $publishedTasks = $this->tab === 'published' ? $repository->publishedWorklist()->page($this->publishedSearch, (int) $this->getPage('publishedPage'), $this->publishedPerPage, $this->publishedKeyId, $this->publishedLanguage, $this->publishedSort, $this->publishedDirection, caseSensitive: $this->textSearchOptions['publishedSearch']['case'] ?? false, wholeWord: $this->textSearchOptions['publishedSearch']['word'] ?? false) : null;
         $filterLanguages = in_array($this->tab, ['review', 'publication', 'published'], true) ? $this->locales() : [];
-        $publicationTasks = $this->tab === 'publication' ? $repository->reviewWorklist()->publicationPage($this->publicationSearch, (int) $this->getPage('publicationPage'), $this->publicationPerPage, $this->publicationKeyId, $this->publicationLanguage, $this->publicationSort, $this->publicationDirection) : null;
+        $publicationTasks = $this->tab === 'publication' ? $repository->reviewWorklist()->publicationPage($this->publicationSearch, (int) $this->getPage('publicationPage'), $this->publicationPerPage, $this->publicationKeyId, $this->publicationLanguage, $this->publicationSort, $this->publicationDirection, caseSensitive: $this->textSearchOptions['publicationSearch']['case'] ?? false, wholeWord: $this->textSearchOptions['publicationSearch']['word'] ?? false) : null;
         $taskLocales = [...array_column($publishedTasks?->items() ?? [], 'locale'), ...array_column($publicationTasks?->items() ?? [], 'locale')];
         foreach ($this->publicationBatch as $task) {
             $taskLocales[] = $task['context']['locale'];
@@ -2067,7 +2485,8 @@ class TranslationWorkbench extends Component
         foreach ($translationTasks?->items() ?? [] as $task) {
             array_push($taskLocales, ...array_column($task['locales'], 'locale'));
         }
-        $findingStates = $repository->workflowStates(array_column($rows->items(), 'id'));
+        $findingIds = array_column($rows?->items() ?? [], 'id');
+        $findingStates = $findingIds ? $repository->workflowStates($findingIds) : [];
         foreach ($findingStates as $states) {
             foreach ($states as $state) {
                 $taskLocales[] = $state['locale'];
@@ -2075,8 +2494,9 @@ class TranslationWorkbench extends Component
             }
         }
         array_push($taskLocales, ...array_keys($this->reviewChoices), ...array_keys($this->publicationChoices));
+        $scanCategoryCounts = $this->scanOpen ? $repository->scanCategoryCounts($this->selectedScan) : [];
         $scanRows = $this->scanOpen && $this->scanReviewPath === '' ? $repository->scanPage($this->selectedScan, $this->scanCategory, (int) $this->getPage('scanResultsPage'), ...($this->scanPerPage !== 25 ? [$this->scanSearch, $this->scanPerPage] : ($this->scanSearch !== '' ? [$this->scanSearch] : []))) : null;
-        $summaryIds = [...array_column($rows->items(), 'id'), ...array_filter(array_column($scanRows?->items() ?? [], 'id'))];
+        $summaryIds = [...$findingIds, ...array_filter(array_column($scanRows?->items() ?? [], 'id'))];
         if ($this->editorOpen) {
             $summaryIds[] = $this->selected;
         }
@@ -2088,34 +2508,58 @@ class TranslationWorkbench extends Component
                 $decisionActors[$actorId] = app(\Gunreip\TranslationWorkbench\Support\WorkbenchUserSummary::class)->find((int) $actorId);
             }
         }
+        $scanPositionRows = null;
+        if ($this->scanWorkflowOpen && in_array($this->scanWorkflow['state'] ?? '', ['preview_ready', 'changed'], true)
+            && in_array($this->scanPositionPath, $this->scanWorkflow['preview']['position_files'] ?? [], true)) {
+            $positions = app(\Gunreip\TranslationWorkbench\Generation\ScanRunCoordinator::class)
+                ->positionPreview($this->scanWorkflowId, (int) auth()->id(), $this->scanPositionPath);
+            if (isset($positions[$this->scanPositionFinding])) {
+                $positions = [$this->scanPositionFinding => $positions[$this->scanPositionFinding]] + $positions;
+            }
+            $page = max(1, min((int) $this->getPage('scanPositionPage'), (int) ceil(count($positions) / 25)));
+            $scanPositionRows = new \Illuminate\Pagination\LengthAwarePaginator(
+                array_slice($positions, ($page - 1) * 25, 25, true), count($positions), 25, $page, ['pageName' => 'scanPositionPage']);
+        }
+
+        $sourceIssues = null;
+        if ($this->tab === 'source-issues') {
+            $cases = $repository->sourceIssues($this->testToken);
+            $sourceIssues = $this->sourceIssuePage($repository, $cases);
+        }
+        $scanRequirement = $repository->scanRequirementSummary();
         return view('translation-workbench::livewire.translation-workbench', [
+            'tabCounts' => $repository->tabCounts($workTarget, $this->workOnlyMine ? (int) auth()->id() : null, $this->testToken),
+            'sourceIssues' => $sourceIssues,
+            'sourceIssueTotal' => $sourceIssues ? count($cases) : 0,
             'workTasks' => $workTasks,
             'recentWork' => $recentWork,
             'workActors' => $workActors,
             'captureRows' => $captureRows,
             'decisionActors' => $decisionActors,
+            'scanPositionRows' => $scanPositionRows,
             'preservedRows' => $this->scanOpen && $this->scanReviewPath !== '' && ! $this->scanCaptureView ? $repository->preservedFindingsPage($this->selectedScan, $this->scanReviewPath, (int) $this->getPage('preservedFindingsPage')) : null,
-            'scanRequirement' => $repository->scanRequirementSummary(),
-            'scanRuns' => $repository->recentScans(),
-            'scanCategoryCounts' => $this->scanOpen ? $repository->scanCategoryCounts($this->selectedScan) : [],
+            'scanRequirement' => $scanRequirement,
+            'scanAction' => $this->scanAction($scanRequirement),
+            'scanRuns' => $this->overviewOpen ? $repository->recentScans() : [],
+            'scanCategoryCounts' => $scanCategoryCounts,
+            'scanCategoryTotal' => $scanCategoryCounts[$this->scanCategory] ?? 0,
             'scanRows' => $scanRows,
-            'publications' => app(GenerationPublisher::class)->recent(),
+            'publications' => $this->overviewOpen ? app(GenerationPublisher::class)->recent() : [],
             'publicationActor' => $this->publicationOpen && $this->publication
                 ? app(\Gunreip\TranslationWorkbench\Support\WorkbenchUserSummary::class)->find((int) $this->publication['actor']) : null,
-            'sourceRuns' => app(SourceReplacementWriter::class)->recent(),
+            'sourceRuns' => $this->overviewOpen ? app(SourceReplacementWriter::class)->recent() : [],
             'rows' => $rows,
             'findingWorkflowStates' => $findingStates,
             'translationTasks' => $translationTasks,
             'publishedTasks' => $publishedTasks,
             'filterLanguages' => $filterLanguages,
-            'sourceReplacementLastEvent' => $this->tab === 'source-replacement' ? $repository->latestWorkingEventId() : null,
+            'sourceReplacementLastEvent' => in_array($this->tab, ['source-replacement', 'completed'], true) ? $repository->latestWorkingEventId() : null,
             'publicationTasks' => $publicationTasks,
-            'reviewTasks' => $this->tab === 'review' ? $repository->reviewWorklist()->page($this->reviewSearch, (int) $this->getPage('reviewPage'), $this->reviewPerPage, $this->reviewSort, $this->reviewDirection, $this->reviewKeyId, $this->reviewLanguage) : null,
-            'sharedSummaries' => $repository->sharedSummaries(array_values(array_unique($summaryIds))),
+            'reviewTasks' => $this->tab === 'review' ? $repository->reviewWorklist()->page($this->reviewSearch, (int) $this->getPage('reviewPage'), $this->reviewPerPage, $this->reviewSort, $this->reviewDirection, $this->reviewKeyId, $this->reviewLanguage, caseSensitive: $this->textSearchOptions['reviewSearch']['case'] ?? false, wholeWord: $this->textSearchOptions['reviewSearch']['word'] ?? false) : null,
+            'sharedSummaries' => $summaryIds ? $repository->sharedSummaries(array_values(array_unique($summaryIds))) : [],
             'sharedRows' => $sharedRows,
             'selectableSharedIds' => $this->selectableSharedIds($sharedRows?->items() ?? []),
-            'totals' => $repository->totals(),
-            'keys' => $this->editorOpen ? $repository->keys() : [],
+            'totals' => $this->overviewOpen ? $repository->totals() : [],
             'locales' => $this->editorOpen ? $this->locales() : [],
             'subLanguages' => $this->editorOpen ? app(TranslationWorkbenchEditorLocales::class)->resolve()['sub'] : [],
             'translationFlagCountries' => $this->sourcePreviewOpen || $this->publicationTaskOpen || $this->reviewBatchOpen || $this->publicationOpen || $this->workflowStatusOpen || $this->editorOpen || $translationTasks !== null || $publishedTasks !== null || $publicationTasks !== null || $filterLanguages !== [] || $findingStates !== [] || $workLocales !== [] ? $this->translationFlagCountries([...array_column($this->sourcePreview['translation_files'] ?? [], 'locale'), ...$taskLocales, ...$workLocales, ...array_column($this->workflowStatus['languages'] ?? [], 'locale'), ...array_column($this->publication['changes'] ?? [], 'locale')]) : [],

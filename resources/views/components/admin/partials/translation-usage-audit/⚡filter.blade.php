@@ -166,7 +166,7 @@
                         <span
                             class="mr-2 w-36 shrink-0 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
                         >
-                            {{ __('Decision') }}
+                            {{ __('ui.table.headers.decision') }}
                         </span>
                     </x-ui.tooltip.trigger>
 

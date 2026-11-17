@@ -7,17 +7,13 @@
     >
         {{-- Header Column Key --}}
         <flux:table.column
-            align="center"
             sortable
             :sorted="$publishedSort === 'key'"
             :direction="$publishedDirection"
             wire:click="sortPublished('key')"
         >
             <flux:tooltip>
-                <flux:callout.heading
-                    class="ml-2"
-                    align="center"
-                >
+                <flux:callout.heading class="ml-2">
                     {{ __('Key') }}
                 </flux:callout.heading>
                 <x-translation-workbench::ui.common.tooltip-content
@@ -37,10 +33,10 @@
         >
             <flux:tooltip>
                 <flux:callout.heading>
-                    {{ __('Translation Key') }}
+                    {{ __('translation-workbench.translation.key.translation-key') }}
                 </flux:callout.heading>
                 <x-translation-workbench::ui.common.tooltip-content
-                    :heading="__('Translation Key')"
+                    :heading="__('translation-workbench.translation.key.translation-key')"
                     :text="__(
                         'Translation key used for this publication, including its namespace when present. Select a shortened key below to view it in full.',
                     )"
@@ -49,7 +45,6 @@
         </flux:table.column>
         {{-- Header Column Language --}}
         <flux:table.column
-            align="center"
             sortable
             :sorted="$publishedSort === 'language'"
             :direction="$publishedDirection"
@@ -127,10 +122,7 @@
             <flux:table.row :key="'published-'.$task['run'].
             '-'.$task['revision']">
                 {{-- Column Key --}}
-                <flux:table.cell
-                    class="ml-2 tabular-nums"
-                    align="end"
-                >
+                <flux:table.cell class="ml-2 tabular-nums">
                     <flux:callout.text class="w-24">
                         <code>#{{ $task['key_id'] }}</code>
                     </flux:callout.text>
@@ -138,15 +130,18 @@
                 {{-- Column TranslationKey --}}
                 <flux:table.cell class="whitespace-normal break-all">
                     <x-translation-workbench::ui.common.text-preview
+                        :search="$publishedSearch"
+                        :case-sensitive="$textSearchOptions['publishedSearch']['case'] ?? false"
+                        :whole-word="$textSearchOptions['publishedSearch']['word'] ?? false"
                         :mono="true"
                         :text="($task['namespace'] !== '' ? $task['namespace'].'::' : '').$task['full_name']"
                         :length="80"
                         side="center"
-                        :heading="__('Translation Key')"
+                        :heading="__('translation-workbench.translation.key.translation-key')"
                     />
                 </flux:table.cell>
                 {{-- Column Language --}}
-                <flux:table.cell align="center">
+                <flux:table.cell>
                     <flux:tooltip toggleable>
                         <flux:button
                             variant="ghost"
@@ -253,11 +248,11 @@
                                         variant="outline"
                                         wire:click="open({{ $task['finding_id'] }})"
                                     >
-                                        {{ __('Edit translations') }}
+                                        {{ __('translation-workbench.edits.edit_translations') }}
                                     </flux:button>
                                 </flux:button.group>
                                 <x-translation-workbench::ui.common.tooltip-content
-                                    :heading="__('Edit translations')"
+                                    :heading="__('translation-workbench.edits.edit_translations')"
                                     :text="__(
                                         'Open the current key through an active finding. Editing uses the active language in Settings.',
                                     )"

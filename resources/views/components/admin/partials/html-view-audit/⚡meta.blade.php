@@ -267,7 +267,7 @@
 
                         @if ($referenceHasFallback)
                             <div class="text-sm text-amber-700 dark:text-amber-300">
-                                {{ __('admin.translation_list.modal_history.reason') }}:
+                                {{ __('ui.table.header.reason') }}:
                                 {{ $nativeReference['fallback_reason'] ?? 'n/a' }}
                             </div>
                         @endif
